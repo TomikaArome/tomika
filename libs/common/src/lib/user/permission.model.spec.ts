@@ -1,47 +1,54 @@
 import { Permission } from './permission.model';
+import { rootPermMock, permAdminMock, permManageUsersMock, permPostMock } from '../../mock/user/permission.mock';
 
 describe('Permission', () => {
-  const rootPermModel = {
-    id: 0,
-    label: 'perm'
-  };
-  const perm1Model = {
-    id: 1,
-    label: 'admin',
-    parentId: 0
-  };
-  const perm2Model = {
-    id: 2,
-    label: 'power',
-    parentId: 1
-  };
-  let rootPerm, perm1, perm2;
+  let rootPerm, permAdmin, permManageUsers, permPost;
 
   beforeAll(() => {
-    rootPerm = new Permission(rootPermModel);
-    perm1 = new Permission(perm1Model);
-    perm2 = new Permission(perm2Model);
+    rootPerm = new Permission(rootPermMock);
+    permAdmin = new Permission(permAdminMock);
+    permManageUsers = new Permission(permManageUsersMock);
+    permPost = new Permission(permPostMock);
   });
 
   it('should set the correct values', () => {
-    expect(rootPerm.id).toBe(rootPermModel.id);
-    expect(rootPerm.label).toBe(rootPermModel.label);
+    expect(rootPerm.id).toBe(rootPermMock.id);
+    expect(rootPerm.label).toBe(rootPermMock.label);
     expect(rootPerm.parentId).toBeNull();
-    expect(perm1.parentId).toBe(perm1Model.parentId);
+    expect(permAdmin.parentId).toBe(permAdminMock.parentId);
   });
 
   it('should check if root', () => {
     expect(rootPerm.isRoot).toBeTruthy();
-    expect(perm1.isRoot).toBeFalsy();
+    expect(permAdmin.isRoot).toBeFalsy();
   });
 
   it('should return its parent', () => {
     expect(rootPerm.parent).toBeNull();
-    expect(perm1.parent).toBe(rootPerm);
+    expect(permAdmin.parent).toBe(rootPerm);
   });
 
   it('should return the full label', () => {
-    const expectedLabel = `${rootPermModel.label}.${perm1Model.label}.${perm2Model.label}`;
-    expect(perm2.fullLabel).toBe(expectedLabel);
+    const expectedLabel = `${rootPermMock.label}.${permAdminMock.label}.${permManageUsersMock.label}`;
+    expect(permManageUsers.fullLabel).toBe(expectedLabel);
+  });
+
+  it('should check if is ancestor of another permission', () => {
+    expect(rootPerm.isAncestorOf(permAdmin)).toBeTruthy();
+    expect(permAdmin.isAncestorOf(rootPerm)).toBeFalsy();
+    expect(permAdmin.isAncestorOf(permPost)).toBeFalsy();
+  });
+
+  it('should simplify an array of permissions', () => {
+    const originalArray = [
+      permAdmin,
+      permManageUsers,
+      permPost
+    ];
+
+    expect(Permission.simplifyPermissionArray(originalArray)).toEqual([
+      permAdmin,
+      permPost
+    ]);
   });
 });

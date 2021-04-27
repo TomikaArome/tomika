@@ -44,6 +44,10 @@ export class Permission implements PermissionModel {
 
   private static permissions: { [index: number]: Permission } = {};
 
+  static getById(id: number): Permission {
+    return Permission.permissions[id] ?? null;
+  }
+
   static buildPermissionTree(modelArray: PermissionModel[]) {
     modelArray.forEach((model) => {
       new Permission(model);
@@ -62,5 +66,19 @@ export class Permission implements PermissionModel {
       }
       return newArray;
     }, []);
+  }
+
+  static hasPermission(permission: Permission, grantedPermissions: Permission[]): boolean {
+    let hasPermission = false;
+    for (let i = 0; !hasPermission && i < grantedPermissions.length; i++) {
+      const grantedPermission = grantedPermissions[i];
+      hasPermission = grantedPermission === permission;
+      let checkPermission = permission;
+      while (!hasPermission && !checkPermission.isRoot) {
+        hasPermission = checkPermission.parent === grantedPermission;
+        checkPermission = checkPermission.parent;
+      }
+    }
+    return hasPermission;
   }
 }

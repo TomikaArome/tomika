@@ -23,8 +23,4 @@ describe('Group', () => {
     expect(group1.permissionIds).toStrictEqual([]);
     expect(group2.permissionIds).toBe(group2Model.permissionIds);
   });
-
-  it('should be granted permissions', () => {
-    expect(true).toBeTruthy();
-  });
 });

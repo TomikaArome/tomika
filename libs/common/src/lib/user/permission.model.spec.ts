@@ -1,21 +1,22 @@
 import { Permission } from './permission.model';
-import { rootPermMock, permAdminMock, permManageUsersMock, permPostMock } from '../../mock/user/permission.mock';
+import { permTreeArrayMock } from '../../mock/user/permission.mock';
 
 describe('Permission', () => {
   let rootPerm, permAdmin, permManageUsers, permPost;
 
   beforeAll(() => {
-    rootPerm = new Permission(rootPermMock);
-    permAdmin = new Permission(permAdminMock);
-    permManageUsers = new Permission(permManageUsersMock);
-    permPost = new Permission(permPostMock);
+    Permission.buildPermissionTree(permTreeArrayMock);
+    rootPerm = Permission.getById(0);
+    permAdmin = Permission.getById(1);
+    permManageUsers = Permission.getById(2);
+    permPost = Permission.getById(7);
   });
 
   it('should set the correct values', () => {
-    expect(rootPerm.id).toBe(rootPermMock.id);
-    expect(rootPerm.label).toBe(rootPermMock.label);
+    expect(rootPerm.id).toBe(0);
+    expect(rootPerm.label).toBe('perm');
     expect(rootPerm.parentId).toBeNull();
-    expect(permAdmin.parentId).toBe(permAdminMock.parentId);
+    expect(permAdmin.parentId).toBe(0);
   });
 
   it('should check if root', () => {
@@ -29,7 +30,7 @@ describe('Permission', () => {
   });
 
   it('should return the full label', () => {
-    const expectedLabel = `${rootPermMock.label}.${permAdminMock.label}.${permManageUsersMock.label}`;
+    const expectedLabel = `perm.admin.manage-users`;
     expect(permManageUsers.fullLabel).toBe(expectedLabel);
   });
 
@@ -50,5 +51,22 @@ describe('Permission', () => {
       permAdmin,
       permPost
     ]);
+  });
+
+  it('should check if a permission is granted given an array', () => {
+    const permManageGroups = Permission.getById(5),
+      permEditInfo = Permission.getById(3),
+      permSubscribed = Permission.getById(11);
+    const grantedPermissions = [
+      permPost,
+      permManageUsers,
+      permManageGroups
+    ];
+
+    expect(Permission.hasPermission(permManageGroups, grantedPermissions)).toBeTruthy();
+    expect(Permission.hasPermission(permEditInfo, grantedPermissions)).toBeTruthy();
+    expect(Permission.hasPermission(permSubscribed, grantedPermissions)).toBeTruthy();
+    expect(Permission.hasPermission(permAdmin, grantedPermissions)).toBeFalsy();
+    expect(Permission.hasPermission(rootPerm, grantedPermissions)).toBeFalsy();
   });
 });

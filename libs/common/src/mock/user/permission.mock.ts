@@ -1,30 +1,18 @@
-export const rootPermMock = {
-  id: 0,
-  label: 'perm'
-};
-
-export const permAdminMock = {
-  id: 1,
-  label: 'admin',
-  parentId: 0
-};
-
-export const permManageUsersMock = {
-  id: 2,
-  label: 'manage-users',
-  parentId: 1
-};
-
-export const permPostMock = {
-  id: 7,
-  label: 'post',
-  parentId: 0
-};
-
 export const permTreeArrayMock = [
-  rootPermMock,
-  permAdminMock,
-  permManageUsersMock,
+  {
+    id: 0,
+    label: 'perm'
+  },
+  {
+    id: 1,
+    label: 'admin',
+    parentId: 0
+  },
+  {
+    id: 2,
+    label: 'manage-users',
+    parentId: 1
+  },
   {
     id: 3,
     label: 'edit-info',
@@ -45,7 +33,11 @@ export const permTreeArrayMock = [
     label: 'manage-permissions',
     parentId: 1
   },
-  permPostMock,
+  {
+    id: 7,
+    label: 'post',
+    parentId: 0
+  },
   {
     id: 8,
     label: 'submit',

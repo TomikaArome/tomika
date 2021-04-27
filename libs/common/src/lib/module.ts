@@ -1,3 +1,1 @@
-export function module(): string {
-  return 'common';
-}
+export * from './user/module';

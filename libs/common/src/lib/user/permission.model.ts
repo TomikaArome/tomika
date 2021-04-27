@@ -33,5 +33,52 @@ export class Permission implements PermissionModel {
     return (this.isRoot ? '' : (this.parent?.fullLabel + '.')) + this.label;
   }
 
-  private static permissions: { [index: number]: Permission } = [];
+  isAncestorOf(otherPermission: Permission): boolean {
+    let isAncestor = false, checkPermission = otherPermission;
+    while (!isAncestor && !checkPermission.isRoot) {
+      isAncestor = checkPermission.parent === this;
+      checkPermission = checkPermission.parent;
+    }
+    return isAncestor;
+  }
+
+  private static permissions: { [index: number]: Permission } = {};
+
+  static getById(id: number): Permission {
+    return Permission.permissions[id] ?? null;
+  }
+
+  static buildPermissionTree(modelArray: PermissionModel[]) {
+    modelArray.forEach((model) => {
+      new Permission(model);
+    });
+  }
+
+  static simplifyPermissionArray(permissionArray: Permission[]): Permission[] {
+    return permissionArray.reduce((newArray: Permission[], permissionToAdd) => {
+      let addToArray = true;
+      newArray = newArray.filter((currentPermission) => {
+        if (currentPermission === permissionToAdd || currentPermission.isAncestorOf(permissionToAdd)) { addToArray = false; }
+        return !permissionToAdd.isAncestorOf(currentPermission);
+      });
+      if (addToArray) {
+        newArray.push(permissionToAdd);
+      }
+      return newArray;
+    }, []);
+  }
+
+  static hasPermission(permission: Permission, grantedPermissions: Permission[]): boolean {
+    let hasPermission = false;
+    for (let i = 0; !hasPermission && i < grantedPermissions.length; i++) {
+      const grantedPermission = grantedPermissions[i];
+      hasPermission = grantedPermission === permission;
+      let checkPermission = permission;
+      while (!hasPermission && !checkPermission.isRoot) {
+        hasPermission = checkPermission.parent === grantedPermission;
+        checkPermission = checkPermission.parent;
+      }
+    }
+    return hasPermission;
+  }
 }

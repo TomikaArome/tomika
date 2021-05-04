@@ -1,11 +1,11 @@
 import { Permission } from './permission.model';
-import { permTreeArrayMock } from '../../mock/user/permission.mock';
+import { permissionTreeArrayMock } from '../../mock/user/permission.mock';
 
 describe('Permission', () => {
   let rootPerm, permAdmin, permManageUsers, permPost;
 
   beforeAll(() => {
-    Permission.buildPermissionTree(permTreeArrayMock);
+    Permission.createPermissionTree(permissionTreeArrayMock);
     rootPerm = Permission.getById(0);
     permAdmin = Permission.getById(1);
     permManageUsers = Permission.getById(2);

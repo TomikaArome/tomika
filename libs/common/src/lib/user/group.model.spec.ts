@@ -1,26 +1,19 @@
 import { Group } from './group.model';
+import { adminGroupMock, groupsArrayMock } from '../../mock/module';
 
 describe('Group', () => {
-  const group1Model = {
-    id: 0,
-    name: 'Admin'
-  };
-  const group2Model = {
-    id: 1,
-    name: 'Member',
-    permissionIds: [0, 1]
-  };
-  let group1, group2;
+  let adminGroup, groupWithNoPermissions;
 
   beforeEach(() => {
-    group1 = new Group(group1Model);
-    group2 = new Group(group2Model);
+    Group.createGroups(groupsArrayMock);
+    adminGroup = Group.getById(0);
+    groupWithNoPermissions = Group.getById(3);
   });
 
   it('should set the correct values', () => {
-    expect(group1.id).toBe(group1Model.id);
-    expect(group1.name).toBe(group1Model.name);
-    expect(group1.permissionIds).toStrictEqual([]);
-    expect(group2.permissionIds).toBe(group2Model.permissionIds);
+    expect(adminGroup.id).toBe(adminGroupMock.id);
+    expect(adminGroup.name).toBe(adminGroupMock.name);
+    expect(groupWithNoPermissions.permissionIds).toStrictEqual([]);
+    expect(adminGroup.permissionIds).toBe(adminGroupMock.permissionIds);
   });
 });

@@ -1,4 +1,4 @@
-export const permTreeArrayMock = [
+export const permissionTreeArrayMock = [
   {
     id: 0,
     label: 'perm'

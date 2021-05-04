@@ -5,6 +5,8 @@ export interface PermissionModel {
 }
 
 export class Permission implements PermissionModel {
+  private static permissions: { [index: number]: Permission } = {};
+
   id: number;
   label: string;
   parentId: number;
@@ -42,13 +44,11 @@ export class Permission implements PermissionModel {
     return isAncestor;
   }
 
-  private static permissions: { [index: number]: Permission } = {};
-
   static getById(id: number): Permission {
     return Permission.permissions[id] ?? null;
   }
 
-  static buildPermissionTree(modelArray: PermissionModel[]) {
+  static createPermissionTree(modelArray: PermissionModel[]) {
     modelArray.forEach((model) => {
       new Permission(model);
     });
@@ -66,6 +66,11 @@ export class Permission implements PermissionModel {
       }
       return newArray;
     }, []);
+  }
+
+  static getPermissionArrayFromIdArray(permissionIds: number[]): Permission[] {
+    const permissionArray = permissionIds.map(Permission.getById).filter(permissionObject => permissionObject !== null);
+    return Permission.simplifyPermissionArray(permissionArray);
   }
 
   static hasPermission(permission: Permission, grantedPermissions: Permission[]): boolean {

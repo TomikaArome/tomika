@@ -15,6 +15,7 @@
     "frontend": { "tags": [] },
     "frontend-e2e": { "tags": [], "implicitDependencies": ["frontend"] },
     "backend": { "tags": [] },
-    "common": { "tags": [] }
+    "common": { "tags": [] },
+    "splatnet": { "tags": [] }
   }
 }

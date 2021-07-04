@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@TomikaArome/common": ["libs/common/src/index.ts"]
+      "@TomikaArome/common": ["libs/common/src/index.ts"],
+      "@TomikaArome/splatnet": ["libs/splatnet/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

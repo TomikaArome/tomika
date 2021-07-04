@@ -5,5 +5,6 @@ module.exports = {
     '<rootDir>/libs/common',
     '<rootDir>/libs/ouistiti',
     '<rootDir>/libs/ouistiti-ui',
+    '<rootDir>/libs/splatnet',
   ],
 };

@@ -1,3 +1,5 @@
+import { fetch } from 'node-fetch';
+
 interface Splatnet2statinkApiOptions {
   userAgent?: string;
   timestamp?: number;
@@ -11,7 +13,7 @@ export class Splatnet2statinkApi {
   private timestamp: string;
   private idToken: string;
 
-  constructor(options) {
+  constructor(options: Splatnet2statinkApiOptions = {}) {
     this.setUserAgent(options.userAgent ?? null);
     this.setTimestamp(options.timestamp ?? Math.floor(+new Date() / 1000));
     this.setIdToken(options.idToken ?? null);
@@ -35,7 +37,7 @@ export class Splatnet2statinkApi {
       headers: this.buildHeaders(),
       body: this.buildBodyQuery()
     });
-    return this.getHashFromApiReponse(result.json());
+    return Splatnet2statinkApi.getHashFromApiReponse(await result.json());
   }
 
   private buildHeaders() {
@@ -55,7 +57,7 @@ export class Splatnet2statinkApi {
     return `naIdToken=${this.idToken}&timestamp=${this.timestamp}`;
   }
 
-  private getHashFromApiReponse(response: { hash: string }): string {
+  private static getHashFromApiReponse(response: { hash: string }): string {
     return response.hash;
   }
 }

@@ -1,72 +1,51 @@
-import { Permission } from './permission.model';
-import { permissionTreeArrayMock } from '../../mock/user/permission.mock';
+import { PermissionHelper } from './permission.model';
+import { permissionTreeMock } from '../../mock/user/permission.mock';
 
 describe('Permission', () => {
-  let rootPerm, permAdmin, permManageUsers, permPost;
+  let helper: PermissionHelper;
 
-  beforeAll(() => {
-    Permission.createPermissionTree(permissionTreeArrayMock);
-    rootPerm = Permission.getById(0);
-    permAdmin = Permission.getById(1);
-    permManageUsers = Permission.getById(2);
-    permPost = Permission.getById(7);
+  beforeEach(() => {
+    helper = new PermissionHelper();
+    helper.rootPermission = permissionTreeMock;
   });
 
-  it('should set the correct values', () => {
-    expect(rootPerm.id).toBe(0);
-    expect(rootPerm.label).toBe('perm');
-    expect(rootPerm.parentId).toBeNull();
-    expect(permAdmin.parentId).toBe(0);
+  it('should be able to get the permission object from the full label', () => {
+    const editInfoPermission = helper.getPermission('perm.admin.manage-users.edit-info');
+    const nonExistent = helper.getPermission('perm.this.is.nonsense');
+    expect(editInfoPermission.label).toBe('edit-info');
+    expect(nonExistent).toBe(null);
   });
 
-  it('should check if root', () => {
-    expect(rootPerm.isRoot).toBeTruthy();
-    expect(permAdmin.isRoot).toBeFalsy();
+  it('should be able to get the parent of a permission', () => {
+    const editInfoPermission = helper.getPermission('perm.admin.manage-users.edit-info');
+    const manageUsersPermission = helper.getPermission('perm.admin.manage-users');
+    expect(helper.getParentPermission(editInfoPermission)).toBe(manageUsersPermission);
   });
 
-  it('should return its parent', () => {
-    expect(rootPerm.parent).toBeNull();
-    expect(permAdmin.parent).toBe(rootPerm);
+  it('should be able to test if a permission is an ancestor of another permission', () => {
+    const editInfoLabel = 'perm.admin.manage-users.edit-info';
+    const adminLabel = 'perm.admin';
+    const commentLabel = 'perm.post.comment';
+
+    expect(PermissionHelper.isAncestorOf(adminLabel, editInfoLabel)).toBeTruthy();
+    expect(PermissionHelper.isAncestorOf(editInfoLabel, adminLabel)).toBeFalsy();
+    expect(PermissionHelper.isAncestorOf(editInfoLabel, editInfoLabel)).toBeFalsy();
+    expect(PermissionHelper.isAncestorOf(commentLabel, editInfoLabel)).toBeFalsy();
   });
 
-  it('should return the full label', () => {
-    const expectedLabel = `perm.admin.manage-users`;
-    expect(permManageUsers.fullLabel).toBe(expectedLabel);
+  it('should be able to simplify an array of permissions', () => {
+    const originalArray = ['perm.admin.manage-users', 'perm.post', 'perm.admin'];
+    expect(PermissionHelper.simplifyFullLabelsArray(originalArray)).toEqual(['perm.admin', 'perm.post']);
   });
 
-  it('should check if is ancestor of another permission', () => {
-    expect(rootPerm.isAncestorOf(permAdmin)).toBeTruthy();
-    expect(permAdmin.isAncestorOf(rootPerm)).toBeFalsy();
-    expect(permAdmin.isAncestorOf(permPost)).toBeFalsy();
-  });
+  it('should be able to check if a permission has been granted from an array of permissions', () => {
+    const editInfoLabel = 'perm.admin.manage-users.edit-info';
+    const commentLabel = 'perm.post.comment';
+    const rateLabel = 'perm.post.rate';
+    const grantedPermissions = ['perm.admin', 'perm.post.comment'];
 
-  it('should simplify an array of permissions', () => {
-    const originalArray = [
-      permAdmin,
-      permManageUsers,
-      permPost
-    ];
-
-    expect(Permission.simplifyPermissionArray(originalArray)).toEqual([
-      permAdmin,
-      permPost
-    ]);
-  });
-
-  it('should check if a permission is granted given an array', () => {
-    const permManageGroups = Permission.getById(5),
-      permEditInfo = Permission.getById(3),
-      permSubscribed = Permission.getById(11);
-    const grantedPermissions = [
-      permPost,
-      permManageUsers,
-      permManageGroups
-    ];
-
-    expect(Permission.hasPermission(permManageGroups, grantedPermissions)).toBeTruthy();
-    expect(Permission.hasPermission(permEditInfo, grantedPermissions)).toBeTruthy();
-    expect(Permission.hasPermission(permSubscribed, grantedPermissions)).toBeTruthy();
-    expect(Permission.hasPermission(permAdmin, grantedPermissions)).toBeFalsy();
-    expect(Permission.hasPermission(rootPerm, grantedPermissions)).toBeFalsy();
+    expect(PermissionHelper.hasPermission(grantedPermissions, editInfoLabel)).toBeTruthy();
+    expect(PermissionHelper.hasPermission(grantedPermissions, commentLabel)).toBeTruthy();
+    expect(PermissionHelper.hasPermission(grantedPermissions, rateLabel)).toBeFalsy();
   });
 });

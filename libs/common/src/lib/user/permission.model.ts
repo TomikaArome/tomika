@@ -1,89 +1,67 @@
-export interface PermissionModel {
-  id: number;
-  label: string;
-  parentId?: number;
+export interface Permission {
+  readonly label: string;
+  readonly children?: Permission[];
 }
 
-export class Permission implements PermissionModel {
-  private static permissions: { [index: number]: Permission } = {};
+interface PermissionArray {
+  [index: string]: Permission;
+}
 
-  id: number;
-  label: string;
-  parentId: number;
+export class PermissionHelper {
+  private _rootPermission: Permission = null;
+  private savedPermissions: PermissionArray = {};
 
-  constructor(model: PermissionModel) {
-    if (Permission.permissions[model.id]) {
-      return Permission.permissions[model.id];
-    }
-
-    this.id = model.id;
-    this.label = model.label;
-    this.parentId = model.parentId ?? null;
-
-    Permission.permissions[this.id] = this;
+  get rootPermission(): Permission { return this._rootPermission; }
+  set rootPermission(rootPermission: Permission) {
+    this._rootPermission = rootPermission;
+    this.savedPermissions = {};
+    this.savePermission(rootPermission);
   }
 
-  get isRoot(): boolean {
-    return this.parentId === null;
-  }
-
-  get parent(): Permission {
-    return this.isRoot ? null : Permission.permissions[this.parentId];
-  }
-
-  get fullLabel(): string {
-    return (this.isRoot ? '' : (this.parent?.fullLabel + '.')) + this.label;
-  }
-
-  isAncestorOf(otherPermission: Permission): boolean {
-    let isAncestor = false, checkPermission = otherPermission;
-    while (!isAncestor && !checkPermission.isRoot) {
-      isAncestor = checkPermission.parent === this;
-      checkPermission = checkPermission.parent;
-    }
-    return isAncestor;
-  }
-
-  static getById(id: number): Permission {
-    return Permission.permissions[id] ?? null;
-  }
-
-  static createPermissionTree(modelArray: PermissionModel[]) {
-    modelArray.forEach((model) => {
-      new Permission(model);
-    });
-  }
-
-  static simplifyPermissionArray(permissionArray: Permission[]): Permission[] {
-    return permissionArray.reduce((newArray: Permission[], permissionToAdd) => {
-      let addToArray = true;
-      newArray = newArray.filter((currentPermission) => {
-        if (currentPermission === permissionToAdd || currentPermission.isAncestorOf(permissionToAdd)) { addToArray = false; }
-        return !permissionToAdd.isAncestorOf(currentPermission);
+  private savePermission(permission: Permission, baseLabel = '') {
+    const fullLabel = baseLabel + permission.label;
+    this.savedPermissions[fullLabel] = permission;
+    if (permission.children) {
+      permission.children.forEach(childPermission => {
+        this.savePermission(childPermission, fullLabel + '.');
       });
-      if (addToArray) {
-        newArray.push(permissionToAdd);
-      }
-      return newArray;
+    }
+  }
+
+  getFullLabel(permission: Permission): string {
+    return Object.entries(this.savedPermissions).find(entry => entry[1] === permission)[0];
+  }
+
+  getPermission(fullLabel: string): Permission {
+    return this.savedPermissions[fullLabel] ?? null;
+  }
+
+  getParentPermission(permission: Permission): Permission {
+    return permission === this.rootPermission ? null :
+      this.getPermission(this.getFullLabel(permission).replace(/\.[a-z0-9-]+$/, ''));
+  }
+
+  getPermissionsArray(fullLabelsArray: string[]): Permission[] {
+    return fullLabelsArray.map(fullLabel => this.getPermission(fullLabel))
+      .filter(permission => permission !== null);
+  }
+
+  static isAncestorOf(presumedAncestorLabel: string, presumedDescendantLabel: string): boolean {
+    return (new RegExp(`^${presumedAncestorLabel}\\.`)).test(presumedDescendantLabel);
+  }
+
+  static containsAncestor(fullLabelsArray: string[], fullLabel: string): boolean {
+    return fullLabelsArray.reduce((isAncestor, label) => isAncestor || PermissionHelper.isAncestorOf(label, fullLabel), false);
+  }
+
+  static simplifyFullLabelsArray(permissionsArray: string[]): string[] {
+    return permissionsArray.sort().reduce((savedLabels, fullLabel) => {
+      if (!PermissionHelper.containsAncestor(savedLabels, fullLabel)) { savedLabels.push(fullLabel); }
+      return savedLabels;
     }, []);
   }
 
-  static getPermissionArrayFromIdArray(permissionIds: number[]): Permission[] {
-    const permissionArray = permissionIds.map(Permission.getById).filter(permissionObject => permissionObject !== null);
-    return Permission.simplifyPermissionArray(permissionArray);
-  }
-
-  static hasPermission(permission: Permission, grantedPermissions: Permission[]): boolean {
-    let hasPermission = false;
-    for (let i = 0; !hasPermission && i < grantedPermissions.length; i++) {
-      const grantedPermission = grantedPermissions[i];
-      hasPermission = grantedPermission === permission;
-      let checkPermission = permission;
-      while (!hasPermission && !checkPermission.isRoot) {
-        hasPermission = checkPermission.parent === grantedPermission;
-        checkPermission = checkPermission.parent;
-      }
-    }
-    return hasPermission;
+  static hasPermission(grantedPermissions: string[], fullLabel: string): boolean {
+    return grantedPermissions.includes(fullLabel) || PermissionHelper.containsAncestor(grantedPermissions, fullLabel);
   }
 }

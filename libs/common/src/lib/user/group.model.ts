@@ -1,9 +1,9 @@
-import { Permission } from './permission.model';
+import { PermissionHelper } from './permission.model';
 
 export interface GroupModel {
   id: number;
   name: string;
-  permissionIds?: number[];
+  permissions?: string[];
 }
 
 export class Group implements GroupModel {
@@ -11,7 +11,7 @@ export class Group implements GroupModel {
 
   id: number;
   name: string;
-  permissionIds: number[];
+  permissions: string[];
 
   constructor(model: GroupModel) {
     if (Group.groups[model.id]) {
@@ -20,17 +20,13 @@ export class Group implements GroupModel {
 
     this.id = model.id;
     this.name = model.name;
-    this.permissionIds = model.permissionIds ?? [];
+    this.permissions = model.permissions ?? [];
 
     Group.groups[model.id] = this;
   }
 
-  get permissions(): Permission[] {
-    return Permission.getPermissionArrayFromIdArray(this.permissionIds);
-  }
-
-  hasPermission(permission: Permission): boolean {
-    return Permission.hasPermission(permission, this.permissions);
+  hasPermission(permission: string): boolean {
+    return PermissionHelper.hasPermission(this.permissions, permission);
   }
 
   static getById(id: number): Group {

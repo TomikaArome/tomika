@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.mat-sidenav-container {
+  height: 100%;
+}
+
+.mat-drawer-container {
+  background-color: initial;
+}
+
+.mat-sidenav {
+  width: 250px;
+  border-right: 2px solid hsla(0,0,0,0.1);
+}

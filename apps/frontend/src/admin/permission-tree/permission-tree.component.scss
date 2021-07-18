@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  padding: 1em 1.2em;
+  font-size: 1.2em;
+}
+
+.mat-tree-node {
+  min-height: 24px;
+
+  button {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    margin-right: 4px;
+  }
+
+  &[role="treeitem"] {
+    padding-left: 28px;
+  }
+
+  .label {
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+  }
+}
+:not(.root-permission) > .children-nodes {
+  padding-left: 28px;
+}

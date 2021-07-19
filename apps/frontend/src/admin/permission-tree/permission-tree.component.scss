@@ -1,28 +1,46 @@
 :host {
   display: block;
-  padding: 1em 1.2em;
   font-size: 1.2em;
 }
 
 .mat-tree-node {
+  display: flex;
+  align-items: stretch;
   min-height: 24px;
+  cursor: pointer;
 
-  button {
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    margin-right: 4px;
+  &:nth-child(2n) {
+    background-color: hsla(0,0%,0%,0.025);
   }
 
-  &[role="treeitem"] {
-    padding-left: 28px;
+  &:hover {
+    background-color: hsla(200,100%,75%,0.1);
+  }
+
+  .expand-button {
+    width: 20px;
+    height: 16px;
+    box-sizing: content-box;
+    margin: 4px;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: hsla(0,0%,0%,0.05);
+    }
+
+    mat-icon {
+      display: flex;
+      place-content: center;
+      font-size: 1em;
+      line-height: 16px;
+    }
   }
 
   .label {
+    display: flex;
+    align-items: center;
     font-family: "Courier New", monospace;
     font-weight: bold;
+    flex-grow: 1;
   }
-}
-:not(.root-permission) > .children-nodes {
-  padding-left: 28px;
 }

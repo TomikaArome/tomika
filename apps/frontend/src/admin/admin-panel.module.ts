@@ -8,6 +8,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { CommonModule } from '@angular/common';
     MatTreeModule,
     MatButtonModule,
     MatIconModule,
+    MatToolbarModule,
     CommonModule
   ],
   declarations: [

@@ -1,5 +1,6 @@
 export interface Permission {
   readonly label: string;
+  readonly description?: string;
   readonly children?: Permission[];
 }
 

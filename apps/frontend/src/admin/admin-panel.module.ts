@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { AdminPanelRoutingModule } from './admin-panel-routing.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { AdminPanelComponent } from './panel/admin-panel.component';
@@ -9,15 +10,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatListModule } from '@angular/material/list';
+import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({
   imports: [
+    AdminPanelRoutingModule,
+    CommonModule,
     MatSidenavModule,
     MatTreeModule,
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
-    CommonModule
+    MatListModule,
+    MatButtonModule,
+    MatRippleModule
   ],
   declarations: [
     AdminPanelComponent,

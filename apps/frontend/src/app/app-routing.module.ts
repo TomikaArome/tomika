@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+import { AdminPanelModule } from '../admin/admin-panel.module';
+
 import { IndexComponent } from '../index/index.component';
-import { AdminPanelComponent } from '../admin/panel/admin-panel.component';
 
 const routes: Routes = [
   {
@@ -10,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminPanelComponent
+    loadChildren: () => AdminPanelModule
   }
 ];
 

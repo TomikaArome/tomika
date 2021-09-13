@@ -1,6 +1,12 @@
 <mat-sidenav-container>
-  <mat-sidenav mode="side" opened>Sidenav content</mat-sidenav>
+  <mat-sidenav mode="side" opened>
+    <mat-list>
+      <div mat-list-item matRipple>
+        <mat-icon mat-list-icon>lock</mat-icon> Permission Tree
+      </div>
+    </mat-list>
+  </mat-sidenav>
   <mat-sidenav-content>
-    <tmk-permission-tree></tmk-permission-tree>
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

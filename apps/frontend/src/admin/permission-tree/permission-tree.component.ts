@@ -29,7 +29,7 @@ export class PermissionTreeComponent {
       permission => permission.children);
     this.dataSource = new MatTreeFlatDataSource<Permission, FlatPermissionNode>(this.treeControl, this.treeFlattener);
     this.dataSource.data = [this.permissionService.rootPermission];
-    this.collapseAll();
+    this.expandAll();
   }
 
   flattenNode = (node: Permission, level: number): FlatPermissionNode => {

@@ -7,11 +7,13 @@ import { AdminPanelModule } from '../admin/admin-panel.module';
 import { AppComponent } from './app.component';
 import { IndexComponent } from '../index/index.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CardsTestComponent } from '../cards-test/cards-test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    IndexComponent
+    IndexComponent,
+    CardsTestComponent
   ],
   imports: [
     BrowserModule,

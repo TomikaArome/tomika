@@ -1,0 +1,22 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  background-color: hsl(0,0%,10%);
+  padding: 20px 32px;
+  width: 400px;
+  border-radius: 20px;
+
+  .nickname-colour-point {
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 0.2em;
+    background-color: aqua;
+    margin-right: 0.3em;
+  }
+
+  .player-nicknames-row {
+    color: hsl(0,0%,80%);
+    margin-top: 0.8em;
+  }
+}

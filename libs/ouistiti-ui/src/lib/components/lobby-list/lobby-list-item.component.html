@@ -1,0 +1,21 @@
+<div class="nicknames">
+  <h2>
+    <div class="nickname-colour-point"></div>
+    {{ lobbyInfo.hostNickname }}
+  </h2>
+
+  <div class="player-nicknames-row">
+    <ng-container *ngIf="noOtherPlayers(); else hasOtherPlayers">
+      No other players yet
+    </ng-container>
+    <ng-template #hasOtherPlayers>
+      <ng-container *ngFor="let nickname of playerNicknames(); let last = last">
+        {{ nickname + (last ? '' : ',') }}
+      </ng-container>
+    </ng-template>
+  </div>
+</div>
+
+<div>
+  
+</div>

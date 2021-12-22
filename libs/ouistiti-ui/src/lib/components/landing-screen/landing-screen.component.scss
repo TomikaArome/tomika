@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background-color: hsl(0,0%,5%);
+  color: hsl(0,0%,100%);
+}
+
+.tmk-landing-screen-section {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  padding: 10% 100px;
+}

@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "paths": {
-      "@TomikaArome/common": ["libs/common/src/index.ts"]
+      "@TomikaArome/common": ["libs/common/src/index.ts"],
+      "@TomikaArome/ouistiti": ["libs/ouistiti/src/index.ts"],
+      "@TomikaArome/ouistiti-ui": ["libs/ouistiti-ui/src/index.ts"],
+      "@TomikaArome/ouistiti-shared": ["libs/ouistiti-shared/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

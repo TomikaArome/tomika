@@ -3,5 +3,7 @@ module.exports = {
     '<rootDir>/apps/frontend',
     '<rootDir>/apps/backend',
     '<rootDir>/libs/common',
+    '<rootDir>/libs/ouistiti',
+    '<rootDir>/libs/ouistiti-ui',
   ],
 };

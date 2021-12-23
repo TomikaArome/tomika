@@ -1,22 +1,76 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  background-color: hsl(0,0%,10%);
-  padding: 20px 32px;
-  width: 400px;
-  border-radius: 20px;
+  --lobby-list-item-border-radius: 20px;
 
-  .nickname-colour-point {
-    display: inline-block;
-    width: 0.6em;
-    height: 0.6em;
-    border-radius: 0.2em;
-    background-color: aqua;
-    margin-right: 0.3em;
+  .player-colour-red { --player-colour-hue: 0; }
+  .player-colour-orange { --player-colour-hue: 30; }
+  .player-colour-yellow { --player-colour-hue: 60; }
+  .player-colour-green { --player-colour-hue: 120; }
+  .player-colour-aqua { --player-colour-hue: 180; }
+  .player-colour-blue { --player-colour-hue: 240; }
+  .player-colour-purple { --player-colour-hue: 280; }
+  .player-colour-pink { --player-colour-hue: 320; }
+
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: hsl(0,0%,10%);
+  padding: 20px 32px 20px 72px;
+  width: 400px;
+  border-radius: var(--lobby-list-item-border-radius);
+  border: 2px solid hsla(0,0%,100%,0.05);
+  overflow: hidden;
+
+  .host-colour {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    border-radius: var(--lobby-list-item-border-radius);
+    background: linear-gradient(110deg, hsla(var(--player-colour-hue, 0),100%,50%,40%) 15%, hsla(0,0%,0%,0) 40%);
+  }
+  & > * {
+    position: relative;
+    z-index: 1;
   }
 
-  .player-nicknames-row {
-    color: hsl(0,0%,80%);
-    margin-top: 0.8em;
+  .player-symbol {
+    position: absolute;
+    bottom: -8px;
+    left: -8px;
+    width: 72px;
+    height: 72px;
+    color: hsla(0,0%,100%,0.2);
+  }
+
+  .nicknames {
+    flex-grow: 1;
+
+    .player-nicknames-row {
+      color: hsl(0,0%,80%);
+      margin-top: 0.8em;
+    }
+  }
+
+  .players-count {
+    position: relative;
+    font-weight: bold;
+
+    .background-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%) scale(3);
+      color: hsla(0,0%,100%,0.1);
+    }
+    .actual-number-of-players {
+      font-size: 2em;
+    }
+    .maximum-number-of-players {
+      color: hsl(0,0%,80%);
+    }
   }
 }

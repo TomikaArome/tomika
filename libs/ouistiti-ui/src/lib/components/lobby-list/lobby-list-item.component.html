@@ -1,21 +1,24 @@
+<div class="host-colour" [ngClass]="getHostColourClassName()"></div>
+
+<mat-icon class="player-symbol" [svgIcon]="getHostSymbolIconName()"></mat-icon>
+
 <div class="nicknames">
-  <h2>
-    <div class="nickname-colour-point"></div>
-    {{ lobbyInfo.hostNickname }}
-  </h2>
+  <h2>{{ host()?.nickname }}</h2>
 
   <div class="player-nicknames-row">
     <ng-container *ngIf="noOtherPlayers(); else hasOtherPlayers">
       No other players yet
     </ng-container>
     <ng-template #hasOtherPlayers>
-      <ng-container *ngFor="let nickname of playerNicknames(); let last = last">
+      <ng-container *ngFor="let nickname of otherPlayerNicknames(); let last = last">
         {{ nickname + (last ? '' : ',') }}
       </ng-container>
     </ng-template>
   </div>
 </div>
 
-<div>
-  
+<div class="players-count">
+  <mat-icon class="background-icon">people</mat-icon>
+  <span class="actual-number-of-players">{{ lobbyInfo.players.length }}</span>
+  <span class="maximum-number-of-players"> / {{ lobbyInfo.maxNumberOfPlayers }}</span>
 </div>

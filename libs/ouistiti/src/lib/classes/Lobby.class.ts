@@ -32,10 +32,10 @@ export class Lobby {
       passwordProtected: !!this.password,
       maxNumberOfPlayers: this.maxNumberOfPlayers,
       gameStatus: this.game.status,
-      playerNicknames: this.players.map(player => player.nickname),
-      hostNickname: this.host.nickname
+      players: this.players.map(player => player.getPlayerInfo()),
+      hostId: this.host.id
     };
-    if (this.game.status === GameStatus.IN_PROGRESS) {
+    if (this.game.status !== GameStatus.INIT) {
       lobbyInfo.currentRoundNumber = this.game.currentRound.roundNumber;
       lobbyInfo.totalRoundCount = this.game.totalRoundCount;
     }

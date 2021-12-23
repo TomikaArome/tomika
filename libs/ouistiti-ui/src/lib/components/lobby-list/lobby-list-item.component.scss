@@ -1,25 +1,18 @@
+@import "../../assets/ouistiti-theme";
+
 :host {
   --lobby-list-item-border-radius: 20px;
-
-  .player-colour-red { --player-colour-hue: 0; }
-  .player-colour-orange { --player-colour-hue: 30; }
-  .player-colour-yellow { --player-colour-hue: 60; }
-  .player-colour-green { --player-colour-hue: 120; }
-  .player-colour-aqua { --player-colour-hue: 180; }
-  .player-colour-blue { --player-colour-hue: 240; }
-  .player-colour-purple { --player-colour-hue: 280; }
-  .player-colour-pink { --player-colour-hue: 320; }
 
   position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   background-color: hsl(0,0%,10%);
-  padding: 20px 32px 20px 72px;
+  padding: 16px 32px 16px 72px;
   width: 400px;
   border-radius: var(--lobby-list-item-border-radius);
-  border: 2px solid hsla(0,0%,100%,0.05);
   overflow: hidden;
+  user-select: none;
 
   .host-colour {
     content: "";
@@ -49,27 +42,49 @@
   .nicknames {
     flex-grow: 1;
 
+    .password-protected {
+      vertical-align: -2px;
+      font-size: 0.8em;
+      color: hsl(60,80%,80%);
+    }
+
+    .joinable-tag {
+      display: inline-block;
+      font-size: 0.4em;
+      vertical-align: middle;
+      background-color: hsl(120,30%,50%);
+      color: hsl(0,0%,10%);
+      padding: 1px 4px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+
     .player-nicknames-row {
       color: hsl(0,0%,80%);
-      margin-top: 0.8em;
+      margin-top: 0.6em;
+
+      .no-other-players {
+        font-style: italic;
+      }
     }
   }
 
-  .players-count {
+  .players-and-rounds-count {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-weight: bold;
 
-    .background-icon {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%,-50%) scale(3);
-      color: hsla(0,0%,100%,0.1);
-    }
-    .actual-number-of-players {
+    .current-count {
       font-size: 2em;
     }
-    .maximum-number-of-players {
+    .maximum-count {
+      color: hsl(0,0%,80%);
+    }
+    .count-type-label {
+      font-size: 0.8em;
+      font-weight: normal;
       color: hsl(0,0%,80%);
     }
   }

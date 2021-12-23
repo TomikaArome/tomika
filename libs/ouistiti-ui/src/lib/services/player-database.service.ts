@@ -6,7 +6,7 @@ import { CLUB_ICON, DIAMOND_ICON, HEART_ICON, SPADE_ICON } from '../assets/icons
 
 @Injectable({ providedIn: 'root' })
 export class PlayerDatabaseService {
-  private players: PlayerInfo[];
+  private players: PlayerInfo[] = [];
 
   constructor(private iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     this.iconRegistry.addSvgIconLiteral('spade', sanitizer.bypassSecurityTrustHtml(SPADE_ICON));

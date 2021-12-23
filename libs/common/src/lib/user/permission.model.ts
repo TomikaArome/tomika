@@ -1,7 +1,6 @@
 export interface Permission {
-  label: string;
-  description?: string;
-  children?: Permission[];
+  readonly label: string;
+  readonly children?: Permission[];
 }
 
 interface PermissionArray {
@@ -23,7 +22,6 @@ export class PermissionHelper {
     const fullLabel = baseLabel + permission.label;
     this.savedPermissions[fullLabel] = permission;
     if (permission.children) {
-      permission.children = permission.children.sort((a, b) => a.label.localeCompare(b.label));
       permission.children.forEach(childPermission => {
         this.savePermission(childPermission, fullLabel + '.');
       });

@@ -33,12 +33,12 @@ describe('Permission', () => {
     expect(PermissionHelper.isAncestorOf(commentLabel, editInfoLabel)).toBeFalsy();
   });
 
-  it('should be able to simplify an array of permissions', () => {
+  it('should be able to simplify an array of permission-tree', () => {
     const originalArray = ['perm.admin.manage-users', 'perm.post', 'perm.admin'];
     expect(PermissionHelper.simplifyFullLabelsArray(originalArray)).toEqual(['perm.admin', 'perm.post']);
   });
 
-  it('should be able to check if a permission has been granted from an array of permissions', () => {
+  it('should be able to check if a permission has been granted from an array of permission-tree', () => {
     const editInfoLabel = 'perm.admin.manage-users.edit-info';
     const commentLabel = 'perm.post.comment';
     const rateLabel = 'perm.post.rate';

@@ -12,7 +12,7 @@ export const permissionTreeMock = {
           ]
         },
         { label: 'manage-groups' },
-        { label: 'manage-permissions' }
+        { label: 'manage-permission-tree' }
       ]
     },
     {

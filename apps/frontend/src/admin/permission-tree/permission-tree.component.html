@@ -1,0 +1,24 @@
+<mat-toolbar>
+  <div class="title">Permission tree</div>
+  <button mat-icon-button (click)="expandAll()">
+    <mat-icon>unfold_more</mat-icon>
+  </button>
+  <button mat-icon-button (click)="collapseAll()">
+    <mat-icon>unfold_less</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <mat-tree-node
+    *matTreeNodeDef="let node">
+    <div *ngIf="showExpandButton(node); else noExpandButton" matTreeNodeToggle
+      class="expand-button" [style.paddingLeft]="nodeIndent(node)">
+      <mat-icon>{{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+    </div>
+    <ng-template #noExpandButton>
+      <div [style.width]="nodeIndent(node)"></div>
+    </ng-template>
+    <div class="label">{{ node.permission.label }}</div>
+    <div class="description">{{ node.permission.description }}</div>
+  </mat-tree-node>
+</mat-tree>

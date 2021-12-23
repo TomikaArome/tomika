@@ -8,3 +8,6 @@ export * from './lib/enum/player-symbol.enum';
 // Interfaces
 export * from './lib/interfaces/lobby-info.interface';
 export * from './lib/interfaces/player-info.interface';
+
+// Mocks
+export * from './lib/mock/lobbies.mock';

@@ -1,11 +1,7 @@
-<!--<button (click)="connect()">-->
-<!--  Connect-->
-<!--</button>-->
+<h2>List of active lobbies</h2>
 
-<!--<button (click)="disconnect()">-->
-<!--  Disconnect-->
-<!--</button>-->
+<ng-container *ngFor="let lobbyInfo of lobbyList">
+  <tmk-ouistiti-lobby-list-item matRipple [matRippleColor]="'hsla(0,0%,100%,0.05)'" [lobbyInfo]="lobbyInfo"></tmk-ouistiti-lobby-list-item>
+</ng-container>
 
-<tmk-ouistiti-lobby-list-item
-  [lobbyInfo]="exampleItem">
-</tmk-ouistiti-lobby-list-item>
+<div matRipple [matRippleColor]="'hsla(0,0%,100%,0.05)'" class="create-lobby-button">Create new lobby</div>

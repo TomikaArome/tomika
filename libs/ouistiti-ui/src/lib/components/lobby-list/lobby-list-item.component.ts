@@ -28,8 +28,8 @@ export class LobbyListItemComponent {
     return this.otherPlayerNicknames().length === 0;
   }
 
-  isGameInProgress(): boolean {
-    return this.lobbyInfo.gameStatus === GameStatus.IN_PROGRESS;
+  isGameJoinable(): boolean {
+    return this.lobbyInfo.gameStatus === GameStatus.INIT && this.lobbyInfo.players.length < this.lobbyInfo.maxNumberOfPlayers;
   }
 
   showNumberOfRounds(): boolean {

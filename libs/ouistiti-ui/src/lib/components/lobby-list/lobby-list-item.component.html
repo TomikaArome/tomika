@@ -3,12 +3,16 @@
 <mat-icon class="player-symbol" [svgIcon]="getHostSymbolIconName()"></mat-icon>
 
 <div class="nicknames">
-  <h2>{{ host()?.nickname }}</h2>
+  <h2>
+    <mat-icon [inline]="true" class="password-protected" *ngIf="lobbyInfo.passwordProtected">lock</mat-icon>
+    {{ host()?.nickname }}
+    <div *ngIf="isGameJoinable()" class="joinable-tag">JOINABLE</div>
+  </h2>
 
   <div class="player-nicknames-row">
-    <ng-container *ngIf="noOtherPlayers(); else hasOtherPlayers">
+    <span class="no-other-players" *ngIf="noOtherPlayers(); else hasOtherPlayers">
       No other players yet
-    </ng-container>
+    </span>
     <ng-template #hasOtherPlayers>
       <ng-container *ngFor="let nickname of otherPlayerNicknames(); let last = last">
         {{ nickname + (last ? '' : ',') }}
@@ -17,8 +21,10 @@
   </div>
 </div>
 
-<div class="players-count">
-  <mat-icon class="background-icon">people</mat-icon>
-  <span class="actual-number-of-players">{{ lobbyInfo.players.length }}</span>
-  <span class="maximum-number-of-players"> / {{ lobbyInfo.maxNumberOfPlayers }}</span>
+<div class="players-and-rounds-count">
+  <div>
+    <span class="current-count">{{ showNumberOfRounds() ? lobbyInfo.currentRoundNumber : lobbyInfo.players.length }}</span>
+    <span class="maximum-count"> / {{ showNumberOfRounds() ? lobbyInfo.totalRoundCount : lobbyInfo.maxNumberOfPlayers }}</span>
+  </div>
+  <div class="count-type-label">{{ showNumberOfRounds() ? 'ROUNDS' : 'PLAYERS' }}</div>
 </div>

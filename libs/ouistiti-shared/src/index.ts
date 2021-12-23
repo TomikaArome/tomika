@@ -1,7 +1,10 @@
 // Enumerations
-export * from './lib/CardSuit.enum';
-export * from './lib/CardValue.enum';
-export * from './lib/GameStatus.enum';
+export * from './lib/enum/card-suit.enum';
+export * from './lib/enum/card-value.enum';
+export * from './lib/enum/game-status';
+export * from './lib/enum/player-colour.enum';
+export * from './lib/enum/player-symbol.enum';
 
 // Interfaces
-export * from './lib/LobbyInfo.interface';
+export * from './lib/interfaces/lobby-info.interface';
+export * from './lib/interfaces/player-info.interface';

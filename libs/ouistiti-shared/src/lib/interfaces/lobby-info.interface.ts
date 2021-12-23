@@ -1,11 +1,12 @@
-import { GameStatus } from './GameStatus.enum';
+import { GameStatus } from '../enum/game-status';
+import { PlayerInfo } from './player-info.interface';
 
 export interface LobbyInfo {
   passwordProtected: boolean;
   maxNumberOfPlayers: number;
   gameStatus: GameStatus;
-  playerNicknames: string[];
-  hostNickname: string;
+  players: PlayerInfo[];
+  hostId: string;
   currentRoundNumber?: number;
   totalRoundCount?: number;
 }

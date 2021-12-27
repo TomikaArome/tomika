@@ -1,7 +1,26 @@
 <h2>List of active lobbies</h2>
 
-<ng-container *ngFor="let lobbyInfo of lobbyList">
-  <tmk-ouistiti-lobby-list-item matRipple [matRippleColor]="'hsla(0,0%,100%,0.05)'" [lobbyInfo]="lobbyInfo"></tmk-ouistiti-lobby-list-item>
-</ng-container>
+<div *ngIf="isEmpty(); else lobbyListTemplate" class="no-lobbies">
+  No active lobbies yet
+  Why not create one!
+</div>
 
-<div matRipple [matRippleColor]="'hsla(0,0%,100%,0.05)'" class="create-lobby-button">Create new lobby</div>
+<ng-template #lobbyListTemplate>
+  <tmk-ouistiti-lobby-list-item
+    *ngFor="let lobbyInfo of lobbyList"
+    matRipple
+    [matRippleDisabled]="!isLobbyJoinable(lobbyInfo)"
+    [matRippleColor]="'hsla(0,0%,100%,0.05)'"
+    [ngClass]="{ 'joinable': isLobbyJoinable(lobbyInfo) }"
+    [lobbyInfo]="lobbyInfo"
+    (click)="clickLobby(lobbyInfo)">
+  </tmk-ouistiti-lobby-list-item>
+</ng-template>
+
+<div
+  class="create-lobby-button"
+  matRipple
+  [matRippleColor]="'hsla(0,0%,100%,0.05)'"
+  (click)="createLobby.emit()">
+  Create new lobby
+</div>

@@ -1,0 +1,6 @@
+<div
+  class="colour-option"
+  *ngFor="let colourKey of colours"
+  [ngClass]="colourClasses(colourKey)"
+  (click)="clickColour(colourKey)">
+</div>

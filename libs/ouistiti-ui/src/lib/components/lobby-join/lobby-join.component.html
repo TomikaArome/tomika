@@ -1,0 +1,29 @@
+<h2>{{ createMode ? 'Create' : 'Join' }} a lobby</h2>
+
+<tmk-ouistiti-lobby-list-item
+  *ngIf="lobby"
+  [lobbyInfo]="lobby">
+</tmk-ouistiti-lobby-list-item>
+
+<form class="lobby-join-settings" autocomplete="off">
+  <label>Nickname</label>
+  <input type="text">
+
+  <ng-container *ngIf="showPasswordField">
+    <label>Password</label>
+    <input type="text" [placeholder]="createMode ? 'Leave empty for no password' : ''">
+  </ng-container>
+
+  <label>Colour</label>
+  <tmk-ouistiti-colour-selector
+    [chosen]="selectedColour"
+    [taken]="takenColours"
+    (selected)="selectedColour = $event">
+  </tmk-ouistiti-colour-selector>
+
+  <label>Symbol</label>
+  <tmk-ouistiti-symbol-selector
+    [chosen]="selectedSymbol"
+    (selected)="selectedSymbol = $event">
+  </tmk-ouistiti-symbol-selector>
+</form>

@@ -2,6 +2,7 @@ import { Player } from './Player.class';
 import { Game } from './Game.class';
 import { Socket } from 'socket.io';
 import { GameStatus, LobbyInfo } from '@TomikaArome/ouistiti-shared';
+import { nanoid } from 'nanoid';
 
 export interface CreateLobbySettings {
   hostNickname: string;
@@ -10,12 +11,18 @@ export interface CreateLobbySettings {
 }
 
 export class Lobby {
+  id: string;
   players: Player[] = [];
   game: Game;
   host: Player;
   password: string;
 
   maxNumberOfPlayers: number;
+
+  constructor() {
+    this.id = nanoid();
+  }
+
 
   getPlayerFromId(playerId: string): Player {
     return this.players.find(player => player.id === playerId);
@@ -29,12 +36,15 @@ export class Lobby {
 
   getLobbyInfo(): LobbyInfo {
     const lobbyInfo: LobbyInfo = {
+      id: this.id,
       passwordProtected: !!this.password,
-      maxNumberOfPlayers: this.maxNumberOfPlayers,
       gameStatus: this.game.status,
       players: this.players.map(player => player.getPlayerInfo()),
       hostId: this.host.id
     };
+    if (this.game.status === GameStatus.INIT) {
+      lobbyInfo.maxNumberOfPlayers = this.maxNumberOfPlayers;
+    }
     if (this.game.status !== GameStatus.INIT) {
       lobbyInfo.currentRoundNumber = this.game.currentRound.roundNumber;
       lobbyInfo.totalRoundCount = this.game.totalRoundCount;

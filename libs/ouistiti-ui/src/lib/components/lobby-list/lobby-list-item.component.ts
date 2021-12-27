@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { GameStatus, LobbyInfo, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
-import { PlayerDatabaseService } from '../../services/player-database.service';
+import { GameStatus, LobbyInfo, PlayerInfo } from '@TomikaArome/ouistiti-shared';
+import { PlayerService } from '../../services/player.service';
+import { LobbyService } from '../../services/lobby.service';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-list-item',
@@ -11,16 +12,16 @@ export class LobbyListItemComponent {
   @Input()
   lobbyInfo: LobbyInfo;
 
-  constructor(private playerDatabaseService: PlayerDatabaseService) {}
+  constructor(private playerService: PlayerService) {}
 
   host(): PlayerInfo {
-    return this.lobbyInfo.players.find(player => player.id === this.lobbyInfo.hostId);
+    return this.playerService.getPlayer(this.lobbyInfo.hostId);
   }
 
   otherPlayerNicknames(): string[] {
     return this.lobbyInfo.players
-      .filter(player => this.host() !== player)
-      .map(player => player.nickname)
+      .filter(player => player.id !== this.lobbyInfo.hostId)
+      .map(player => this.playerService.getPlayer(player.id)?.nickname)
       .sort();
   }
 
@@ -28,8 +29,8 @@ export class LobbyListItemComponent {
     return this.otherPlayerNicknames().length === 0;
   }
 
-  isGameJoinable(): boolean {
-    return this.lobbyInfo.gameStatus === GameStatus.INIT && this.lobbyInfo.players.length < this.lobbyInfo.maxNumberOfPlayers;
+  isLobbyJoinable(): boolean {
+    return LobbyService.isLobbyJoinable(this.lobbyInfo);
   }
 
   showNumberOfRounds(): boolean {
@@ -37,10 +38,10 @@ export class LobbyListItemComponent {
   }
 
   getHostSymbolIconName(): string {
-    return this.playerDatabaseService.getSymbolIconName(this.host().symbol);
+    return PlayerService.getSymbolIconName(this.host().symbol);
   }
 
   getHostColourClassName(): string {
-    return this.playerDatabaseService.getColourClassName(this.host().colour);
+    return PlayerService.getColourClassName(this.host().colour);
   }
 }

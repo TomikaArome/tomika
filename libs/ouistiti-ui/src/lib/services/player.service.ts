@@ -5,8 +5,16 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { CLUB_ICON, DIAMOND_ICON, HEART_ICON, SPADE_ICON } from '../assets/icons';
 
 @Injectable({ providedIn: 'root' })
-export class PlayerDatabaseService {
+export class PlayerService {
   private players: PlayerInfo[] = [];
+
+  static getSymbolIconName(symbol: PlayerSymbol): string {
+    return symbol.toLowerCase();
+  }
+
+  static getColourClassName(colour: PlayerColour): string {
+    return `player-colour-${colour.toLowerCase()}`;
+  }
 
   constructor(private iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
     this.iconRegistry.addSvgIconLiteral('spade', sanitizer.bypassSecurityTrustHtml(SPADE_ICON));
@@ -16,7 +24,7 @@ export class PlayerDatabaseService {
   }
 
   getPlayer(playerId: string): PlayerInfo {
-    return this.players.find(player => player.id === playerId);
+    return this.players.find(player => player.id === playerId) ?? null;
   }
 
   isPlayerSaved(playerId: string): boolean {
@@ -29,28 +37,6 @@ export class PlayerDatabaseService {
       this.players[index] = playerInfo;
     } else {
       this.players.push(playerInfo);
-    }
-  }
-
-  getSymbolIconName(symbol: PlayerSymbol): string {
-    switch (symbol) {
-      case PlayerSymbol.SPADE: return 'spade';
-      case PlayerSymbol.HEART: return 'heart';
-      case PlayerSymbol.CLUB: return 'club';
-      case PlayerSymbol.DIAMOND: return 'diamond';
-    }
-  }
-
-  getColourClassName(colour: PlayerColour): string {
-    switch (colour) {
-      case PlayerColour.RED: return 'player-colour-red';
-      case PlayerColour.ORANGE: return 'player-colour-orange';
-      case PlayerColour.YELLOW: return 'player-colour-yellow';
-      case PlayerColour.GREEN: return 'player-colour-green';
-      case PlayerColour.AQUA: return 'player-colour-aqua';
-      case PlayerColour.BLUE: return 'player-colour-blue';
-      case PlayerColour.PURPLE: return 'player-colour-purple';
-      case PlayerColour.PINK: return 'player-colour-pink';
     }
   }
 }

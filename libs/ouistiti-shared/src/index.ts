@@ -1,7 +1,7 @@
 // Enumerations
 export * from './lib/enum/card-suit.enum';
 export * from './lib/enum/card-value.enum';
-export * from './lib/enum/game-status';
+export * from './lib/enum/game-status.enum';
 export * from './lib/enum/player-colour.enum';
 export * from './lib/enum/player-symbol.enum';
 

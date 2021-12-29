@@ -7,3 +7,16 @@ export interface PlayerInfo {
   colour: PlayerColour;
   symbol: PlayerSymbol;
 }
+
+export interface PlayerCreate {
+  nickname: string;
+  colour?: PlayerColour;
+  symbol?: PlayerSymbol;
+}
+
+export interface PlayerUpdate {
+  id: string;
+  nickname?: string;
+  colour?: PlayerColour;
+  symbol?: PlayerSymbol;
+}

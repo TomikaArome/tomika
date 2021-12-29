@@ -13,8 +13,6 @@ export class LobbyListComponent {
 
   @Output()
   selectLobby = new EventEmitter<LobbyInfo>();
-  @Output()
-  createLobby = new EventEmitter<void>();
 
   clickLobby(lobby: LobbyInfo) {
     if (this.isLobbyJoinable(lobby)) {

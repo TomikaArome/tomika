@@ -11,7 +11,7 @@ export class LandingScreenComponent {
   lobbyList$ = this.lobbyService.lobbyList$;
 
   private selectedLobbyId: string = null;
-  private createMode = false;
+  createMode = false;
 
   get selectedLobby(): LobbyInfo {
     return this.lobbyService.getLobbyById(this.selectedLobbyId);
@@ -30,6 +30,6 @@ export class LandingScreenComponent {
   }
 
   showLobbyJoin(): boolean {
-    return this.createMode || !!this.selectedLobbyId;
+    return !this.createMode && !!this.selectedLobbyId;
   }
 }

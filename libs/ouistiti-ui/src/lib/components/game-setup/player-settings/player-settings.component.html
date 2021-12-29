@@ -1,0 +1,11 @@
+<div class="form-grid" [formGroup]="form">
+  <label>Nickname</label>
+  <input type="text" formControlName="nickname">
+
+  <label>Colour</label>
+  <tmk-ouistiti-colour-selector [taken]="takenColours" formControlName="colour">
+  </tmk-ouistiti-colour-selector>
+
+  <label>Symbol</label>
+  <tmk-ouistiti-symbol-selector formControlName="symbol"></tmk-ouistiti-symbol-selector>
+</div>

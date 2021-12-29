@@ -21,5 +21,10 @@
     &.chosen {
       outline: 2px solid hsl(0,0%,100%);
     }
+
+    &.disabled {
+      opacity: 0.1;
+      cursor: initial;
+    }
   }
 }

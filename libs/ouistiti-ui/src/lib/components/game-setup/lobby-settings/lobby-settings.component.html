@@ -1,0 +1,13 @@
+<div class="form-grid" [formGroup]="form">
+  <label>Password</label>
+  <input
+    type="password"
+    autocomplete="off"
+    formControlName="password"
+    placeholder="Leave blank for no password">
+
+  <label>Max players</label>
+  <select>
+    <option *ngFor="let i of maxNumberOfPlayersValues">{{ i }}</option>
+  </select>
+</div>

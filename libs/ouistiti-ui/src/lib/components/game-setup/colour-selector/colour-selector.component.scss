@@ -12,7 +12,7 @@
     border-radius: 0.5em;
     cursor: pointer;
 
-    &.chosen:not(.taken) {
+    &.chosen {
       outline: 2px solid hsl(0,0%,100%);
     }
 

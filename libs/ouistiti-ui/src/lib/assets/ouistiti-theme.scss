@@ -1,8 +1,62 @@
-.player-colour-red { --player-colour-hue: 0; }
-.player-colour-orange { --player-colour-hue: 30; }
-.player-colour-yellow { --player-colour-hue: 60; }
-.player-colour-green { --player-colour-hue: 120; }
-.player-colour-aqua { --player-colour-hue: 180; }
-.player-colour-blue { --player-colour-hue: 240; }
-.player-colour-purple { --player-colour-hue: 280; }
-.player-colour-pink { --player-colour-hue: 320; }
+:host {
+  .player-colour-red { --player-colour-hue: 0; }
+  .player-colour-orange { --player-colour-hue: 30; }
+  .player-colour-yellow { --player-colour-hue: 60; }
+  .player-colour-green { --player-colour-hue: 120; }
+  .player-colour-aqua { --player-colour-hue: 180; }
+  .player-colour-blue { --player-colour-hue: 240; }
+  .player-colour-purple { --player-colour-hue: 280; }
+  .player-colour-pink { --player-colour-hue: 320; }
+
+  .form-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    align-items: center;
+    gap: 8px;
+
+    label {
+      color: hsl(0, 0%, 80%);
+      font-weight: bold;
+      padding-right: 1em;
+      outline: none;
+    }
+
+    input, select {
+      background-color: hsla(0, 0%, 100%, 0.05);
+      padding: 8px 16px;
+      border-radius: 0.5em;
+      border: 1px solid hsla(0, 0%, 100%, 0.1);
+      transition: border-color 100ms;
+      color: inherit;
+    }
+
+    input:focus-visible {
+      outline: none;
+      border-color: hsla(0, 0%, 100%, 0.3);
+    }
+
+    hr {
+      grid-column: 1 / -1;
+      width: calc(100% - 40px);
+      padding: 0 20px;
+      margin: 8px 20px;
+      border: none;
+      border-top: 1px solid hsla(0, 0%, 100%, 0.1);
+
+      &:first-child {
+        margin-top: 16px;
+      }
+      &:last-child {
+        margin-bottom: 16px;
+      }
+    }
+
+    .info-row {
+      grid-column: 1 / -1;
+      font-size: 0.9em;
+      color: hsl(0,0%,60%);
+      font-style: italic;
+    }
+  }
+}

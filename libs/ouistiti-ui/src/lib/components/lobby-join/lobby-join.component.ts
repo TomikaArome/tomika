@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { LobbyInfo, PlayerColour, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, PlayerColour } from '@TomikaArome/ouistiti-shared';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-join',
@@ -12,22 +13,16 @@ export class LobbyJoinComponent {
   get lobby(): LobbyInfo { return this._lobby; }
   set lobby(value: LobbyInfo) {
     this._lobby = value;
-    this.selectedColour = null;
-    this.selectedSymbol = null;
+    this.form.reset();
   }
 
-  selectedColour: PlayerColour = null;
-  selectedSymbol: PlayerSymbol = null;
-
-  get createMode(): boolean {
-    return !this.lobby;
-  }
+  form = new FormControl({});
 
   get showPasswordField(): boolean {
-    return this.createMode || this.lobby.passwordProtected;
+    return this.lobby.passwordProtected;
   }
 
   get takenColours(): PlayerColour[] {
-    return this.createMode ? [] : this.lobby.players.map(player => player.colour);
+    return this.lobby.players.map(player => player.colour);
   }
 }

@@ -1,6 +1,5 @@
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { PlayerSettingsComponent } from '../player-settings/player-settings.component';
 import { LobbyCreate } from '@TomikaArome/ouistiti-shared';
 
 @Component({
@@ -11,7 +10,7 @@ import { LobbyCreate } from '@TomikaArome/ouistiti-shared';
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: forwardRef(() => PlayerSettingsComponent),
+      useExisting: forwardRef(() => LobbySettingsComponent),
     }
   ]
 })
@@ -21,7 +20,8 @@ export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
 
   maxNumberOfPlayersValues = [...Array(6).keys()].map(x => x + 3);
   form = new FormGroup({
-    password: new FormControl('')
+    password: new FormControl(''),
+    maxNumberOfPlayers: new FormControl(8)
   });
   private formSubscription = this.form.valueChanges.subscribe((value) => {
     this.onChange(value);

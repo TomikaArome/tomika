@@ -23,7 +23,7 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
   disabled = false;
 
   form = new FormGroup({
-    nickname: new FormControl(''),
+    nickname: new FormControl('fasdf'),
     colour: new FormControl(null),
     symbol: new FormControl(null)
   });

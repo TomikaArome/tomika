@@ -4,7 +4,10 @@ import { OuistitiService } from './ouistiti.service';
 
 @Module({
   controllers: [],
-  providers: [OuistitiGateway, OuistitiService],
+  providers: [
+    OuistitiGateway,
+    OuistitiService
+  ],
   exports: [],
 })
 export class OuistitiModule {}

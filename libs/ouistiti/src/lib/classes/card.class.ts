@@ -1,4 +1,4 @@
-import { Player } from './Player.class';
+import { Player } from './player.class';
 import { CardSuit } from '@TomikaArome/ouistiti-shared';
 import { CardValue } from '@TomikaArome/ouistiti-shared';
 

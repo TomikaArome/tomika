@@ -1,6 +1,9 @@
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { OuistitiService } from './ouistiti.service';
+import { LobbyCreate } from '@TomikaArome/ouistiti-shared';
+import { UseFilters } from '@nestjs/common';
+import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
 
 @WebSocketGateway({
   namespace: 'ouistiti',
@@ -11,13 +14,7 @@ import { OuistitiService } from './ouistiti.service';
   }
 })
 export class OuistitiGateway implements OnGatewayConnection {
-
   constructor(private ouistitiService: OuistitiService) {}
-
-  @SubscribeMessage('createLobby')
-  handleMessage(clientSocket: Socket, payload: string) {
-    console.log(payload);
-  }
 
   handleConnection(socket: Socket) {
     console.log(`Client connected: ${socket.id}`);
@@ -29,4 +26,9 @@ export class OuistitiGateway implements OnGatewayConnection {
     console.log(`Client disconnected: ${socket.id} Reason: ${reason}`);
   }
 
+  @UseFilters(new OuistitiExceptionFilter('createLobby'))
+  @SubscribeMessage('createLobby')
+  createLobby(clientSocket: Socket, payload: LobbyCreate) {
+    this.ouistitiService.createLobbyWithNewGame(clientSocket, payload);
+  }
 }

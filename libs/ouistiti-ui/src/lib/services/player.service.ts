@@ -1,11 +1,22 @@
 import { Injectable } from '@angular/core';
-import { PlayerColour, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
+import { PlayerColour, PlayerInfo, PlayerSymbol, SocketStatus } from '@TomikaArome/ouistiti-shared';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CLUB_ICON, DIAMOND_ICON, HEART_ICON, SPADE_ICON } from '../assets/icons';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { SocketService } from './socket.service';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
+  currentPlayerInLobby$: Observable<boolean> = this.socketService.socketStatus$.pipe(
+    map((status: SocketStatus) => status.inLobby)
+  );
+
+  currentPlayer$: Observable<PlayerInfo> = this.socketService.socketStatus$.pipe(
+    map((status: SocketStatus) => this.getPlayer(status.playerId))
+  );
+
   private players: PlayerInfo[] = [];
 
   static getSymbolIconName(symbol: PlayerSymbol): string {
@@ -16,11 +27,17 @@ export class PlayerService {
     return `player-colour-${colour.toLowerCase()}`;
   }
 
-  constructor(private iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    this.iconRegistry.addSvgIconLiteral('spade', sanitizer.bypassSecurityTrustHtml(SPADE_ICON));
-    this.iconRegistry.addSvgIconLiteral('heart', sanitizer.bypassSecurityTrustHtml(HEART_ICON));
-    this.iconRegistry.addSvgIconLiteral('club', sanitizer.bypassSecurityTrustHtml(CLUB_ICON));
-    this.iconRegistry.addSvgIconLiteral('diamond', sanitizer.bypassSecurityTrustHtml(DIAMOND_ICON));
+  constructor(private socketService: SocketService,
+              private iconRegistry: MatIconRegistry,
+              private sanitizer: DomSanitizer) {
+    this.registerIcons();
+  }
+
+  registerIcons() {
+    this.iconRegistry.addSvgIconLiteral('spade', this.sanitizer.bypassSecurityTrustHtml(SPADE_ICON));
+    this.iconRegistry.addSvgIconLiteral('heart', this.sanitizer.bypassSecurityTrustHtml(HEART_ICON));
+    this.iconRegistry.addSvgIconLiteral('club', this.sanitizer.bypassSecurityTrustHtml(CLUB_ICON));
+    this.iconRegistry.addSvgIconLiteral('diamond', this.sanitizer.bypassSecurityTrustHtml(DIAMOND_ICON));
   }
 
   getPlayer(playerId: string): PlayerInfo {

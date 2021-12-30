@@ -6,6 +6,7 @@ export interface PlayerInfo {
   nickname: string;
   colour: PlayerColour;
   symbol: PlayerSymbol;
+  vacant: boolean;
 }
 
 export interface PlayerCreate {

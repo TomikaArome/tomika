@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
-import { Round } from './Round.class';
-import { Lobby } from './Lobby.class';
-import { Player } from './Player.class';
+import { Round } from './round.class';
+import { Lobby } from './lobby.class';
+import { Player } from './player.class';
 import { GameStatus } from '@TomikaArome/ouistiti-shared';
 
 
@@ -18,13 +18,17 @@ export class Game {
     if (existingId) {
       this.loadExistingGame(existingId);
     } else {
-      this.id = 'ouistiti-game-' + nanoid();
-      this.newRound();
+      this.id = nanoid();
+      // this.newRound();
     }
   }
 
   get currentRound(): Round {
     return this.rounds[this.rounds.length - 1] ?? null;
+  }
+
+  get currentRoundNumber(): number {
+    return this.currentRound?.roundNumber ?? 1;
   }
 
   get totalRoundCount(): number {

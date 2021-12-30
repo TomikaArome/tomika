@@ -1,6 +1,6 @@
-import { Turn } from './Turn.class';
-import { Card } from './Card.class';
-import { Game } from './Game.class';
+import { Turn } from './turn.class';
+import { Card } from './card.class';
+import { Game } from './game.class';
 
 export enum RoundStage {
   ASC, NO_TRUMPS, DESC

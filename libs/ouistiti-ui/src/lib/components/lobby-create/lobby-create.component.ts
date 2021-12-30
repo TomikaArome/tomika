@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { LobbyService } from '../../services/lobby.service';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-create',
@@ -11,4 +12,17 @@ export class LobbyCreateComponent {
     playerSettings: new FormControl(null),
     lobbySettings: new FormControl(null)
   });
+
+  constructor(private lobbyService: LobbyService) {
+  }
+
+  create() {
+    if (this.form.valid) {
+      const params = {
+        host: this.form.value.playerSettings,
+        ...this.form.value.lobbySettings
+      };
+      this.lobbyService.createLobby(params);
+    }
+  }
 }

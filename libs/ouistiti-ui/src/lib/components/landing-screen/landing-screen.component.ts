@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LobbyService } from '../../services/lobby.service';
 import { LobbyInfo } from '@TomikaArome/ouistiti-shared';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'tmk-ouistiti-landing-screen',
@@ -10,6 +11,8 @@ import { LobbyInfo } from '@TomikaArome/ouistiti-shared';
 export class LandingScreenComponent {
   lobbyList$ = this.lobbyService.lobbyList$;
 
+  socketStatus$ = this.socketService.socketStatus$;
+
   private selectedLobbyId: string = null;
   createMode = false;
 
@@ -17,7 +20,8 @@ export class LandingScreenComponent {
     return this.lobbyService.getLobbyById(this.selectedLobbyId);
   }
 
-  constructor(private lobbyService: LobbyService) {}
+  constructor(private lobbyService: LobbyService,
+              private socketService: SocketService) {}
 
   selectLobby(lobby: LobbyInfo) {
     this.createMode = false;

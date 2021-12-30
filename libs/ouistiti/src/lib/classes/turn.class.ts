@@ -1,6 +1,6 @@
-import { Card } from './Card.class';
-import { Player } from './Player.class';
-import { Round } from './Round.class';
+import { Card } from './card.class';
+import { Player } from './player.class';
+import { Round } from './round.class';
 import { CardSuit } from '@TomikaArome/ouistiti-shared';
 
 export class Turn {

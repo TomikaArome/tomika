@@ -21,6 +21,6 @@ import { CardsTestComponent } from '../cards-test/cards-test.component';
     AdminPanelModule,
     BrowserAnimationsModule
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { BehaviorSubject } from 'rxjs';
-import { LobbyInfo } from '@TomikaArome/ouistiti-shared';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { LobbyInfo, OuistitiError, SocketStatus } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
@@ -9,8 +9,23 @@ export class SocketService {
 
   private socketDisconnected$: BehaviorSubject<boolean>;
 
+  private errorSource = new Subject<OuistitiError>();
+  error$ = this.errorSource.asObservable();
+
+  private socketStatusSource = new BehaviorSubject<SocketStatus>({ inLobby: false });
+  socketStatus$ = this.socketStatusSource.asObservable();
+
   private listLobbiesSource = new BehaviorSubject<LobbyInfo[]>([]);
   listLobbies$ = this.listLobbiesSource.asObservable();
+
+  private createLobbySource = new Subject<LobbyInfo>();
+  createLobby$ = this.createLobbySource.asObservable();
+
+  constructor() {
+    this.error$.subscribe(error => {
+      console.log(error);
+    });
+  }
 
   connect() {
     console.log('Connect');
@@ -20,12 +35,13 @@ export class SocketService {
   }
 
   private subscribeEvents() {
-    this.subscribeEvent('listLobbies');
+    const eventNames = ['error', 'socketStatus', 'listLobbies', 'createLobby'];
+    eventNames.forEach(eventName => this.subscribeEvent(eventName));
   }
 
   private subscribeEvent(eventName: string) {
     this.socket.on(eventName, (payload) => {
-      (this[`${eventName}Source`] as BehaviorSubject<any>).next(payload);
+      (this[`${eventName}Source`] as Subject<unknown>).next(payload);
     });
   }
 
@@ -34,5 +50,9 @@ export class SocketService {
     this.socketDisconnected$.next(true);
     this.socketDisconnected$.complete();
     this.socket.disconnect();
+  }
+
+  emitEvent(eventType: string, payload?: unknown) {
+    this.socket.emit(eventType, payload);
   }
 }

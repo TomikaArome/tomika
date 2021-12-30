@@ -7,7 +7,7 @@
     placeholder="Leave blank for no password">
 
   <label>Max players</label>
-  <select>
-    <option *ngFor="let i of maxNumberOfPlayersValues">{{ i }}</option>
+  <select formControlName="maxNumberOfPlayers">
+    <option *ngFor="let i of maxNumberOfPlayersValues" [value]="i">{{ i }}</option>
   </select>
 </div>

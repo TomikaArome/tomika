@@ -1,6 +1,6 @@
-import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid';
 import { Socket } from 'socket.io';
-import { PlayerColour, PlayerCreate, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
+import { OuistitiErrorType, PlayerColour, PlayerCreate, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
 import { OuistitiException } from './ouistiti-exception.class';
 
 export class Player {
@@ -12,6 +12,13 @@ export class Player {
 
   static createNewPlayer(socket: Socket, params: PlayerCreate): Player {
     OuistitiException.checkRequiredParams(params, ['nickname']);
+    if (params.nickname.length > 20) {
+      throw new OuistitiException(OuistitiErrorType.STRING_TOO_LONG, {
+        param: 'nickname',
+        value: params.nickname,
+        maxLength: 20
+      });
+    }
 
     const player = new Player(socket);
 

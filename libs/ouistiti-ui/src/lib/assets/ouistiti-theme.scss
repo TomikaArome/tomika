@@ -60,10 +60,25 @@
     }
 
     .buttons-row {
-      grid-column: 2 / -1;
+      grid-column: 1 / -1;
       display: flex;
-      justify-self: end;
+      flex-direction: row-reverse;
+      align-items: center;
       gap: 8px;
+
+      .error {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        color: hsl(0,50%,50%);
+        font-size: 0.9em;
+        padding: 0 1em;
+
+        mat-icon {
+          margin-right: 0.3em;
+          font-size: 1.5em;
+        }
+      }
 
       button {
         --button-hue: 0;

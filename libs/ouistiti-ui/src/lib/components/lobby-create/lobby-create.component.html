@@ -15,6 +15,10 @@
       <button class="button-colour-green" (click)="create()">
         Create lobby
       </button>
+
+      <div class="error" *ngIf="(nicknameTooLongError$ | async) as nicknameTooLongError">
+        <mat-icon [inline]="true">error</mat-icon>{{ nicknameTooLongError }}
+      </div>
     </div>
   </div>
 </form>

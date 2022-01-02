@@ -1,6 +1,13 @@
 import { nanoid } from 'nanoid';
 import { Socket } from 'socket.io';
-import { OuistitiErrorType, PlayerColour, PlayerCreate, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
+import {
+  NICKNAME_MAX_LENGTH,
+  OuistitiErrorType,
+  PlayerColour,
+  PlayerCreate,
+  PlayerInfo,
+  PlayerSymbol
+} from '@TomikaArome/ouistiti-shared';
 import { OuistitiException } from './ouistiti-exception.class';
 
 export class Player {
@@ -10,14 +17,27 @@ export class Player {
   symbol: PlayerSymbol;
   socket: Socket;
 
+  get info(): PlayerInfo {
+    return {
+      id: this.id,
+      nickname: this.nickname,
+      colour: this.colour,
+      symbol: this.symbol,
+      vacant: this.isVacant()
+    }
+  }
+
   static createNewPlayer(socket: Socket, params: PlayerCreate): Player {
     OuistitiException.checkRequiredParams(params, ['nickname']);
-    if (params.nickname.length > 20) {
-      throw new OuistitiException(OuistitiErrorType.STRING_TOO_LONG, {
+    if (params.nickname.length > NICKNAME_MAX_LENGTH) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.STRING_TOO_LONG,
         param: 'nickname',
-        value: params.nickname,
-        requiredLength: 20,
-        actualLength: params.nickname.length
+        detail: {
+          value: params.nickname,
+          requiredLength: NICKNAME_MAX_LENGTH,
+          actualLength: params.nickname.length
+        }
       });
     }
 
@@ -47,16 +67,6 @@ export class Player {
 
   isVacant(): boolean {
     return !this.socket?.connected;
-  }
-
-  getPlayerInfo(): PlayerInfo {
-    return {
-      id: this.id,
-      nickname: this.nickname,
-      colour: this.colour,
-      symbol: this.symbol,
-      vacant: this.isVacant()
-    }
   }
 
   emit(eventName: string, payload?: unknown) {

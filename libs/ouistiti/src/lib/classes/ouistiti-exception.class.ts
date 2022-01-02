@@ -3,9 +3,10 @@ import { WsException } from '@nestjs/websockets';
 
 export class OuistitiException extends WsException {
   static requiredParam(requiredParamKey: string): OuistitiException {
-    return new OuistitiException(
-      OuistitiErrorType.REQUIRED_PARAM,
-      `Missing required parameter: ${requiredParamKey}`);
+    return new OuistitiException({
+      type: OuistitiErrorType.REQUIRED_PARAM,
+      param: requiredParamKey
+    });
   }
 
   static checkRequiredParams(obj: unknown, keys: string[]) {
@@ -18,11 +19,11 @@ export class OuistitiException extends WsException {
     });
   }
 
-  constructor(type: OuistitiErrorType, detail?: unknown) {
-    super({ type, detail });
+  constructor(error: OuistitiError) {
+    super(error);
   }
 
-  getError(): Partial<OuistitiError> {
-    return super.getError() as Partial<OuistitiError>;
+  getError(): OuistitiError {
+    return super.getError() as OuistitiError;
   }
 }

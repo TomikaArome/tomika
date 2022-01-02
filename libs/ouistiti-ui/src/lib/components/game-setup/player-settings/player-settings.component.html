@@ -3,8 +3,8 @@
   <input
     type="text"
     formControlName="nickname"
-    maxlength="20"
-    [ngClass]="{ error: nicknameControl.invalid && (nicknameControl.touched) }"
+    [maxlength]="nicknameMaxLength"
+    [ngClass]="{ error: nicknameControl.invalid && nicknameControl.touched }"
     (blur)="forceOnChange()">
 
   <label>Colour</label>

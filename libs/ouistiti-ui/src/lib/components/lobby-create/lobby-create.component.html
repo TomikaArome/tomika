@@ -12,7 +12,7 @@
   <div class="form-grid">
     <hr>
     <div class="buttons-row">
-      <button class="button-colour-green" (click)="create()">
+      <button class="button-colour-green" (click)="create()" [disabled]="form.invalid">
         Create lobby
       </button>
 

@@ -1,6 +1,14 @@
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { PlayerColour, PlayerCreate } from '@TomikaArome/ouistiti-shared';
-import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR, ValidationErrors,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'tmk-ouistiti-player-settings',
@@ -11,6 +19,11 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from 
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: forwardRef(() => PlayerSettingsComponent),
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => PlayerSettingsComponent),
+      multi: true
     }
   ]
 })
@@ -23,7 +36,15 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
   disabled = false;
 
   form = new FormGroup({
-    nickname: new FormControl('fasdf'),
+    nickname: new FormControl('', [
+      Validators.required,
+      (control: AbstractControl) => {
+        if (this.takenNicknames.indexOf(control.value) > -1) {
+          return { 'taken': { takenNicknames: this.takenNicknames } };
+        }
+        return null;
+      }
+    ]),
     colour: new FormControl(null),
     symbol: new FormControl(null)
   });
@@ -31,6 +52,8 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
     this.onChange(value);
     this.onTouch();
   });
+
+  get nicknameControl(): AbstractControl { return this.form.get('nickname'); }
 
   get value(): Partial<PlayerCreate> {
     return this.form.value;
@@ -76,6 +99,23 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  validate(): ValidationErrors | null {
+    let invalid = false;
+    const errors = Object.keys(this.nicknameControl.errors ?? {}).reduce((renamedErrors, currentKey) => {
+      if (currentKey !== 'required' || this.nicknameControl.touched) {
+        invalid = true;
+        renamedErrors[`nickname${currentKey.charAt(0).toUpperCase()}${currentKey.slice(1)}`] = this.nicknameControl.errors[currentKey];
+      }
+      return renamedErrors;
+    }, {});
+    return invalid ? errors : null;
+  }
+
+  forceOnChange() {
+    this.onTouch();
+    this.onChange(this.form.value);
   }
 
   ngOnDestroy() {

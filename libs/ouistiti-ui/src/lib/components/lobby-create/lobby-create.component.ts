@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { LobbyService } from '../../services/lobby.service';
-import { SocketService } from '../../services/socket.service';
-import { filter, map } from 'rxjs/operators';
-import { OuistitiError, OuistitiErrorType } from '@TomikaArome/ouistiti-shared';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-create',
@@ -17,18 +13,16 @@ export class LobbyCreateComponent {
     lobbySettings: new FormControl(null)
   });
 
-  nicknameTooLongError$: Observable<string> = this.socketService.error$.pipe(
-    filter((error: OuistitiError) => {
-      return error.caller === 'createLobby' && error.type === OuistitiErrorType.STRING_TOO_LONG
-        && error.detail.param === 'nickname';
-    }),
-    map((error: OuistitiError) => {
-      return `Nickname should be maximum ${error.detail.maxLength} characters`;
-    })
-  );
+  get errorMessage(): string {
+    const errors: ValidationErrors = this.form.get('playerSettings').errors ?? {};
+    // console.log(errors);
+    if (errors.nicknameRequired) {
+      return 'The nickname is required';
+    }
+    return '';
+  }
 
-  constructor(private lobbyService: LobbyService,
-              private socketService: SocketService) {}
+  constructor(private lobbyService: LobbyService) {}
 
   create() {
     if (this.form.valid) {

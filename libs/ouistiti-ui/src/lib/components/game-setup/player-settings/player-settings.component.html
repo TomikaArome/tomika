@@ -1,6 +1,11 @@
 <div class="form-grid" [formGroup]="form">
   <label>Nickname</label>
-  <input type="text" formControlName="nickname">
+  <input
+    type="text"
+    formControlName="nickname"
+    maxlength="20"
+    [ngClass]="{ error: nicknameControl.invalid && (nicknameControl.touched) }"
+    (blur)="forceOnChange()">
 
   <label>Colour</label>
   <tmk-ouistiti-colour-selector [taken]="takenColours" formControlName="colour">

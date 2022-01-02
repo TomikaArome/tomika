@@ -16,8 +16,8 @@
         Create lobby
       </button>
 
-      <div class="error" *ngIf="(nicknameTooLongError$ | async) as nicknameTooLongError">
-        <mat-icon [inline]="true">error</mat-icon>{{ nicknameTooLongError }}
+      <div class="error" *ngIf="form.touched && form.invalid && errorMessage">
+        <mat-icon [inline]="true">error</mat-icon>{{ errorMessage }}
       </div>
     </div>
   </div>

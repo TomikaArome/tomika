@@ -30,11 +30,15 @@
       border: 1px solid hsla(0, 0%, 100%, 0.1);
       transition: border-color 100ms;
       color: inherit;
-    }
 
-    input:focus-visible {
-      outline: none;
-      border-color: hsla(0, 0%, 100%, 0.3);
+      &:focus-visible {
+        outline: none;
+        border-color: hsla(0, 0%, 100%, 0.3);
+      }
+
+      &.error {
+        border-color: hsla(0,50%,50%,0.5);
+      }
     }
 
     hr {

@@ -16,7 +16,8 @@ export class Player {
       throw new OuistitiException(OuistitiErrorType.STRING_TOO_LONG, {
         param: 'nickname',
         value: params.nickname,
-        maxLength: 20
+        requiredLength: 20,
+        actualLength: params.nickname.length
       });
     }
 

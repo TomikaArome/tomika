@@ -22,6 +22,7 @@ export class Lobby {
     lobby.players.push(hostPlayer);
     lobby.host = hostPlayer;
     lobby.maxNumberOfPlayers = params.maxNumberOfPlayers;
+    lobby.password = params.password;
     lobby.game = new Game(lobby);
 
     return lobby;

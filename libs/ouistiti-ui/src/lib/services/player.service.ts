@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PlayerColour, PlayerInfo, PlayerSymbol, SocketStatus } from '@TomikaArome/ouistiti-shared';
+import { LobbyStatus, PlayerColour, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CLUB_ICON, DIAMOND_ICON, HEART_ICON, SPADE_ICON } from '../assets/icons';
@@ -9,12 +9,12 @@ import { SocketService } from './socket.service';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
-  currentPlayerInLobby$: Observable<boolean> = this.socketService.socketStatus$.pipe(
-    map((status: SocketStatus) => status.inLobby)
+  currentPlayerInLobby$: Observable<boolean> = this.socketService.lobbyStatus$.pipe(
+    map((status: LobbyStatus) => status.inLobby)
   );
 
-  currentPlayer$: Observable<PlayerInfo> = this.socketService.socketStatus$.pipe(
-    map((status: SocketStatus) => this.getPlayer(status.playerId))
+  currentPlayer$: Observable<PlayerInfo> = this.socketService.lobbyStatus$.pipe(
+    map((status: LobbyStatus) => this.getPlayer(status.playerId))
   );
 
   private players: PlayerInfo[] = [];

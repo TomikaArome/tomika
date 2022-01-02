@@ -1,12 +1,13 @@
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
-import { PlayerColour, PlayerCreate } from '@TomikaArome/ouistiti-shared';
+import { NICKNAME_MAX_LENGTH, PlayerColour, PlayerCreate } from '@TomikaArome/ouistiti-shared';
 import {
   AbstractControl,
   ControlValueAccessor,
   FormControl,
   FormGroup,
   NG_VALIDATORS,
-  NG_VALUE_ACCESSOR, ValidationErrors,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
   Validators
 } from '@angular/forms';
 
@@ -52,6 +53,8 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
     this.onChange(value);
     this.onTouch();
   });
+
+  readonly nicknameMaxLength = NICKNAME_MAX_LENGTH;
 
   get nicknameControl(): AbstractControl { return this.form.get('nickname'); }
 
@@ -102,15 +105,15 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
   }
 
   validate(): ValidationErrors | null {
-    let invalid = false;
-    const errors = Object.keys(this.nicknameControl.errors ?? {}).reduce((renamedErrors, currentKey) => {
-      if (currentKey !== 'required' || this.nicknameControl.touched) {
-        invalid = true;
-        renamedErrors[`nickname${currentKey.charAt(0).toUpperCase()}${currentKey.slice(1)}`] = this.nicknameControl.errors[currentKey];
-      }
-      return renamedErrors;
-    }, {});
-    return invalid ? errors : null;
+    if (this.form.valid) { return null; }
+    const errors: { [i: string]: unknown } = {};
+    if (this.nicknameControl.errors.required) {
+      errors.nicknameRequired = { touched: this.nicknameControl.touched };
+    }
+    if (this.nicknameControl.errors.taken) {
+      errors.nicknameTaken = this.nicknameControl.errors.taken;
+    }
+    return errors;
   }
 
   forceOnChange() {

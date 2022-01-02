@@ -1,6 +1,10 @@
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { LobbyCreate } from '@TomikaArome/ouistiti-shared';
+import {
+  LobbyCreate,
+  MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
+  MIN_NUMBER_OF_PLAYERS_PER_LOBBY
+} from '@TomikaArome/ouistiti-shared';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-settings',
@@ -18,7 +22,8 @@ export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
   @Input()
   disabled = false;
 
-  maxNumberOfPlayersValues = [...Array(6).keys()].map(x => x + 3);
+  maxNumberOfPlayersValues = [...Array(MAX_NUMBER_OF_PLAYERS_PER_LOBBY - MIN_NUMBER_OF_PLAYERS_PER_LOBBY + 1).keys()]
+    .map(x => x + MIN_NUMBER_OF_PLAYERS_PER_LOBBY);
   form = new FormGroup({
     password: new FormControl(''),
     maxNumberOfPlayers: new FormControl(8)

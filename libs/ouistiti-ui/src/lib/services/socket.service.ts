@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LobbyInfo, OuistitiError, SocketStatus } from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, OuistitiError, LobbyStatus } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
@@ -12,8 +12,8 @@ export class SocketService {
   private errorSource = new Subject<OuistitiError>();
   error$ = this.errorSource.asObservable();
 
-  private socketStatusSource = new BehaviorSubject<SocketStatus>({ inLobby: false });
-  socketStatus$ = this.socketStatusSource.asObservable();
+  private lobbyStatusSource = new BehaviorSubject<LobbyStatus>({ inLobby: false });
+  lobbyStatus$ = this.lobbyStatusSource.asObservable();
 
   private listLobbiesSource = new BehaviorSubject<LobbyInfo[]>([]);
   listLobbies$ = this.listLobbiesSource.asObservable();
@@ -35,7 +35,7 @@ export class SocketService {
   }
 
   private subscribeEvents() {
-    const eventNames = ['error', 'socketStatus', 'listLobbies', 'createLobby'];
+    const eventNames = ['error', 'lobbyStatus', 'listLobbies', 'createLobby'];
     eventNames.forEach(eventName => this.subscribeEvent(eventName));
   }
 

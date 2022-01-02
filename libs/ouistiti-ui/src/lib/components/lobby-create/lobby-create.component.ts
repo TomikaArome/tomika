@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { LobbyService } from '../../services/lobby.service';
+import { LobbyCreate } from '@TomikaArome/ouistiti-shared';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-create',
@@ -15,8 +16,7 @@ export class LobbyCreateComponent {
 
   get errorMessage(): string {
     const errors: ValidationErrors = this.form.get('playerSettings').errors ?? {};
-    // console.log(errors);
-    if (errors.nicknameRequired) {
+    if (errors.nicknameRequired?.touched) {
       return 'The nickname is required';
     }
     return '';
@@ -26,7 +26,7 @@ export class LobbyCreateComponent {
 
   create() {
     if (this.form.valid) {
-      const params = {
+      const params: LobbyCreate = {
         host: this.form.value.playerSettings,
         ...this.form.value.lobbySettings
       };

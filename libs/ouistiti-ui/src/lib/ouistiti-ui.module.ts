@@ -12,6 +12,7 @@ import { LobbyCreateComponent } from './components/lobby-create/lobby-create.com
 import { LobbyJoinComponent } from './components/lobby-join/lobby-join.component';
 import { LobbyListComponent } from './components/lobby-list/lobby-list.component';
 import { LobbyListItemComponent } from './components/lobby-list/lobby-list-item.component';
+import { LobbyScreenComponent } from './components/lobby-screen/lobby-screen.component';
 import { LobbySettingsComponent } from './components/game-setup/lobby-settings/lobby-settings.component';
 import { PlayerSettingsComponent } from './components/game-setup/player-settings/player-settings.component';
 import { SymbolSelectorComponent } from './components/game-setup/symbol-selector/symbol-selector.component';
@@ -31,6 +32,7 @@ import { SymbolSelectorComponent } from './components/game-setup/symbol-selector
     LobbyJoinComponent,
     LobbyListComponent,
     LobbyListItemComponent,
+    LobbyScreenComponent,
     LobbySettingsComponent,
     PlayerSettingsComponent,
     SymbolSelectorComponent

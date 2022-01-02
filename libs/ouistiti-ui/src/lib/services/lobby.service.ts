@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { GameStatus, LobbyCreate, LobbyInfo, PlayerInfo, SocketStatus } from '@TomikaArome/ouistiti-shared';
+import { GameStatus, LobbyCreate, LobbyInfo, LobbyJoin, LobbyStatus, PlayerInfo } from '@TomikaArome/ouistiti-shared';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PlayerService } from './player.service';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class LobbyService {
-  currentLobby$: Observable<LobbyInfo> = this.socketService.socketStatus$.pipe(
-    map((status: SocketStatus) => status.lobby ?? null),
+  currentLobby$: Observable<LobbyInfo> = this.socketService.lobbyStatus$.pipe(
+    map((status: LobbyStatus) => status.lobby ?? null),
     tap((lobby: LobbyInfo) => {
       lobby.players.forEach(playerInfo => this.playerService.savePlayer(playerInfo));
     })
@@ -55,5 +55,9 @@ export class LobbyService {
 
   createLobby(params: LobbyCreate) {
     this.socketService.emitEvent('createLobby', params);
+  }
+
+  joinLobby(params: LobbyJoin) {
+    this.socketService.emitEvent('joinLobby', params);
   }
 }

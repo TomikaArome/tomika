@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { LobbyService } from '../../services/lobby.service';
 import { LobbyInfo } from '@TomikaArome/ouistiti-shared';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'tmk-ouistiti-landing-screen',
@@ -8,14 +10,13 @@ import { LobbyInfo } from '@TomikaArome/ouistiti-shared';
   styleUrls: ['./landing-screen.component.scss']
 })
 export class LandingScreenComponent {
-  lobbyList$ = this.lobbyService.lobbyList$;
+  lobbyList$: Observable<LobbyInfo[]> = this.lobbyService.lobbyList$;
+  selectedLobby$: Observable<LobbyInfo> = this.lobbyService.lobbyList$.pipe(
+    map((lobbyList: LobbyInfo[]) => lobbyList.find((lobby: LobbyInfo) => lobby.id === this.selectedLobbyId) ?? null)
+  );
 
   private selectedLobbyId: string = null;
   createMode = false;
-
-  get selectedLobby(): LobbyInfo {
-    return this.lobbyService.getLobbyById(this.selectedLobbyId);
-  }
 
   constructor(private lobbyService: LobbyService) {}
 

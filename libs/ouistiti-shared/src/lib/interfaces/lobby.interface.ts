@@ -1,5 +1,7 @@
 import { GameStatus } from '../enum/game-status.enum';
-import { PlayerCreate, PlayerInfo } from './player-info.interface';
+import { PlayerCreateParams, PlayerInfo } from './player.interface';
+
+// Client events
 
 export interface LobbyStatus {
   inLobby: boolean;
@@ -18,19 +20,34 @@ export interface LobbyInfo {
   totalRoundCount?: number;
 }
 
-export interface LobbyCreate {
-  host: PlayerCreate;
+export interface LobbyClosed {
+  id: string;
+}
+
+// Server events
+
+export interface LobbyCreateParams {
+  host: PlayerCreateParams;
   password?: string;
   maxNumberOfPlayers?: number;
 }
 
-export interface LobbyJoin {
+export interface LobbyJoinParams {
   id: string;
-  player: PlayerCreate;
+  player: PlayerCreateParams;
   password?: string;
 }
 
-export interface LobbyUpdate {
+export interface LobbyLeaveParams {
+  id: string;
+}
+
+export interface LobbyKickParams {
+  lobbyId: string;
+  playerId: string;
+}
+
+export interface LobbyUpdateParams {
   id: string;
   maxNumberOfPlayers?: number;
 }

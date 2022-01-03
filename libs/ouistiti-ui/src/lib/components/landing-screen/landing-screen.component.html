@@ -19,7 +19,7 @@
 
 <div class="section">
   <div class="inner-section" *ngIf="showLobbyJoin()">
-    <tmk-ouistiti-lobby-join [lobby]="selectedLobby"></tmk-ouistiti-lobby-join>
+    <tmk-ouistiti-lobby-join [lobby]="selectedLobby$ | async"></tmk-ouistiti-lobby-join>
   </div>
 
   <div class="inner-section" *ngIf="createMode">

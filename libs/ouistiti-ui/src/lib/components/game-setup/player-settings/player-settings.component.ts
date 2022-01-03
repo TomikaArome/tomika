@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
-import { NICKNAME_MAX_LENGTH, PlayerColour, PlayerCreate } from '@TomikaArome/ouistiti-shared';
+import { NICKNAME_MAX_LENGTH, PlayerColour, PlayerCreateParams } from '@TomikaArome/ouistiti-shared';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -58,10 +58,10 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
 
   get nicknameControl(): AbstractControl { return this.form.get('nickname'); }
 
-  get value(): Partial<PlayerCreate> {
+  get value(): Partial<PlayerCreateParams> {
     return this.form.value;
   }
-  set value(value: Partial<PlayerCreate>) {
+  set value(value: Partial<PlayerCreateParams>) {
     let touch = true;
     if (value === null) {
       touch = false;
@@ -85,10 +85,10 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
     }
   }
 
-  onChange: (playerSettings: Partial<PlayerCreate>) => void = () => {};
+  onChange: (playerSettings: Partial<PlayerCreateParams>) => void = () => {};
   onTouch: () => void = () => {};
 
-  registerOnChange(fn: (playerSettings: Partial<PlayerCreate>) => void): void {
+  registerOnChange(fn: (playerSettings: Partial<PlayerCreateParams>) => void): void {
     this.onChange = fn;
   }
 
@@ -96,7 +96,7 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
     this.onTouch = fn;
   }
 
-  writeValue(value: Partial<PlayerCreate>): void {
+  writeValue(value: Partial<PlayerCreateParams>): void {
     this.value = value;
   }
 

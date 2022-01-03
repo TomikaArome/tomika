@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LobbyInfo, OuistitiError, LobbyStatus } from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
@@ -15,11 +15,12 @@ export class SocketService {
   private lobbyStatusSource = new BehaviorSubject<LobbyStatus>({ inLobby: false });
   lobbyStatus$ = this.lobbyStatusSource.asObservable();
 
-  private listLobbiesSource = new BehaviorSubject<LobbyInfo[]>([]);
-  listLobbies$ = this.listLobbiesSource.asObservable();
-
-  private createLobbySource = new Subject<LobbyInfo>();
-  createLobby$ = this.createLobbySource.asObservable();
+  private lobbyListSource = new BehaviorSubject<LobbyInfo[]>([]);
+  lobbyList$ = this.lobbyListSource.asObservable();
+  private lobbyUpdatedSource = new Subject<LobbyInfo>();
+  lobbyUpdated$ = this.lobbyUpdatedSource.asObservable();
+  private lobbyClosedSource = new Subject<LobbyClosed>();
+  lobbyClosed$ = this.lobbyClosedSource.asObservable();
 
   constructor() {
     this.error$.subscribe(error => {
@@ -35,7 +36,7 @@ export class SocketService {
   }
 
   private subscribeEvents() {
-    const eventNames = ['error', 'lobbyStatus', 'listLobbies', 'createLobby'];
+    const eventNames = ['error', 'lobbyStatus', 'lobbyList', 'lobbyUpdated', 'lobbyClosed'];
     eventNames.forEach(eventName => this.subscribeEvent(eventName));
   }
 

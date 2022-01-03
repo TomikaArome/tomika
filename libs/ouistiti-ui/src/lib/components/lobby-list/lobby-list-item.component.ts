@@ -12,16 +12,14 @@ export class LobbyListItemComponent {
   @Input()
   lobbyInfo: LobbyInfo;
 
-  constructor(private playerService: PlayerService) {}
-
   host(): PlayerInfo {
-    return this.playerService.getPlayer(this.lobbyInfo.hostId);
+    return this.lobbyInfo.players.find((player: PlayerInfo) => player.id === this.lobbyInfo.hostId);
   }
 
   otherPlayerNicknames(): string[] {
     return this.lobbyInfo.players
       .filter(player => player.id !== this.lobbyInfo.hostId)
-      .map(player => this.playerService.getPlayer(player.id)?.nickname)
+      .map(player => player.nickname)
       .sort();
   }
 

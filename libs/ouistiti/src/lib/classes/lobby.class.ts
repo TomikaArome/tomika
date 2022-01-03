@@ -3,9 +3,9 @@ import { Game } from './game.class';
 import { Socket } from 'socket.io';
 import {
   GameStatus,
-  LobbyCreate,
+  LobbyCreateParams,
   LobbyInfo,
-  LobbyJoin, LobbyStatus,
+  LobbyJoinParams, LobbyStatus,
   MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
   OuistitiErrorType
 } from '@TomikaArome/ouistiti-shared';
@@ -39,7 +39,7 @@ export class Lobby {
     return lobbyInfo;
   }
 
-  static createLobbyWithNewGame(hostSocket: Socket, params: LobbyCreate): Lobby {
+  static createLobbyWithNewGame(hostSocket: Socket, params: LobbyCreateParams): Lobby {
     OuistitiException.checkRequiredParams(params, ['host.nickname']);
 
     const hostPlayer = Player.createNewPlayer(hostSocket, params.host);
@@ -61,7 +61,7 @@ export class Lobby {
     this.players.forEach(player => player.emit(eventName, payload));
   }
 
-  addPlayer(playerSocket: Socket, params: LobbyJoin): Player {
+  addPlayer(playerSocket: Socket, params: LobbyJoinParams): Player {
     if (this.password) {
       OuistitiException.checkRequiredParams(params, ['password']);
       if (params.password !== this.password) {

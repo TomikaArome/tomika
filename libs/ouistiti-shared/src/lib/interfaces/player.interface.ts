@@ -1,6 +1,8 @@
 import { PlayerColour } from '../enum/player-colour.enum';
 import { PlayerSymbol } from '../enum/player-symbol.enum';
 
+// Client events
+
 export interface PlayerInfo {
   id: string;
   nickname: string;
@@ -9,13 +11,15 @@ export interface PlayerInfo {
   vacant: boolean;
 }
 
-export interface PlayerCreate {
+// Server events
+
+export interface PlayerCreateParams {
   nickname: string;
   colour?: PlayerColour;
   symbol?: PlayerSymbol;
 }
 
-export interface PlayerUpdate {
+export interface PlayerUpdateParams {
   id: string;
   nickname?: string;
   colour?: PlayerColour;

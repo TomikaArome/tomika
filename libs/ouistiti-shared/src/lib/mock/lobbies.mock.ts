@@ -1,5 +1,5 @@
 import { GameStatus } from '../enum/game-status.enum';
-import { LobbyInfo } from '../interfaces/lobby-info.interface';
+import { LobbyInfo } from '../interfaces/lobby.interface';
 import { PlayerColour } from '../enum/player-colour.enum';
 import { PlayerSymbol } from '../enum/player-symbol.enum';
 

@@ -4,7 +4,7 @@ import {
   NICKNAME_MAX_LENGTH,
   OuistitiErrorType,
   PlayerColour,
-  PlayerCreate,
+  PlayerCreateParams,
   PlayerInfo,
   PlayerSymbol
 } from '@TomikaArome/ouistiti-shared';
@@ -27,7 +27,7 @@ export class Player {
     }
   }
 
-  static createNewPlayer(socket: Socket, params: PlayerCreate): Player {
+  static createNewPlayer(socket: Socket, params: PlayerCreateParams): Player {
     OuistitiException.checkRequiredParams(params, ['nickname']);
     if (params.nickname.length > NICKNAME_MAX_LENGTH) {
       throw new OuistitiException({

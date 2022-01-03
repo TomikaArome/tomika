@@ -1,9 +1,12 @@
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { OuistitiService } from './ouistiti.service';
 import { LobbyCreateParams, LobbyJoinParams } from '@TomikaArome/ouistiti-shared';
 import { UseFilters } from '@nestjs/common';
 import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
+import { SocketController } from './classes/socket-controller.class';
+import { OuistitiException } from './classes/ouistiti-exception.class';
+import { Lobby } from './classes/lobby.class';
+import { Player } from './classes/player.class';
 
 @WebSocketGateway({
   namespace: 'ouistiti',
@@ -14,27 +17,35 @@ import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
   }
 })
 export class OuistitiGateway implements OnGatewayConnection {
-  constructor(private ouistitiService: OuistitiService) {}
+  private socketControllers: { [socketId: string]: SocketController } = {};
 
-  handleConnection(socket: Socket) {
-    console.log(`Client connected: ${socket.id}`);
-    this.ouistitiService.listLobbies(socket);
-    socket.on('disconnect', (reason) => this.onDisconnect(socket, reason));
+  getSocketController(socket: Socket) {
+    return this.socketControllers[socket.id] ?? null;
   }
 
-  onDisconnect(socket: Socket, reason: string) {
-    console.log(`Client disconnected: ${socket.id} Reason: ${reason}`);
+  handleConnection(socket: Socket) {
+    const controller = new SocketController(socket);
+    this.socketControllers[socket.id] = controller;
+    controller.disconnected$.subscribe(() => {
+      delete this.socketControllers[socket.id];
+    });
   }
 
   @UseFilters(new OuistitiExceptionFilter('createLobby'))
   @SubscribeMessage('createLobby')
-  createLobby(clientSocket: Socket, payload: LobbyCreateParams) {
-    this.ouistitiService.createLobbyWithNewGame(clientSocket, payload);
+  createLobby(clientSocket: Socket, params: LobbyCreateParams) {
+    OuistitiException.checkRequiredParams(params, ['host.nickname']);
+    Lobby.createLobbyWithNewGame(params, (player: Player) => {
+      this.getSocketController(clientSocket).player = player;
+    });
   }
 
   @UseFilters(new OuistitiExceptionFilter('joinLobby'))
   @SubscribeMessage('joinLobby')
-  joinLobby(clientSocket: Socket, payload: LobbyJoinParams) {
-    this.ouistitiService.joinLobby(clientSocket, payload);
+  joinLobby(clientSocket: Socket, params: LobbyJoinParams) {
+    OuistitiException.checkRequiredParams(params, ['id', 'player.nickname']);
+    Lobby.getLobbyById(params.id).addPlayer(params, (player: Player) => {
+      this.getSocketController(clientSocket).player = player;
+    });
   }
 }

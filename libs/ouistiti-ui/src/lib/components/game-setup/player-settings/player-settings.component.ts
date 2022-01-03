@@ -85,8 +85,8 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
     }
   }
 
-  onChange: (playerSettings: Partial<PlayerCreateParams>) => void = () => {};
-  onTouch: () => void = () => {};
+  onChange: (playerSettings: Partial<PlayerCreateParams>) => void = () => undefined;
+  onTouch: () => void = () => undefined;
 
   registerOnChange(fn: (playerSettings: Partial<PlayerCreateParams>) => void): void {
     this.onChange = fn;

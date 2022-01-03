@@ -34,8 +34,8 @@ export class ColourSelectorComponent implements ControlValueAccessor {
   }
   colours: PlayerColour[] = Object.values(PlayerColour);
 
-  onChange: (colour: PlayerColour) => void = () => {};
-  onTouch: () => void = () => {};
+  onChange: (colour: PlayerColour) => void = () => undefined;
+  onTouch: () => void = () => undefined;
 
   colourClasses(colour: PlayerColour): { [key: string]: boolean } {
     const classes = {

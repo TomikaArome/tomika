@@ -1,16 +1,17 @@
 import { Player } from './player.class';
 import { Game } from './game.class';
-import { Socket } from 'socket.io';
 import {
   GameStatus,
   LobbyCreateParams,
   LobbyInfo,
-  LobbyJoinParams, LobbyStatus,
+  LobbyJoinParams,
   MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
   OuistitiErrorType
 } from '@TomikaArome/ouistiti-shared';
 import { nanoid } from 'nanoid';
 import { OuistitiException } from './ouistiti-exception.class';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export class Lobby {
   id = nanoid();
@@ -39,31 +40,55 @@ export class Lobby {
     return lobbyInfo;
   }
 
-  static createLobbyWithNewGame(hostSocket: Socket, params: LobbyCreateParams): Lobby {
-    OuistitiException.checkRequiredParams(params, ['host.nickname']);
+  private lobbyClosedSource = new Subject<void>();
+  lobbyClosed$ = this.lobbyClosedSource.asObservable();
+  private playerJoinedSource = new Subject<Player>();
+  playerJoined$ = this.playerJoinedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  private playerLeftSource = new Subject<Player>();
+  playerLeft$ = this.playerLeftSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
 
-    const hostPlayer = Player.createNewPlayer(hostSocket, params.host);
-    const lobby = new Lobby();
-    lobby.players.push(hostPlayer);
-    lobby.host = hostPlayer;
-    lobby.maxNumberOfPlayers = params.maxNumberOfPlayers ?? MAX_NUMBER_OF_PLAYERS_PER_LOBBY;
-    lobby.password = params.password;
-    lobby.game = new Game(lobby);
+  private static lobbies: Lobby[] = [];
 
-    return lobby;
+  private static lobbyCreatedSource = new Subject<Lobby>();
+  static lobbyCreated$ = Lobby.lobbyCreatedSource.asObservable();
+
+  static getLobbyList(): Lobby[] {
+    return Lobby.lobbies.slice();
   }
 
-  getPlayerFromId(playerId: string): Player {
-    return this.players.find(player => player.id === playerId);
+  static getLobbyById(lobbyId: string): Lobby {
+    return Lobby.lobbies.find((lobby: Lobby) => lobby.id === lobbyId) ?? null;
   }
 
-  emit(eventName: string, payload: unknown) {
-    this.players.forEach(player => player.emit(eventName, payload));
+  static createLobbyWithNewGame(params: LobbyCreateParams, playerAssignFn: (player: Player) => void = () => undefined) {
+    const hostPlayer = Player.createNewPlayer(params.host);
+    const newLobby = new Lobby();
+    newLobby.players.push(hostPlayer);
+    newLobby.host = hostPlayer;
+    newLobby.maxNumberOfPlayers = params.maxNumberOfPlayers ?? MAX_NUMBER_OF_PLAYERS_PER_LOBBY;
+    newLobby.password = params.password;
+    newLobby.game = new Game(newLobby);
+
+    Lobby.lobbies.push(newLobby);
+    playerAssignFn(hostPlayer);
+    Lobby.lobbyCreatedSource.next(newLobby);
   }
 
-  addPlayer(playerSocket: Socket, params: LobbyJoinParams): Player {
+  close() {
+    const index = Lobby.lobbies.findIndex((lobby: Lobby) => lobby === this);
+    if (index > -1) {
+      Lobby.lobbies.splice(index, 1);
+    }
+    this.lobbyClosedSource.next();
+    this.lobbyClosedSource.complete();
+  }
+
+  getPlayerById(playerId: string): Player {
+    return this.players.find((player: Player) => player.id === playerId) ?? null;
+  }
+
+  addPlayer(params: LobbyJoinParams, playerAssignFn: (player: Player) => void = () => undefined): Player {
     if (this.password) {
-      OuistitiException.checkRequiredParams(params, ['password']);
       if (params.password !== this.password) {
         throw new OuistitiException({
           type: OuistitiErrorType.INCORRECT_PASSWORD,
@@ -71,20 +96,21 @@ export class Lobby {
         });
       }
     }
-    OuistitiException.checkRequiredParams(params, ['player.nickname']);
 
-    const newPlayer = Player.createNewPlayer(playerSocket, params.player);
+    const newPlayer = Player.createNewPlayer(params.player);
     this.players.push(newPlayer);
 
-    this.players.forEach((player: Player) => {
-      const eventPayload: LobbyStatus = {
-        inLobby: true,
-        lobby: this.info,
-        playerId: player.id
-      };
-      player.emit('lobbyStatus', eventPayload);
-    });
+    playerAssignFn(newPlayer);
+    this.playerJoinedSource.next(newPlayer);
 
     return newPlayer;
+  }
+
+  removePlayer(playerId: string) {
+    const index = this.players.findIndex((player: Player) => player.id === playerId);
+    if (index > -1) {
+      this.playerLeftSource.next(this.players[index]);
+      this.players.splice(index, 1);
+    }
   }
 }

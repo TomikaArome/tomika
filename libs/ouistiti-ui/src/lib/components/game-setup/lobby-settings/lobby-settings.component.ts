@@ -58,8 +58,8 @@ export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
     }
   }
 
-  onChange: (lobbySettings: Partial<LobbyCreateParams>) => void = () => {};
-  onTouch: () => void = () => {};
+  onChange: (lobbySettings: Partial<LobbyCreateParams>) => void = () => undefined;
+  onTouch: () => void = () => undefined;
 
   registerOnChange(fn: (lobbySettings: Partial<LobbyCreateParams>) => void) {
     this.onChange = fn;

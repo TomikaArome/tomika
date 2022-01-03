@@ -37,7 +37,7 @@ export class Game {
   }
 
   get playersInOrder(): Player[] {
-    return this.playerOrder.map(playerId => this.lobby.getPlayerFromId(playerId));
+    return this.playerOrder.map(playerId => this.lobby.getPlayerById(playerId));
   }
 
   loadExistingGame(id: string) {

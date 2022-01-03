@@ -32,8 +32,8 @@ export class SymbolSelectorComponent implements ControlValueAccessor {
   }
   symbols: PlayerSymbol[] = Object.values(PlayerSymbol);
 
-  onChange: (symbol: PlayerSymbol) => void = () => {};
-  onTouch: () => void = () => {};
+  onChange: (symbol: PlayerSymbol) => void = () => undefined;
+  onTouch: () => void = () => undefined;
 
   symbolIconName(symbol: PlayerSymbol): string {
     return PlayerService.getSymbolIconName(symbol);

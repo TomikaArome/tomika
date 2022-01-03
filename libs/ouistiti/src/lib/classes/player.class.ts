@@ -1,5 +1,4 @@
 import { nanoid } from 'nanoid';
-import { Socket } from 'socket.io';
 import {
   NICKNAME_MAX_LENGTH,
   OuistitiErrorType,
@@ -9,13 +8,13 @@ import {
   PlayerSymbol
 } from '@TomikaArome/ouistiti-shared';
 import { OuistitiException } from './ouistiti-exception.class';
+import { Subject } from 'rxjs';
 
 export class Player {
   id: string = nanoid();
   nickname: string;
   colour: PlayerColour;
   symbol: PlayerSymbol;
-  socket: Socket;
 
   get info(): PlayerInfo {
     return {
@@ -27,7 +26,9 @@ export class Player {
     }
   }
 
-  static createNewPlayer(socket: Socket, params: PlayerCreateParams): Player {
+  static playerCreated$ = new Subject<Player>();
+
+  static createNewPlayer(params: PlayerCreateParams): Player {
     OuistitiException.checkRequiredParams(params, ['nickname']);
     if (params.nickname.length > NICKNAME_MAX_LENGTH) {
       throw new OuistitiException({
@@ -41,7 +42,7 @@ export class Player {
       });
     }
 
-    const player = new Player(socket);
+    const player = new Player();
 
     player.nickname = params.nickname;
     player.colour = params.colour ?? Player.getRandomColour();
@@ -61,15 +62,8 @@ export class Player {
     return PlayerSymbol[symbolKeys[Math.floor(Math.random() * symbolKeys.length)]];
   }
 
-  private constructor(socket: Socket) {
-    this.socket = socket;
-  }
-
   isVacant(): boolean {
-    return !this.socket?.connected;
-  }
-
-  emit(eventName: string, payload?: unknown) {
-    this.socket.emit(eventName, payload);
+    // TODO
+    return false;
   }
 }

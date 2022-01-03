@@ -14,10 +14,8 @@ export class PlayerService {
   );
 
   currentPlayer$: Observable<PlayerInfo> = this.socketService.lobbyStatus$.pipe(
-    map((status: LobbyStatus) => this.getPlayer(status.playerId))
+    map((status: LobbyStatus) => status.lobby.players.find((player: PlayerInfo) => player.id === status.playerId) ?? null)
   );
-
-  private players: PlayerInfo[] = [];
 
   static getSymbolIconName(symbol: PlayerSymbol): string {
     return symbol.toLowerCase();
@@ -38,22 +36,5 @@ export class PlayerService {
     this.iconRegistry.addSvgIconLiteral('heart', this.sanitizer.bypassSecurityTrustHtml(HEART_ICON));
     this.iconRegistry.addSvgIconLiteral('club', this.sanitizer.bypassSecurityTrustHtml(CLUB_ICON));
     this.iconRegistry.addSvgIconLiteral('diamond', this.sanitizer.bypassSecurityTrustHtml(DIAMOND_ICON));
-  }
-
-  getPlayer(playerId: string): PlayerInfo {
-    return this.players.find(player => player.id === playerId) ?? null;
-  }
-
-  isPlayerSaved(playerId: string): boolean {
-    return !!this.getPlayer(playerId);
-  }
-
-  savePlayer(playerInfo: PlayerInfo) {
-    if (this.isPlayerSaved(playerInfo.id)) {
-      const index = this.players.findIndex(player => player.id === playerInfo.id);
-      this.players[index] = playerInfo;
-    } else {
-      this.players.push(playerInfo);
-    }
   }
 }

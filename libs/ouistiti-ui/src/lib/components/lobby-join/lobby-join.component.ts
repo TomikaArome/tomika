@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { LobbyInfo, LobbyJoin, PlayerColour, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, LobbyJoinParams, PlayerColour, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { LobbyService } from '../../services/lobby.service';
 
@@ -49,7 +49,7 @@ export class LobbyJoinComponent {
 
   join() {
     if (this.form.valid) {
-      const params: LobbyJoin = {
+      const params: LobbyJoinParams = {
         id: this.lobby.id,
         player: this.form.value.playerSettings,
       }

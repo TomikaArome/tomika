@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
 import { LobbyService } from '../../services/lobby.service';
-import { LobbyCreate } from '@TomikaArome/ouistiti-shared';
+import { LobbyCreateParams } from '@TomikaArome/ouistiti-shared';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-create',
@@ -26,7 +26,7 @@ export class LobbyCreateComponent {
 
   create() {
     if (this.form.valid) {
-      const params: LobbyCreate = {
+      const params: LobbyCreateParams = {
         host: this.form.value.playerSettings,
         ...this.form.value.lobbySettings
       };

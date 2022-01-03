@@ -1,7 +1,7 @@
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
-  LobbyCreate,
+  LobbyCreateParams,
   MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
   MIN_NUMBER_OF_PLAYERS_PER_LOBBY
 } from '@TomikaArome/ouistiti-shared';
@@ -33,10 +33,10 @@ export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
     this.onTouch();
   });
 
-  get value(): Partial<LobbyCreate> {
+  get value(): Partial<LobbyCreateParams> {
     return this.form.value;
   }
-  set value(value: Partial<LobbyCreate>) {
+  set value(value: Partial<LobbyCreateParams>) {
     let touch = true;
     if (value === null) {
       touch = false;
@@ -58,10 +58,10 @@ export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
     }
   }
 
-  onChange: (lobbySettings: Partial<LobbyCreate>) => void = () => {};
+  onChange: (lobbySettings: Partial<LobbyCreateParams>) => void = () => {};
   onTouch: () => void = () => {};
 
-  registerOnChange(fn: (lobbySettings: Partial<LobbyCreate>) => void) {
+  registerOnChange(fn: (lobbySettings: Partial<LobbyCreateParams>) => void) {
     this.onChange = fn;
   }
 
@@ -69,7 +69,7 @@ export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
     this.onTouch = fn;
   }
 
-  writeValue(value: Partial<LobbyCreate>) {
+  writeValue(value: Partial<LobbyCreateParams>) {
     this.value = value;
   }
 

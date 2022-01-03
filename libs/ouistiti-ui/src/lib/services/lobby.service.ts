@@ -1,39 +1,60 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { GameStatus, LobbyCreate, LobbyInfo, LobbyJoin, LobbyStatus, PlayerInfo } from '@TomikaArome/ouistiti-shared';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  GameStatus,
+  LobbyClosed,
+  LobbyCreateParams,
+  LobbyInfo,
+  LobbyJoinParams,
+  LobbyStatus
+} from '@TomikaArome/ouistiti-shared';
+import { merge, Observable } from 'rxjs';
 import { PlayerService } from './player.service';
-import { map, tap } from 'rxjs/operators';
+import { map, scan } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class LobbyService {
   currentLobby$: Observable<LobbyInfo> = this.socketService.lobbyStatus$.pipe(
-    map((status: LobbyStatus) => status.lobby ?? null),
-    tap((lobby: LobbyInfo) => {
-      lobby.players.forEach(playerInfo => this.playerService.savePlayer(playerInfo));
-    })
+    map((status: LobbyStatus) => status.lobby ?? null)
   );
 
-  private lobbies: LobbyInfo[] = [];
+  lobbyList$: Observable<LobbyInfo[]> = merge(
+    this.socketService.lobbyList$.pipe(map(v => { return { event: 'lobbyList', payload: v } })),
+    this.socketService.lobbyUpdated$.pipe(map(v => { return { event: 'lobbyUpdated', payload: v } })),
+    this.socketService.lobbyClosed$.pipe(map(v => { return { event: 'lobbyClosed', payload: v } }))
+  ).pipe(
+    scan((acc: LobbyInfo[], curr) => {
+      if (curr.event === 'lobbyList') {
 
-  private lobbyListSource = new BehaviorSubject<LobbyInfo[]>([]);
-  lobbyList$ = this.lobbyListSource.asObservable();
+        acc = (curr.payload as LobbyInfo[]).sort(LobbyService.lobbySortingFunction);
+
+      } else if (curr.event === 'lobbyUpdated') {
+
+        const lobbyInfo = curr.payload as LobbyInfo;
+        const index = acc.findIndex((lobby: LobbyInfo) => lobby.id === lobbyInfo.id);
+        if (index > -1) {
+          acc[index] = lobbyInfo;
+        } else {
+          acc.push(lobbyInfo);
+        }
+
+      } else {
+
+        const lobbyInfo = curr.payload as LobbyClosed;
+        const index = acc.findIndex((lobby: LobbyInfo) => lobby.id === lobbyInfo.id);
+        acc.splice(index, 1);
+
+      }
+      return acc;
+    }, [])
+  );
 
   static isLobbyJoinable(lobbyInfo: LobbyInfo): boolean {
     return (lobbyInfo.gameStatus === GameStatus.INIT || lobbyInfo.gameStatus === GameStatus.SUSPENDED)
       && lobbyInfo.players.length < lobbyInfo.maxNumberOfPlayers;
   }
 
-  constructor(private socketService: SocketService,
-              private playerService: PlayerService) {
-    this.socketService.listLobbies$.subscribe((lobbyList: LobbyInfo[]) => {
-      lobbyList.forEach((lobbyInfo: LobbyInfo) => this.savePlayersFromLobbyInfo(lobbyInfo));
-      this.lobbies = lobbyList.sort(this.lobbySortingFunction);
-      this.lobbyListSource.next(this.lobbies);
-    });
-  }
-
-  private lobbySortingFunction(lobbyA: LobbyInfo, lobbyB: LobbyInfo): number {
+  private static lobbySortingFunction(lobbyA: LobbyInfo, lobbyB: LobbyInfo): number {
     const lobbyAJoinable = LobbyService.isLobbyJoinable(lobbyA);
     const lobbyBJoinable = LobbyService.isLobbyJoinable(lobbyB);
     if (lobbyAJoinable && !lobbyBJoinable) { return -1; }
@@ -45,19 +66,14 @@ export class LobbyService {
     return lobbyA.hostId.localeCompare(lobbyB.hostId);
   }
 
-  getLobbyById(lobbyId: string): LobbyInfo {
-    return this.lobbies.find(lobby => lobby.id === lobbyId) ?? null;
-  }
+  constructor(private socketService: SocketService,
+              private playerService: PlayerService) {}
 
-  private savePlayersFromLobbyInfo(lobbyInfo: LobbyInfo) {
-    lobbyInfo.players.forEach((playerInfo: PlayerInfo) => this.playerService.savePlayer(playerInfo));
-  }
-
-  createLobby(params: LobbyCreate) {
+  createLobby(params: LobbyCreateParams) {
     this.socketService.emitEvent('createLobby', params);
   }
 
-  joinLobby(params: LobbyJoin) {
+  joinLobby(params: LobbyJoinParams) {
     this.socketService.emitEvent('joinLobby', params);
   }
 }

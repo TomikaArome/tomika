@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Lobby } from './classes/lobby.class';
 import { Socket } from 'socket.io';
-import { LobbyCreate, LobbyJoin, LobbyStatus, OuistitiErrorType } from '@TomikaArome/ouistiti-shared';
+import { LobbyCreateParams, LobbyJoinParams, LobbyStatus, OuistitiErrorType } from '@TomikaArome/ouistiti-shared';
 import { Player } from './classes/player.class';
 import { OuistitiException } from './classes/ouistiti-exception.class';
 
@@ -35,11 +35,11 @@ export class OuistitiService {
   }
 
   listLobbies(socket: Socket) {
-    socket.emit('listLobbies', this.lobbies.map(lobby => lobby.info));
-    // socket.emit('listLobbies', lobbyListMock);
+    socket.emit('lobbyList', this.lobbies.map(lobby => lobby.info));
+    // socket.emit('lobbyList', lobbyListMock);
   }
 
-  createLobbyWithNewGame(hostSocket: Socket, params: LobbyCreate) {
+  createLobbyWithNewGame(hostSocket: Socket, params: LobbyCreateParams) {
     const newLobby = Lobby.createLobbyWithNewGame(hostSocket, params);
     this.lobbies.push(newLobby);
     this.players[hostSocket.id] = newLobby.host;
@@ -52,7 +52,7 @@ export class OuistitiService {
     newLobby.host.emit('lobbyStatus', eventPayload);
   }
 
-  joinLobby(clientSocket: Socket, params: LobbyJoin) {
+  joinLobby(clientSocket: Socket, params: LobbyJoinParams) {
     OuistitiException.checkRequiredParams(params, ['id']);
     this.players[clientSocket.id] = this.getLobbyById(params.id).addPlayer(clientSocket, params);
   }

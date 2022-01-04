@@ -33,6 +33,7 @@ export class SocketService {
     this.socket = io('http://localhost:3333/ouistiti');
     this.socketDisconnected$ = new BehaviorSubject<boolean>(false);
     this.subscribeEvents();
+    this.emitEvent('listLobbies');
   }
 
   private subscribeEvents() {

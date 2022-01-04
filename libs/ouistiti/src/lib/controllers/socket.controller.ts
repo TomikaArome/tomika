@@ -31,7 +31,6 @@ export class SocketController {
     this.socket.on('disconnect', (reason: string) => { this.onDisconnect(reason); });
     Lobby.getLobbyList().forEach((lobby: Lobby) => { new SocketLobbyController(this, lobby); });
     this.subscribeLobbyCreated();
-    this.emitLobbyList();
   }
 
   onDisconnect(reason: string) {

@@ -31,6 +31,12 @@ export class OuistitiGateway implements OnGatewayConnection {
     });
   }
 
+  @UseFilters(new OuistitiExceptionFilter('listLobbies'))
+  @SubscribeMessage('listLobbies')
+  listLobbies(clientSocket: Socket) {
+    this.getSocketController(clientSocket)?.emitLobbyList();
+  }
+
   @UseFilters(new OuistitiExceptionFilter('createLobby'))
   @SubscribeMessage('createLobby')
   createLobby(clientSocket: Socket, params: LobbyCreateParams) {

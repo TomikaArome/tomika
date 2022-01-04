@@ -3,7 +3,7 @@ import { Socket } from 'socket.io';
 import { LobbyCreateParams, LobbyJoinParams } from '@TomikaArome/ouistiti-shared';
 import { UseFilters } from '@nestjs/common';
 import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
-import { SocketController } from './classes/socket-controller.class';
+import { SocketController } from './controllers/socket.controller';
 import { OuistitiException } from './classes/ouistiti-exception.class';
 import { Lobby } from './classes/lobby.class';
 import { Player } from './classes/player.class';

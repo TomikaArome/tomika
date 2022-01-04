@@ -12,6 +12,7 @@ import { nanoid } from 'nanoid';
 import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LobbyChangedHostObserved, LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
 
 export class Lobby {
   id = nanoid();
@@ -44,8 +45,11 @@ export class Lobby {
   lobbyClosed$ = this.lobbyClosedSource.asObservable();
   private playerJoinedSource = new Subject<Player>();
   playerJoined$ = this.playerJoinedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-  private playerLeftSource = new Subject<Player>();
+  private playerLeftSource = new Subject<LobbyLeftObserved>();
   playerLeft$ = this.playerLeftSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+
+  private hostChangedSource = new Subject<LobbyChangedHostObserved>();
+  hostChanged$ = this.hostChangedSource.asObservable();
 
   private static lobbies: Lobby[] = [];
 
@@ -106,11 +110,26 @@ export class Lobby {
     return newPlayer;
   }
 
-  removePlayer(playerId: string) {
-    const index = this.players.findIndex((player: Player) => player.id === playerId);
-    if (index > -1) {
-      this.playerLeftSource.next(this.players[index]);
-      this.players.splice(index, 1);
+  removePlayer(player: Player) {
+    this.players.splice(this.players.indexOf(player), 1);
+    if (this.players.length > 0) {
+      const observed: LobbyLeftObserved = { player };
+      if (player === this.host) {
+        this.host = this.players[0];
+        observed.newHost = this.host;
+      }
+      this.playerLeftSource.next(observed);
+    } else {
+      this.close();
+    }
+  }
+
+  changeHost(newHostId: string) {
+    const newHost = this.getPlayerById(newHostId);
+    if (newHost) {
+      const previousHost = this.host;
+      this.host = newHost;
+      this.hostChangedSource.next({ previousHost, newHost });
     }
   }
 }

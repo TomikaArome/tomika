@@ -1,1 +1,12 @@
-<pre>{{ lobbyStatus$ | async | json }}</pre>
+<div class="section">
+  <div class="inner-section">
+    <tmk-ouistiti-player-list
+      [players]="playerList$ | async"
+      [hostId]="hostId$ | async"
+      [maxNumberOfPlayers]="maxNumberOfPlayers$ | async"
+      [isSortable]="isHost$ | async">
+    </tmk-ouistiti-player-list>
+  </div>
+</div>
+
+<div class="section"></div>

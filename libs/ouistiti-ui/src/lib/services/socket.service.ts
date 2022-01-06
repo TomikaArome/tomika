@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed } from '@TomikaArome/ouistiti-shared';
+import {
+  LobbyInfo,
+  OuistitiError,
+  LobbyStatus,
+  LobbyClosed,
+  lobbyStatusPlayerIsHostMock
+} from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
@@ -12,7 +18,8 @@ export class SocketService {
   private errorSource = new Subject<OuistitiError>();
   error$ = this.errorSource.asObservable();
 
-  private lobbyStatusSource = new BehaviorSubject<LobbyStatus>({ inLobby: false });
+  //private lobbyStatusSource = new BehaviorSubject<LobbyStatus>({ inLobby: false });
+  private lobbyStatusSource = new BehaviorSubject<LobbyStatus>(lobbyStatusPlayerIsHostMock);
   lobbyStatus$ = this.lobbyStatusSource.asObservable();
 
   private lobbyListSource = new BehaviorSubject<LobbyInfo[]>([]);

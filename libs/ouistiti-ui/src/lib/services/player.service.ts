@@ -12,9 +12,11 @@ export class PlayerService {
   currentPlayerInLobby$: Observable<boolean> = this.socketService.lobbyStatus$.pipe(
     map((status: LobbyStatus) => status.inLobby)
   );
-
   currentPlayer$: Observable<PlayerInfo> = this.socketService.lobbyStatus$.pipe(
     map((status: LobbyStatus) => status.lobby.players.find((player: PlayerInfo) => player.id === status.playerId) ?? null)
+  );
+  isHost$ = this.socketService.lobbyStatus$.pipe(
+    map((status: LobbyStatus) => status.playerId === status.lobby.hostId)
   );
 
   static getSymbolIconName(symbol: PlayerSymbol): string {

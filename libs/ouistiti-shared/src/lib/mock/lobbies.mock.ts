@@ -1,5 +1,5 @@
 import { GameStatus } from '../enum/game-status.enum';
-import { LobbyInfo } from '../interfaces/lobby.interface';
+import { LobbyInfo, LobbyStatus } from '../interfaces/lobby.interface';
 import { PlayerColour } from '../enum/player-colour.enum';
 import { PlayerSymbol } from '../enum/player-symbol.enum';
 
@@ -86,8 +86,20 @@ export const lobby3Mock: LobbyInfo = {
   totalRoundCount: 18
 }
 
-export const lobbyListMock = [
+export const lobbyListMock: LobbyInfo[] = [
   lobby1Mock,
   lobby2Mock,
   lobby3Mock
 ];
+
+export const lobbyStatusPlayerIsHostMock: LobbyStatus = {
+  inLobby: true,
+  lobby: lobby1Mock,
+  playerId: 'AXP9aX7pRuHZH1a1Bi_Sf'
+}
+
+export const lobbyStatusPlayerIsNotHostMock: LobbyStatus = {
+  inLobby: true,
+  lobby: lobby1Mock,
+  playerId: '5x89SitQIGwno_mUWhqG6'
+}

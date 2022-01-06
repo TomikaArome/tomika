@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UtilityModule } from './utility/utility.module';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
@@ -14,6 +15,8 @@ import { LobbyListComponent } from './components/lobby-list/lobby-list.component
 import { LobbyListItemComponent } from './components/lobby-list/lobby-list-item.component';
 import { LobbyScreenComponent } from './components/lobby-screen/lobby-screen.component';
 import { LobbySettingsComponent } from './components/game-setup/lobby-settings/lobby-settings.component';
+import { PlayerListComponent } from './components/player-list/player-list.component';
+import { PlayerListItemComponent } from './components/player-list/player-list-item.component';
 import { PlayerSettingsComponent } from './components/game-setup/player-settings/player-settings.component';
 import { SymbolSelectorComponent } from './components/game-setup/symbol-selector/symbol-selector.component';
 
@@ -22,7 +25,8 @@ import { SymbolSelectorComponent } from './components/game-setup/symbol-selector
     CommonModule,
     MatIconModule,
     MatRippleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    UtilityModule
   ],
   declarations: [
     ContainerComponent,
@@ -34,6 +38,8 @@ import { SymbolSelectorComponent } from './components/game-setup/symbol-selector
     LobbyListItemComponent,
     LobbyScreenComponent,
     LobbySettingsComponent,
+    PlayerListComponent,
+    PlayerListItemComponent,
     PlayerSettingsComponent,
     SymbolSelectorComponent
   ]

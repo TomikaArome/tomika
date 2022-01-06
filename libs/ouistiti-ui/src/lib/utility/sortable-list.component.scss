@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+
+  &.dragging-in-progress {
+    user-select: none;
+  }
+  &.horizontal-list {
+    flex-direction: row;
+
+    .tmk-sortable-list-item.dragging {
+      transform: translateX(var(--drag-difference));
+    }
+  }
+  &.vertical-list {
+    flex-direction: column;
+
+    .tmk-sortable-list-item.dragging {
+      transform: translateY(var(--drag-difference));
+    }
+  }
+}
+
+.tmk-sortable-list-item {
+  position: relative;
+
+  &.dragging {
+    z-index: 100000;
+  }
+
+  &:not(.dragging) {
+    transition: transform 100ms;
+  }
+}

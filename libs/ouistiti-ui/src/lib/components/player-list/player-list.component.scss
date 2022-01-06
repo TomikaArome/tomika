@@ -1,0 +1,15 @@
+:host {
+  width: 400px;
+
+  tmk-ouistiti-player-list-item {
+    transition: transform 100ms, opacity 100ms;
+
+    &.notDragging {
+      opacity: 0.5;
+    }
+    &.dragging {
+      transform-origin: center;
+      transform: scale(1.05);
+    }
+  }
+}

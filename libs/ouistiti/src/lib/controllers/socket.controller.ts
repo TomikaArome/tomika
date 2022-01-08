@@ -26,6 +26,8 @@ export class SocketController {
     return this.lobby !== null;
   }
 
+  static debounceTime = 5;
+
   constructor(private socket: Socket) {
     console.log(`Client connected: ${this.socket.id}`);
     this.socket.on('disconnect', (reason: string) => { this.onDisconnect(reason); });
@@ -76,7 +78,6 @@ export class SocketController {
     });
 
     this.lobbyCreatedBySelf$.subscribe((lobby: Lobby) => {
-      new SocketLobbyController(this, lobby);
       this.lobby = lobby;
       this.emitLobbyStatus();
     });

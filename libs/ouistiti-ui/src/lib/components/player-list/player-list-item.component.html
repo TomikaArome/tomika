@@ -1,3 +1,22 @@
-<div class="player-colour" [ngClass]="playerColourClass"></div>
+<div class="player-list-item-row" [ngClass]="playerColourClass">
+  <mat-icon [svgIcon]="playerSymbol" class="symbol"></mat-icon>
 
-<div class="nickname">{{ player.nickname }}</div>
+  <div class="nickname">{{ player.nickname }}</div>
+
+  <mat-icon
+    *ngIf="expandable"
+    [ngClass]="{ active: contentVisible }"
+    (click)="toggleContent()">
+    manage_accounts
+  </mat-icon>
+
+  <mat-icon
+    *ngIf="grabbable"
+    tmkSortableListGrip>
+    drag_indicator
+  </mat-icon>
+</div>
+
+<div class="player-list-item-content" *ngIf="contentVisible">
+  <ng-content></ng-content>
+</div>

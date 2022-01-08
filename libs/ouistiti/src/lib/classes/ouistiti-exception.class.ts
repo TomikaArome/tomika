@@ -1,5 +1,6 @@
-import { OuistitiError, OuistitiErrorType } from '@TomikaArome/ouistiti-shared';
+import { OuistitiError, OuistitiErrorType, OuistitiInvalidActionReason } from '@TomikaArome/ouistiti-shared';
 import { WsException } from '@nestjs/websockets';
+import { SocketController } from '../controllers/socket.controller';
 
 export class OuistitiException extends WsException {
   static requiredParam(requiredParamKey: string): OuistitiException {
@@ -17,6 +18,28 @@ export class OuistitiException extends WsException {
         return acc[currentKey];
       }, obj);
     });
+  }
+
+  static checkIfInLobby(controller: SocketController) {
+    if (!controller.inLobby) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ACTION,
+        detail: {
+          reason: OuistitiInvalidActionReason.NOT_IN_LOBBY
+        }
+      });
+    }
+  }
+
+  static checkIfHost(controller: SocketController) {
+    if (controller.player !== controller.lobby.host) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ACTION,
+        detail: {
+          reason: OuistitiInvalidActionReason.NOT_HOST
+        }
+      });
+    }
   }
 
   constructor(error: OuistitiError) {

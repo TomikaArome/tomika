@@ -38,6 +38,12 @@ export const lobby1Mock: LobbyInfo = {
       vacant: false
     }
   ],
+  playerOrder: [
+    'So5DdHmXOR7YoDnDeMBPC',
+    'ne6NF08aL2caTuk3c34rX',
+    'AXP9aX7pRuHZH1a1Bi_Sf',
+    '5x89SitQIGwno_mUWhqG6'
+  ],
   hostId: 'AXP9aX7pRuHZH1a1Bi_Sf',
   currentRoundNumber: 5,
   totalRoundCount: 18
@@ -56,6 +62,9 @@ export const lobby2Mock: LobbyInfo = {
       symbol: PlayerSymbol.CLUB,
       vacant: false
     }
+  ],
+  playerOrder: [
+    'IqqU4-U37aEv_IaMz-SR3'
   ],
   hostId: 'IqqU4-U37aEv_IaMz-SR3'
 }
@@ -80,6 +89,10 @@ export const lobby3Mock: LobbyInfo = {
       symbol: PlayerSymbol.HEART,
       vacant: true
     }
+  ],
+  playerOrder: [
+    '3_qFtX8jK-0KvM_KK61tc',
+    'NEnVNgoucJlfqCs3a51H7'
   ],
   hostId: '3_qFtX8jK-0KvM_KK61tc',
   currentRoundNumber: 13,

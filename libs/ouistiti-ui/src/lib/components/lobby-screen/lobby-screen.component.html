@@ -3,8 +3,10 @@
     <tmk-ouistiti-player-list
       [players]="playerList$ | async"
       [hostId]="hostId$ | async"
+      [selfId]="selfId$ | async"
       [maxNumberOfPlayers]="maxNumberOfPlayers$ | async"
-      [isSortable]="isHost$ | async">
+      [sortable]="isHost$ | async"
+      (orderChanged)="onOrderChange($event)">
     </tmk-ouistiti-player-list>
   </div>
 </div>

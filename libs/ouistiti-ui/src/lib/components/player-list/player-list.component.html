@@ -1,8 +1,15 @@
-<tmk-sortable-list [disabled]="!isSortable" [items]="players" [gap]="8">
+<tmk-sortable-list
+  [items]="players"
+  [disabled]="!isSortable"
+  [gap]="8"
+  (orderChanged)="sortableListOrderChanged($event)">
   <tmk-ouistiti-player-list-item
-    tmkSortableListGrip
     *tmkSortableListItem="let player; let dragging=dragging; let notDragging=notDragging"
     [ngClass]="{ dragging: dragging, notDragging: notDragging }"
-    [player]="player">
+    [player]="player"
+    [grabbable]="isSortable"
+    [isHost]="isHost(player)"
+    [expandable]="isExpandable(player)">
+    test
   </tmk-ouistiti-player-list-item>
 </tmk-sortable-list>

@@ -14,6 +14,7 @@ export interface LobbyInfo {
   passwordProtected: boolean;
   gameStatus: GameStatus;
   players: PlayerInfo[];
+  playerOrder: string[];
   hostId: string;
   maxNumberOfPlayers?: number;
   currentRoundNumber?: number;
@@ -38,16 +39,8 @@ export interface LobbyJoinParams {
   password?: string;
 }
 
-export interface LobbyLeaveParams {
-  id: string;
-}
-
-export interface LobbyKickParams {
-  lobbyId: string;
-  playerId: string;
-}
-
 export interface LobbyUpdateParams {
-  id: string;
   maxNumberOfPlayers?: number;
+  hostId?: string;
+  playerOrder?: string[];
 }

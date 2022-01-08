@@ -18,8 +18,8 @@ export class SocketService {
   private errorSource = new Subject<OuistitiError>();
   error$ = this.errorSource.asObservable();
 
-  //private lobbyStatusSource = new BehaviorSubject<LobbyStatus>({ inLobby: false });
-  private lobbyStatusSource = new BehaviorSubject<LobbyStatus>(lobbyStatusPlayerIsHostMock);
+  private lobbyStatusSource = new BehaviorSubject<LobbyStatus>({ inLobby: false });
+  // private lobbyStatusSource = new BehaviorSubject<LobbyStatus>(lobbyStatusPlayerIsHostMock);
   lobbyStatus$ = this.lobbyStatusSource.asObservable();
 
   private lobbyListSource = new BehaviorSubject<LobbyInfo[]>([]);

@@ -44,7 +44,6 @@ export class SortableListComponent<T> implements ControlValueAccessor {
   set items(value: T[]) {
     // Remove duplicates
     this.realItems = [...new Set(value)];
-    this.orderChanged.emit(this.items);
   };
 
   @HostBinding('class.horizontal-list')
@@ -66,6 +65,10 @@ export class SortableListComponent<T> implements ControlValueAccessor {
   orderChanged = new EventEmitter<T[]>();
   @Output()
   disabledChanged = new EventEmitter<boolean>();
+  @Output()
+  draggingStateChanged = new EventEmitter<T>();
+  @Output()
+  gripped = new EventEmitter<Element>();
 
   @ContentChild(SortableListItemDirective)
   itemContent: SortableListItemDirective;
@@ -122,6 +125,8 @@ export class SortableListComponent<T> implements ControlValueAccessor {
     document.body.classList.remove('grabbing');
     this.draggingElement.style.setProperty('--drag-difference', '');
     this.itemDragging = null;
+    this.draggingStateChanged.emit(null);
+    this.gripped.emit(null);
   }
 
   mouseDown(event: MouseEvent, item: T) {
@@ -135,6 +140,8 @@ export class SortableListComponent<T> implements ControlValueAccessor {
       this.elementStart = this.itemRect.start;
       this.elementEnd = this.itemRect.end;
       this.lastElementEnd = this.allRects[this.savedItems.length - 1].end;
+      this.draggingStateChanged.emit(this.itemDragging);
+      this.gripped.emit(grip);
     }
   }
 
@@ -200,15 +207,20 @@ export class SortableListComponent<T> implements ControlValueAccessor {
     this.onChange = fn;
   }
   writeValue(value: T[]) {
-    if (value === null) {
-      this.items = [];
-    } else if (value !== this.items) {
+    if (value !== null && !this.arraysAreEqual(value)) {
       this.items = value;
       this.onChange(this.items);
       this.onTouch();
+      this.orderChanged.emit(this.items);
     }
   }
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
+  }
+
+  private arraysAreEqual(value: T[]) {
+    if (value === this.items) { return true; }
+    if (value.length !== this.items.length) { return false; }
+    return this.items.reduce((acc: boolean, curr: T, index: number) => acc && curr === value[index], true);
   }
 }

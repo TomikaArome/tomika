@@ -1,15 +1,31 @@
-import { OuistitiErrorType } from '../enum/ouistiti-error-type.enum';
+import { OuistitiErrorType, OuistitiInvalidActionReason } from '../enum/ouistiti-error-type.enum';
 
 interface NoDetail {
   type: OuistitiErrorType.REQUIRED_PARAM | OuistitiErrorType.INCORRECT_PASSWORD
 }
 
+interface InvalidActionDetail {
+  type: OuistitiErrorType.INVALID_ACTION;
+  detail: {
+    reason: OuistitiInvalidActionReason
+  }
+}
+
 interface StringLengthDetail {
-  type: OuistitiErrorType.STRING_TOO_LONG,
+  type: OuistitiErrorType.STRING_TOO_LONG;
   detail: {
     value: string;
     requiredLength: number;
     actualLength: number;
+  }
+}
+
+interface NumberRangeDetail {
+  type: OuistitiErrorType.NUMBER_OUT_OF_RANGE;
+  detail: {
+    value: number;
+    minimum?: number;
+    maximum?: number;
   }
 }
 
@@ -20,17 +36,25 @@ interface InvalidIdDetail {
   }
 }
 
-interface NicknameTakenDetail {
-  type: OuistitiErrorType.NICKNAME_TAKEN,
+interface ElementInArrayTakenDetail {
+  type: OuistitiErrorType.NICKNAME_TAKEN;
   detail: {
     provided: string;
     taken: string[];
   }
 }
 
-type CombinedErrorType = NoDetail | StringLengthDetail | InvalidIdDetail | NicknameTakenDetail;
+interface OrderArrayIncompleteDetail {
+  type: OuistitiErrorType.ORDER_ARRAY_INCOMPLETE;
+  detail: {
+    provided: string[];
+    missing: string[];
+  }
+}
+
+type CombinedErrorType = NoDetail | InvalidActionDetail | StringLengthDetail | NumberRangeDetail | InvalidIdDetail | ElementInArrayTakenDetail | OrderArrayIncompleteDetail;
 
 export type OuistitiError = CombinedErrorType & {
-  param: string;
+  param?: string;
   caller?: string;
 }

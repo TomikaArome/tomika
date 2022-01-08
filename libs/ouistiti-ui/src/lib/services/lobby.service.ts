@@ -76,4 +76,10 @@ export class LobbyService {
   joinLobby(params: LobbyJoinParams) {
     this.socketService.emitEvent('joinLobby', params);
   }
+
+  changeCurrentLobbyOrder(order: string[]) {
+    this.socketService.emitEvent('updateLobby', {
+      playerOrder: order
+    });
+  }
 }

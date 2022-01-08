@@ -11,7 +11,6 @@ export class Game {
   lobby: Lobby;
   status: GameStatus = GameStatus.INIT;
   rounds: Round[] = [];
-  private playerOrder: string[];
 
   constructor(lobby: Lobby, existingId: string = null) {
     this.lobby = lobby;
@@ -34,10 +33,6 @@ export class Game {
   get totalRoundCount(): number {
     const maxCardsPerPlayer = 8;
     return (maxCardsPerPlayer - 1) * 2 + this.lobby.players.length;
-  }
-
-  get playersInOrder(): Player[] {
-    return this.playerOrder.map(playerId => this.lobby.getPlayerById(playerId));
   }
 
   loadExistingGame(id: string) {

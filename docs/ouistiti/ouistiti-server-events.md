@@ -2,12 +2,14 @@
 
 This page lists all the websocket events that a client may sent to the server.
 
-- Lobbies
+- [Lobbies](#lobbies)
   - [`listLobbies`](#listlobbies)
   - [`createLobby`](#createlobby)
   - [`joinLobby`](#joinlobby)
   - [`leaveLobby`](#leavelobby)
   - [`updateLobby`](#updatelobby)
+- [Players](#players)
+  - [`updatePlayer`](#updateplayer)
 
 ## Lobbies
 
@@ -95,5 +97,47 @@ will be ignored.
     "zkn_iuMOj2KvaCLaQeIE1",
     "lB3Gt6t9kYITX9_QWhAzh"
   ]
+}
+```
+
+## Players
+
+### `updatePlayer`
+Updates a player's settings. This action may be performed by the concerned player, or the host of the lobby for any player
+in that lobby. On success, the server will emit a `lobbyStatus` event to each of the sockets in the lobby, and a
+`lobbyUpdate` event for any other socket who is not already in a lobby of their own.
+
+If a socket attempts to update information of a player they do not have permission to modify, an error will be sent back.
+
+The payload is of type [`PlayerUpdateParams`]().
+- `id` ID of player to modify. Optional if modifying self's settings.
+- `nickname`
+- `colour`
+- `symbol`
+
+```json
+{
+  "id": "zkn_iuMOj2KvaCLaQeIE1",
+  "nickname": "Thomas",
+  "colour": "AQUA",
+  "symbol": "SPADE"
+}
+```
+
+### `kickPlayer`
+Kicks a player from the lobby. This action may only be performed by the host of a lobby, and not on themselves. For
+voluntarily leaving a lobby, use the `leaveLobby` event instead. On success, the server will emit a `lobbyStatus` event
+to each of the sockets in the lobby, and a `lobbyUpdate` event for any other socket who is not already in a lobby of
+their own.
+
+If a socket attempts to kick a player while they are not part of any lobby, or if they are not a host of their lobby,
+an error will sent back.
+
+The payload is of type [`PlayerKickParams`]().
+- `id` ID of the player to kick
+
+```json
+{
+  "id": "zkn_iuMOj2KvaCLaQeIE1"
 }
 ```

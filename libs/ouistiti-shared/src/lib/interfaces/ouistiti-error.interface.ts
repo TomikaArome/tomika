@@ -1,7 +1,7 @@
 import { OuistitiErrorType, OuistitiInvalidActionReason } from '../enum/ouistiti-error-type.enum';
 
 interface NoDetail {
-  type: OuistitiErrorType.REQUIRED_PARAM | OuistitiErrorType.INCORRECT_PASSWORD
+  type: OuistitiErrorType.REQUIRED_PARAM | OuistitiErrorType.INCORRECT_PASSWORD | OuistitiErrorType.HOST_CANNOT_KICK_SELF;
 }
 
 interface InvalidActionDetail {
@@ -37,10 +37,10 @@ interface InvalidIdDetail {
 }
 
 interface ElementInArrayTakenDetail {
-  type: OuistitiErrorType.NICKNAME_TAKEN;
+  type: OuistitiErrorType.VALUE_TAKEN;
   detail: {
-    provided: string;
-    taken: string[];
+    provided: unknown;
+    taken: unknown[];
   }
 }
 

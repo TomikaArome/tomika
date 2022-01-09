@@ -16,31 +16,31 @@ export class Player {
   colour: PlayerColour;
   symbol: PlayerSymbol;
 
+  get isVacant(): boolean {
+    // TODO
+    return false;
+  }
+
   get info(): PlayerInfo {
     return {
       id: this.id,
       nickname: this.nickname,
       colour: this.colour,
       symbol: this.symbol,
-      vacant: this.isVacant()
+      vacant: this.isVacant
     }
   }
 
-  static playerCreated$ = new Subject<Player>();
+  private nicknameChangedSource = new Subject<string>();
+  nicknameChanged$ = this.nicknameChangedSource.asObservable();
+  private colourChangedSource = new Subject<PlayerColour>();
+  colourChanged$ = this.colourChangedSource.asObservable();
+  private symbolChangedSource = new Subject<PlayerSymbol>();
+  symbolChanged$ = this.symbolChangedSource.asObservable();
 
   static createNewPlayer(params: PlayerCreateParams): Player {
     OuistitiException.checkRequiredParams(params, ['nickname']);
-    if (params.nickname.length > NICKNAME_MAX_LENGTH) {
-      throw new OuistitiException({
-        type: OuistitiErrorType.STRING_TOO_LONG,
-        param: 'nickname',
-        detail: {
-          value: params.nickname,
-          requiredLength: NICKNAME_MAX_LENGTH,
-          actualLength: params.nickname.length
-        }
-      });
-    }
+    Player.validateNickname(params.nickname);
 
     const player = new Player();
 
@@ -62,8 +62,33 @@ export class Player {
     return PlayerSymbol[symbolKeys[Math.floor(Math.random() * symbolKeys.length)]];
   }
 
-  isVacant(): boolean {
-    // TODO
-    return false;
+  private static validateNickname(nickname: string) {
+    if (nickname.length > NICKNAME_MAX_LENGTH) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.STRING_TOO_LONG,
+        param: 'nickname',
+        detail: {
+          value: nickname,
+          requiredLength: NICKNAME_MAX_LENGTH,
+          actualLength: nickname.length
+        }
+      });
+    }
+  }
+
+  changeNickname(nickname: string) {
+    Player.validateNickname(nickname);
+    this.nickname = nickname;
+    this.nicknameChangedSource.next(nickname);
+  }
+
+  changeColour(colour: PlayerColour) {
+    this.colour = colour;
+    this.colourChangedSource.next(colour);
+  }
+
+  changeSymbol(symbol: PlayerSymbol) {
+    this.symbol = symbol;
+    this.symbolChangedSource.next(symbol);
   }
 }

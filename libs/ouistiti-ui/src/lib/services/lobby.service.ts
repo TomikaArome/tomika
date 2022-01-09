@@ -6,7 +6,7 @@ import {
   LobbyCreateParams,
   LobbyInfo,
   LobbyJoinParams,
-  LobbyStatus
+  LobbyStatus, PlayerKickParams
 } from '@TomikaArome/ouistiti-shared';
 import { merge, Observable } from 'rxjs';
 import { PlayerService } from './player.service';
@@ -66,8 +66,7 @@ export class LobbyService {
     return lobbyA.hostId.localeCompare(lobbyB.hostId);
   }
 
-  constructor(private socketService: SocketService,
-              private playerService: PlayerService) {}
+  constructor(private socketService: SocketService) {}
 
   createLobby(params: LobbyCreateParams) {
     this.socketService.emitEvent('createLobby', params);
@@ -77,9 +76,24 @@ export class LobbyService {
     this.socketService.emitEvent('joinLobby', params);
   }
 
+  leaveLobby() {
+    this.socketService.emitEvent('leaveLobby');
+    this.socketService.emitEvent('listLobbies');
+  }
+
+  kickFromLobby(params: PlayerKickParams) {
+    this.socketService.emitEvent('kickPlayer', params);
+  }
+
   changeCurrentLobbyOrder(order: string[]) {
     this.socketService.emitEvent('updateLobby', {
       playerOrder: order
+    });
+  }
+
+  changeCurrentLobbyHost(newHostId: string) {
+    this.socketService.emitEvent('updateLobby', {
+      hostId: newHostId
     });
   }
 }

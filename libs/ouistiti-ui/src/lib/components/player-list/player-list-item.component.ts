@@ -1,8 +1,9 @@
-import { Component, HostBinding, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnDestroy, Output } from '@angular/core';
 import { PlayerInfo } from '@TomikaArome/ouistiti-shared';
 import { PlayerService } from '../../services/player.service';
 import { SortableListComponent } from '../../utility/sortable-list.component';
 import { Subject } from 'rxjs';
+import { faCrown, faGripVertical, faUserCog } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'tmk-ouistiti-player-list-item',
@@ -19,11 +20,22 @@ export class PlayerListItemComponent implements OnDestroy {
   @Input()
   expandable = false;
 
+  private _contentVisible = false;
+  @Input()
+  get contentVisible(): boolean { return this._contentVisible; }
+  set contentVisible(value: boolean) { this._contentVisible = value; }
+
+  @Output()
+  contentVisibledToggled = new EventEmitter<boolean>();
+
   @HostBinding('class.tmk-player-list-item-dragging')
   dragging = false;
 
-  contentVisible = false;
   private onDestroy$ = new Subject<void>();
+
+  faCrown = faCrown;
+  faUserCog = faUserCog;
+  faGripVertical = faGripVertical;
 
   constructor(private sortableList: SortableListComponent<PlayerInfo>) {
     this.sortableList.draggingStateChanged.subscribe((player: PlayerInfo) => {
@@ -49,5 +61,6 @@ export class PlayerListItemComponent implements OnDestroy {
 
   toggleContent() {
     this.contentVisible = !this.contentVisible;
+    this.contentVisibledToggled.emit(this.contentVisible);
   }
 }

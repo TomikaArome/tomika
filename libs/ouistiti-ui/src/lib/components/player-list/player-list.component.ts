@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output } from '@angular/core';
 import { MAX_NUMBER_OF_PLAYERS_PER_LOBBY, PlayerInfo } from '@TomikaArome/ouistiti-shared';
+import { PlayerListItemContentDirective } from '../../directives/player-list-item-content.directive';
 
 @Component({
   selector: 'tmk-ouistiti-player-list',
@@ -9,8 +10,15 @@ import { MAX_NUMBER_OF_PLAYERS_PER_LOBBY, PlayerInfo } from '@TomikaArome/ouisti
 export class PlayerListComponent {
   @Input()
   players: PlayerInfo[] = [];
+  _hostId: string;
   @Input()
-  hostId: string;
+  get hostId(): string { return this._hostId; }
+  set hostId(value: string) {
+    if (this._hostId === this.selfId) {
+      this.expandedPlayerId = null;
+    }
+    this._hostId = value;
+  }
   @Input()
   selfId: string;
   @Input()
@@ -20,6 +28,11 @@ export class PlayerListComponent {
 
   @Output()
   orderChanged = new EventEmitter<string[]>();
+
+  @ContentChild(PlayerListItemContentDirective)
+  playerListItemContent: PlayerListItemContentDirective;
+
+  expandedPlayerId: string = null;
 
   get isSortable(): boolean {
     return this.sortable && this.players.length > 1;
@@ -31,6 +44,15 @@ export class PlayerListComponent {
 
   isExpandable(player: PlayerInfo): boolean {
     return this.hostId === this.selfId || player.id === this.selfId;
+  }
+
+  isExpanded(player: PlayerInfo): boolean {
+    return this.expandedPlayerId === player.id;
+  }
+  setExpandedPlayer(player: PlayerInfo, isExpanded: boolean) {
+    if (isExpanded) {
+      this.expandedPlayerId = player.id;
+    }
   }
 
   sortableListOrderChanged(order: PlayerInfo[]) {

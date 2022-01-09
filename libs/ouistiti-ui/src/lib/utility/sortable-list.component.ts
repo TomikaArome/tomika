@@ -82,6 +82,8 @@ export class SortableListComponent<T> implements ControlValueAccessor {
   private elementEnd = 0;
   private lastElementEnd = 0;
 
+  private contexts: SortableListTemplateContext<T>[] = [];
+
   @HostBinding('class.dragging-in-progress')
   get dragging(): boolean { return !!this.itemDragging; }
   @HostBinding('class.vertical-list')

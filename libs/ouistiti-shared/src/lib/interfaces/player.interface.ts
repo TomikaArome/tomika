@@ -20,8 +20,12 @@ export interface PlayerCreateParams {
 }
 
 export interface PlayerUpdateParams {
-  id: string;
+  id?: string;
   nickname?: string;
   colour?: PlayerColour;
   symbol?: PlayerSymbol;
+}
+
+export interface PlayerKickParams {
+  id: string;
 }

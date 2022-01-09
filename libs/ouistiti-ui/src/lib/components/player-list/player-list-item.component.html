@@ -1,20 +1,24 @@
 <div class="player-list-item-row" [ngClass]="playerColourClass">
   <mat-icon [svgIcon]="playerSymbol" class="symbol"></mat-icon>
 
-  <div class="nickname">{{ player.nickname }}</div>
+  <div class="nickname">
+    {{ player.nickname }}
+    <fa-icon *ngIf="isHost" class="host-indicator" [icon]="faCrown"></fa-icon>
+  </div>
 
-  <mat-icon
+  <fa-icon
     *ngIf="expandable"
+    [icon]="faUserCog"
     [ngClass]="{ active: contentVisible }"
     (click)="toggleContent()">
-    manage_accounts
-  </mat-icon>
+  </fa-icon>
 
-  <mat-icon
+  <fa-icon
+    [icon]="faGripVertical"
     *ngIf="grabbable"
     tmkSortableListGrip>
     drag_indicator
-  </mat-icon>
+  </fa-icon>
 </div>
 
 <div class="player-list-item-content" *ngIf="contentVisible">

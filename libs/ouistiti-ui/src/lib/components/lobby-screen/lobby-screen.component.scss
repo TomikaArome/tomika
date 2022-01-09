@@ -1,3 +1,5 @@
+@import "../../assets/ouistiti-theme";
+
 :host {
   display: flex;
   flex-direction: row;
@@ -14,6 +16,11 @@
     .inner-section {
       position: relative;
       min-width: 400px;
+
+      .update-player-settings {
+        display: block;
+        padding: 8px 16px;
+      }
     }
   }
 }

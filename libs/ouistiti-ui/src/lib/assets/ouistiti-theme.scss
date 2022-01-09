@@ -14,7 +14,19 @@
     grid-template-columns: 1fr 3fr;
     align-items: center;
     justify-items: stretch;
-    gap: 8px;
+    row-gap: 8px;
+
+    .input-button-cell {
+      display: flex;
+      gap: 8px;
+
+      & > * {
+        flex: 1;
+      }
+      & > button {
+        width: fit-content;
+      }
+    }
 
     label {
       color: hsl(0, 0%, 80%);
@@ -83,26 +95,32 @@
           font-size: 1.5em;
         }
       }
+    }
 
-      button {
-        --button-hue: 0;
-        --button-saturation: 0%;
-        background-color: hsl(var(--button-hue), var(--button-saturation), 30%);
-        border-color: hsl(var(--button-hue), var(--button-saturation), 20%);
-        cursor: pointer;
-        transition: background-color 100ms, border-color 100ms, color 100ms;
-        color: hsla(0,0%,100%,0.8);
+    button {
+      --button-hue: 0;
+      --button-saturation: 0%;
+      background-color: hsl(var(--button-hue), var(--button-saturation), 30%);
+      border-color: hsl(var(--button-hue), var(--button-saturation), 20%);
+      cursor: pointer;
+      transition: background-color 100ms, border-color 100ms, color 100ms;
+      color: hsla(0,0%,100%,0.8);
 
-        &:disabled {
-          background-color: hsl(120, 0%, 10%);
-          border-color: hsl(120, 0%, 5%);
-          cursor: initial;
-          color: hsla(0,0%,100%,0.2);
-        }
+      &:disabled {
+        background-color: hsl(120, 0%, 10%);
+        border-color: hsl(120, 0%, 5%);
+        cursor: initial;
+        color: hsla(0,0%,100%,0.2);
+      }
 
-        &[class*="button-colour-"] { --button-saturation: 30%; }
-        &.button-colour-green { --button-hue: 120; }
-        &.button-colour-red { --button-hue: 0; }
+      &[class*="button-colour-"] { --button-saturation: 30%; }
+      &.button-colour-green { --button-hue: 120; }
+      &.button-colour-red { --button-hue: 0; }
+      &.button-colour-gold { --button-hue: 50; }
+
+      fa-icon {
+        margin-right: 0.5em;
+        font-size: 0.8em;
       }
     }
   }

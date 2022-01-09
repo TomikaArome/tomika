@@ -1,6 +1,12 @@
-import { OnGatewayConnection, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import { LobbyCreateParams, LobbyJoinParams, LobbyUpdateParams } from '@TomikaArome/ouistiti-shared';
+import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import {
+  LobbyCreateParams,
+  LobbyJoinParams,
+  LobbyUpdateParams,
+  OuistitiErrorType,
+  PlayerKickParams,
+  PlayerUpdateParams
+} from '@TomikaArome/ouistiti-shared';
 import { UseFilters, UsePipes } from '@nestjs/common';
 import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
 import { SocketController } from './controllers/socket.controller';
@@ -60,5 +66,35 @@ export class OuistitiGateway {
     if (params.hostId) { controller.lobby.changeHost(params.hostId); }
     if (params.playerOrder) { controller.lobby.changeOrder(params.playerOrder); }
     if (params.maxNumberOfPlayers !== undefined) { controller.lobby.changeMaxNumberOfPlayers(params.maxNumberOfPlayers); }
+  }
+
+  @UseFilters(new OuistitiExceptionFilter('updatePlayer'))
+  @SubscribeMessage('updatePlayer')
+  updatePlayer(controller: SocketController, params: PlayerUpdateParams) {
+    OuistitiException.checkIfInLobby(controller);
+    if (!params.id) { params.id = controller.player.id; }
+    if (params.id !== controller.player.id) {
+      OuistitiException.checkIfHost(controller);
+    }
+
+    const player = controller.lobby.getPlayerByIdAndThrowIfNotFound(params.id);
+    if (params.nickname) { controller.lobby.changePlayerNickname(player, params.nickname); }
+    if (params.colour) { controller.lobby.changePlayerColour(player, params.colour); }
+    if (params.symbol) { player.changeSymbol(params.symbol); }
+  }
+
+  @UseFilters(new OuistitiExceptionFilter('kickPlayer'))
+  @SubscribeMessage('kickPlayer')
+  kickPlayer(controller: SocketController, params: PlayerKickParams) {
+    OuistitiException.checkIfInLobby(controller);
+    OuistitiException.checkIfHost(controller);
+    if (params.id === controller.player.id) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.HOST_CANNOT_KICK_SELF
+      });
+    }
+
+    const player = controller.lobby.getPlayerByIdAndThrowIfNotFound(params.id);
+    controller.lobby.removePlayer(player);
   }
 }

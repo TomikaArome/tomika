@@ -17,7 +17,7 @@
     padding: 6px;
     border-radius: var(--player-list-item-border-radius);
 
-    mat-icon {
+    & > fa-icon, & > mat-icon {
       width: 40px;
       height: 40px;
       display: flex;
@@ -48,11 +48,17 @@
       padding-left: 16px;
       font-weight: bold;
       flex: 1;
+
+      .host-indicator {
+        font-size: 0.8em;
+        margin-left: 6px;
+        color: hsl(50,50%,50%);
+      }
     }
   }
 
   &:not(.tmk-player-list-item-dragging) .player-list-item-row  {
-    mat-icon:not(.symbol):hover {
+    fa-icon:not(.symbol):hover {
       cursor: pointer;
       background-color: hsla(0,0%,100%,0.1);
     }

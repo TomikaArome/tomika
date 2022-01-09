@@ -9,7 +9,11 @@
     [player]="player"
     [grabbable]="isSortable"
     [isHost]="isHost(player)"
-    [expandable]="isExpandable(player)">
-    test
+    [expandable]="isExpandable(player)"
+    [contentVisible]="isExpanded(player)"
+    (contentVisibledToggled)="setExpandedPlayer(player, $event)">
+
+    <ng-container *ngTemplateOutlet="playerListItemContent.templateRef; context: { $implicit: player }"></ng-container>
+
   </tmk-ouistiti-player-list-item>
 </tmk-sortable-list>

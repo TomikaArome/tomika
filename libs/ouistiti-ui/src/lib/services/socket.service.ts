@@ -39,6 +39,7 @@ export class SocketService {
     console.log('Connect');
     this.socket = io('http://localhost:3333/ouistiti');
     this.socketDisconnected$ = new BehaviorSubject<boolean>(false);
+    this.socket.on('disconnect', () => { this.disconnect(); });
     this.subscribeEvents();
     this.emitEvent('listLobbies');
   }
@@ -58,7 +59,9 @@ export class SocketService {
     console.log('Disconnect');
     this.socketDisconnected$.next(true);
     this.socketDisconnected$.complete();
-    this.socket.disconnect();
+    if (this.socket?.connected) {
+      this.socket.disconnect();
+    }
   }
 
   emitEvent(eventType: string, payload?: unknown) {

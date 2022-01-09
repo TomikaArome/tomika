@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LobbyStatus, PlayerColour, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
+import { LobbyStatus, PlayerColour, PlayerInfo, PlayerSymbol, PlayerUpdateParams } from '@TomikaArome/ouistiti-shared';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CLUB_ICON, DIAMOND_ICON, HEART_ICON, SPADE_ICON } from '../assets/icons';
@@ -13,10 +13,10 @@ export class PlayerService {
     map((status: LobbyStatus) => status.inLobby)
   );
   currentPlayer$: Observable<PlayerInfo> = this.socketService.lobbyStatus$.pipe(
-    map((status: LobbyStatus) => status.lobby.players.find((player: PlayerInfo) => player.id === status.playerId) ?? null)
+    map((status: LobbyStatus) => status?.lobby?.players?.find((player: PlayerInfo) => player.id === status.playerId) ?? null)
   );
   isHost$ = this.socketService.lobbyStatus$.pipe(
-    map((status: LobbyStatus) => status.playerId === status.lobby.hostId)
+    map((status: LobbyStatus) => status.inLobby && status.playerId === status.lobby.hostId)
   );
 
   static getSymbolIconName(symbol: PlayerSymbol): string {
@@ -38,5 +38,9 @@ export class PlayerService {
     this.iconRegistry.addSvgIconLiteral('heart', this.sanitizer.bypassSecurityTrustHtml(HEART_ICON));
     this.iconRegistry.addSvgIconLiteral('club', this.sanitizer.bypassSecurityTrustHtml(CLUB_ICON));
     this.iconRegistry.addSvgIconLiteral('diamond', this.sanitizer.bypassSecurityTrustHtml(DIAMOND_ICON));
+  }
+
+  updatePlayerSettings(params: PlayerUpdateParams) {
+    this.socketService.emitEvent('updatePlayer', params);
   }
 }

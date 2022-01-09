@@ -105,6 +105,23 @@ export class Lobby {
   getPlayerById(playerId: string): Player {
     return this.players.find((player: Player) => player.id === playerId) ?? null;
   }
+  getPlayerByIdAndThrowIfNotFound(playerId: string, param = 'id'): Player {
+    const player = this.getPlayerById(playerId);
+    if (!player) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ID,
+        detail: {
+          provided: playerId
+        },
+        param
+      });
+    }
+    return player;
+  }
+
+  nicknameTaken(nickname: string): boolean {
+    return this.players.findIndex((player: Player) => player.nickname === nickname) > -1;
+  }
 
   colourTaken(colour: PlayerColour): boolean {
     return this.players.findIndex((player: Player) => player.colour === colour) > -1;
@@ -158,16 +175,7 @@ export class Lobby {
   }
 
   changeHost(newHostId: string) {
-    const newHost = this.getPlayerById(newHostId);
-    if (!newHost) {
-      throw new OuistitiException({
-        type: OuistitiErrorType.INVALID_ID,
-        detail: {
-          provided: newHostId
-        },
-        param: 'hostId'
-      });
-    }
+    const newHost = this.getPlayerByIdAndThrowIfNotFound(newHostId, 'hostId');
 
     const previousHost = this.host;
     this.host = newHost;
@@ -211,5 +219,31 @@ export class Lobby {
 
     this.maxNumberOfPlayers = newMax;
     this.maximumNumberOfPlayersChangedSource.next(this.maxNumberOfPlayers);
+  }
+
+  changePlayerNickname(player: Player, nickname: string) {
+    if (this.nicknameTaken(nickname)) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.VALUE_TAKEN,
+        detail: {
+          provided: nickname,
+          taken: this.players.map((player: Player) => player.nickname)
+        }
+      });
+    }
+    player.changeNickname(nickname);
+  }
+
+  changePlayerColour(player: Player, colour: PlayerColour) {
+    if (this.colourTaken(colour)) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.VALUE_TAKEN,
+        detail: {
+          provided: colour,
+          taken: this.players.map((player: Player) => player.colour)
+        }
+      });
+    }
+    player.changeColour(colour);
   }
 }

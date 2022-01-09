@@ -4,6 +4,7 @@ import { debounceTime, filter, tap } from 'rxjs/operators';
 import { LobbyJoinObserved, LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
 import { merge } from 'rxjs';
 import { LobbyClosed } from '@TomikaArome/ouistiti-shared';
+import { SocketPlayerController } from './socket-player.controller';
 
 export class SocketLobbyController {
   private ownLobbyClosed$ = this.controlledLobby.lobbyClosed$.pipe(
@@ -56,6 +57,13 @@ export class SocketLobbyController {
     this.subscribeEmitLobbyStatus();
     this.subscribeEmitLobbyUpdate();
     this.subscribeEmitLobbyClosed();
+
+    new SocketPlayerController(this.socketController, this.controlledLobby.host, this.controlledLobby);
+    this.controlledLobby.playerJoined$.pipe(
+      this.socketController.takeUntilDisconnected()
+    ).subscribe(({ player }: LobbyJoinObserved) => {
+      new SocketPlayerController(this.socketController, player, this.controlledLobby);
+    })
   }
 
   filterByOwnLobby() {
@@ -69,8 +77,8 @@ export class SocketLobbyController {
       this.playerLeftInOwnLobby$,
       this.ownLobbyUpdated$
     ).pipe(
-      debounceTime(SocketController.debounceTime),
-      this.socketController.takeUntilDisconnected()
+      this.socketController.takeUntilDisconnected(),
+      debounceTime(SocketController.debounceTime)
     ).subscribe(() => {
       this.socketController.emitLobbyStatus();
     });
@@ -82,8 +90,8 @@ export class SocketLobbyController {
       this.otherLeftWhileSelfNotInLobby$,
       this.lobbyUpdatedWhileSelfNotInLobby$
     ).pipe(
-      debounceTime(SocketController.debounceTime),
-      this.socketController.takeUntilDisconnected()
+      this.socketController.takeUntilDisconnected(),
+      debounceTime(SocketController.debounceTime)
     ).subscribe(() => {
       this.socketController.emit('lobbyUpdated', this.controlledLobby.info);
     });

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UtilityModule } from './utility/utility.module';
 
@@ -20,9 +22,12 @@ import { PlayerListItemComponent } from './components/player-list/player-list-it
 import { PlayerSettingsComponent } from './components/game-setup/player-settings/player-settings.component';
 import { SymbolSelectorComponent } from './components/game-setup/symbol-selector/symbol-selector.component';
 
+import { PlayerListItemContentDirective } from './directives/player-list-item-content.directive';
+
 @NgModule({
   imports: [
     CommonModule,
+    FontAwesomeModule,
     MatIconModule,
     MatRippleModule,
     ReactiveFormsModule,
@@ -41,7 +46,9 @@ import { SymbolSelectorComponent } from './components/game-setup/symbol-selector
     PlayerListComponent,
     PlayerListItemComponent,
     PlayerSettingsComponent,
-    SymbolSelectorComponent
+    SymbolSelectorComponent,
+
+    PlayerListItemContentDirective
   ]
 })
 export class OuistitiUiModule {}

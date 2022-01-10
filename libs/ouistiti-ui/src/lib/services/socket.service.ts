@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Subject } from 'rxjs';
-import {
-  LobbyInfo,
-  OuistitiError,
-  LobbyStatus,
-  LobbyClosed,
-  lobbyStatusPlayerIsHostMock
-} from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, lobbyStatusPlayerIsHostMock, RoundInfo, BidInfo, PlayedCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
@@ -29,6 +23,15 @@ export class SocketService {
   private lobbyClosedSource = new Subject<LobbyClosed>();
   lobbyClosed$ = this.lobbyClosedSource.asObservable();
 
+  private roundStatusSource = new Subject<RoundInfo>();
+  roundStatus$ = this.roundStatusSource.asObservable();
+  private bidSource = new Subject<BidInfo[]>();
+  bid$ = this.bidSource.asObservable();
+  private cardPlayedSource = new Subject<PlayedCardInfo>();
+  cardPlayed$ = this.cardPlayedSource.asObservable();
+  private trickWonSource = new Subject<WonCardInfo[]>();
+  trickWon$ = this.trickWonSource.asObservable();
+
   constructor() {
     this.error$.subscribe(error => {
       console.log(error);
@@ -45,12 +48,13 @@ export class SocketService {
   }
 
   private subscribeEvents() {
-    const eventNames = ['error', 'lobbyStatus', 'lobbyList', 'lobbyUpdated', 'lobbyClosed'];
+    const eventNames = ['error', 'lobbyStatus', 'lobbyList', 'lobbyUpdated', 'lobbyClosed', 'roundStatus', 'bid',
+      'cardPlayed', 'trickWon'];
     eventNames.forEach(eventName => this.subscribeEvent(eventName));
   }
 
   private subscribeEvent(eventName: string) {
-    this.socket.on(eventName, (payload) => {
+    this.socket.on(eventName, (payload: unknown) => {
       (this[`${eventName}Source`] as Subject<unknown>).next(payload);
     });
   }

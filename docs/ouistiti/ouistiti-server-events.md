@@ -57,7 +57,7 @@ The payload is of type [`LobbyJoinParams`](https://github.com/TomikaArome/tomika
 
 ```json
 {
-  "id": "y7kxzvtXKma_CPfloua13",
+  "id": "WsYuuQ8JP_",
   "player": {
     "nickname": "Thomas"
   }
@@ -92,10 +92,10 @@ will be ignored.
 ```json
 {
   "maxNumberOfPlayers": 4,
-  "hostId": "zkn_iuMOj2KvaCLaQeIE1",
+  "hostId": "KfaB3Zz0zU",
   "playerOrder": [
-    "zkn_iuMOj2KvaCLaQeIE1",
-    "lB3Gt6t9kYITX9_QWhAzh"
+    "KfaB3Zz0zU",
+    "9mOwZjv0fM"
   ]
 }
 ```
@@ -117,7 +117,7 @@ The payload is of type [`PlayerUpdateParams`]().
 
 ```json
 {
-  "id": "zkn_iuMOj2KvaCLaQeIE1",
+  "id": "KfaB3Zz0zU",
   "nickname": "Thomas",
   "colour": "AQUA",
   "symbol": "SPADE"
@@ -138,6 +138,6 @@ The payload is of type [`PlayerKickParams`]().
 
 ```json
 {
-  "id": "zkn_iuMOj2KvaCLaQeIE1"
+  "id": "9mOwZjv0fM"
 }
 ```

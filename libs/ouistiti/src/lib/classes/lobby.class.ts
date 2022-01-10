@@ -20,7 +20,7 @@ import {
 } from '../interfaces/lobby-oberserved.interface';
 
 export class Lobby {
-  id = nanoid();
+  id = nanoid(10);
   players: Player[] = [];
   playerOrder: string[] = [];
   game: Game;

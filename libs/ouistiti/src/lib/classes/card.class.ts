@@ -1,8 +1,9 @@
 import { Player } from './player.class';
-import { CardSuit } from '@TomikaArome/ouistiti-shared';
-import { CardValue } from '@TomikaArome/ouistiti-shared';
+import { CARD_ORDER, CardSuit, CardValue } from '@TomikaArome/ouistiti-shared';
+import { nanoid } from 'nanoid';
 
 export class Card {
+  id = nanoid(10);
   value: CardValue;
   suit: CardSuit;
   owner: Player;
@@ -14,20 +15,17 @@ export class Card {
   }
 
   compareTo(otherCard: Card): number {
-    return Card.cardOrder.indexOf(this.value) - Card.cardOrder.indexOf(otherCard.value);
+    return CARD_ORDER.indexOf(this.value) - CARD_ORDER.indexOf(otherCard.value);
   }
-
-  static cardOrder = [CardValue.TWO, CardValue.THREE, CardValue.FOUR, CardValue.FIVE, CardValue.SIX, CardValue.SEVEN,
-    CardValue.EIGHT, CardValue.NINE, CardValue.TEN, CardValue.JACK, CardValue.QUEEN, CardValue.KING, CardValue.ACE];
 
   static generateUnshuffledDeck(totalNumberOfCards: number): Card[] {
     let i = totalNumberOfCards;
-    return this.cardOrder.reduceRight((accumulatedCards, currentValue) => {
+    return CARD_ORDER.reduceRight((accumulatedCards, currentValue) => {
       Object.values(CardSuit).forEach((currentSuit) => {
         if (i > 0) {
           accumulatedCards.push(new Card(currentValue, currentSuit));
+          i--;
         }
-        i--;
       });
       return accumulatedCards;
     }, []);

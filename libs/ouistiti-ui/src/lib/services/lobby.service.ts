@@ -1,15 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import {
-  GameStatus,
-  LobbyClosed,
-  LobbyCreateParams,
-  LobbyInfo,
-  LobbyJoinParams,
-  LobbyStatus, PlayerKickParams
-} from '@TomikaArome/ouistiti-shared';
+import { GameStatus, LobbyClosed, LobbyCreateParams, LobbyInfo, LobbyJoinParams, LobbyStatus, PlayerKickParams } from '@TomikaArome/ouistiti-shared';
 import { merge, Observable } from 'rxjs';
-import { PlayerService } from './player.service';
 import { map, scan } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })

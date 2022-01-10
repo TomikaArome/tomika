@@ -8,11 +8,17 @@ export interface RoundInfo {
   bids: BidInfo[];
 }
 
-export interface BidInfo {
+export interface PendingBidInfo {
   playerId: string;
-  waitingForBid: boolean;
-  bid?: number;
+  bidPending: true;
 }
+
+export interface ResolvedBidInfo {
+  playerId: string;
+  bid: number;
+}
+
+export type BidInfo = PendingBidInfo | ResolvedBidInfo;
 
 // Server events
 

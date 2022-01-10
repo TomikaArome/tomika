@@ -9,7 +9,7 @@ type RoundStatusTemporaryObservableValue = {
   payload: RoundInfo
 } | {
   event: 'bid',
-  payload: BidInfo[]
+  payload: BidInfo
 } | {
   event: 'cardPlayed',
   payload: PlayedCardInfo
@@ -30,11 +30,11 @@ export class RoundService {
       if (v.event === 'roundStatus') {
         currStatus = v.payload;
       } else if (v.event === 'bid') {
-        currStatus.bids = v.payload;
+        RoundService.updateBidInfo(currStatus.bids, v.payload);
       } else if (v.event === 'cardPlayed') {
-        RoundService.updateCardInfo(currStatus, v.payload);
+        RoundService.updateCardInfo(currStatus.cards, v.payload);
       } else if (v.event === 'trickWon') {
-        v.payload.forEach((cardInfo: WonCardInfo) => RoundService.updateCardInfo(currStatus, cardInfo));
+        v.payload.forEach((cardInfo: WonCardInfo) => RoundService.updateCardInfo(currStatus.cards, cardInfo));
       }
       return currStatus;
     }, {
@@ -44,12 +44,21 @@ export class RoundService {
     })
   );
 
-  private static updateCardInfo(roundStatus: RoundInfo, cardInfo: CardInfo) {
-    const originalCardIndex = roundStatus.cards.findIndex((card: CardInfo) => card.id === cardInfo.id);
-    if (originalCardIndex === -1) {
-      roundStatus.cards.push(cardInfo);
+  private static updateBidInfo(bids: BidInfo[], newBid: BidInfo) {
+    const originalBidIndex = bids.findIndex((bid: BidInfo) => bid.playerId === newBid.playerId);
+    if (originalBidIndex === -1) {
+      bids.push(newBid);
     } else {
-      roundStatus.cards[originalCardIndex] = cardInfo;
+      bids[originalBidIndex] = newBid;
+    }
+  }
+
+  private static updateCardInfo(cards: CardInfo[], newCard: CardInfo) {
+    const originalCardIndex = cards.findIndex((card: CardInfo) => card.id === newCard.id);
+    if (originalCardIndex === -1) {
+      cards.push(newCard);
+    } else {
+      cards[originalCardIndex] = newCard;
     }
   }
 

@@ -11,7 +11,7 @@ import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
 
 export class Player {
-  id: string = nanoid();
+  id: string = nanoid(10);
   nickname: string;
   colour: PlayerColour;
   symbol: PlayerSymbol;

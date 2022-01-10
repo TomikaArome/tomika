@@ -58,16 +58,16 @@ The payload is of type [`LobbyStatus`](https://github.com/TomikaArome/tomika/blo
 {
   "inLobby": true,
   "lobby": {
-    "id": "y7kxzvtXKma_CPfloua13",
+    "id": "WsYuuQ8JP_",
     "passwordProtected": false,
     "gameStatus": "INIT",
     "players": [
       ...
     ],
-    "hostId": "lB3Gt6t9kYITX9_QWhAzh",
+    "hostId": "KfaB3Zz0zU",
     "maxNumberOfPlayers": 4
   },
-  "playerId": "zkn_iuMOj2KvaCLaQeIE1"
+  "playerId": "9mOwZjv0fM"
 }
 ```
 
@@ -79,17 +79,17 @@ The payload is of type [`LobbyInfo[]`](https://github.com/TomikaArome/tomika/blo
 ```json
 [
   {
-    "id": "y7kxzvtXKma_CPfloua13",
+    "id": "WsYuuQ8JP_",
     "passwordProtected": false,
     "gameStatus": "INIT",
     "players": [
       ...
     ],
-    "hostId": "lB3Gt6t9kYITX9_QWhAzh",
+    "hostId": "KfaB3Zz0zU",
     "maxNumberOfPlayers": 4
   },
   {
-    "id": "AQQTU5nhXs26qBBkj8nwj",
+    "id": "7QE5s3acFq",
     ...
   },
   ...
@@ -103,13 +103,13 @@ lobby. Anything that may update the information of the lobby, or the players wit
 The payload is of type [`LobbyInfo`](https://github.com/TomikaArome/tomika/blob/f83b0f39b27b882410f849a5fd80cc0195863d38/libs/ouistiti-shared/src/lib/interfaces/lobby.interface.ts#L12-21).
 ```json
 {
-  "id": "y7kxzvtXKma_CPfloua13",
+  "id": "WsYuuQ8JP_",
   "passwordProtected": false,
   "gameStatus": "INIT",
   "players": [
     ...
   ],
-  "hostId": "lB3Gt6t9kYITX9_QWhAzh",
+  "hostId": "KfaB3Zz0zU",
   "maxNumberOfPlayers": 4
 }
 ```
@@ -120,6 +120,6 @@ Emits when a lobby is closed.
 The payload is of type [`LobbyClosed`](https://github.com/TomikaArome/tomika/blob/f83b0f39b27b882410f849a5fd80cc0195863d38/libs/ouistiti-shared/src/lib/interfaces/lobby.interface.ts#L23-L25).
 ```json
 {
-  "id": "y7kxzvtXKma_CPfloua13"
+  "id": "WsYuuQ8JP_"
 }
 ```

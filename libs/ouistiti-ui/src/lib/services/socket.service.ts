@@ -25,7 +25,7 @@ export class SocketService {
 
   private roundStatusSource = new Subject<RoundInfo>();
   roundStatus$ = this.roundStatusSource.asObservable();
-  private bidSource = new Subject<BidInfo[]>();
+  private bidSource = new Subject<BidInfo>();
   bid$ = this.bidSource.asObservable();
   private cardPlayedSource = new Subject<PlayedCardInfo>();
   cardPlayed$ = this.cardPlayedSource.asObservable();

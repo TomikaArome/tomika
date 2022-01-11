@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="125" height="175" viewBox="0 0 125 175" [ngClass]="svgClasses">
+  <defs>
+    <svg [id]="'card-' + id + '-symbol'" width="25" height="25" viewBox="256 256 512 512">
+      <path [id]="'card-' + id + '-symbol-path'" [attr.d]="symbolPath" />
+    </svg>
+    <svg [id]="'card-' + id + '-inv-symbol'" width="25" height="25" viewBox="256 256 512 512">
+      <use [attr.href]="'#card-' + id + '-symbol-path'" transform="scale(1,-1)" transform-origin="center" />
+    </svg>
+    <svg [id]="'card-' + id + '-number'">
+      <text class="card-text" textLength="11px" lengthAdjust="spacingAndGlyphs" letter-spacing="-4">{{ numberValue }}</text>
+      <use [attr.href]="'#card-' + id + '-symbol'" x="7.5" y="12" width="15" height="15" />
+    </svg>
+  </defs>
+  <ng-container *ngIf="!miniture; else: minitureCardTemplate">
+    <use
+      stroke="black"
+      stroke-width="2"
+      *ngFor="let pos of symbolPositions"
+      [attr.href]="'#card-' + id + (pos.inv ? '-inv-symbol' : '-symbol')"
+      [attr.x]="pos.x"
+      [attr.y]="pos.y"
+      [ngClass]="{ inv: pos.inv, large: pos.large }" />
+    <use [attr.href]="'#card-' + id + '-number'" x="2" y="22" />
+    <use [attr.href]="'#card-' + id + '-number'" x="2" y="22" transform="scale(-1,-1)" transform-origin="center" />
+    <rect *ngIf="isFaceCard" class="face-card-border" width="83" height="133" x="21" y="21"></rect>
+  </ng-container>
+  <ng-template #minitureCardTemplate>
+    <use [attr.href]="'#card-' + id + '-number'" x="8" y="21" transform="scale(4)" />
+  </ng-template>
+</svg>

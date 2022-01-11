@@ -8,6 +8,7 @@ import { UtilityModule } from './utility/utility.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 
+import { CardComponent } from './components/game-flow/card/card.component';
 import { ContainerComponent } from './components/container/container.component';
 import { ColourSelectorComponent} from './components/game-setup/colour-selector/colour-selector.component';
 import { LandingScreenComponent } from './components/landing-screen/landing-screen.component';
@@ -34,6 +35,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     UtilityModule
   ],
   declarations: [
+    CardComponent,
     ContainerComponent,
     ColourSelectorComponent,
     LandingScreenComponent,

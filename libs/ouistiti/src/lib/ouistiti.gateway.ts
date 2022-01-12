@@ -97,4 +97,11 @@ export class OuistitiGateway {
     const player = controller.lobby.getPlayerByIdAndThrowIfNotFound(params.id);
     controller.lobby.removePlayer(player);
   }
+
+  @UseFilters(new OuistitiExceptionFilter('startGame'))
+  @SubscribeMessage('startGame')
+  startGame(controller: SocketController) {
+    OuistitiException.checkIfInLobby(controller);
+    OuistitiException.checkIfHost(controller);
+  }
 }

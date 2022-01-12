@@ -1,26 +1,22 @@
 import { nanoid } from 'nanoid';
 import { Round } from './round.class';
-import { Lobby } from './lobby.class';
-import { Player } from './player.class';
 import { GameStatus } from '@TomikaArome/ouistiti-shared';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-
+export interface StartGameSettings {
+  playerOrder: string[]
+}
 
 export class Game {
-  id: string;
-  lobby: Lobby;
+  id = nanoid();
   status: GameStatus = GameStatus.INIT;
   rounds: Round[] = [];
+  playerOrder: string[] = [];
 
-  constructor(lobby: Lobby, existingId: string = null) {
-    this.lobby = lobby;
-    if (existingId) {
-      this.loadExistingGame(existingId);
-    } else {
-      this.id = nanoid();
-      // this.newRound();
-    }
-  }
+  private gameComplete$ = new Subject<void>();
+  private gameStatusChangedSource = new Subject<GameStatus>();
+  gameStatusChanged$ = this.gameStatusChangedSource.asObservable().pipe(takeUntil(this.gameComplete$));
 
   get currentRound(): Round {
     return this.rounds[this.rounds.length - 1] ?? null;
@@ -32,18 +28,29 @@ export class Game {
 
   get totalRoundCount(): number {
     const maxCardsPerPlayer = 8;
-    return (maxCardsPerPlayer - 1) * 2 + this.lobby.players.length;
+    return (maxCardsPerPlayer - 1) * 2 + this.playerOrder.length;
   }
 
-  loadExistingGame(id: string) {
-    // TODO
+  static createNewGame(): Game {
+    return new Game();
+  }
+
+  startGame(settings: StartGameSettings) {
+    this.playerOrder = settings.playerOrder;
+    this.newRound();
   }
 
   newRound() {
-    if (this.currentRound?.isLastRound()) {
+    if (this.currentRound?.isLastRound) {
       this.status = GameStatus.COMPLETED;
+      this.gameComplete$.next();
+      this.gameComplete$.complete();
     } else {
-      Round.createNewRound(this);
+      this.rounds.push(Round.createNewRound({
+        roundNumber: this.rounds.length + 1,
+        playerIds: this.playerOrder,
+        maxCardsPerPlayer: 8 // TODO
+      }));
     }
   }
 }

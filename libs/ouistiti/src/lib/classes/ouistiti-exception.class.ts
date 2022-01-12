@@ -1,6 +1,7 @@
-import { OuistitiError, OuistitiErrorType, OuistitiInvalidActionReason } from '@TomikaArome/ouistiti-shared';
+import { GameStatus, OuistitiError, OuistitiErrorType, OuistitiInvalidActionReason } from '@TomikaArome/ouistiti-shared';
 import { WsException } from '@nestjs/websockets';
 import { SocketController } from '../controllers/socket.controller';
+import { Lobby } from './lobby.class';
 
 export class OuistitiException extends WsException {
   static requiredParam(requiredParamKey: string): OuistitiException {
@@ -40,6 +41,10 @@ export class OuistitiException extends WsException {
         }
       });
     }
+  }
+
+  static checkGameStatus(lobby: Lobby, status: GameStatus) {
+
   }
 
   constructor(error: OuistitiError) {

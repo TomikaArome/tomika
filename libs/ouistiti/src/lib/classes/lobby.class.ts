@@ -86,7 +86,7 @@ export class Lobby {
     newLobby.host = hostPlayer;
     newLobby.maxNumberOfPlayers = params.maxNumberOfPlayers ?? MAX_NUMBER_OF_PLAYERS_PER_LOBBY;
     newLobby.password = params.password;
-    newLobby.game = new Game(newLobby);
+    newLobby.game = new Game();
 
     Lobby.lobbies.push(newLobby);
     playerAssignFn(hostPlayer);
@@ -210,7 +210,7 @@ export class Lobby {
       throw new OuistitiException({
         type: OuistitiErrorType.NUMBER_OUT_OF_RANGE,
         detail: {
-          value: newMax,
+          provided: newMax,
           minimum: MIN_NUMBER_OF_PLAYERS_PER_LOBBY,
           maximum: MAX_NUMBER_OF_PLAYERS_PER_LOBBY
         }

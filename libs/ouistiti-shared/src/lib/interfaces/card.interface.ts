@@ -1,33 +1,25 @@
 import { CardSuit, CardValue } from '@TomikaArome/ouistiti-shared';
 
-export interface TrumpCardInfo {
+export interface UnownedAndUnknownCardInfo {
   id: string;
+}
+
+export interface UnownedAndKnownCardInfo extends UnownedAndUnknownCardInfo {
+  value: CardValue;
+  suit: CardSuit;
+}
+
+export interface TrumpCardInfo extends UnownedAndKnownCardInfo {
   isTrumpCard: true;
-  value: CardValue;
-  suit: CardSuit;
 }
 
-export interface UnownedCardInfo {
-  id: string;
-}
-
-export interface OwnedAndUnknownCardInfo {
-  id: string;
+export interface OwnedAndUnknownCardInfo extends UnownedAndUnknownCardInfo {
   ownerId: string;
-  played: false;
 }
 
-export interface OwnedAndKnownCardInfo extends OwnedAndUnknownCardInfo {
-  value: CardValue;
-  suit: CardSuit;
-}
+export type OwnedAndKnownCardInfo = OwnedAndUnknownCardInfo & UnownedAndKnownCardInfo;
 
-export interface PlayedCardInfo {
-  id: string;
-  ownerId: string;
-  value: CardValue;
-  suit: CardSuit;
-  played: true;
+export interface PlayedCardInfo extends OwnedAndKnownCardInfo {
   playedOnTurn: number;
   playedOrderPosition: number;
 }
@@ -36,4 +28,7 @@ export interface WonCardInfo extends PlayedCardInfo {
   winnerId: string;
 }
 
-export type CardInfo = TrumpCardInfo | UnownedCardInfo | OwnedAndUnknownCardInfo | OwnedAndKnownCardInfo | PlayedCardInfo | WonCardInfo;
+export type UnknownCardInfo = UnownedAndUnknownCardInfo | OwnedAndUnknownCardInfo;
+export type KnownCardInfo = UnownedAndKnownCardInfo | TrumpCardInfo | OwnedAndKnownCardInfo | PlayedCardInfo | WonCardInfo;
+
+export type CardInfo = UnknownCardInfo | KnownCardInfo;

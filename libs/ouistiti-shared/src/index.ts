@@ -17,3 +17,4 @@ export * from './lib/interfaces/round.interface';
 
 // Mocks
 export * from './lib/mock/lobbies.mock';
+export * from './lib/mock/round-status.mock';

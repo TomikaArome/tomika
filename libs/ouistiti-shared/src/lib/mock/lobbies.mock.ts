@@ -4,34 +4,34 @@ import { PlayerColour } from '../enum/player-colour.enum';
 import { PlayerSymbol } from '../enum/player-symbol.enum';
 
 export const lobby1Mock: LobbyInfo = {
-  id: 'ZqgqKiD3vUeYpQYTUQGj_',
+  id: 'ZqgqKiD3vU',
   passwordProtected: true,
   maxNumberOfPlayers: 4,
   gameStatus: GameStatus.IN_PROGRESS,
   players: [
     {
-      id: 'AXP9aX7pRuHZH1a1Bi_Sf',
+      id: 'AXP9aX7pRu',
       nickname: 'Thomas',
       colour: PlayerColour.AQUA,
       symbol: PlayerSymbol.SPADE,
       vacant: false
     },
     {
-      id: 'So5DdHmXOR7YoDnDeMBPC',
+      id: 'So5DdHmXOR',
       nickname: 'Steve',
       colour: PlayerColour.RED,
       symbol: PlayerSymbol.CLUB,
       vacant: false
     },
     {
-      id: '5x89SitQIGwno_mUWhqG6',
+      id: '5x89SitQIG',
       nickname: 'Claire',
       colour: PlayerColour.GREEN,
       symbol: PlayerSymbol.DIAMOND,
       vacant: false
     },
     {
-      id: 'ne6NF08aL2caTuk3c34rX',
+      id: 'ne6NF08aL2',
       nickname: 'David',
       colour: PlayerColour.BLUE,
       symbol: PlayerSymbol.SPADE,
@@ -39,24 +39,24 @@ export const lobby1Mock: LobbyInfo = {
     }
   ],
   playerOrder: [
-    'So5DdHmXOR7YoDnDeMBPC',
-    'ne6NF08aL2caTuk3c34rX',
-    'AXP9aX7pRuHZH1a1Bi_Sf',
-    '5x89SitQIGwno_mUWhqG6'
+    'So5DdHmXOR',
+    'ne6NF08aL2',
+    'AXP9aX7pRu',
+    '5x89SitQIG'
   ],
-  hostId: 'AXP9aX7pRuHZH1a1Bi_Sf',
+  hostId: 'AXP9aX7pRu',
   currentRoundNumber: 5,
   totalRoundCount: 18
 };
 
 export const lobby2Mock: LobbyInfo = {
-  id: 'pFcH1u_ul-sF_l6VtFcuh',
+  id: 'pFcH1u_ul-',
   passwordProtected: false,
   maxNumberOfPlayers: 6,
   gameStatus: GameStatus.INIT,
   players: [
     {
-      id: 'IqqU4-U37aEv_IaMz-SR3',
+      id: 'IqqU4-U37a',
       nickname: 'Jon',
       colour: PlayerColour.PINK,
       symbol: PlayerSymbol.CLUB,
@@ -64,26 +64,26 @@ export const lobby2Mock: LobbyInfo = {
     }
   ],
   playerOrder: [
-    'IqqU4-U37aEv_IaMz-SR3'
+    'IqqU4-U37a'
   ],
-  hostId: 'IqqU4-U37aEv_IaMz-SR3'
+  hostId: 'IqqU4-U37a'
 }
 
 export const lobby3Mock: LobbyInfo = {
-  id: '6DK77-nQPuIPtpKsnJELJ',
+  id: '6DK77-nQPu',
   passwordProtected: true,
   maxNumberOfPlayers: 8,
   gameStatus: GameStatus.SUSPENDED,
   players: [
     {
-      id: '3_qFtX8jK-0KvM_KK61tc',
+      id: '3_qFtX8jK-',
       nickname: 'Madeline',
       colour: PlayerColour.RED,
       symbol: PlayerSymbol.DIAMOND,
       vacant: false
     },
     {
-      id: 'NEnVNgoucJlfqCs3a51H7',
+      id: 'NEnVNgoucJ',
       nickname: 'Celia',
       colour: PlayerColour.GREEN,
       symbol: PlayerSymbol.HEART,
@@ -91,10 +91,10 @@ export const lobby3Mock: LobbyInfo = {
     }
   ],
   playerOrder: [
-    '3_qFtX8jK-0KvM_KK61tc',
-    'NEnVNgoucJlfqCs3a51H7'
+    '3_qFtX8jK-',
+    'NEnVNgoucJ'
   ],
-  hostId: '3_qFtX8jK-0KvM_KK61tc',
+  hostId: '3_qFtX8jK-',
   currentRoundNumber: 13,
   totalRoundCount: 18
 }
@@ -108,11 +108,11 @@ export const lobbyListMock: LobbyInfo[] = [
 export const lobbyStatusPlayerIsHostMock: LobbyStatus = {
   inLobby: true,
   lobby: lobby1Mock,
-  playerId: 'AXP9aX7pRuHZH1a1Bi_Sf'
+  playerId: 'AXP9aX7pRu'
 }
 
 export const lobbyStatusPlayerIsNotHostMock: LobbyStatus = {
   inLobby: true,
   lobby: lobby1Mock,
-  playerId: '5x89SitQIGwno_mUWhqG6'
+  playerId: '5x89SitQIG'
 }

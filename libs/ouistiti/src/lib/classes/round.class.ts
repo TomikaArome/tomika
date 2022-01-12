@@ -1,59 +1,229 @@
-import { Turn } from './turn.class';
 import { Card } from './card.class';
-import { Game } from './game.class';
+import { OuistitiException } from './ouistiti-exception.class';
+import { KnownBidInfo, OuistitiErrorType, OuistitiInvalidActionReason } from '@TomikaArome/ouistiti-shared';
+import { Subject } from 'rxjs';
+import { CardPlayedObserved } from '../interfaces/round-observed.interface';
+import { takeUntil } from 'rxjs/operators';
 
 export enum RoundStage {
   ASC, NO_TRUMPS, DESC
 }
 
-export class Round {
-  game: Game;
-  stage: RoundStage;
+export interface RoundSettings {
   roundNumber: number;
-  numberOfCards: number;
-  turns: Turn[];
-  cards: Card[];
+  playerIds: string[];
+  maxCardsPerPlayer: number;
+}
+
+export class Round {
+  roundNumber: number;
+  stage: RoundStage;
+  cards: Card[] = [];
   trumpCard: Card;
+  numberOfCardsPerPlayer: number;
+  currentPlayerId: string;
+  currentTurnNumber = 1;
 
-  private constructor(game: Game) {
-    this.game = game;
+  biddingPhase = true;
+  bids: { [key: string]: number } = {};
+
+  readonly playerIds: string[];
+  readonly maxCardsPerPlayer: number;
+
+  private roundCompletedSource = new Subject<string>();
+  roundCompleted$ = this.roundCompletedSource.asObservable();
+
+  private bidsFinalisedSource = new Subject<void>();
+  bidsFinalised$ = this.bidsFinalisedSource.asObservable().pipe(takeUntil(this.roundCompleted$));
+  private bidPlacedSource = new Subject<KnownBidInfo>();
+  bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
+
+  private cardPlayedSource = new Subject<CardPlayedObserved>();
+  cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.roundCompleted$));
+
+  private turnFinishedSource = new Subject<Card>();
+  turnFinished$ = this.turnFinishedSource.asObservable().pipe(takeUntil(this.roundCompleted$));
+
+  get isLastTurn(): boolean {
+    return this.currentTurnNumber === this.playerIds.length;
   }
 
-  initRound() {
-    this.roundNumber = this.game.rounds.indexOf(this) + 1;
-    const numberOfPlayers = this.game.lobby.players.length;
-    const maxCardsPerPlayer = 8;
-
-    if (numberOfPlayers < 4 || numberOfPlayers > 6) { throw 'Need between 4 and 6 players'; }
-    if (this.roundNumber < maxCardsPerPlayer) {
-      this.numberOfCards = this.roundNumber;
-      this.stage = RoundStage.ASC;
-    } else if (this.roundNumber < maxCardsPerPlayer + numberOfPlayers) {
-      this.numberOfCards = maxCardsPerPlayer;
-      this.stage = RoundStage.NO_TRUMPS;
-    } else {
-      this.numberOfCards = (2 * (maxCardsPerPlayer - 1) + numberOfPlayers) - this.roundNumber + 1;
-      this.stage = RoundStage.DESC;
-    }
+  get isLastRound(): boolean {
+    return this.numberOfCardsPerPlayer === 1 && this.stage === RoundStage.DESC;
   }
 
-  isLastRound(): boolean {
-    return this.numberOfCards === 1 && this.stage === RoundStage.DESC;
+  get startingPlayerId(): string {
+    return this.playerIds[(this.roundNumber - 1) % this.playerIds.length];
   }
 
-  hasTrumps(): boolean {
+  get isTrumpsRound(): boolean {
     return this.stage !== RoundStage.NO_TRUMPS;
   }
 
+  static createNewRound(settings: RoundSettings): Round {
+    const round = new Round(settings);
+    round.initRound();
+    round.generateCards();
+    return round;
+  }
+
+  constructor(settings: RoundSettings) {
+    this.roundNumber = settings.roundNumber;
+    this.playerIds = settings.playerIds;
+    this.maxCardsPerPlayer = settings.maxCardsPerPlayer;
+  }
+
+  initRound() {
+    if (this.roundNumber < this.maxCardsPerPlayer) {
+      this.numberOfCardsPerPlayer = this.roundNumber;
+      this.stage = RoundStage.ASC;
+    } else if (this.roundNumber < this.maxCardsPerPlayer + this.playerIds.length) {
+      this.numberOfCardsPerPlayer = this.maxCardsPerPlayer;
+      this.stage = RoundStage.NO_TRUMPS;
+    } else {
+      this.numberOfCardsPerPlayer = (2 * (this.maxCardsPerPlayer - 1) + this.playerIds.length) - this.roundNumber + 1;
+      this.stage = RoundStage.DESC;
+    }
+    this.currentPlayerId = this.startingPlayerId;
+  }
+
   generateCards() {
+    const unshuffledDeck = Card.generateUnshuffledDeck(this.maxCardsPerPlayer * this.playerIds.length);
+    for (let i = 0; i < this.numberOfCardsPerPlayer; i++) {
+      this.playerIds.forEach((playerId: string) => {
+        const randomIndex = Math.floor(Math.random() * unshuffledDeck.length);
+        const [card] = unshuffledDeck.splice(randomIndex,1);
+        card.ownerId = playerId;
+        this.cards.push(card);
+      });
+    }
+    if (this.stage === RoundStage.NO_TRUMPS) {
+      const randomIndex = Math.floor(Math.random() * unshuffledDeck.length);
+      this.trumpCard = unshuffledDeck[randomIndex];
+    }
+    this.cards.push(...unshuffledDeck);
+  }
+
+  getCardById(cardId: string): Card {
+    return this.cards.find((card: Card) => card.id === cardId) ?? null;
+  }
+
+  getCardsOwnedBy(playerId: string, onlyNotPlayed = false): Card[] {
+    return this.cards.filter((card: Card) => card.ownerId === playerId && !(onlyNotPlayed && card.played));
+  }
+
+  getCardsOnTurn(turnNumber: number): Card[] {
+    return this.cards
+      .filter((card: Card) => card.playedOnTurn === turnNumber)
+      .sort((cardA: Card, cardB: Card) => cardA.compareByPlayedOrderPosition(cardB));
+  }
+
+  getTurnWinningCard(turnNumber: number): Card {
+    return this.getCardsOnTurn(turnNumber).reduce((winningCard, currentCard) => {
+      if (winningCard === null) { return currentCard; }
+      else if (winningCard.suit === currentCard.suit) {
+        return winningCard.compareByValue(currentCard) > 0 ? winningCard : currentCard;
+      }
+      else if (winningCard.suit !== this.trumpCard.suit && currentCard.suit === this.trumpCard.suit) { return currentCard; }
+      else { return winningCard; }
+    }, null);
+  }
+
+  placeBid(playerId: string, bid: number) {
+    if (!this.biddingPhase) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ACTION,
+        detail: {
+          reason: OuistitiInvalidActionReason.BIDDING_FINISHED
+        }
+      });
+    }
+    if (this.playerIds.indexOf(playerId) === -1) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ID,
+        detail: {
+          provided: playerId
+        }
+      });
+    }
+    if (bid < 0 || bid > this.numberOfCardsPerPlayer) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.NUMBER_OUT_OF_RANGE,
+        detail: {
+          provided: bid,
+          minimum: 0,
+          maximum: this.numberOfCardsPerPlayer
+        }
+      });
+    }
+
+    this.bids[playerId] = bid;
+    this.bidPlacedSource.next({ playerId, bid });
+  }
+
+  finaliseBids() {
+    if (this.biddingPhase) {
+      this.biddingPhase = false;
+      this.bidsFinalisedSource.next();
+      this.bidsFinalisedSource.complete();
+    }
+  }
+
+  playCard(playerId: string, cardId: string) {
+    if (this.biddingPhase || playerId !== this.currentPlayerId) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ACTION,
+        detail: {
+          reason: OuistitiInvalidActionReason.NOT_PLAYERS_TURN
+        }
+      });
+    }
+
+    const card = this.getCardById(cardId);
+    if (!card) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.PLAYER_DOESNT_HAVE_CARD,
+        detail: {
+          provided: cardId,
+          actual: this.getCardsOwnedBy(playerId, true).map((card: Card) => card.id)
+        },
+        param: 'id'
+      });
+    }
+    const cardsPlayedThisTurn = this.getCardsOnTurn(this.currentTurnNumber);
+    card.playedOnTurn = this.currentTurnNumber;
+    card.playedOrderPosition = cardsPlayedThisTurn.length + 1;
+    this.currentPlayerId = this.playerIds[(this.playerIds.indexOf(this.currentPlayerId) + 1) % this.playerIds.length];
+
+    const turnFinished = card.playedOrderPosition === this.playerIds.length;
+
+    const observed: CardPlayedObserved = { card };
+    if (!turnFinished) {
+      observed.nextPlayerId = this.currentPlayerId;
+    }
+    this.cardPlayedSource.next(observed);
+
+    if (turnFinished) {
+      this.completeTurn();
+    }
 
   }
 
-  static createNewRound(game: Game): Round {
-    const round = new Round(game);
-    round.initRound();
-    round.generateCards();
-    round.game.rounds.push(round);
-    return round;
+  completeTurn() {
+    const winningCard = this.getTurnWinningCard(this.currentTurnNumber);
+    if (!this.isLastTurn) {
+      this.currentTurnNumber++;
+      this.currentPlayerId = winningCard.ownerId;
+    }
+
+    this.turnFinishedSource.next(winningCard);
+    if (this.isLastTurn) {
+      this.completeRound();
+    }
+  }
+
+  completeRound() {
+    this.roundCompletedSource.next();
+    this.roundCompletedSource.complete();
   }
 }

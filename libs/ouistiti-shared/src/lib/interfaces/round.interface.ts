@@ -8,17 +8,17 @@ export interface RoundInfo {
   bids: BidInfo[];
 }
 
-export interface PendingBidInfo {
+export interface UnknownBidInfo {
   playerId: string;
-  bidPending: true;
+  bidPending: boolean;
 }
 
-export interface ResolvedBidInfo {
+export interface KnownBidInfo {
   playerId: string;
   bid: number;
 }
 
-export type BidInfo = PendingBidInfo | ResolvedBidInfo;
+export type BidInfo = UnknownBidInfo | KnownBidInfo;
 
 // Server events
 

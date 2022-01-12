@@ -23,7 +23,7 @@ interface StringLengthDetail {
 interface NumberRangeDetail {
   type: OuistitiErrorType.NUMBER_OUT_OF_RANGE;
   detail: {
-    value: number;
+    provided: number;
     minimum?: number;
     maximum?: number;
   }
@@ -52,7 +52,16 @@ interface OrderArrayIncompleteDetail {
   }
 }
 
-type CombinedErrorType = NoDetail | InvalidActionDetail | StringLengthDetail | NumberRangeDetail | InvalidIdDetail | ElementInArrayTakenDetail | OrderArrayIncompleteDetail;
+interface PlayerDoesntHaveCardDetail {
+  type: OuistitiErrorType.PLAYER_DOESNT_HAVE_CARD,
+  detail: {
+    provided: string;
+    actual: string[];
+  }
+}
+
+type CombinedErrorType = NoDetail | InvalidActionDetail | StringLengthDetail | NumberRangeDetail | InvalidIdDetail |
+  ElementInArrayTakenDetail | OrderArrayIncompleteDetail | PlayerDoesntHaveCardDetail;
 
 export type OuistitiError = CombinedErrorType & {
   param?: string;

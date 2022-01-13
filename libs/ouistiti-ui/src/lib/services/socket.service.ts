@@ -1,39 +1,30 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, lobbyStatusPlayerIsHostMock, RoundInfo, BidInfo, PlayedCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, BidInfo, PlayedCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { ServerEvent } from '../classes/server-event.class';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
   private socket: Socket;
+  private events: ServerEvent<unknown>[] = [
+    new ServerEvent<OuistitiError>('error'),
+
+    new ServerEvent<LobbyStatus>('lobbyStatus', { inLobby: false }),
+    new ServerEvent<LobbyInfo[]>('lobbyList', []),
+    new ServerEvent<LobbyInfo>('lobbyUpdated'),
+    new ServerEvent<LobbyClosed>('lobbyClosed'),
+
+    new ServerEvent<RoundInfo>('roundStatus'),
+    new ServerEvent<BidInfo>('bid'),
+    new ServerEvent<PlayedCardInfo>('cardPlayed'),
+    new ServerEvent<WonCardInfo[]>('trickWon')
+  ];
 
   private socketDisconnected$: BehaviorSubject<boolean>;
 
-  private errorSource = new Subject<OuistitiError>();
-  error$ = this.errorSource.asObservable();
-
-  private lobbyStatusSource = new BehaviorSubject<LobbyStatus>({ inLobby: false });
-  // private lobbyStatusSource = new BehaviorSubject<LobbyStatus>(lobbyStatusPlayerIsHostMock);
-  lobbyStatus$ = this.lobbyStatusSource.asObservable();
-
-  private lobbyListSource = new BehaviorSubject<LobbyInfo[]>([]);
-  lobbyList$ = this.lobbyListSource.asObservable();
-  private lobbyUpdatedSource = new Subject<LobbyInfo>();
-  lobbyUpdated$ = this.lobbyUpdatedSource.asObservable();
-  private lobbyClosedSource = new Subject<LobbyClosed>();
-  lobbyClosed$ = this.lobbyClosedSource.asObservable();
-
-  private roundStatusSource = new Subject<RoundInfo>();
-  roundStatus$ = this.roundStatusSource.asObservable();
-  private bidSource = new Subject<BidInfo>();
-  bid$ = this.bidSource.asObservable();
-  private cardPlayedSource = new Subject<PlayedCardInfo>();
-  cardPlayed$ = this.cardPlayedSource.asObservable();
-  private trickWonSource = new Subject<WonCardInfo[]>();
-  trickWon$ = this.trickWonSource.asObservable();
-
   constructor() {
-    this.error$.subscribe(error => {
+    this.getEvent<OuistitiError>('error').subscribe(error => {
       console.log(error);
     });
   }
@@ -43,20 +34,12 @@ export class SocketService {
     this.socket = io('http://localhost:3333/ouistiti');
     this.socketDisconnected$ = new BehaviorSubject<boolean>(false);
     this.socket.on('disconnect', () => { this.disconnect(); });
-    this.subscribeEvents();
-    this.emitEvent('listLobbies');
-  }
 
-  private subscribeEvents() {
-    const eventNames = ['error', 'lobbyStatus', 'lobbyList', 'lobbyUpdated', 'lobbyClosed', 'roundStatus', 'bid',
-      'cardPlayed', 'trickWon'];
-    eventNames.forEach(eventName => this.subscribeEvent(eventName));
-  }
-
-  private subscribeEvent(eventName: string) {
-    this.socket.on(eventName, (payload: unknown) => {
-      (this[`${eventName}Source`] as Subject<unknown>).next(payload);
+    Object.values(this.events).forEach((serverEvent: ServerEvent<unknown>) => {
+      serverEvent.bindSocket(this.socket);
     });
+
+    this.emitEvent('listLobbies');
   }
 
   disconnect() {
@@ -66,6 +49,12 @@ export class SocketService {
     if (this.socket?.connected) {
       this.socket.disconnect();
     }
+  }
+
+  getEvent<T>(eventName: string): Observable<T> {
+    const serverEvent = this.events.find((serverEvent: ServerEvent<unknown>) => serverEvent.name === eventName);
+    if (!serverEvent) { throw `Event doesn't exist`; }
+    return serverEvent.event$ as Observable<T>;
   }
 
   emitEvent(eventType: string, payload?: unknown) {

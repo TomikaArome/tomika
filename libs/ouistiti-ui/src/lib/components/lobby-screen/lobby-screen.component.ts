@@ -15,15 +15,15 @@ import { Subject } from 'rxjs';
 export class LobbyScreenComponent implements OnDestroy {
   private onDestroy$ = new Subject<void>();
 
-  playerList$ = this.socketService.lobbyStatus$.pipe(
+  playerList$ = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
     map((status: LobbyStatus) => status?.lobby?.playerOrder
       ?.map((playerId: string) => status.lobby.players
         .find((player: PlayerInfo) => player.id === playerId)
       ) ?? []
     )
   );
-  hostId$ = this.socketService.lobbyStatus$.pipe(map((status: LobbyStatus) => status?.lobby?.hostId ?? null));
-  maxNumberOfPlayers$ = this.socketService.lobbyStatus$.pipe(map((status: LobbyStatus) => status?.lobby?.maxNumberOfPlayers ?? null));
+  hostId$ = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(map((status: LobbyStatus) => status?.lobby?.hostId ?? null));
+  maxNumberOfPlayers$ = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(map((status: LobbyStatus) => status?.lobby?.maxNumberOfPlayers ?? null));
 
   takenColours$ = this.playerList$.pipe(map((players: PlayerInfo[]) =>
     players.map((player: PlayerInfo) => player.colour)));
@@ -43,7 +43,7 @@ export class LobbyScreenComponent implements OnDestroy {
     this.playerService.isHost$.pipe(takeUntil(this.onDestroy$)).subscribe((isHost: boolean) => {
       this.isHost = isHost;
     });
-    this.socketService.lobbyStatus$.pipe(
+    this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
       map((status: LobbyStatus) => status?.playerId),
       takeUntil(this.onDestroy$)
     ).subscribe((selfId: string) => {

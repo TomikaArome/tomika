@@ -21,10 +21,10 @@ type RoundStatusTemporaryObservableValue = {
 @Injectable({ providedIn: 'root' })
 export class RoundService {
   roundStatus$: Observable<RoundInfo> = merge(
-    this.socketService.roundStatus$.pipe(map(v => { return { event: 'roundStatus', payload: v }; })),
-    this.socketService.bid$.pipe(map(v => { return { event: 'bid', payload: v }; })),
-    this.socketService.cardPlayed$.pipe(map(v => { return { event: 'cardPlayed', payload: v }; })),
-    this.socketService.trickWon$.pipe(map(v => { return { event: 'trickWon', payload: v }; }))
+    this.socketService.getEvent<RoundInfo>('roundStatus').pipe(map((v: RoundInfo) => { return { event: 'roundStatus', payload: v }; })),
+    this.socketService.getEvent<BidInfo>('bid').pipe(map((v: BidInfo) => { return { event: 'bid', payload: v }; })),
+    this.socketService.getEvent<PlayedCardInfo>('cardPlayed').pipe(map((v: PlayedCardInfo) => { return { event: 'cardPlayed', payload: v }; })),
+    this.socketService.getEvent<WonCardInfo[]>('trickWon').pipe(map((v: WonCardInfo[]) => { return { event: 'trickWon', payload: v }; }))
   ).pipe(
     scan((currStatus: RoundInfo, v: RoundStatusTemporaryObservableValue) => {
       if (v.event === 'roundStatus') {
@@ -39,6 +39,7 @@ export class RoundService {
       return currStatus;
     }, {
       currentPlayerId: null,
+      currentTurnNumber: 1,
       cards: [],
       bids: []
     })

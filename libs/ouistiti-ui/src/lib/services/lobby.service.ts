@@ -6,14 +6,14 @@ import { map, scan } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class LobbyService {
-  currentLobby$: Observable<LobbyInfo> = this.socketService.lobbyStatus$.pipe(
+  currentLobby$: Observable<LobbyInfo> = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
     map((status: LobbyStatus) => status.lobby ?? null)
   );
 
   lobbyList$: Observable<LobbyInfo[]> = merge(
-    this.socketService.lobbyList$.pipe(map(v => { return { event: 'lobbyList', payload: v } })),
-    this.socketService.lobbyUpdated$.pipe(map(v => { return { event: 'lobbyUpdated', payload: v } })),
-    this.socketService.lobbyClosed$.pipe(map(v => { return { event: 'lobbyClosed', payload: v } }))
+    this.socketService.getEvent<LobbyInfo[]>('lobbyList').pipe(map((v: LobbyInfo[]) => { return { event: 'lobbyList', payload: v } })),
+    this.socketService.getEvent<LobbyInfo>('lobbyUpdated').pipe(map((v: LobbyInfo) => { return { event: 'lobbyUpdated', payload: v } })),
+    this.socketService.getEvent<LobbyClosed>('lobbyClosed').pipe(map((v: LobbyClosed) => { return { event: 'lobbyClosed', payload: v } }))
   ).pipe(
     scan((acc: LobbyInfo[], curr) => {
       if (curr.event === 'lobbyList') {

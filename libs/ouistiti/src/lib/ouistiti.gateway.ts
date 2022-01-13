@@ -1,12 +1,5 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import {
-  LobbyCreateParams,
-  LobbyJoinParams,
-  LobbyUpdateParams,
-  OuistitiErrorType,
-  PlayerKickParams,
-  PlayerUpdateParams
-} from '@TomikaArome/ouistiti-shared';
+import { LobbyCreateParams, LobbyJoinParams, LobbyUpdateParams, OuistitiErrorType, PlayerKickParams, PlayerUpdateParams } from '@TomikaArome/ouistiti-shared';
 import { UseFilters, UsePipes } from '@nestjs/common';
 import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
 import { SocketController } from './controllers/socket.controller';
@@ -35,7 +28,7 @@ export class OuistitiGateway {
   @SubscribeMessage('createLobby')
   createLobby(controller: SocketController, params: LobbyCreateParams) {
     OuistitiException.checkRequiredParams(params, ['host.nickname']);
-    Lobby.createLobbyWithNewGame(params, (player: Player) => {
+    new Lobby(params, (player: Player) => {
       controller.player = player;
     });
   }
@@ -103,5 +96,9 @@ export class OuistitiGateway {
   startGame(controller: SocketController) {
     OuistitiException.checkIfInLobby(controller);
     OuistitiException.checkIfHost(controller);
+
+    controller.lobby.startGame({
+      maxCardsPerPlayer: 8
+    })
   }
 }

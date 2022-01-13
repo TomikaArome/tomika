@@ -1,6 +1,6 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
-import { KnownBidInfo, OuistitiErrorType, OuistitiInvalidActionReason } from '@TomikaArome/ouistiti-shared';
+import { BidInfo, isKnownBidInfo, KnownBidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundStatus, UnknownBidInfo } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { CardPlayedObserved } from '../interfaces/round-observed.interface';
 import { takeUntil } from 'rxjs/operators';
@@ -18,14 +18,13 @@ export interface RoundSettings {
 export class Round {
   roundNumber: number;
   stage: RoundStage;
+  status: RoundStatus = RoundStatus.BIDDING;
   cards: Card[] = [];
   trumpCard: Card;
   numberOfCardsPerPlayer: number;
   currentPlayerId: string;
   currentTurnNumber = 1;
-
-  biddingPhase = true;
-  bids: { [key: string]: number } = {};
+  bids: BidInfo[] = [];
 
   readonly playerIds: string[];
   readonly maxCardsPerPlayer: number;
@@ -33,10 +32,12 @@ export class Round {
   private roundCompletedSource = new Subject<string>();
   roundCompleted$ = this.roundCompletedSource.asObservable();
 
-  private bidsFinalisedSource = new Subject<void>();
+  private bidsFinalisedSource = new Subject<KnownBidInfo[]>();
   bidsFinalised$ = this.bidsFinalisedSource.asObservable().pipe(takeUntil(this.roundCompleted$));
   private bidPlacedSource = new Subject<KnownBidInfo>();
   bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
+  private bidCancelledSource = new Subject<string>();
+  bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
 
   private cardPlayedSource = new Subject<CardPlayedObserved>();
   cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.roundCompleted$));
@@ -56,8 +57,13 @@ export class Round {
     return this.playerIds[(this.roundNumber - 1) % this.playerIds.length];
   }
 
-  get isTrumpsRound(): boolean {
-    return this.stage !== RoundStage.NO_TRUMPS;
+  get info(): RoundInfo {
+    return {
+      currentPlayerId: this.currentPlayerId,
+      currentTurnNumber: this.currentTurnNumber,
+      cards: this.cards.map((card: Card) => card.info),
+      bids: this.bids
+    }
   }
 
   static createNewRound(settings: RoundSettings): Round {
@@ -85,6 +91,15 @@ export class Round {
       this.stage = RoundStage.DESC;
     }
     this.currentPlayerId = this.startingPlayerId;
+  }
+
+  initBids() {
+    this.bids = this.playerIds.map((playerId: string) => {
+      return {
+        playerId,
+        bidPending: true
+      }
+    });
   }
 
   generateCards() {
@@ -130,47 +145,69 @@ export class Round {
   }
 
   placeBid(playerId: string, bid: number) {
-    if (!this.biddingPhase) {
+    if (this.status !== RoundStatus.BIDDING) {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
-        detail: {
-          reason: OuistitiInvalidActionReason.BIDDING_FINISHED
-        }
+        detail: { reason: OuistitiInvalidActionReason.BIDDING_FINISHED }
       });
     }
     if (this.playerIds.indexOf(playerId) === -1) {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ID,
-        detail: {
-          provided: playerId
-        }
+        detail: { provided: playerId }
       });
     }
     if (bid < 0 || bid > this.numberOfCardsPerPlayer) {
       throw new OuistitiException({
         type: OuistitiErrorType.NUMBER_OUT_OF_RANGE,
-        detail: {
-          provided: bid,
-          minimum: 0,
-          maximum: this.numberOfCardsPerPlayer
-        }
+        detail: { provided: bid, minimum: 0, maximum: this.numberOfCardsPerPlayer },
+        param: 'bid'
       });
     }
 
-    this.bids[playerId] = bid;
-    this.bidPlacedSource.next({ playerId, bid });
+    const bidInfoIndex = this.bids.findIndex((bid: BidInfo) => bid.playerId === playerId);
+    const newBid: KnownBidInfo = { playerId, bid };
+    this.bids[bidInfoIndex] = newBid;
+    this.bidPlacedSource.next(newBid);
+  }
+
+  cancelBid(playerId: string) {
+    if (this.playerIds.indexOf(playerId) === -1) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ID,
+        detail: { provided: playerId }
+      });
+    }
+
+    const bidInfoIndex = this.bids.findIndex((bid: BidInfo) => bid.playerId === playerId);
+    this.bids[bidInfoIndex] = { playerId, bidPending: true };
+    this.bidCancelledSource.next(playerId);
   }
 
   finaliseBids() {
-    if (this.biddingPhase) {
-      this.biddingPhase = false;
-      this.bidsFinalisedSource.next();
+    if (this.status === RoundStatus.BIDDING) {
+      this.status = RoundStatus.PLAY;
+
+      this.bids = this.bids.map((bidInfo: BidInfo) => {
+        if (isKnownBidInfo(bidInfo)) {
+          return bidInfo;
+        } else {
+          // Assign to the player the most likely average bid for that round
+          const automaticallyChosenBid: KnownBidInfo = {
+            playerId: bidInfo.playerId,
+            bid: Math.round(this.numberOfCardsPerPlayer / this.playerIds.length)
+          }
+          return automaticallyChosenBid;
+        }
+      });
+
+      this.bidsFinalisedSource.next(this.bids as KnownBidInfo[]);
       this.bidsFinalisedSource.complete();
     }
   }
 
   playCard(playerId: string, cardId: string) {
-    if (this.biddingPhase || playerId !== this.currentPlayerId) {
+    if (this.status !== RoundStatus.PLAY || playerId !== this.currentPlayerId) {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
         detail: {
@@ -223,6 +260,7 @@ export class Round {
   }
 
   completeRound() {
+    this.status = RoundStatus.COMPLETED;
     this.roundCompletedSource.next();
     this.roundCompletedSource.complete();
   }

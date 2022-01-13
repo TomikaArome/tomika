@@ -1,56 +1,60 @@
 import { nanoid } from 'nanoid';
 import { Round } from './round.class';
-import { GameStatus } from '@TomikaArome/ouistiti-shared';
+import { GameCreateParams, GameStatus } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-export interface StartGameSettings {
+export interface GameCreateSettings extends GameCreateParams {
   playerOrder: string[]
 }
 
 export class Game {
-  id = nanoid();
-  status: GameStatus = GameStatus.INIT;
+  id = nanoid(10);
+  status: GameStatus = GameStatus.IN_PROGRESS;
   rounds: Round[] = [];
   playerOrder: string[] = [];
-
-  private gameComplete$ = new Subject<void>();
-  private gameStatusChangedSource = new Subject<GameStatus>();
-  gameStatusChanged$ = this.gameStatusChangedSource.asObservable().pipe(takeUntil(this.gameComplete$));
+  maxCardsPerPlayer: number;
 
   get currentRound(): Round {
     return this.rounds[this.rounds.length - 1] ?? null;
   }
 
-  get currentRoundNumber(): number {
-    return this.currentRound?.roundNumber ?? 1;
-  }
-
   get totalRoundCount(): number {
-    const maxCardsPerPlayer = 8;
-    return (maxCardsPerPlayer - 1) * 2 + this.playerOrder.length;
+    return (this.maxCardsPerPlayer - 1) * 2 + this.playerOrder.length;
   }
 
-  static createNewGame(): Game {
-    return new Game();
+  private gameComplete$ = new Subject<void>();
+  private gameStatusChangedSource = new Subject<GameStatus>();
+  gameStatusChanged$ = this.gameStatusChangedSource.asObservable().pipe(takeUntil(this.gameComplete$));
+
+  private roundStartedSource = new Subject();
+  roundStarted$ = this.roundStartedSource.asObservable();
+
+  static createNewGame(settings: GameCreateSettings): Game {
+    const newGame = new Game();
+    newGame.playerOrder = settings.playerOrder;
+    newGame.maxCardsPerPlayer = settings.maxCardsPerPlayer;
+    newGame.newRound();
+    return newGame;
   }
 
-  startGame(settings: StartGameSettings) {
-    this.playerOrder = settings.playerOrder;
-    this.newRound();
+  changeStatus(status: GameStatus) {
+    this.status = status;
+    this.gameStatusChangedSource.next(status);
   }
 
   newRound() {
     if (this.currentRound?.isLastRound) {
-      this.status = GameStatus.COMPLETED;
+      this.changeStatus(GameStatus.COMPLETED);
       this.gameComplete$.next();
       this.gameComplete$.complete();
     } else {
       this.rounds.push(Round.createNewRound({
         roundNumber: this.rounds.length + 1,
         playerIds: this.playerOrder,
-        maxCardsPerPlayer: 8 // TODO
+        maxCardsPerPlayer: this.maxCardsPerPlayer
       }));
+      this.roundStartedSource.next(this.currentRound);
     }
   }
 }

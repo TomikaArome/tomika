@@ -1,23 +1,11 @@
 import { Player } from './player.class';
 import { Game } from './game.class';
-import {
-  GameStatus,
-  LobbyCreateParams,
-  LobbyInfo,
-  LobbyJoinParams,
-  MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
-  MIN_NUMBER_OF_PLAYERS_PER_LOBBY,
-  OuistitiErrorType, PlayerColour
-} from '@TomikaArome/ouistiti-shared';
+import { GameCreateParams, GameStatus, LobbyCreateParams, LobbyInfo, LobbyJoinParams, MAX_NUMBER_OF_PLAYERS_PER_LOBBY, MIN_NUMBER_OF_PLAYERS_PER_LOBBY, OuistitiErrorType, PlayerColour } from '@TomikaArome/ouistiti-shared';
 import { nanoid } from 'nanoid';
 import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  LobbyChangedHostObserved,
-  LobbyJoinObserved,
-  LobbyLeftObserved
-} from '../interfaces/lobby-oberserved.interface';
+import { LobbyChangedHostObserved, LobbyJoinObserved, LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
 
 export class Lobby {
   id = nanoid(10);
@@ -28,20 +16,24 @@ export class Lobby {
   password: string;
   maxNumberOfPlayers: number;
 
+  get gameStatus(): GameStatus {
+    return this.game?.status ?? GameStatus.INIT;
+  }
+
   get info(): LobbyInfo {
     const lobbyInfo: LobbyInfo = {
       id: this.id,
       passwordProtected: !!this.password,
-      gameStatus: this.game.status,
+      gameStatus: this.gameStatus,
       players: this.players.map(player => player.info),
       playerOrder: this.playerOrder,
       hostId: this.host.id
     };
-    if (this.game.status === GameStatus.INIT) {
+    if (this.gameStatus === GameStatus.INIT) {
       lobbyInfo.maxNumberOfPlayers = this.maxNumberOfPlayers;
     }
-    if (this.game.status !== GameStatus.INIT) {
-      lobbyInfo.currentRoundNumber = this.game.currentRoundNumber;
+    if (this.gameStatus !== GameStatus.INIT) {
+      lobbyInfo.currentRoundNumber = this.game.currentRound.roundNumber;
       lobbyInfo.totalRoundCount = this.game.totalRoundCount;
     }
     return lobbyInfo;
@@ -59,11 +51,14 @@ export class Lobby {
   playerLeft$ = this.playerLeftSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
 
   private hostChangedSource = new Subject<LobbyChangedHostObserved>();
-  hostChanged$ = this.hostChangedSource.asObservable();
+  hostChanged$ = this.hostChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
   private playerOrderChangedSource = new Subject<string[]>();
-  playerOrderChanged$ = this.playerOrderChangedSource.asObservable();
+  playerOrderChanged$ = this.playerOrderChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
   private maximumNumberOfPlayersChangedSource = new Subject<number>();
-  maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource.asObservable();
+  maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+
+  private gameStartedSource = new Subject<Game>();
+  gameStarted$ = this.gameStartedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
 
   private static lobbies: Lobby[] = [];
 
@@ -78,19 +73,17 @@ export class Lobby {
     return Lobby.lobbies.find((lobby: Lobby) => lobby.id === lobbyId) ?? null;
   }
 
-  static createLobbyWithNewGame(params: LobbyCreateParams, playerAssignFn: (player: Player) => void = () => undefined) {
+  constructor(params: LobbyCreateParams, playerAssignFn: (player: Player) => void = () => undefined) {
     const hostPlayer = Player.createNewPlayer(params.host);
-    const newLobby = new Lobby();
-    newLobby.players.push(hostPlayer);
-    newLobby.playerOrder.push(hostPlayer.id);
-    newLobby.host = hostPlayer;
-    newLobby.maxNumberOfPlayers = params.maxNumberOfPlayers ?? MAX_NUMBER_OF_PLAYERS_PER_LOBBY;
-    newLobby.password = params.password;
-    newLobby.game = new Game();
+    this.players.push(hostPlayer);
+    this.playerOrder.push(hostPlayer.id);
+    this.host = hostPlayer;
+    this.maxNumberOfPlayers = params.maxNumberOfPlayers ?? MAX_NUMBER_OF_PLAYERS_PER_LOBBY;
+    this.password = params.password;
 
-    Lobby.lobbies.push(newLobby);
+    Lobby.lobbies.push(this);
     playerAssignFn(hostPlayer);
-    Lobby.lobbyCreatedSource.next(newLobby);
+    Lobby.lobbyCreatedSource.next(this);
   }
 
   close() {
@@ -245,5 +238,15 @@ export class Lobby {
       });
     }
     player.changeColour(colour);
+  }
+
+  startGame(params: GameCreateParams) {
+    if (this.gameStatus === GameStatus.INIT) {
+      this.game = Game.createNewGame({
+        playerOrder: this.playerOrder,
+        ...params
+      });
+      this.gameStartedSource.next(this.game);
+    }
   }
 }

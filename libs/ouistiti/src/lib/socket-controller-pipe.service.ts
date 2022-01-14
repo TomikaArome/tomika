@@ -9,7 +9,7 @@ export class SocketControllerPipe implements PipeTransform {
   static registerController(socket: Socket): SocketController {
     const controller = new SocketController(socket);
     SocketControllerPipe.socketControllers[socket.id] = controller;
-    controller.disconnected$.subscribe(() => {
+    controller.stop$.subscribe(() => { // TODO move the socket controllers array to the SocketController class as a static property
       delete this.socketControllers[socket.id];
     });
     return controller;

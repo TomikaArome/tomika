@@ -23,12 +23,12 @@ export class Game {
     return (this.maxCardsPerPlayer - 1) * 2 + this.playerOrder.length;
   }
 
-  private gameComplete$ = new Subject<void>();
-  private gameStatusChangedSource = new Subject<GameStatus>();
-  gameStatusChanged$ = this.gameStatusChangedSource.asObservable().pipe(takeUntil(this.gameComplete$));
+  private completed$ = new Subject<void>();
+  private statusChangedSource = new Subject<GameStatus>();
+  private roundStartedSource = new Subject<Round>();
 
-  private roundStartedSource = new Subject();
-  roundStarted$ = this.roundStartedSource.asObservable();
+  statusChanged$ = this.statusChangedSource.asObservable().pipe(takeUntil(this.completed$));
+  roundStarted$ = this.roundStartedSource.asObservable().pipe(takeUntil(this.completed$));
 
   static createNewGame(settings: GameCreateSettings): Game {
     const newGame = new Game();
@@ -40,14 +40,14 @@ export class Game {
 
   changeStatus(status: GameStatus) {
     this.status = status;
-    this.gameStatusChangedSource.next(status);
+    this.statusChangedSource.next(status);
   }
 
   newRound() {
     if (this.currentRound?.isLastRound) {
       this.changeStatus(GameStatus.COMPLETED);
-      this.gameComplete$.next();
-      this.gameComplete$.complete();
+      this.completed$.next();
+      this.completed$.complete();
     } else {
       this.rounds.push(Round.createNewRound({
         roundNumber: this.rounds.length + 1,

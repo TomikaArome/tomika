@@ -9,12 +9,14 @@ import {
 } from '@TomikaArome/ouistiti-shared';
 import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
+import { Lobby } from './lobby.class';
 
 export class Player {
   id: string = nanoid(10);
   nickname: string;
   colour: PlayerColour;
   symbol: PlayerSymbol;
+  lobby: Lobby;
 
   get isVacant(): boolean {
     // TODO
@@ -32,13 +34,14 @@ export class Player {
   }
 
   private nicknameChangedSource = new Subject<string>();
-  nicknameChanged$ = this.nicknameChangedSource.asObservable();
   private colourChangedSource = new Subject<PlayerColour>();
-  colourChanged$ = this.colourChangedSource.asObservable();
   private symbolChangedSource = new Subject<PlayerSymbol>();
+
+  nicknameChanged$ = this.nicknameChangedSource.asObservable();
+  colourChanged$ = this.colourChangedSource.asObservable();
   symbolChanged$ = this.symbolChangedSource.asObservable();
 
-  static createNewPlayer(params: PlayerCreateParams): Player {
+  static createNewPlayer(lobby: Lobby, params: PlayerCreateParams): Player {
     OuistitiException.checkRequiredParams(params, ['nickname']);
     Player.validateNickname(params.nickname);
 
@@ -47,6 +50,7 @@ export class Player {
     player.nickname = params.nickname;
     player.colour = params.colour ?? Player.getRandomColour();
     player.symbol = params.symbol ?? Player.getRandomSymbol();
+    player.lobby = lobby;
 
     return player;
   }

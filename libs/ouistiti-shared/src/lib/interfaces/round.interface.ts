@@ -1,4 +1,4 @@
-import { CardInfo } from './card.interface';
+import { CardInfo, PlayedCardInfo } from './card.interface';
 
 // Client events
 
@@ -20,6 +20,11 @@ export interface KnownBidInfo {
 }
 
 export type BidInfo = UnknownBidInfo | KnownBidInfo;
+
+export interface CardPlayed {
+  card: PlayedCardInfo;
+  nextPlayerId: string;
+}
 
 // Server events
 

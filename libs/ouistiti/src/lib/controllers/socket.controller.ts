@@ -3,49 +3,53 @@ import { Lobby } from '../classes/lobby.class';
 import { Player } from '../classes/player.class';
 import { LobbyStatus } from '@TomikaArome/ouistiti-shared';
 import { MonoTypeOperatorFunction, Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { SocketLobbyController } from './socket-lobby.controller';
 
 export class SocketController {
-  lobby: Lobby = null;
   player: Player = null;
+  stop$ = new Subject<void>();
 
-  private disconnectedSource = new Subject<void>();
-  disconnected$ = this.disconnectedSource.asObservable();
-
-  lobbyCreatedBySelf$ = Lobby.lobbyCreated$.pipe(
-    this.takeUntilDisconnected(),
-    filter((lobby: Lobby) => lobby.host === this.player)
-  );
-  lobbyCreatedByOtherWhileSelfNotInLobby$ = Lobby.lobbyCreated$.pipe(
-    this.takeUntilDisconnected(),
-    filter((lobby: Lobby) => !this.inLobby && lobby.host !== this.player)
-  )
+  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stop$); }
 
   get inLobby(): boolean {
-    return this.lobby !== null;
+    return this.player !== null;
   }
 
   static debounceTime = 5;
 
   constructor(private socket: Socket) {
     console.log(`Client connected: ${this.socket.id}`);
-    this.socket.on('disconnect', (reason: string) => { this.onDisconnect(reason); });
-    Lobby.getLobbyList().forEach((lobby: Lobby) => { new SocketLobbyController(this, lobby); });
+
     this.subscribeLobbyCreated();
+
+    this.init();
+  }
+
+  init() {
+    this.socket.on('disconnect', (reason: string) => {
+      this.onDisconnect(reason);
+    });
+    Lobby.getLobbyList().forEach((lobby: Lobby) => { new SocketLobbyController(this, lobby, this.stop$); });
   }
 
   onDisconnect(reason: string) {
     console.log(`Client disconnected: ${this.socket.id} Reason: ${reason}`);
-    this.disconnectedSource.next();
-    this.disconnectedSource.complete();
+    this.stop$.next();
+    this.stop$.complete();
 
     if (this.inLobby) {
-      this.lobby.removePlayer(this.player);
+      this.player.lobby.removePlayer(this.player);
     }
   }
 
-  emit(event: string, payload: unknown) {
+  subscribeLobbyCreated() {
+    Lobby.lobbyCreated$.pipe(this.stop).subscribe((lobby: Lobby) => {
+      new SocketLobbyController(this, lobby, this.stop$);
+    });
+  }
+
+  emit(event: string, payload?: unknown) {
     this.socket.emit(event, payload);
   }
 
@@ -58,32 +62,9 @@ export class SocketController {
       inLobby: this.inLobby
     };
     if (this.inLobby) {
-      payload.lobby = this.lobby.info;
+      payload.lobby = this.player.lobby.info;
       payload.playerId = this.player.id;
     }
     this.emit('lobbyStatus', payload);
-  }
-
-  takeUntilDisconnected<T>(): MonoTypeOperatorFunction<T> {
-    return takeUntil(this.disconnected$);
-  }
-
-  filterByNotInLobby<T>(): MonoTypeOperatorFunction<T> {
-    return filter(() => !this.inLobby)
-  }
-
-  subscribeLobbyCreated() {
-    Lobby.lobbyCreated$.pipe(this.takeUntilDisconnected()).subscribe((lobby: Lobby) => {
-      new SocketLobbyController(this, lobby);
-    });
-
-    this.lobbyCreatedBySelf$.subscribe((lobby: Lobby) => {
-      this.lobby = lobby;
-      this.emitLobbyStatus();
-    });
-
-    this.lobbyCreatedByOtherWhileSelfNotInLobby$.subscribe((lobby: Lobby) => {
-      this.emit('lobbyUpdated', lobby.info);
-    });
   }
 }

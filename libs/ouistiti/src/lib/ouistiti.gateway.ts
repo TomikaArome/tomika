@@ -46,7 +46,7 @@ export class OuistitiGateway {
   @SubscribeMessage('leaveLobby')
   leaveLobby(controller: SocketController) {
     if (controller.inLobby) {
-      controller.lobby.removePlayer(controller.player);
+      controller.player.lobby.removePlayer(controller.player);
     }
   }
 
@@ -56,9 +56,9 @@ export class OuistitiGateway {
     OuistitiException.checkIfInLobby(controller);
     OuistitiException.checkIfHost(controller);
 
-    if (params.hostId) { controller.lobby.changeHost(params.hostId); }
-    if (params.playerOrder) { controller.lobby.changeOrder(params.playerOrder); }
-    if (params.maxNumberOfPlayers !== undefined) { controller.lobby.changeMaxNumberOfPlayers(params.maxNumberOfPlayers); }
+    if (params.hostId) { controller.player.lobby.changeHost(params.hostId); }
+    if (params.playerOrder) { controller.player.lobby.changeOrder(params.playerOrder); }
+    if (params.maxNumberOfPlayers !== undefined) { controller.player.lobby.changeMaxNumberOfPlayers(params.maxNumberOfPlayers); }
   }
 
   @UseFilters(new OuistitiExceptionFilter('updatePlayer'))
@@ -70,9 +70,9 @@ export class OuistitiGateway {
       OuistitiException.checkIfHost(controller);
     }
 
-    const player = controller.lobby.getPlayerByIdAndThrowIfNotFound(params.id);
-    if (params.nickname) { controller.lobby.changePlayerNickname(player, params.nickname); }
-    if (params.colour) { controller.lobby.changePlayerColour(player, params.colour); }
+    const player = controller.player.lobby.getPlayerByIdAndThrowIfNotFound(params.id);
+    if (params.nickname) { controller.player.lobby.changePlayerNickname(player, params.nickname); }
+    if (params.colour) { controller.player.lobby.changePlayerColour(player, params.colour); }
     if (params.symbol) { player.changeSymbol(params.symbol); }
   }
 
@@ -87,8 +87,8 @@ export class OuistitiGateway {
       });
     }
 
-    const player = controller.lobby.getPlayerByIdAndThrowIfNotFound(params.id);
-    controller.lobby.removePlayer(player);
+    const player = controller.player.lobby.getPlayerByIdAndThrowIfNotFound(params.id);
+    controller.player.lobby.removePlayer(player);
   }
 
   @UseFilters(new OuistitiExceptionFilter('startGame'))
@@ -97,7 +97,7 @@ export class OuistitiGateway {
     OuistitiException.checkIfInLobby(controller);
     OuistitiException.checkIfHost(controller);
 
-    controller.lobby.startGame({
+    controller.player.lobby.startGame({
       maxCardsPerPlayer: 8
     })
   }

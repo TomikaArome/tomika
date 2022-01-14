@@ -33,7 +33,7 @@ export class OuistitiException extends WsException {
   }
 
   static checkIfHost(controller: SocketController) {
-    if (controller.player !== controller.lobby.host) {
+    if (controller.player !== controller.player.lobby.host) {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
         detail: {

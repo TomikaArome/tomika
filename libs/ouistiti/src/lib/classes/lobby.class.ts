@@ -44,20 +44,19 @@ export class Lobby {
   }
 
   private lobbyClosedSource = new Subject<void>();
-  lobbyClosed$ = this.lobbyClosedSource.asObservable();
   private playerJoinedSource = new Subject<LobbyJoinObserved>();
-  playerJoined$ = this.playerJoinedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
   private playerLeftSource = new Subject<LobbyLeftObserved>();
-  playerLeft$ = this.playerLeftSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-
   private hostChangedSource = new Subject<LobbyChangedHostObserved>();
-  hostChanged$ = this.hostChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
   private playerOrderChangedSource = new Subject<string[]>();
-  playerOrderChanged$ = this.playerOrderChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
   private maximumNumberOfPlayersChangedSource = new Subject<number>();
-  maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-
   private gameStartedSource = new Subject<Game>();
+
+  lobbyClosed$ = this.lobbyClosedSource.asObservable();
+  playerJoined$ = this.playerJoinedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  playerLeft$ = this.playerLeftSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  hostChanged$ = this.hostChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  playerOrderChanged$ = this.playerOrderChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
   gameStarted$ = this.gameStartedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
 
   private static lobbies: Lobby[] = [];
@@ -74,7 +73,7 @@ export class Lobby {
   }
 
   constructor(params: LobbyCreateParams, playerAssignFn: (player: Player) => void = () => undefined) {
-    const hostPlayer = Player.createNewPlayer(params.host);
+    const hostPlayer = Player.createNewPlayer(this, params.host);
     this.players.push(hostPlayer);
     this.playerOrder.push(hostPlayer.id);
     this.host = hostPlayer;
@@ -135,7 +134,7 @@ export class Lobby {
       params.player.colour = remainingColours[Math.floor(Math.random() * remainingColours.length)];
     }
 
-    const newPlayer = Player.createNewPlayer(params.player);
+    const newPlayer = Player.createNewPlayer(this, params.player);
     this.players.push(newPlayer);
     this.playerOrder.push(newPlayer.id);
 

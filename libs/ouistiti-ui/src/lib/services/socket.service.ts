@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, BidInfo, PlayedCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, BidInfo, WonCardInfo, KnownBidInfo, CardPlayed } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
 
 @Injectable({ providedIn: 'root' })
@@ -17,7 +17,8 @@ export class SocketService {
 
     new ServerEvent<RoundInfo>('roundStatus'),
     new ServerEvent<BidInfo>('bid'),
-    new ServerEvent<PlayedCardInfo>('cardPlayed'),
+    new ServerEvent<KnownBidInfo[]>('bidsFinalised'),
+    new ServerEvent<CardPlayed>('cardPlayed'),
     new ServerEvent<WonCardInfo[]>('trickWon')
   ];
 

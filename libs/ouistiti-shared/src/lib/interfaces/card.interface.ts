@@ -32,3 +32,22 @@ export type UnknownCardInfo = UnownedAndUnknownCardInfo | OwnedAndUnknownCardInf
 export type KnownCardInfo = UnownedAndKnownCardInfo | TrumpCardInfo | OwnedAndKnownCardInfo | PlayedCardInfo | WonCardInfo;
 
 export type CardInfo = UnknownCardInfo | KnownCardInfo;
+
+// Type guard checks
+
+export function isTrumpCardInfo(obj: CardInfo): obj is TrumpCardInfo {
+  return (obj as TrumpCardInfo).isTrumpCard === true;
+}
+
+export function isWonCardInfo(obj: CardInfo): obj is WonCardInfo {
+  return (obj as WonCardInfo).winnerId !== undefined;
+}
+
+export function isPlayedCardInfo(obj: CardInfo): obj is PlayedCardInfo {
+  const playedCard = obj as PlayedCardInfo;
+  return playedCard.playedOnTurn !== undefined && playedCard.playedOrderPosition !== undefined;
+}
+
+export function isOwnedAndKnownCardInfo(obj: CardInfo): obj is OwnedAndKnownCardInfo {
+  return (obj as OwnedAndKnownCardInfo).ownerId !== undefined;
+}

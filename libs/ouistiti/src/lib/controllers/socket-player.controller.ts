@@ -1,57 +1,38 @@
 import { SocketController } from './socket.controller';
 import { Player } from '../classes/player.class';
-import { Lobby } from '../classes/lobby.class';
-import { merge } from 'rxjs';
+import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 import { LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
 
 export class SocketPlayerController {
-  private controlledPlayerLeftLobby$ = this.controlledPlayerLobby.playerLeft$.pipe(
-    filter(({ player }: LobbyLeftObserved) => player === this.controlledPlayer)
-  );
-  private controlledLobbyClosed$ = this.controlledPlayerLobby.lobbyClosed$;
-
-  private playerInfoChanged$ = merge(
-    this.controlledPlayer.nicknameChanged$,
-    this.controlledPlayer.colourChanged$,
-    this.controlledPlayer.symbolChanged$
-  ).pipe(
-    this.takeUntilControlledPlayerNoLongerInLobby(),
-    this.socketController.takeUntilDisconnected(),
-    debounceTime(SocketController.debounceTime)
+  private controlledPlayerLeftLobby$ = this.player.lobby.playerLeft$.pipe(
+    filter(({ player }: LobbyLeftObserved) => player === this.player)
   );
 
-  constructor(private socketController: SocketController,
-              private controlledPlayer: Player,
-              private controlledPlayerLobby: Lobby) {
-    this.subscribeEmitLobbyStatus();
-    this.subscribeEmitLobbyUpdate();
+  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stop$); }
+
+  constructor(readonly controller: SocketController,
+              readonly player: Player,
+              readonly stop$: Observable<unknown>) {
+    this.stop$ = merge(this.stop$, this.controlledPlayerLeftLobby$);
+
+    this.subscribeInfoChanged();
   }
 
-  takeUntilControlledPlayerNoLongerInLobby() {
-    return takeUntil(merge(
-      this.controlledPlayerLeftLobby$,
-      this.controlledLobbyClosed$
-    ));
-  }
-
-  filterByOwnLobby() {
-    return filter(() => this.controlledPlayerLobby === this.socketController.lobby)
-  }
-
-  subscribeEmitLobbyStatus() {
-    this.playerInfoChanged$.pipe(
-      this.filterByOwnLobby()
+  subscribeInfoChanged() {
+    merge(
+      this.player.nicknameChanged$,
+      this.player.colourChanged$,
+      this.player.symbolChanged$
+    ).pipe(
+      this.stop,
+      debounceTime(SocketController.debounceTime)
     ).subscribe(() => {
-      this.socketController.emitLobbyStatus();
-    });
-  }
-
-  subscribeEmitLobbyUpdate() {
-    this.playerInfoChanged$.pipe(
-      this.socketController.filterByNotInLobby()
-    ).subscribe(() => {
-      this.socketController.emit('lobbyUpdated', this.controlledPlayerLobby.info);
+      if (!this.controller.inLobby) {
+        this.controller.emit('lobbyUpdated', this.player.lobby.info);
+      } else if (this.player.lobby === this.controller.player.lobby) {
+        this.controller.emitLobbyStatus();
+      }
     });
   }
 }

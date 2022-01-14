@@ -1,9 +1,9 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
-import { BidInfo, isKnownBidInfo, KnownBidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundStatus, UnknownBidInfo } from '@TomikaArome/ouistiti-shared';
+import { BidInfo, isKnownBidInfo, KnownBidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundStatus } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
-import { CardPlayedObserved } from '../interfaces/round-observed.interface';
 import { takeUntil } from 'rxjs/operators';
+import { CardPlayedObserved } from '../interfaces/round-observed.interface';
 
 export enum RoundStage {
   ASC, NO_TRUMPS, DESC
@@ -29,21 +29,19 @@ export class Round {
   readonly playerIds: string[];
   readonly maxCardsPerPlayer: number;
 
-  private roundCompletedSource = new Subject<string>();
-  roundCompleted$ = this.roundCompletedSource.asObservable();
-
+  private completedSource = new Subject<string>();
   private bidsFinalisedSource = new Subject<KnownBidInfo[]>();
-  bidsFinalised$ = this.bidsFinalisedSource.asObservable().pipe(takeUntil(this.roundCompleted$));
   private bidPlacedSource = new Subject<KnownBidInfo>();
-  bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
   private bidCancelledSource = new Subject<string>();
-  bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
-
   private cardPlayedSource = new Subject<CardPlayedObserved>();
-  cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.roundCompleted$));
-
   private turnFinishedSource = new Subject<Card>();
-  turnFinished$ = this.turnFinishedSource.asObservable().pipe(takeUntil(this.roundCompleted$));
+
+  completed$ = this.completedSource.asObservable();
+  bidsFinalised$ = this.bidsFinalisedSource.asObservable().pipe(takeUntil(this.completedSource));
+  bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalisedSource));
+  bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalisedSource));
+  cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.completedSource));
+  turnFinished$ = this.turnFinishedSource.asObservable().pipe(takeUntil(this.completedSource));
 
   get isLastTurn(): boolean {
     return this.currentTurnNumber === this.playerIds.length;
@@ -61,7 +59,10 @@ export class Round {
     return {
       currentPlayerId: this.currentPlayerId,
       currentTurnNumber: this.currentTurnNumber,
-      cards: this.cards.map((card: Card) => card.info),
+      cards: this.cards.map((card: Card) => {
+        if (card === this.trumpCard) { return { ...card.info, isTrumpCard: true }; }
+        return card.info;
+      }),
       bids: this.bids
     }
   }
@@ -69,6 +70,7 @@ export class Round {
   static createNewRound(settings: RoundSettings): Round {
     const round = new Round(settings);
     round.initRound();
+    round.initBids();
     round.generateCards();
     return round;
   }
@@ -77,6 +79,23 @@ export class Round {
     this.roundNumber = settings.roundNumber;
     this.playerIds = settings.playerIds;
     this.maxCardsPerPlayer = settings.maxCardsPerPlayer;
+  }
+
+  infoKnownToPlayer(playerId: string): RoundInfo {
+    return {
+      ...this.info,
+      cards: this.cards.map((card: Card) => {
+        if (card === this.trumpCard) { return { ...card.info, isTrumpCard: true }; }
+        if (card.ownerId !== playerId && !card.played) { return card.incompleteInfo; }
+        return card.info;
+      }),
+      bids: this.bids.map((bidInfo: BidInfo) => {
+        if (this.status === RoundStatus.BIDDING && bidInfo.playerId !== playerId) {
+          return { playerId: bidInfo.playerId, bidPending: isKnownBidInfo(bidInfo) };
+        }
+        return bidInfo;
+      })
+    }
   }
 
   initRound() {
@@ -261,7 +280,7 @@ export class Round {
 
   completeRound() {
     this.status = RoundStatus.COMPLETED;
-    this.roundCompletedSource.next();
-    this.roundCompletedSource.complete();
+    this.completedSource.next();
+    this.completedSource.complete();
   }
 }

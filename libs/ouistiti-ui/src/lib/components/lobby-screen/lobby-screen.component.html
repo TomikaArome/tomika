@@ -40,6 +40,16 @@
       </ng-container>
 
     </tmk-ouistiti-player-list>
+
+    <div class="form-grid" *ngIf="isHost">
+      <hr>
+
+      <div class="buttons-row">
+        <button class="button-colour-green" (click)="startGame()">
+          <fa-icon [icon]="faPlay"></fa-icon>Start game
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

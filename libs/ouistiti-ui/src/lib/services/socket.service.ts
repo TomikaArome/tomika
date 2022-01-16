@@ -15,7 +15,7 @@ export class SocketService {
     new ServerEvent<LobbyInfo>('lobbyUpdated'),
     new ServerEvent<LobbyClosed>('lobbyClosed'),
 
-    new ServerEvent<RoundInfo>('roundStatus'),
+    new ServerEvent<RoundInfo>('roundStatus', { currentPlayerId: '', currentTurnNumber: 1, cards: [], bids: [] }),
     new ServerEvent<BidInfo>('bid'),
     new ServerEvent<KnownBidInfo[]>('bidsFinalised'),
     new ServerEvent<CardPlayed>('cardPlayed'),
@@ -41,6 +41,9 @@ export class SocketService {
     });
 
     this.emitEvent('listLobbies');
+
+    // Test
+    // this.emitEvent('createLobby', { host: { nickname: 'Thomas' } });
   }
 
   disconnect() {

@@ -88,4 +88,8 @@ export class LobbyService {
       hostId: newHostId
     });
   }
+
+  startGame() {
+    this.socketService.emitEvent('startGame');
+  }
 }

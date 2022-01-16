@@ -1,11 +1,12 @@
 import { Component, OnDestroy } from '@angular/core';
 import { SocketService } from '../../services/socket.service';
 import { map, takeUntil } from 'rxjs/operators';
-import { LobbyStatus, PlayerColour, PlayerInfo, PlayerUpdateParams } from '@TomikaArome/ouistiti-shared';
+import { LobbyStatus, PlayerColour, PlayerInfo, PlayerUpdateParams, RoundStatus } from '@TomikaArome/ouistiti-shared';
 import { PlayerService } from '../../services/player.service';
 import { LobbyService } from '../../services/lobby.service';
-import { faBan, faCrown, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCrown, faDoorOpen, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { Subject } from 'rxjs';
+import { RoundService } from '../../services/round.service';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-screen',
@@ -36,10 +37,12 @@ export class LobbyScreenComponent implements OnDestroy {
   faCrown = faCrown;
   faBan = faBan;
   faDoorOpen = faDoorOpen;
+  faPlay = faPlay;
 
   constructor(private socketService: SocketService,
               private playerService: PlayerService,
-              private lobbyService: LobbyService) {
+              private lobbyService: LobbyService,
+              private roundService: RoundService) {
     this.playerService.isHost$.pipe(takeUntil(this.onDestroy$)).subscribe((isHost: boolean) => {
       this.isHost = isHost;
     });
@@ -49,6 +52,8 @@ export class LobbyScreenComponent implements OnDestroy {
     ).subscribe((selfId: string) => {
       this.selfId = selfId;
     });
+
+    this.roundService.roundStatus$.subscribe((obj) => { console.log(obj); });
   }
 
   onOrderChange(order: string[]) {
@@ -100,6 +105,10 @@ export class LobbyScreenComponent implements OnDestroy {
     } else {
       this.lobbyService.kickFromLobby({ id: playerToKickId });
     }
+  }
+
+  startGame() {
+    this.lobbyService.startGame();
   }
 
   ngOnDestroy() {

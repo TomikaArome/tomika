@@ -9,7 +9,7 @@ import {
 @Component({
   selector: 'tmk-ouistiti-lobby-settings',
   templateUrl: './lobby-settings.component.html',
-  styleUrls: ['../../../assets/ouistiti-theme.scss'],
+  styleUrls: ['../../../ouistiti-theme.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

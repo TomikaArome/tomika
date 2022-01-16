@@ -1,13 +1,18 @@
 import { SocketController } from './socket.controller';
 import { Lobby } from '../classes/lobby.class';
-import { debounceTime, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 import { LobbyJoinObserved, LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
 import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { GameStatus, LobbyClosed } from '@TomikaArome/ouistiti-shared';
 import { SocketPlayerController } from './socket-player.controller';
 import { SocketGameController } from './socket-game.controller';
+import { Game } from '../classes/game.class';
 
 export class SocketLobbyController {
+  stopIncludingSelfLeft$ = merge(this.stop$, this.lobby.playerLeft$.pipe(
+    filter(({ player }: LobbyLeftObserved) => this.controller.player === player)
+  ));
+
   private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stop$); }
 
   constructor(readonly controller: SocketController,
@@ -18,6 +23,7 @@ export class SocketLobbyController {
     this.subscribePlayerJoined();
     this.subscribeUpdateLobby();
     this.subscribeLobbyClosed();
+    this.subscribeGameStarted();
 
     this.init();
   }
@@ -35,7 +41,7 @@ export class SocketLobbyController {
     this.lobby.playerJoined$.pipe(this.stop).subscribe(({ player }: LobbyJoinObserved) => {
       new SocketPlayerController(this.controller, player, this.stop$);
       if (player === this.controller.player && player.lobby.gameStatus !== GameStatus.INIT) {
-        new SocketGameController(this.controller, this.lobby.game, this.stop$);
+        new SocketGameController(this.controller, this.lobby.game, this.stopIncludingSelfLeft$);
       }
     });
   }
@@ -68,7 +74,7 @@ export class SocketLobbyController {
   }
 
   subscribeLobbyClosed() {
-    this.lobby.lobbyClosed$.subscribe(() => {
+    this.lobby.lobbyClosed$.pipe(this.stop).subscribe(() => {
       if (!this.controller.inLobby) {
         const payload: LobbyClosed = {
           id: this.lobby.id
@@ -78,6 +84,12 @@ export class SocketLobbyController {
         this.controller.player = null;
         this.controller.emitLobbyStatus();
       }
+    });
+  }
+
+  subscribeGameStarted() {
+    this.lobby.gameStarted$.pipe(this.stop).subscribe((game: Game) => {
+      new SocketGameController(this.controller, game, this.stopIncludingSelfLeft$);
     });
   }
 }

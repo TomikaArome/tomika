@@ -91,7 +91,7 @@ export class Round {
       }),
       bids: this.bids.map((bidInfo: BidInfo) => {
         if (this.status === RoundStatus.BIDDING && bidInfo.playerId !== playerId) {
-          return { playerId: bidInfo.playerId, bidPending: isKnownBidInfo(bidInfo) };
+          return { playerId: bidInfo.playerId, bidPending: !isKnownBidInfo(bidInfo) };
         }
         return bidInfo;
       })
@@ -109,6 +109,9 @@ export class Round {
       this.numberOfCardsPerPlayer = (2 * (this.maxCardsPerPlayer - 1) + this.playerIds.length) - this.roundNumber + 1;
       this.stage = RoundStage.DESC;
     }
+    // TODO temp
+    this.numberOfCardsPerPlayer = 8;
+    this.stage = RoundStage.NO_TRUMPS;
     this.currentPlayerId = this.startingPlayerId;
   }
 
@@ -131,7 +134,7 @@ export class Round {
         this.cards.push(card);
       });
     }
-    if (this.stage === RoundStage.NO_TRUMPS) {
+    if (this.stage !== RoundStage.NO_TRUMPS) {
       const randomIndex = Math.floor(Math.random() * unshuffledDeck.length);
       this.trumpCard = unshuffledDeck[randomIndex];
     }

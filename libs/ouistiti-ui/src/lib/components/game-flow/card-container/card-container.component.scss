@@ -1,0 +1,7 @@
+:host {
+  display: grid;
+  grid-template: repeat(4, 1fr) / repeat(13, 1fr);
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}

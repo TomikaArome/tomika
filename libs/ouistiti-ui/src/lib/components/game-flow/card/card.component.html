@@ -11,20 +11,34 @@
       <use [attr.href]="'#card-' + id + '-symbol'" x="7.5" y="12" width="15" height="15" />
     </svg>
   </defs>
-  <ng-container *ngIf="!miniture; else: minitureCardTemplate">
-    <use
-      stroke="black"
-      stroke-width="2"
-      *ngFor="let pos of symbolPositions"
-      [attr.href]="'#card-' + id + (pos.inv ? '-inv-symbol' : '-symbol')"
-      [attr.x]="pos.x"
-      [attr.y]="pos.y"
-      [ngClass]="{ inv: pos.inv, large: pos.large }" />
-    <use [attr.href]="'#card-' + id + '-number'" x="2" y="22" />
-    <use [attr.href]="'#card-' + id + '-number'" x="2" y="22" transform="scale(-1,-1)" transform-origin="center" />
-    <rect *ngIf="isFaceCard" class="face-card-border" width="83" height="133" x="21" y="21"></rect>
+
+  <rect class="card-background"></rect>
+
+  <ng-container *ngIf="isFaceUp; else cardBackTemplate">
+    <ng-container *ngIf="!miniature; else: miniatureCardTemplate">
+      <use
+        *ngFor="let pos of symbolPositions"
+        [attr.href]="'#card-' + id + (pos.inv ? '-inv-symbol' : '-symbol')"
+        [attr.x]="pos.x"
+        [attr.y]="pos.y"
+        [ngClass]="{ inv: pos.inv, large: pos.large }" />
+
+      <use [attr.href]="'#card-' + id + '-number'" x="2" y="22" />
+
+      <use [attr.href]="'#card-' + id + '-number'" x="2" y="22" transform="scale(-1,-1)" transform-origin="center" />
+
+      <ng-container *ngIf="isFaceCard">
+        <image class="face" [attr.href]="faceCardImagePath"></image>
+        <rect class="face-outline"></rect>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #miniatureCardTemplate>
+      <use [attr.href]="'#card-' + id + '-number'" x="8" y="21" transform="scale(4)" />
+    </ng-template>
   </ng-container>
-  <ng-template #minitureCardTemplate>
-    <use [attr.href]="'#card-' + id + '-number'" x="8" y="21" transform="scale(4)" />
+
+  <ng-template #cardBackTemplate>
+    <image class="back" [attr.href]="cardBackPath" preserveAspectRatio="none"></image>
   </ng-template>
 </svg>

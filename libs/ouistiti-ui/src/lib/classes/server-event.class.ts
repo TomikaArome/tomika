@@ -1,5 +1,6 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
+import { lobbyStatusPlayerIsHostMock, roundStatusMock } from '@TomikaArome/ouistiti-shared';
 
 export class ServerEvent<T> {
   private eventSource: Subject<T>;
@@ -14,5 +15,11 @@ export class ServerEvent<T> {
     socket.on(this.name, (payload: T) => {
       this.eventSource.next(payload);
     });
+
+    // Mock
+    switch (this.name) {
+      case 'lobbyStatus': this.eventSource.next(lobbyStatusPlayerIsHostMock as any); break;
+      case 'roundStatus': this.eventSource.next(roundStatusMock as any); break;
+    }
   }
 }

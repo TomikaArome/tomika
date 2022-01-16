@@ -12,10 +12,11 @@ export class OuistitiException extends WsException {
   }
 
   static checkRequiredParams(obj: unknown, keys: string[]) {
+    if (typeof obj !== 'object' || obj === null) { throw OuistitiException.requiredParam(keys[0]); }
     keys.forEach((fullKey: string) => {
       const splitKey: string[] = fullKey.split('.');
       splitKey.reduce((acc: unknown, currentKey: string) => {
-        if (!acc[currentKey]) { throw OuistitiException.requiredParam(fullKey); }
+        if (acc[currentKey] === undefined) { throw OuistitiException.requiredParam(fullKey); }
         return acc[currentKey];
       }, obj);
     });

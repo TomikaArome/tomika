@@ -28,9 +28,13 @@ export class OuistitiGateway {
   @SubscribeMessage('createLobby')
   createLobby(controller: SocketController, params: LobbyCreateParams) {
     OuistitiException.checkRequiredParams(params, ['host.nickname']);
-    new Lobby(params, (player: Player) => {
+    const temp = new Lobby(params, (player: Player) => {
       controller.player = player;
     });
+    // temp.addPlayer({ id: '', player: { nickname: 'Claire' } });
+    // temp.addPlayer({ id: '', player: { nickname: 'Steve' } });
+    // temp.addPlayer({ id: '', player: { nickname: 'David' } });
+    // temp.startGame({ maxCardsPerPlayer: 8 });
   }
 
   @UseFilters(new OuistitiExceptionFilter('joinLobby'))

@@ -47,6 +47,7 @@ export class RoundService {
     }, {
       currentPlayerId: null,
       currentTurnNumber: 1,
+      playerOrder: [],
       cards: [],
       bids: []
     })

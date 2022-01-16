@@ -5,6 +5,7 @@ import { CardInfo, PlayedCardInfo } from './card.interface';
 export interface RoundInfo {
   currentPlayerId: string;
   currentTurnNumber: number;
+  playerOrder: string[];
   cards: CardInfo[];
   bids: BidInfo[];
 }

@@ -3,6 +3,7 @@ import { Player } from '../classes/player.class';
 import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 import { LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
+import { SocketLobbyController } from './socket-lobby.controller';
 
 export class SocketPlayerController {
   private controlledPlayerLeftLobby$ = this.player.lobby.playerLeft$.pipe(
@@ -13,7 +14,8 @@ export class SocketPlayerController {
 
   constructor(readonly controller: SocketController,
               readonly player: Player,
-              readonly stop$: Observable<unknown>) {
+              readonly stop$: Observable<unknown>,
+              readonly lobbyController: SocketLobbyController) {
     this.stop$ = merge(this.stop$, this.controlledPlayerLeftLobby$);
 
     this.subscribeInfoChanged();
@@ -31,7 +33,7 @@ export class SocketPlayerController {
       if (!this.controller.inLobby) {
         this.controller.emit('lobbyUpdated', this.player.lobby.info);
       } else if (this.player.lobby === this.controller.player.lobby) {
-        this.controller.emitLobbyStatus();
+        this.lobbyController.emitLobbyStatus();
       }
     });
   }

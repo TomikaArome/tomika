@@ -9,14 +9,17 @@ import { SocketService } from './socket.service';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
-  currentPlayerInLobby$: Observable<boolean> = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
+  selfInLobby$: Observable<boolean> = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
     map((status: LobbyStatus) => status.inLobby)
   );
-  currentPlayer$: Observable<PlayerInfo> = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
-    map((status: LobbyStatus) => status?.lobby?.players?.find((player: PlayerInfo) => player.id === status.playerId) ?? null)
+  selfId$: Observable<string> = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
+    map((status: LobbyStatus) => status?.playerId ?? null)
   );
   isHost$ = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
     map((status: LobbyStatus) => !!status.inLobby && status.playerId === status.lobby.hostId)
+  );
+  currentLobbyPlayers$: Observable<PlayerInfo[]> = this.socketService.getEvent<LobbyStatus>('lobbyStatus').pipe(
+    map((status: LobbyStatus) => status?.lobby?.players ?? [])
   );
 
   static getSymbolIconName(symbol: PlayerSymbol): string {

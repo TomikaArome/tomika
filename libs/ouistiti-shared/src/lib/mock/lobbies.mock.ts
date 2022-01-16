@@ -39,9 +39,9 @@ export const lobby1Mock: LobbyInfo = {
     }
   ],
   playerOrder: [
+    'AXP9aX7pRu',
     'So5DdHmXOR',
     'ne6NF08aL2',
-    'AXP9aX7pRu',
     '5x89SitQIG'
   ],
   hostId: 'AXP9aX7pRu',

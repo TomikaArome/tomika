@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { SocketService } from '../../services/socket.service';
 import { PlayerService } from '../../services/player.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { LobbyService } from '../../services/lobby.service';
 import { GameStatus, LobbyInfo } from '@TomikaArome/ouistiti-shared';
 import { RoundService } from '../../services/round.service';
@@ -12,7 +12,7 @@ import { RoundService } from '../../services/round.service';
   styleUrls: ['./container.component.scss']
 })
 export class ContainerComponent {
-  showLobbySelector$ = this.playerService.currentPlayerInLobby$.pipe(
+  showLobbySelector$ = this.playerService.selfInLobby$.pipe(
     map((inLobby: boolean) => !inLobby)
   );
 
@@ -21,6 +21,8 @@ export class ContainerComponent {
   );
 
   roundStatus$ = this.roundService.roundStatus$;
+  selfId$ = this.playerService.selfId$;
+  currentLobbyPlayers$ = this.playerService.currentLobbyPlayers$;
 
   constructor(private socketService: SocketService,
               private playerService: PlayerService,

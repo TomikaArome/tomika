@@ -56,15 +56,4 @@ export class SocketController {
   emitLobbyList() {
     this.emit('lobbyList', Lobby.getLobbyList().map(lobby => lobby.info));
   }
-
-  emitLobbyStatus() {
-    const payload: LobbyStatus = {
-      inLobby: this.inLobby
-    };
-    if (this.inLobby) {
-      payload.lobby = this.player.lobby.info;
-      payload.playerId = this.player.id;
-    }
-    this.emit('lobbyStatus', payload);
-  }
 }

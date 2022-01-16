@@ -1,1 +1,29 @@
-<tmk-ouistiti-card *ngFor="let card of cards" [value]="card.value" [suit]="card.suit" [id]="card.id" [height]="175"></tmk-ouistiti-card>
+<div
+  class="card-wrapper"
+  *ngFor="let card of cards"
+  [ngStyle]="cardStyle(getCardPosition(card))">
+
+  <div class="card-interact-wrapper interactable">
+
+    <tmk-ouistiti-card
+      [id]="card.id"
+      [value]="card.value"
+      [suit]="card.suit"
+      [height]="getCardPosition(card).height">
+    </tmk-ouistiti-card>
+
+  </div>
+
+</div>
+
+<div
+  class="player-round-details-wrapper"
+  *ngFor="let player of playersWithoutSelf"
+  [ngStyle]="playerRoundDetailsStyle(getPlayerRoundDetailsPosition(player.id))">
+
+  <tmk-ouistiti-player-round-details
+    [attr.id]="'player-round-details-' + player.id"
+    [player]="player">
+  </tmk-ouistiti-player-round-details>
+
+</div>

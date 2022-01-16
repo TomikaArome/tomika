@@ -52,8 +52,6 @@ export class LobbyScreenComponent implements OnDestroy {
     ).subscribe((selfId: string) => {
       this.selfId = selfId;
     });
-
-    this.roundService.roundStatus$.subscribe((obj) => { console.log(obj); });
   }
 
   onOrderChange(order: string[]) {

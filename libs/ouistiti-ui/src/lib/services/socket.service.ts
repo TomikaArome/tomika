@@ -15,7 +15,7 @@ export class SocketService {
     new ServerEvent<LobbyInfo>('lobbyUpdated'),
     new ServerEvent<LobbyClosed>('lobbyClosed'),
 
-    new ServerEvent<RoundInfo>('roundStatus', { currentPlayerId: '', currentTurnNumber: 1, cards: [], bids: [] }),
+    new ServerEvent<RoundInfo>('roundStatus', { currentPlayerId: '', currentTurnNumber: 1, playerOrder: [], cards: [], bids: [] }),
     new ServerEvent<BidInfo>('bid'),
     new ServerEvent<KnownBidInfo[]>('bidsFinalised'),
     new ServerEvent<CardPlayed>('cardPlayed'),

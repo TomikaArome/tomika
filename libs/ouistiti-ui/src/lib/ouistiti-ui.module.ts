@@ -21,6 +21,7 @@ import { LobbyScreenComponent } from './components/lobby-screen/lobby-screen.com
 import { LobbySettingsComponent } from './components/game-setup/lobby-settings/lobby-settings.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { PlayerListItemComponent } from './components/player-list/player-list-item.component';
+import { PlayerRoundDetailsComponent } from './components/game-flow/player-round-details/player-round-details.component';
 import { PlayerSettingsComponent } from './components/game-setup/player-settings/player-settings.component';
 import { SymbolSelectorComponent } from './components/game-setup/symbol-selector/symbol-selector.component';
 
@@ -49,6 +50,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     LobbySettingsComponent,
     PlayerListComponent,
     PlayerListItemComponent,
+    PlayerRoundDetailsComponent,
     PlayerSettingsComponent,
     SymbolSelectorComponent,
 

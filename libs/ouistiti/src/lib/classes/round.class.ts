@@ -59,6 +59,7 @@ export class Round {
     return {
       currentPlayerId: this.currentPlayerId,
       currentTurnNumber: this.currentTurnNumber,
+      playerOrder: this.playerIds,
       cards: this.cards.map((card: Card) => {
         if (card === this.trumpCard) { return { ...card.info, isTrumpCard: true }; }
         return card.info;

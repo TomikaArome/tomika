@@ -1,0 +1,31 @@
+@import "../../../ouistiti-theme";
+
+:host {
+  --player-round-details-border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  background-color: hsl(0,0%,10%);
+  border-radius: var(--player-round-details-border-radius);
+  padding: 12px;
+  width: 200px;
+
+  .symbol {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: hsla(0,0%,100%,0.5);
+    border-radius: calc(var(--player-round-details-border-radius) / 2);
+    padding: 11px;
+    background-color: hsl(var(--player-colour-hue),50%,50%);
+  }
+
+  .nickname {
+    font-size: 20px;
+    font-weight: bold;
+  }
+}

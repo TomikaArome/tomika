@@ -5,6 +5,7 @@ import { Game } from '../classes/game.class';
 import { GameStatus } from '@TomikaArome/ouistiti-shared';
 import { Round } from '../classes/round.class';
 import { SocketRoundController } from './socket-round.controller';
+import { SocketLobbyController } from './socket-lobby.controller';
 
 export class SocketGameController {
   gameCompleted$: Observable<unknown> = this.game.statusChanged$.pipe(
@@ -15,7 +16,8 @@ export class SocketGameController {
 
   constructor(readonly controller: SocketController,
               readonly game: Game,
-              readonly stop$: Observable<unknown>) {
+              readonly stop$: Observable<unknown>,
+              readonly lobbyController: SocketLobbyController) {
     this.stop$ = merge(this.stop$, this.gameCompleted$);
 
     this.subscribeStatusChanged();
@@ -25,8 +27,13 @@ export class SocketGameController {
   }
 
   createControllerForLatestRound() {
-    if (this.game.rounds.length > 0) {
-      new SocketRoundController(this.controller, this.game.rounds[this.game.rounds.length - 1], this.stop$);
+    if (!this.controller.inLobby) {
+      this.lobbyController.emitLobbyUpdated();
+    } else if (this.lobbyController.isOwnLobby) {
+      this.lobbyController.emitLobbyStatus();
+      if (this.game.rounds.length > 0) {
+        new SocketRoundController(this.controller, this.game.rounds[this.game.rounds.length - 1], this.stop$);
+      }
     }
   }
 

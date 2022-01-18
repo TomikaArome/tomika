@@ -1,8 +1,8 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
-import { BidInfo, isKnownBidInfo, KnownBidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundStatus } from '@TomikaArome/ouistiti-shared';
+import { BidInfo, isKnownBidInfo, KnownBidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundStatus, RoundStatusChanged } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { CardPlayedObserved } from '../interfaces/round-observed.interface';
 
 export enum RoundStage {
@@ -29,19 +29,19 @@ export class Round {
   readonly playerIds: string[];
   readonly maxCardsPerPlayer: number;
 
-  private completedSource = new Subject<string>();
-  private bidsFinalisedSource = new Subject<KnownBidInfo[]>();
+  private statusChangedSource = new Subject<RoundStatusChanged>();
   private bidPlacedSource = new Subject<KnownBidInfo>();
   private bidCancelledSource = new Subject<string>();
   private cardPlayedSource = new Subject<CardPlayedObserved>();
   private turnFinishedSource = new Subject<Card>();
 
-  completed$ = this.completedSource.asObservable();
-  bidsFinalised$ = this.bidsFinalisedSource.asObservable().pipe(takeUntil(this.completedSource));
-  bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalisedSource));
-  bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalisedSource));
-  cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.completedSource));
-  turnFinished$ = this.turnFinishedSource.asObservable().pipe(takeUntil(this.completedSource));
+  statusChanged$ = this.statusChangedSource.asObservable();
+  bidsFinalised$ = this.statusChanged$.pipe(filter((p: RoundStatusChanged) => p.status === RoundStatus.PLAY));
+  completed$ = this.statusChanged$.pipe(filter((p: RoundStatusChanged) => p.status === RoundStatus.COMPLETED));
+  bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
+  bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
+  cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.completed$));
+  turnFinished$ = this.turnFinishedSource.asObservable().pipe(takeUntil(this.completed$));
 
   get isLastTurn(): boolean {
     return this.currentTurnNumber === this.playerIds.length;
@@ -60,6 +60,7 @@ export class Round {
       currentPlayerId: this.currentPlayerId,
       currentTurnNumber: this.currentTurnNumber,
       playerOrder: this.playerIds,
+      status: this.status,
       cards: this.cards.map((card: Card) => {
         if (card === this.trumpCard) { return { ...card.info, isTrumpCard: true }; }
         return card.info;
@@ -113,6 +114,7 @@ export class Round {
     // TODO temp
     this.numberOfCardsPerPlayer = 8;
     this.stage = RoundStage.NO_TRUMPS;
+
     this.currentPlayerId = this.startingPlayerId;
   }
 
@@ -224,8 +226,10 @@ export class Round {
         }
       });
 
-      this.bidsFinalisedSource.next(this.bids as KnownBidInfo[]);
-      this.bidsFinalisedSource.complete();
+      this.statusChangedSource.next({
+        status: this.status,
+        finalBids: this.bids as KnownBidInfo[]
+      });
     }
   }
 
@@ -284,7 +288,9 @@ export class Round {
 
   completeRound() {
     this.status = RoundStatus.COMPLETED;
-    this.completedSource.next();
-    this.completedSource.complete();
+    this.statusChangedSource.next({
+      status: this.status
+    });
+    this.statusChangedSource.complete();
   }
 }

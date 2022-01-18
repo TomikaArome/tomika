@@ -1,6 +1,5 @@
 import { Component, EventEmitter, HostBinding, Input, OnDestroy, Output } from '@angular/core';
 import { PlayerInfo } from '@TomikaArome/ouistiti-shared';
-import { PlayerService } from '../../services/player.service';
 import { SortableListComponent } from '../../utility/sortable-list.component';
 import { Subject } from 'rxjs';
 import { faCrown, faGripVertical, faUserCog } from '@fortawesome/free-solid-svg-icons';
@@ -42,16 +41,6 @@ export class PlayerListItemComponent implements OnDestroy {
       this.contentVisible = false;
       this.dragging = !!player;
     });
-  }
-
-  get playerColourClass(): { [key: string]: string } {
-    const obj = {};
-    obj[PlayerService.getColourClassName(this.player.colour)] = true;
-    return obj;
-  }
-
-  get playerSymbol(): string {
-    return PlayerService.getSymbolIconName(this.player.symbol);
   }
 
   ngOnDestroy() {

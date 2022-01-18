@@ -1,31 +1,77 @@
 @import "../../../ouistiti-theme";
 
 :host {
-  --player-round-details-border-radius: 12px;
+  --tmk-ouistiti-player-round-details-border-radius: 20px;
 
   display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: center;
   background-color: hsl(0,0%,10%);
-  border-radius: var(--player-round-details-border-radius);
-  padding: 12px;
+  border-radius: var(--tmk-ouistiti-player-round-details-border-radius);
+  padding: 20px;
   width: 200px;
+  height: 150px;
+
+  > :nth-last-child(1) {
+    flex: 1;
+  }
 
   .symbol {
-    width: 56px;
-    height: 56px;
-    display: flex;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     color: hsla(0,0%,100%,0.5);
-    border-radius: calc(var(--player-round-details-border-radius) / 2);
+    border-radius: 6px;
     padding: 11px;
     background-color: hsl(var(--player-colour-hue),50%,50%);
   }
 
   .nickname {
+    display: flex;
+    gap: 8px;
+    align-items: center;
     font-size: 20px;
     font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .count-row {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+
+    > div {
+      width: 20px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+
+      > tmk-ouistiti-bid-chip, tmk-ouistiti-card {
+        position: absolute;
+      }
+
+      &:nth-of-type(2n) > tmk-ouistiti-bid-chip, &:nth-of-type(2n) > tmk-ouistiti-card {
+        transform: translateY(15px);
+        z-index: 1;
+      }
+    }
+
+    &:nth-of-type(1) {
+      z-index: 2;
+      height: 40px;
+    }
+    &:nth-of-type(2) {
+      transform: translateY(-30px);
+      height: 30px;
+    }
+  }
+
+  .bid-still-pending {
+    display: flex;
+    align-items: center;
+    color: hsl(0,0%,75%);
   }
 }

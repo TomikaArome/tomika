@@ -18,12 +18,16 @@
 
 <div
   class="player-round-details-wrapper"
-  *ngFor="let player of playersWithoutSelf"
+  *ngFor="let player of players"
   [ngStyle]="playerRoundDetailsStyle(getPlayerRoundDetailsPosition(player.id))">
 
   <tmk-ouistiti-player-round-details
     [attr.id]="'player-round-details-' + player.id"
-    [player]="player">
+    [player]="player"
+    [bid]="playerBid(player.id)"
+    [wonCards]="cardsWonByPlayer(player.id)"
+    [angle]="getPlayerRoundDetailsPosition(player.id).angle"
+    [bidsStillPending]="areBidsStillPending">
   </tmk-ouistiti-player-round-details>
 
 </div>

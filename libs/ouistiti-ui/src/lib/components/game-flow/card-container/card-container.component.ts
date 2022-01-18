@@ -1,9 +1,10 @@
 import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
-import { CARD_ORDER, CardInfo, CardSuit, KnownCardInfo, OwnedAndKnownCardInfo, OwnedAndUnknownCardInfo, PlayerInfo, RoundInfo } from '@TomikaArome/ouistiti-shared';
+import { BidInfo, CARD_ORDER, CardInfo, CardSuit, KnownCardInfo, OwnedAndKnownCardInfo, OwnedAndUnknownCardInfo, PlayedCardInfo, PlayerInfo, RoundInfo, RoundStatus, WonCardInfo } from '@TomikaArome/ouistiti-shared';
 
 interface PlayerRoundDetailsPosition {
   x: number;
   y: number;
+  angle: number;
 }
 
 interface CardPosition {
@@ -37,7 +38,19 @@ export class CardContainerComponent implements OnInit {
   get playersWithoutSelf(): PlayerInfo[] {
     const selfIndex = this.players.findIndex((player: PlayerInfo) => player.id === this.selfId);
     return [...this.players.slice(selfIndex + 1), ...this.players.slice(0, selfIndex)];
-    // return this.players.filter((player: PlayerInfo) => player.id !== this.selfId);
+  }
+
+  get areBidsStillPending(): boolean {
+    return this.roundInfo?.status === RoundStatus.BIDDING;
+  }
+
+  private static toRadians(degrees: number): number {
+    return degrees * Math.PI / 180;
+  }
+  private static getAngle(distance: number, radius: number): number {
+    const twoRSquared = 2 * radius * radius;
+    const radians = Math.acos((twoRSquared - distance * distance) / twoRSquared);
+    return radians * 180 / Math.PI;
   }
 
   constructor(private elRef: ElementRef) {}
@@ -50,6 +63,13 @@ export class CardContainerComponent implements OnInit {
   setContainerSizes() {
     this.containerWidth = (this.elRef.nativeElement as HTMLElement).getBoundingClientRect().width / 2;
     this.containerHeight = (this.elRef.nativeElement as HTMLElement).getBoundingClientRect().height / 2;
+  }
+
+  cardsWonByPlayer(playerId: string): WonCardInfo[] {
+    return this.cards.filter((c: CardInfo) => (c as WonCardInfo).winnerId === playerId) as WonCardInfo[];
+  }
+  playerBid(playerId: string): BidInfo {
+    return this.roundInfo.bids.find((bid: BidInfo) => bid.playerId === playerId);
   }
 
   playerRoundDetailsStyle(pos: PlayerRoundDetailsPosition) {
@@ -66,24 +86,33 @@ export class CardContainerComponent implements OnInit {
   }
 
   getPlayerRoundDetailsPosition(playerId: string): PlayerRoundDetailsPosition {
-    const padding = 20;
     const players = this.playersWithoutSelf.map((player: PlayerInfo) => player.id);
+
     let rx, ry;
     const el = ((this.elRef.nativeElement as HTMLElement)
       .querySelector('#player-round-details-' + playerId) as HTMLElement);
     if (el) {
       const box = el.getBoundingClientRect();
-      rx = this.containerWidth - box.width / 2 - padding;
-      ry = this.containerHeight - box.height / 2 - padding;
+      rx = this.containerWidth - box.width / 2;
+      ry = this.containerHeight - box.height / 2;
     }
 
-    const maxAngle = 180;
-    const angleStep = maxAngle / (players.length - 1);
-    const angle = (players.indexOf(playerId) - ((players.length - 1) / 2)) * angleStep;
+    if (playerId === this.selfId) {
+      return {
+        x: -rx,
+        y: ry,
+        angle: 180
+      }
+    } else {
+      const maxAngle = 180;
+      const angleStep = maxAngle / (players.length - 1);
+      const angle = (players.indexOf(playerId) - ((players.length - 1) / 2)) * angleStep;
 
-    return {
-      x: Math.cos(this.toRadians(angle - 90)) * rx,
-      y: Math.sin(this.toRadians(angle - 90)) * ry
+      return {
+        x: Math.cos(CardContainerComponent.toRadians(angle - 90)) * rx,
+        y: Math.sin(CardContainerComponent.toRadians(angle - 90)) * ry,
+        angle
+      }
     }
   }
 
@@ -117,28 +146,22 @@ export class CardContainerComponent implements OnInit {
     })
   }
 
-  private toRadians(degrees: number): number {
-    return degrees * Math.PI / 180;
-  }
-  private getAngle(distance: number, radius: number): number {
-    const twoRSquared = 2 * radius * radius;
-    const radians = Math.acos((twoRSquared - distance * distance) / twoRSquared);
-    return radians * 180 / Math.PI;
-  }
-
   getCardPositionInOwnHand(card: OwnedAndKnownCardInfo): CardPosition {
-    let cardsInHand: OwnedAndKnownCardInfo[] = this.cards.filter((c: CardInfo) => (c as OwnedAndKnownCardInfo).ownerId === card.ownerId) as OwnedAndKnownCardInfo[];
+    let cardsInHand: OwnedAndKnownCardInfo[] = this.cards.filter((c: CardInfo) => {
+      return (c as OwnedAndKnownCardInfo).ownerId === card.ownerId
+        && (c as PlayedCardInfo).playedOnTurn === undefined;
+    }) as OwnedAndKnownCardInfo[];
     cardsInHand = this.sortCards(cardsInHand) as OwnedAndKnownCardInfo[];
 
     const radius = 1000;
     const spreadDistance = 100;
-    const angleStep = this.getAngle(spreadDistance, radius);
+    const angleStep = CardContainerComponent.getAngle(spreadDistance, radius);
     const angle = (cardsInHand.indexOf(card) - ((cardsInHand.length - 1) / 2)) * angleStep;
     const angleOfFirstCard = (-(cardsInHand.length - 1) / 2) * angleStep;
 
     return {
-      x: Math.cos(this.toRadians(angle - 90)) * radius,
-      y: this.containerHeight - (Math.sin(this.toRadians(angle + 90)) - Math.sin(this.toRadians(angleOfFirstCard + 90))) * radius - 125,
+      x: Math.cos(CardContainerComponent.toRadians(angle - 90)) * radius,
+      y: this.containerHeight - (Math.sin(CardContainerComponent.toRadians(angle + 90)) - Math.sin(CardContainerComponent.toRadians(angleOfFirstCard + 90))) * radius - 125,
       z: cardsInHand.indexOf(card),
       rotation: angle
     }

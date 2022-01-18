@@ -8,6 +8,7 @@ import { UtilityModule } from './utility/utility.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 
+import { BidChipComponent } from './components/game-flow/bid-chip/bid-chip.component';
 import { CardComponent } from './components/game-flow/card/card.component';
 import { CardContainerComponent } from './components/game-flow/card-container/card-container.component';
 import { ContainerComponent } from './components/container/container.component';
@@ -37,6 +38,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     UtilityModule
   ],
   declarations: [
+    BidChipComponent,
     CardComponent,
     CardContainerComponent,
     ContainerComponent,

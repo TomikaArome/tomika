@@ -1,25 +1,38 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, BidInfo, WonCardInfo, KnownBidInfo, CardPlayed } from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, BidInfo, WonCardInfo, CardPlayed, RoundStatus, RoundStatusChanged } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
+  static readonly lobbyStatusInitialValue: LobbyStatus = {
+    inLobby: false
+  };
+
+  static readonly roundStatusInitialValue: RoundInfo = {
+    currentPlayerId: '',
+    currentTurnNumber: 1,
+    playerOrder: [],
+    status: RoundStatus.BIDDING,
+    cards: [],
+    bids: []
+  };
+
   private socket: Socket;
   private events: ServerEvent<unknown>[] = [
     new ServerEvent<OuistitiError>('error'),
 
-    new ServerEvent<LobbyStatus>('lobbyStatus', { inLobby: false }),
+    new ServerEvent<LobbyStatus>('lobbyStatus', SocketService.lobbyStatusInitialValue),
     new ServerEvent<LobbyInfo[]>('lobbyList', []),
     new ServerEvent<LobbyInfo>('lobbyUpdated'),
     new ServerEvent<LobbyClosed>('lobbyClosed'),
 
-    new ServerEvent<RoundInfo>('roundStatus', { currentPlayerId: '', currentTurnNumber: 1, playerOrder: [], cards: [], bids: [] }),
+    new ServerEvent<RoundInfo>('roundStatus', SocketService.roundStatusInitialValue),
     new ServerEvent<BidInfo>('bid'),
-    new ServerEvent<KnownBidInfo[]>('bidsFinalised'),
     new ServerEvent<CardPlayed>('cardPlayed'),
-    new ServerEvent<WonCardInfo[]>('trickWon')
+    new ServerEvent<WonCardInfo[]>('trickWon'),
+    new ServerEvent<RoundStatusChanged>('roundStatusChanged')
   ];
 
   private socketDisconnected$: BehaviorSubject<boolean>;

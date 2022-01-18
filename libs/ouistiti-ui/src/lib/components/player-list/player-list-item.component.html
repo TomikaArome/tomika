@@ -1,5 +1,10 @@
-<div class="player-list-item-row" [ngClass]="playerColourClass">
-  <mat-icon [svgIcon]="playerSymbol" class="symbol"></mat-icon>
+<div class="player-list-item-row">
+  <tmk-ouistiti-bid-chip
+    [colour]="player.colour"
+    [symbol]="player.symbol"
+    [square]="true"
+    [diameter]="40">
+  </tmk-ouistiti-bid-chip>
 
   <div class="nickname">
     {{ player.nickname }}

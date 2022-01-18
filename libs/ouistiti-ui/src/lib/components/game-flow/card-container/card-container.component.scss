@@ -6,11 +6,18 @@
   overflow: hidden;
 
   .card-interact-wrapper {
+    width: fit-content;
+    height: fit-content;
+    transform: translate(-50%,-50%);
+
     &.interactable {
       cursor: pointer;
-      transition: transform 100ms;
 
-      &:hover {
+      tmk-ouistiti-card {
+        transition: transform 100ms;
+      }
+
+      &:hover tmk-ouistiti-card {
         transform: translateY(-20%);
       }
     }
@@ -23,7 +30,7 @@
     top: 50%;
     left: 50%;
 
-    tmk-ouistiti-player-round-details, tmk-ouistiti-card {
+    tmk-ouistiti-player-round-details {
       transform: translate(-50%,-50%);
     }
   }

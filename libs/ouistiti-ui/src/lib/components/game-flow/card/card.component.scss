@@ -74,5 +74,33 @@
       x: 1px;
       y: 2px;
     }
+
+    .miniature-back {
+      fill: #190c80;
+      width: calc(100% - 12px);
+      height: calc(100% - 12px);
+      x: 6px;
+      y: 6px;
+      rx: 4px;
+    }
+
+    &.dotted {
+      .card-background {
+        fill: hsla(0,0%,0%,0.5);
+      }
+
+      .miniature-back {
+        fill: none;
+        stroke: hsla(0,0%,100%,0.5);
+        stroke-width: 4;
+        stroke-dasharray: 12;
+      }
+
+      .dotted-symbol path {
+        fill: none;
+        stroke: hsla(0,0%,100%,0.5);
+        stroke-dasharray: 96;
+      }
+    }
   }
 }

@@ -31,12 +31,6 @@
         color: hsl(0,0%,100%);
       }
 
-      &.symbol {
-        width: 40px;
-        padding: 11px;
-        background-color: hsl(var(--player-colour-hue),50%,50%);
-      }
-
       &.tmk-sortable-list-gripped {
         color: hsl(0,0%,100%);
         background-color: hsla(0,0%,100%,0.1);
@@ -58,7 +52,7 @@
   }
 
   &:not(.tmk-player-list-item-dragging) .player-list-item-row  {
-    fa-icon:not(.symbol):hover {
+    fa-icon:hover {
       cursor: pointer;
       background-color: hsla(0,0%,100%,0.1);
     }

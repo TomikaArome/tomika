@@ -33,6 +33,10 @@ export class CardComponent {
     el.style.setProperty('--tmk-ouistiti-card-width', `${width}px`);
     el.style.setProperty('--tmk-ouistiti-card-height', `${height}px`);
   };
+  private _dotted = false;
+  @Input()
+  get dotted(): boolean { return this.miniature && !this.isFaceUp && this._dotted; }
+  set dotted(value: boolean) { this._dotted = value; }
 
   get isFaceUp(): boolean {
     return this.faceUp && !!this.value && !!this.suit;
@@ -54,7 +58,8 @@ export class CardComponent {
     const isRed = this.suit === CardSuit.HEART || this.suit === CardSuit.DIAMOND;
     return {
       'card-colour-black': !isRed,
-      'card-colour-red': isRed
+      'card-colour-red': isRed,
+      'dotted': this.dotted
     }
   }
 

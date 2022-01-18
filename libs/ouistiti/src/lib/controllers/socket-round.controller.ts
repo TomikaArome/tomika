@@ -1,6 +1,6 @@
 import { SocketController } from './socket.controller';
 import { Round } from '../classes/round.class';
-import { CardPlayed, KnownBidInfo, PlayedCardInfo, UnknownBidInfo } from '@TomikaArome/ouistiti-shared';
+import { CardPlayed, KnownBidInfo, PlayedCardInfo, RoundStatusChanged, UnknownBidInfo } from '@TomikaArome/ouistiti-shared';
 import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CardPlayedObserved } from '../interfaces/round-observed.interface';
@@ -13,9 +13,9 @@ export class SocketRoundController {
               readonly stop$: Observable<unknown>) {
     this.stop$ = merge(this.stop$, this.round.completed$);
 
+    this.subscribeStatusChanged();
     this.subscribeBidPlaced();
     this.subscribeBidCancelled();
-    this.subscribeBidsFinalised();
     this.subscribeCardPlayed();
 
     this.emitInitialRoundStatus();
@@ -23,6 +23,12 @@ export class SocketRoundController {
 
   emitInitialRoundStatus() {
     this.controller.emit('roundStatus', this.round.infoKnownToPlayer(this.controller.player.id));
+  }
+
+  subscribeStatusChanged() {
+    this.round.statusChanged$.pipe(this.stop).subscribe((statusChanged: RoundStatusChanged) => {
+      this.controller.emit('roundStatusChanged', statusChanged);
+    });
   }
 
   subscribeBidPlaced() {
@@ -40,12 +46,6 @@ export class SocketRoundController {
     this.round.bidCancelled$.pipe(this.stop).subscribe((playerId: string) => {
       const unknownBid: UnknownBidInfo = { playerId, bidPending: true };
       this.controller.emit('bid', unknownBid);
-    });
-  }
-
-  subscribeBidsFinalised() {
-    this.round.bidsFinalised$.pipe(this.stop).subscribe((finalBids: KnownBidInfo[]) => {
-      this.controller.emit('bidsFinalised', finalBids);
     });
   }
 

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="125" height="175" viewBox="0 0 125 175" [ngClass]="svgClasses">
+<svg xmlns="http://www.w3.org/2000/svg" width="125" height="175" viewBox="0 0 125 175" [ngClass]="svgClasses">
   <defs>
     <svg [id]="'card-' + id + '-symbol'" width="25" height="25" viewBox="256 256 512 512">
       <path [id]="'card-' + id + '-symbol-path'" [attr.d]="symbolPath" />
@@ -12,7 +12,7 @@
     </svg>
   </defs>
 
-  <rect class="card-background"></rect>
+  <rect class="card-background" />
 
   <ng-container *ngIf="isFaceUp; else cardBackTemplate">
     <ng-container *ngIf="!miniature; else: miniatureCardTemplate">
@@ -28,8 +28,8 @@
       <use [attr.href]="'#card-' + id + '-number'" x="2" y="22" transform="scale(-1,-1)" transform-origin="center" />
 
       <ng-container *ngIf="isFaceCard">
-        <image class="face" [attr.href]="faceCardImagePath"></image>
-        <rect class="face-outline"></rect>
+        <image class="face" [attr.href]="faceCardImagePath" />
+        <rect class="face-outline" />
       </ng-container>
     </ng-container>
 
@@ -39,6 +39,17 @@
   </ng-container>
 
   <ng-template #cardBackTemplate>
-    <image class="back" [attr.href]="cardBackPath" preserveAspectRatio="none"></image>
+    <image
+      class="back"
+      preserveAspectRatio="none"
+      [attr.href]="cardBackPath"
+      *ngIf="!miniature; else miniatureCardTemplate" />
+
+    <ng-template #miniatureCardTemplate>
+      <rect class="miniature-back"></rect>
+      <svg *ngIf="dotted" class="dotted-symbol" width="62.5" height="62.5" x="62.5" y="87.5" viewBox="256 256 512 512">
+        <path [attr.d]="symbolPath" />
+      </svg>
+    </ng-template>
   </ng-template>
 </svg>

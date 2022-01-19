@@ -1,9 +1,19 @@
+<div class="trump-card-border" [ngStyle]="trumpCardBorderStyle">
+  <fieldset>
+    <legend>Trump</legend>
+    <div [ngStyle]="trumpCardBorderContentsStyle">
+      <fa-icon [icon]="faBan"></fa-icon>
+      No trumps
+    </div>
+  </fieldset>
+</div>
+
 <div
   class="card-wrapper"
   *ngFor="let card of cards"
   [ngStyle]="cardStyle(getCardPosition(card))">
 
-  <div class="card-interact-wrapper interactable">
+  <div class="card-interact-wrapper" [ngClass]="{ interactable: getCardPosition(card).playable }">
 
     <tmk-ouistiti-card
       [id]="card.id"

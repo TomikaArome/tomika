@@ -1,7 +1,7 @@
 import { CardSuit } from '../enum/card-suit.enum';
 import { CardValue } from '../enum/card-value.enum';
 import { BidInfo, RoundInfo } from '../interfaces/round.interface';
-import { CardInfo } from '../interfaces/card.interface';
+import { CardInfo, TrumpCardInfo } from '../interfaces/card.interface';
 import { RoundStatus } from '../enum/round-status.enum';
 
 const cards: CardInfo[] = [
@@ -217,6 +217,78 @@ const wonCards: CardInfo[] = [
   }
 ];
 
+const playedCards: CardInfo[] = [
+  {
+    id: "EnCRcV09Ww",
+    ownerId: "AXP9aX7pRu",
+    value: CardValue.EIGHT,
+    suit: CardSuit.SPADE,
+    playedOnTurn: 1,
+    playedOrderPosition: 1,
+    winnerId: 'AXP9aX7pRu'
+  },
+  {
+    id: "BxyU3fXY0v",
+    ownerId: "So5DdHmXOR",
+    playedOnTurn: 1,
+    playedOrderPosition: 2,
+    winnerId: 'AXP9aX7pRu'
+  },
+  {
+    id: "JCn74fWDaq",
+    ownerId: "ne6NF08aL2",
+    playedOnTurn: 1,
+    playedOrderPosition: 3,
+    winnerId: 'AXP9aX7pRu'
+  },
+  {
+    id: "cKW4dEhD5F",
+    ownerId: "5x89SitQIG",
+    playedOnTurn: 1,
+    playedOrderPosition: 4,
+    winnerId: 'AXP9aX7pRu'
+  },
+  {
+    id: "DOnkMYog0F",
+    ownerId: "AXP9aX7pRu",
+    value: CardValue.EIGHT,
+    suit: CardSuit.HEART,
+    playedOnTurn: 2,
+    playedOrderPosition: 1
+  },
+  {
+    id: "L2Aa3eJ_ty",
+    ownerId: "So5DdHmXOR",
+    value: CardValue.ACE,
+    suit: CardSuit.SPADE,
+    playedOnTurn: 2,
+    playedOrderPosition: 2
+  },
+  {
+    id: "w-VJsHKwu0",
+    ownerId: "ne6NF08aL2",
+    value: CardValue.NINE,
+    suit: CardSuit.CLUB,
+    playedOnTurn: 2,
+    playedOrderPosition: 4
+  },
+  {
+    id: "ioN8q-BnEW",
+    ownerId: "5x89SitQIG",
+    value: CardValue.QUEEN,
+    suit: CardSuit.HEART,
+    playedOnTurn: 2,
+    playedOrderPosition: 3
+  }
+];
+
+const trumpCard: TrumpCardInfo = {
+  id: "DOnkMYog0F",
+  isTrumpCard: true,
+  value: CardValue.KING,
+  suit: CardSuit.SPADE,
+}
+
 const bids: BidInfo[] = [
   {
     playerId: "AXP9aX7pRu",
@@ -238,7 +310,7 @@ const bids: BidInfo[] = [
 
 export const roundStatusMock: RoundInfo = {
   currentPlayerId: "AXP9aX7pRu",
-  currentTurnNumber: 1,
+  currentTurnNumber: 2,
   playerOrder: [
     'AXP9aX7pRu',
     'So5DdHmXOR',
@@ -246,6 +318,6 @@ export const roundStatusMock: RoundInfo = {
     '5x89SitQIG'
   ],
   status: RoundStatus.PLAY,
-  cards: [...cards, ...wonCards],
+  cards: [...cards, ...playedCards],
   bids: bids
 };

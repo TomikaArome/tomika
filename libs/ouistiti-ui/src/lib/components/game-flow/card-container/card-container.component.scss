@@ -23,7 +23,7 @@
     }
   }
 
-  .player-round-details-wrapper, .card-wrapper {
+  .player-round-details-wrapper, .card-wrapper, .trump-card-border {
     position: absolute;
     width: 0;
     height: 0;
@@ -32,6 +32,46 @@
 
     tmk-ouistiti-player-round-details {
       transform: translate(-50%,-50%);
+    }
+  }
+
+  .player-round-details-wrapper {
+    z-index: 10000;
+  }
+
+  .trump-card-border {
+    fieldset {
+      width: fit-content;
+      height: fit-content;
+      transform: translate(-50%,calc(-50% - 6px));
+      padding: 0;
+      margin: 0;
+      border: 4px solid hsla(0,0%,100%,0.25);
+      border-radius: 8px;
+      color: hsla(0,0%,100%,0.5);
+      font-variant: all-small-caps;
+      font-size: 20px;
+
+      legend {
+        height: 16px;
+        text-align: center;
+        padding: 0 8px;
+        font-weight: bold;
+        transform: translateY(-50%);
+      }
+
+      div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: hsla(0,0%,100%,0.25);
+        transition: opacity 100ms;
+
+        fa-icon {
+          font-size: 48px;
+        }
+      }
     }
   }
 }

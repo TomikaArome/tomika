@@ -5,9 +5,5 @@
 </ng-template>
 
 <ng-template #gameInProgress>
-  <tmk-ouistiti-card-container
-    [roundInfo]="roundStatus$ | async"
-    [players]="currentLobbyPlayers$ | async"
-    [selfId]="selfId$ | async">
-  </tmk-ouistiti-card-container>
+  <tmk-ouistiti-game-container></tmk-ouistiti-game-container>
 </ng-template>

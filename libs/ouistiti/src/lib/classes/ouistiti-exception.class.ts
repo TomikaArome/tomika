@@ -44,8 +44,15 @@ export class OuistitiException extends WsException {
     }
   }
 
-  static checkGameStatus(lobby: Lobby, status: GameStatus) {
-
+  static checkGameStarted(lobby: Lobby) {
+    if (lobby.gameStatus === GameStatus.INIT) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ACTION,
+        detail: {
+          reason: OuistitiInvalidActionReason.GAME_NOT_STARTED
+        }
+      });
+    }
   }
 
   constructor(error: OuistitiError) {

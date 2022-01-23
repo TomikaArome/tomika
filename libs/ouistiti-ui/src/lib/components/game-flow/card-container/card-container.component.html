@@ -1,11 +1,8 @@
-<div class="trump-card-border" [ngStyle]="trumpCardBorderStyle">
-  <fieldset>
-    <legend>Trump</legend>
-    <div [ngStyle]="trumpCardBorderContentsStyle">
-      <fa-icon [icon]="faBan"></fa-icon>
-      No trumps
-    </div>
-  </fieldset>
+<div class="trump-card-outside-wrapper" [ngStyle]="trumpCardOutsideWrapperStyle">
+  <tmk-ouistiti-trump-card-wrapper
+    [cardHeight]="getUnownedCardPosition().height"
+    [hideNoTrumps]="hasTrumps">
+  </tmk-ouistiti-trump-card-wrapper>
 </div>
 
 <div

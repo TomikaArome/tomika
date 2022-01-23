@@ -14,6 +14,7 @@ export enum OuistitiErrorType {
 export enum OuistitiInvalidActionReason {
   NOT_IN_LOBBY = 'NOT_IN_LOBBY',
   NOT_HOST = 'NOT_HOST',
+  GAME_NOT_STARTED = 'GAME_NOT_STARTED',
   BIDDING_FINISHED = 'BIDDING_FINISHED',
   NOT_PLAYERS_TURN = 'NOT_PLAYERS_TURN'
 }

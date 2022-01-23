@@ -20,10 +20,6 @@ export class ContainerComponent {
     map((lobby: LobbyInfo) => lobby.gameStatus === GameStatus.INIT)
   );
 
-  roundStatus$ = this.roundService.roundStatus$;
-  selfId$ = this.playerService.selfId$;
-  currentLobbyPlayers$ = this.playerService.currentLobbyPlayers$;
-
   constructor(private socketService: SocketService,
               private playerService: PlayerService,
               private lobbyService: LobbyService,

@@ -9,9 +9,9 @@ import { PlayerService } from '../../../services/player.service';
 })
 export class BidChipComponent {
   @Input()
-  colour: PlayerColour;
+  colour: PlayerColour = PlayerColour.RED;
   @Input()
-  symbol: PlayerSymbol;
+  symbol: PlayerSymbol = PlayerSymbol.SPADE;
   @Input()
   set diameter(diameter: number) {
     const el = this.elRef.nativeElement as HTMLElement;
@@ -36,7 +36,9 @@ export class BidChipComponent {
 
   get chipClass(): { [key: string]: boolean } {
     const obj = { dotted: this.dotted };
-    obj[PlayerService.getColourClassName(this.colour)] = true;
+    if (this.colour) {
+      obj[PlayerService.getColourClassName(this.colour)] = true;
+    }
     return obj;
   }
 

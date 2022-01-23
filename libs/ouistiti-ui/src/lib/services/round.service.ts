@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
 import { merge, Observable } from 'rxjs';
-import { BidInfo, CardInfo, CardPlayed, KnownBidInfo, RoundInfo, RoundStatus, RoundStatusChanged, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { BidInfo, BidParams, CardInfo, CardPlayed, KnownBidInfo, RoundInfo, RoundStatus, RoundStatusChanged, WonCardInfo } from '@TomikaArome/ouistiti-shared';
 import { map, scan } from 'rxjs/operators';
 
 type RoundStatusTemporaryObservableValue = {
@@ -69,4 +69,13 @@ export class RoundService {
   }
 
   constructor(private socketService: SocketService) {}
+
+  placeBid(bid: number) {
+    const params: BidParams = { bid };
+    this.socketService.emitEvent('placeBid', params);
+  }
+
+  cancelBid() {
+    this.socketService.emitEvent('cancelBid');
+  }
 }

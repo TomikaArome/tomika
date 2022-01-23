@@ -1,0 +1,13 @@
+<tmk-ouistiti-card-container
+  [roundInfo]="roundStatus$ | async"
+  [players]="currentLobbyPlayers$ | async"
+  [selfId]="selfId$ | async">
+</tmk-ouistiti-card-container>
+
+<tmk-ouistiti-bidding-popup
+  [roundInfo]="roundStatus$ | async"
+  [players]="currentLobbyPlayers$ | async"
+  [selfId]="selfId$ | async"
+  (bidPlaced)="placeBid($event)"
+  (bidCancelled)="cancelBid()">
+</tmk-ouistiti-bidding-popup>

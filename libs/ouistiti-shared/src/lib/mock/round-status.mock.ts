@@ -292,7 +292,7 @@ const trumpCard: TrumpCardInfo = {
 const bids: BidInfo[] = [
   {
     playerId: "AXP9aX7pRu",
-    bid: 3
+    bidPending: true
   },
   {
     playerId: "So5DdHmXOR",
@@ -318,6 +318,6 @@ export const roundStatusMock: RoundInfo = {
     '5x89SitQIG'
   ],
   status: RoundStatus.PLAY,
-  cards: [...cards, ...playedCards],
+  cards: [...cards, trumpCard],
   bids: bids
 };

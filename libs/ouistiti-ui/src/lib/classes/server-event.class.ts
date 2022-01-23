@@ -17,9 +17,9 @@ export class ServerEvent<T> {
     });
 
     // Mock
-    switch (this.name) {
-      case 'lobbyStatus': this.eventSource.next(lobbyStatusPlayerIsHostMock as any); break;
-      case 'roundStatus': this.eventSource.next(roundStatusMock as any); break;
-    }
+    // switch (this.name) {
+    //   case 'lobbyStatus': this.eventSource.next(lobbyStatusPlayerIsHostMock as any); break;
+    //   case 'roundStatus': this.eventSource.next(roundStatusMock as any); break;
+    // }
   }
 }

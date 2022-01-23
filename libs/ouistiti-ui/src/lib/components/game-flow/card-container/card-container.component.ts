@@ -1,6 +1,5 @@
 import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
 import { BidInfo, CARD_ORDER, CardInfo, CardSuit, KnownCardInfo, OwnedAndKnownCardInfo, OwnedAndUnknownCardInfo, PlayedCardInfo, PlayerInfo, RoundInfo, RoundStatus, TrumpCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
-import { faBan } from '@fortawesome/free-solid-svg-icons';
 
 interface PlayerRoundDetailsPosition {
   x: number;
@@ -36,8 +35,6 @@ export class CardContainerComponent implements OnInit {
   private containerWidth: number;
   private containerHeight: number;
 
-  faBan = faBan;
-
   get cards() {
     return this.roundInfo.cards ?? [];
   }
@@ -51,20 +48,11 @@ export class CardContainerComponent implements OnInit {
     return this.roundInfo?.status === RoundStatus.BIDDING;
   }
 
-  get trumpCardBorderStyle() {
+  get trumpCardOutsideWrapperStyle() {
     const cardPos = this.getUnownedCardPosition();
     return {
       transform: `translate(${cardPos.x}px,${cardPos.y}px)`
     };
-  }
-
-  get trumpCardBorderContentsStyle() {
-    const cardPos = this.getUnownedCardPosition();
-    return {
-      width: `${cardPos.width + 12}px`,
-      height: `${cardPos.height + 12}px`,
-      opacity: this.hasTrumps ? 0 : 1
-    }
   }
 
   get hasTrumps(): boolean {
@@ -242,7 +230,7 @@ export class CardContainerComponent implements OnInit {
 
   getUnownedCardPosition(): CardPosition {
     const padding = 20;
-    const cardHeight = 150;
+    const cardHeight = 125;
     const cardWidth = cardHeight / 7 * 5;
     return {
       x: this.containerWidth - cardWidth / 2 - padding,

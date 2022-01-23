@@ -1,5 +1,5 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { LobbyCreateParams, LobbyJoinParams, LobbyUpdateParams, OuistitiErrorType, PlayerKickParams, PlayerUpdateParams } from '@TomikaArome/ouistiti-shared';
+import { BidParams, LobbyCreateParams, LobbyJoinParams, LobbyUpdateParams, OuistitiErrorType, PlayerKickParams, PlayerUpdateParams } from '@TomikaArome/ouistiti-shared';
 import { UseFilters, UsePipes } from '@nestjs/common';
 import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
 import { SocketController } from './controllers/socket.controller';
@@ -31,10 +31,10 @@ export class OuistitiGateway {
     const temp = new Lobby(params, (player: Player) => {
       controller.player = player;
     });
-    // temp.addPlayer({ id: '', player: { nickname: 'Claire' } });
-    // temp.addPlayer({ id: '', player: { nickname: 'Steve' } });
-    // temp.addPlayer({ id: '', player: { nickname: 'David' } });
-    // temp.startGame({ maxCardsPerPlayer: 8 });
+    temp.addPlayer({ id: '', player: { nickname: 'Claire' } });
+    temp.addPlayer({ id: '', player: { nickname: 'Steve' } });
+    temp.addPlayer({ id: '', player: { nickname: 'David' } });
+    temp.startGame({ maxCardsPerPlayer: 8 });
   }
 
   @UseFilters(new OuistitiExceptionFilter('joinLobby'))
@@ -104,5 +104,24 @@ export class OuistitiGateway {
     controller.player.lobby.startGame({
       maxCardsPerPlayer: 8
     })
+  }
+
+  @UseFilters(new OuistitiExceptionFilter('placeBid'))
+  @SubscribeMessage('placeBid')
+  placeBid(controller: SocketController, params: BidParams) {
+    OuistitiException.checkIfInLobby(controller);
+    OuistitiException.checkGameStarted(controller.player.lobby);
+    OuistitiException.checkRequiredParams(params, ['bid']);
+
+    controller.player.lobby.game.currentRound.placeBid(controller.player.id, params.bid);
+  }
+
+  @UseFilters(new OuistitiExceptionFilter('cancelBid'))
+  @SubscribeMessage('cancelBid')
+  cancelBid(controller: SocketController) {
+    OuistitiException.checkIfInLobby(controller);
+    OuistitiException.checkGameStarted(controller.player.lobby);
+
+    controller.player.lobby.game.currentRound.cancelBid(controller.player.id);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input } from '@angular/core';
-import { BidInfo, isKnownBidInfo, PlayerInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { PlayerInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
 
 @Component({
   selector: 'tmk-ouistiti-player-round-details',
@@ -10,7 +10,7 @@ export class PlayerRoundDetailsComponent {
   @Input()
   player: PlayerInfo;
   @Input()
-  bid: BidInfo;
+  bid = -1;
   @Input()
   wonCards: WonCardInfo[] = [];
   @Input()
@@ -27,8 +27,8 @@ export class PlayerRoundDetailsComponent {
   bidsStillPending = false;
 
   get bidChips(): boolean[] {
-    if (isKnownBidInfo(this.bid)) {
-      return Array.from(Array(this.bid.bid).map(() => false));
+    if (this.bid > -1) {
+      return Array.from(Array(this.bid).map(() => false));
     }
     return [true];
   }
@@ -40,10 +40,10 @@ export class PlayerRoundDetailsComponent {
       }
       return tricksArr;
     }, []).map(() => false);
-    if (isKnownBidInfo(this.bid)) {
+    if (this.bid > -1) {
       miniatureCards = [
         ...miniatureCards,
-        ...Array.from(Array(Math.max(this.bid.bid - miniatureCards.length, 0))).map(() => true)
+        ...Array.from(Array(Math.max(this.bid - miniatureCards.length, 0))).map(() => true)
       ];
     }
     return miniatureCards;

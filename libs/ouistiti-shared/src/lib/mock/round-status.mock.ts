@@ -289,24 +289,11 @@ const trumpCard: TrumpCardInfo = {
   suit: CardSuit.SPADE,
 }
 
-const bids: BidInfo[] = [
-  {
-    playerId: "AXP9aX7pRu",
-    bidPending: true
-  },
-  {
-    playerId: "So5DdHmXOR",
-    bidPending: true
-  },
-  {
-    playerId: "ne6NF08aL2",
-    bid: 8
-  },
-  {
-    playerId: "5x89SitQIG",
-    bid: 0
-  }
-];
+const bids: BidInfo = {
+  "AXP9aX7pRu": 2,
+  "So5DdHmXOR": 0,
+  "ne6NF08aL2": 8
+};
 
 export const roundStatusMock: RoundInfo = {
   currentPlayerId: "AXP9aX7pRu",

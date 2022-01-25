@@ -1,5 +1,6 @@
 import { CardInfo, PlayedCardInfo } from './card.interface';
 import { RoundStatus } from '../enum/round-status.enum';
+import { BreakPointInfo } from './break-point.interface';
 
 // Client events
 
@@ -9,29 +10,24 @@ export interface RoundInfo {
   playerOrder: string[];
   status: RoundStatus;
   cards: CardInfo[];
-  bids: BidInfo[];
+  bids: BidInfo;
+  breakPoint?: BreakPointInfo;
 }
 
-export interface UnknownBidInfo {
-  playerId: string;
-  bidPending: boolean;
-}
+export type BidInfo = { [key: string]: number };
 
-export interface KnownBidInfo {
-  playerId: string;
-  bid: number;
+export interface BidsChanged {
+  bids: BidInfo;
+  breakPoint: BreakPointInfo;
 }
-
-export type BidInfo = UnknownBidInfo | KnownBidInfo;
 
 export interface CardPlayed {
   card: PlayedCardInfo;
   nextPlayerId: string;
 }
 
-interface RoundStatusChangedToPlay {
-  status: RoundStatus.PLAY,
-  finalBids: KnownBidInfo[]
+interface RoundStatusChangedToPlay extends BidsChanged {
+  status: RoundStatus.PLAY
 }
 
 interface RoundStatusChangedToCompleted {
@@ -44,10 +40,4 @@ export type RoundStatusChanged = RoundStatusChangedToPlay | RoundStatusChangedTo
 
 export interface BidParams {
   bid: number;
-}
-
-// Type guard checks
-
-export function isKnownBidInfo(obj: BidInfo): obj is KnownBidInfo {
-  return typeof obj === 'object' && (obj as KnownBidInfo).bid !== undefined;
 }

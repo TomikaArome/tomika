@@ -1,6 +1,6 @@
 import { SocketController } from './socket.controller';
 import { Round } from '../classes/round.class';
-import { CardPlayed, KnownBidInfo, PlayedCardInfo, RoundStatusChanged, UnknownBidInfo } from '@TomikaArome/ouistiti-shared';
+import { BidsChanged, CardPlayed, PlayedCardInfo, RoundStatus, RoundStatusChanged } from '@TomikaArome/ouistiti-shared';
 import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CardPlayedObserved } from '../interfaces/round-observed.interface';
@@ -14,8 +14,7 @@ export class SocketRoundController {
     this.stop$ = merge(this.stop$, this.round.completed$);
 
     this.subscribeStatusChanged();
-    this.subscribeBidPlaced();
-    this.subscribeBidCancelled();
+    this.subscribeEmitBidsChanged();
     this.subscribeCardPlayed();
 
     this.emitInitialRoundStatus();
@@ -26,26 +25,30 @@ export class SocketRoundController {
   }
 
   subscribeStatusChanged() {
-    this.round.statusChanged$.pipe(this.stop).subscribe((statusChanged: RoundStatusChanged) => {
-      this.controller.emit('roundStatusChanged', statusChanged);
-    });
-  }
-
-  subscribeBidPlaced() {
-    this.round.bidPlaced$.pipe(this.stop).subscribe((knownBid: KnownBidInfo) => {
-      if (knownBid.playerId === this.controller.player.id) {
-        this.controller.emit('bid', knownBid);
-      } else {
-        const unknownBid: UnknownBidInfo = { playerId: knownBid.playerId, bidPending: false };
-        this.controller.emit('bid', unknownBid);
+    this.round.statusChanged$.pipe(this.stop).subscribe((status: RoundStatus) => {
+      if (status === RoundStatus.PLAY) {
+        const payload: RoundStatusChanged = {
+          status,
+          bids: this.round.bids,
+          breakPoint: this.round.breakPoint.info
+        };
+        this.controller.emit('roundStatusChanged', payload);
+      } else if (status === RoundStatus.COMPLETED) {
+        this.controller.emit('roundStatusChanged', { status });
       }
     });
   }
 
-  subscribeBidCancelled() {
-    this.round.bidCancelled$.pipe(this.stop).subscribe((playerId: string) => {
-      const unknownBid: UnknownBidInfo = { playerId, bidPending: true };
-      this.controller.emit('bid', unknownBid);
+  subscribeEmitBidsChanged() {
+    merge(
+      this.round.bidPlaced$,
+      this.round.bidCancelled$
+    ).pipe(this.stop).subscribe(() => {
+      const payload: BidsChanged = {
+        bids: this.round.bidsKnownToPlayer(this.controller.player.id),
+        breakPoint: this.round.breakPoint.info
+      }
+      this.controller.emit('bidsChanged', payload);
     });
   }
 

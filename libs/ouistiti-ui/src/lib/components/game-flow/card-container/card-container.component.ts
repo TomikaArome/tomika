@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
-import { BidInfo, CARD_ORDER, CardInfo, CardSuit, KnownCardInfo, OwnedAndKnownCardInfo, OwnedAndUnknownCardInfo, PlayedCardInfo, PlayerInfo, RoundInfo, RoundStatus, TrumpCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { CARD_ORDER, CardInfo, CardSuit, KnownCardInfo, OwnedAndKnownCardInfo, OwnedAndUnknownCardInfo, PlayedCardInfo, PlayerInfo, RoundInfo, RoundStatus, TrumpCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
 
 interface PlayerRoundDetailsPosition {
   x: number;
@@ -40,8 +40,11 @@ export class CardContainerComponent implements OnInit {
   }
 
   get playersWithoutSelf(): PlayerInfo[] {
-    const selfIndex = this.players.findIndex((player: PlayerInfo) => player.id === this.selfId);
-    return [...this.players.slice(selfIndex + 1), ...this.players.slice(0, selfIndex)];
+    const playersInOrder = [...this.players];
+    playersInOrder.sort((pA: PlayerInfo, pB: PlayerInfo) =>
+      this.roundInfo.playerOrder.indexOf(pA.id) - this.roundInfo.playerOrder.indexOf(pB.id));
+    const selfIndex = playersInOrder.findIndex((player: PlayerInfo) => player.id === this.selfId);
+    return [...playersInOrder.slice(selfIndex + 1), ...playersInOrder.slice(0, selfIndex)];
   }
 
   get areBidsStillPending(): boolean {
@@ -83,8 +86,8 @@ export class CardContainerComponent implements OnInit {
   cardsWonByPlayer(playerId: string): WonCardInfo[] {
     return this.cards.filter((c: CardInfo) => (c as WonCardInfo).winnerId === playerId) as WonCardInfo[];
   }
-  playerBid(playerId: string): BidInfo {
-    return this.roundInfo.bids.find((bid: BidInfo) => bid.playerId === playerId);
+  playerBid(playerId: string): number {
+    return this.roundInfo.bids[playerId] ?? -1;
   }
 
   playerRoundDetailsStyle(pos: PlayerRoundDetailsPosition) {

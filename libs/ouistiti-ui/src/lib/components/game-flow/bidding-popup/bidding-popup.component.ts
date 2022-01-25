@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { KnownBidInfo, OwnedAndKnownCardInfo, PlayerColour, PlayerInfo, PlayerSymbol, RoundInfo, TrumpCardInfo, UnknownBidInfo } from '@TomikaArome/ouistiti-shared';
+import { OwnedAndKnownCardInfo, PlayerColour, PlayerInfo, PlayerSymbol, RoundInfo, TrumpCardInfo } from '@TomikaArome/ouistiti-shared';
 import { PlayerService } from '../../../services/player.service';
 
 @Component({
@@ -24,6 +24,11 @@ export class BiddingPopupComponent {
   @Output()
   bidCancelled = new EventEmitter<void>();
 
+  get playersInOrder(): PlayerInfo[] {
+    return [...this.players].sort((pA: PlayerInfo, pB: PlayerInfo) =>
+      this.roundInfo.playerOrder.indexOf(pA.id) - this.roundInfo.playerOrder.indexOf(pB.id));
+  }
+
   get maxBid(): number {
     return this.roundInfo.cards.filter((card: OwnedAndKnownCardInfo) => card.ownerId === this.selfId).length;
   }
@@ -33,12 +38,12 @@ export class BiddingPopupComponent {
   }
 
   get self(): PlayerInfo {
-    return this.players.find((player: PlayerInfo) => player.colour) ?? null;
+    return this.players.find((player: PlayerInfo) => player.id === this.selfId) ?? null;
   }
 
   get bidStackClass(): { [key: string]: boolean } {
     const obj = {
-      'bid-selected': this.selfBid !== null
+      'bid-selected': this.selfBid !== -1
     };
     obj[PlayerService.getColourClassName(this.self?.colour)] = true;
     return obj;
@@ -62,16 +67,15 @@ export class BiddingPopupComponent {
   }
 
   get selfBid(): number {
-    return (this.roundInfo.bids.find((bid: KnownBidInfo) => bid.playerId === this.selfId) as KnownBidInfo)?.bid ?? null;
+    return this.roundInfo.bids[this.selfId] ?? -1;
   }
 
   waitingForPlayer(playerId: string): boolean {
-    const bid = this.roundInfo.bids.find((bid: UnknownBidInfo) => bid.playerId === playerId) as UnknownBidInfo;
-    return bid?.bidPending;
+    return !this.roundInfo.breakPoint?.acknowlegements[playerId] ?? true;
   }
 
   selectBid(bid: number) {
-    if (this.selfBid === null) {
+    if (this.selfBid === -1) {
       this.bidPlaced.emit(bid);
     }
   }

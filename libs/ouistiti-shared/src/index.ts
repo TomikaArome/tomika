@@ -10,6 +10,7 @@ export * from './lib/enum/player-symbol.enum';
 export * from './lib/enum/round-status.enum';
 
 // Interfaces
+export * from './lib/interfaces/break-point.interface';
 export * from './lib/interfaces/card.interface';
 export * from './lib/interfaces/game.interface';
 export * from './lib/interfaces/lobby.interface';

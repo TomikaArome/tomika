@@ -35,11 +35,8 @@ export class TimerComponent implements OnDestroy {
   private setInterval(timestamp: number) {
     this.endTimer$.next();
     this.updateTimeLeft(timestamp);
-    timer(this._timeLeft % 1000).pipe(takeUntil(this.endTimer$)).subscribe(() => {
+    interval(1000).pipe(takeUntil(this.endTimer$)).subscribe(() => {
       this.updateTimeLeft(timestamp);
-      interval(1000).pipe(takeUntil(this.endTimer$)).subscribe(() => {
-        this.updateTimeLeft(timestamp);
-      });
     });
   }
 

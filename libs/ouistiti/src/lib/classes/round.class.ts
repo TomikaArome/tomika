@@ -1,9 +1,10 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
-import { BidInfo, isKnownBidInfo, KnownBidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundStatus, RoundStatusChanged } from '@TomikaArome/ouistiti-shared';
+import { BidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundStatus } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { CardPlayedObserved } from '../interfaces/round-observed.interface';
+import { BidCancelledObserved, BidPlacedObserved, CardPlayedObserved } from '../interfaces/round-observed.interface';
+import { BreakPoint } from './break-point.class';
 
 export enum RoundStage {
   ASC, NO_TRUMPS, DESC
@@ -24,20 +25,21 @@ export class Round {
   numberOfCardsPerPlayer: number;
   currentPlayerId: string;
   currentTurnNumber = 1;
-  bids: BidInfo[] = [];
+  bids: BidInfo = {};
+  breakPoint: BreakPoint;
 
   readonly playerIds: string[];
   readonly maxCardsPerPlayer: number;
 
-  private statusChangedSource = new Subject<RoundStatusChanged>();
-  private bidPlacedSource = new Subject<KnownBidInfo>();
-  private bidCancelledSource = new Subject<string>();
+  private statusChangedSource = new Subject<RoundStatus>();
+  private bidPlacedSource = new Subject<BidPlacedObserved>();
+  private bidCancelledSource = new Subject<BidCancelledObserved>();
   private cardPlayedSource = new Subject<CardPlayedObserved>();
   private turnFinishedSource = new Subject<Card>();
 
   statusChanged$ = this.statusChangedSource.asObservable();
-  bidsFinalised$ = this.statusChanged$.pipe(filter((p: RoundStatusChanged) => p.status === RoundStatus.PLAY));
-  completed$ = this.statusChanged$.pipe(filter((p: RoundStatusChanged) => p.status === RoundStatus.COMPLETED));
+  bidsFinalised$ = this.statusChanged$.pipe(filter((status: RoundStatus) => status === RoundStatus.PLAY));
+  completed$ = this.statusChanged$.pipe(filter((status: RoundStatus) => status === RoundStatus.COMPLETED));
   bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
   bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
   cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.completed$));
@@ -56,7 +58,7 @@ export class Round {
   }
 
   get info(): RoundInfo {
-    return {
+    const info: RoundInfo = {
       currentPlayerId: this.currentPlayerId,
       currentTurnNumber: this.currentTurnNumber,
       playerOrder: this.playerIds,
@@ -67,13 +69,17 @@ export class Round {
       }),
       bids: this.bids
     }
+    if (this.breakPoint && !this.breakPoint.ended) {
+      info.breakPoint = this.breakPoint.info;
+    }
+    return info;
   }
 
   static createNewRound(settings: RoundSettings): Round {
     const round = new Round(settings);
     round.initRound();
-    round.initBids();
     round.generateCards();
+    round.initBiddingBreakPoint();
     return round;
   }
 
@@ -91,13 +97,17 @@ export class Round {
         if (card.ownerId !== playerId && !card.played) { return card.incompleteInfo; }
         return card.info;
       }),
-      bids: this.bids.map((bidInfo: BidInfo) => {
-        if (this.status === RoundStatus.BIDDING && bidInfo.playerId !== playerId) {
-          return { playerId: bidInfo.playerId, bidPending: !isKnownBidInfo(bidInfo) };
-        }
-        return bidInfo;
-      })
+      bids: this.bidsKnownToPlayer(playerId)
     }
+  }
+
+  bidsKnownToPlayer(playerId: string): BidInfo {
+    return Object.keys(this.bids).reduce((acc: BidInfo, currPlayerId: string) => {
+      if (this.status !== RoundStatus.BIDDING || currPlayerId === playerId) {
+        acc[playerId] = this.bids[playerId];
+      }
+      return acc;
+    }, {});
   }
 
   initRound() {
@@ -118,15 +128,6 @@ export class Round {
     this.currentPlayerId = this.startingPlayerId;
   }
 
-  initBids() {
-    this.bids = this.playerIds.map((playerId: string) => {
-      return {
-        playerId,
-        bidPending: true
-      }
-    });
-  }
-
   generateCards() {
     const unshuffledDeck = Card.generateUnshuffledDeck(this.maxCardsPerPlayer * this.playerIds.length);
     for (let i = 0; i < this.numberOfCardsPerPlayer; i++) {
@@ -142,6 +143,18 @@ export class Round {
       this.trumpCard = unshuffledDeck[randomIndex];
     }
     this.cards.push(...unshuffledDeck);
+  }
+
+  initBiddingBreakPoint() {
+    const biddingBreakPoint = new BreakPoint({
+      duration: 120000,
+      acknowledgements: this.playerIds,
+      bufferDuration: 5000
+    });
+    biddingBreakPoint.resolved$.subscribe(() => {
+      console.log('bidding break point resolved');
+    });
+    this.breakPoint = biddingBreakPoint;
   }
 
   getCardById(cardId: string): Card {
@@ -190,10 +203,10 @@ export class Round {
       });
     }
 
-    const bidInfoIndex = this.bids.findIndex((bid: BidInfo) => bid.playerId === playerId);
-    const newBid: KnownBidInfo = { playerId, bid };
-    this.bids[bidInfoIndex] = newBid;
-    this.bidPlacedSource.next(newBid);
+    this.bids[playerId] = bid;
+    this.breakPoint.acknowledge(playerId);
+    const payload: BidPlacedObserved = { playerId, bid };
+    this.bidPlacedSource.next(payload);
   }
 
   cancelBid(playerId: string) {
@@ -204,32 +217,24 @@ export class Round {
       });
     }
 
-    const bidInfoIndex = this.bids.findIndex((bid: BidInfo) => bid.playerId === playerId);
-    this.bids[bidInfoIndex] = { playerId, bidPending: true };
-    this.bidCancelledSource.next(playerId);
+    delete this.bids[playerId];
+    this.breakPoint.cancelAcknowledgement(playerId);
+    const payload: BidCancelledObserved = { playerId };
+    this.bidCancelledSource.next(payload);
   }
 
   finaliseBids() {
     if (this.status === RoundStatus.BIDDING) {
       this.status = RoundStatus.PLAY;
 
-      this.bids = this.bids.map((bidInfo: BidInfo) => {
-        if (isKnownBidInfo(bidInfo)) {
-          return bidInfo;
-        } else {
+      this.playerIds.forEach((playerId: string) => {
+        if (Object.keys(this.bids).indexOf(playerId) === -1) {
           // Assign to the player the most likely average bid for that round
-          const automaticallyChosenBid: KnownBidInfo = {
-            playerId: bidInfo.playerId,
-            bid: Math.round(this.numberOfCardsPerPlayer / this.playerIds.length)
-          }
-          return automaticallyChosenBid;
+          this.bids[playerId] = Math.round(this.numberOfCardsPerPlayer / this.playerIds.length);
         }
       });
 
-      this.statusChangedSource.next({
-        status: this.status,
-        finalBids: this.bids as KnownBidInfo[]
-      });
+      this.statusChangedSource.next(this.status);
     }
   }
 
@@ -288,9 +293,7 @@ export class Round {
 
   completeRound() {
     this.status = RoundStatus.COMPLETED;
-    this.statusChangedSource.next({
-      status: this.status
-    });
+    this.statusChangedSource.next(this.status);
     this.statusChangedSource.complete();
   }
 }

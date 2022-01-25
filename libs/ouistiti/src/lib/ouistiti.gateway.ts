@@ -31,10 +31,10 @@ export class OuistitiGateway {
     const temp = new Lobby(params, (player: Player) => {
       controller.player = player;
     });
-    temp.addPlayer({ id: '', player: { nickname: 'Claire' } });
-    temp.addPlayer({ id: '', player: { nickname: 'Steve' } });
-    temp.addPlayer({ id: '', player: { nickname: 'David' } });
-    temp.startGame({ maxCardsPerPlayer: 8 });
+    // temp.addPlayer({ id: '', player: { nickname: 'Claire' } });
+    // temp.addPlayer({ id: '', player: { nickname: 'Steve' } });
+    // temp.addPlayer({ id: '', player: { nickname: 'David' } });
+    // temp.startGame({ maxCardsPerPlayer: 8 });
   }
 
   @UseFilters(new OuistitiExceptionFilter('joinLobby'))

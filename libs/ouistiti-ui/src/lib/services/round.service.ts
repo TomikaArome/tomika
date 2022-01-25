@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
 import { merge, Observable } from 'rxjs';
-import { BidInfo, BidParams, CardInfo, CardPlayed, KnownBidInfo, RoundInfo, RoundStatus, RoundStatusChanged, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { BidInfo, BidParams, BidsChanged, CardInfo, CardPlayed, RoundInfo, RoundStatus, RoundStatusChanged, WonCardInfo } from '@TomikaArome/ouistiti-shared';
 import { map, scan } from 'rxjs/operators';
 
 type RoundStatusTemporaryObservableValue = {
   event: 'roundStatus';
   payload: RoundInfo
 } | {
-  event: 'bid',
-  payload: BidInfo
+  event: 'bidsChanged',
+  payload: BidsChanged
 } | {
   event: 'cardPlayed',
   payload: CardPlayed
@@ -25,16 +25,18 @@ type RoundStatusTemporaryObservableValue = {
 export class RoundService {
   roundStatus$: Observable<RoundInfo> = merge(
     this.socketService.getEvent<RoundInfo>('roundStatus').pipe(map((v: RoundInfo) => { return { event: 'roundStatus', payload: v }; })),
-    this.socketService.getEvent<BidInfo>('bid').pipe(map((v: BidInfo) => { return { event: 'bid', payload: v }; })),
+    this.socketService.getEvent<BidsChanged>('bidsChanged').pipe(map((v: BidsChanged) => { return { event: 'bidsChanged', payload: v }; })),
     this.socketService.getEvent<CardPlayed>('cardPlayed').pipe(map((v: CardPlayed) => { return { event: 'cardPlayed', payload: v }; })),
     this.socketService.getEvent<WonCardInfo[]>('trickWon').pipe(map((v: WonCardInfo[]) => { return { event: 'trickWon', payload: v }; })),
     this.socketService.getEvent<RoundStatusChanged>('roundStatusChanged').pipe(map((v: RoundStatusChanged) => { return { event: 'roundStatusChanged', payload: v }; }))
   ).pipe(
     scan((currStatus: RoundInfo, v: RoundStatusTemporaryObservableValue) => {
+      // console.log(v);
       if (v.event === 'roundStatus') {
         currStatus = v.payload;
-      } else if (v.event === 'bid') {
-        RoundService.updateBidInfo(currStatus.bids, v.payload);
+      } else if (v.event === 'bidsChanged') {
+        currStatus.bids = v.payload.bids;
+        currStatus.breakPoint = v.payload.breakPoint;
       } else if (v.event === 'cardPlayed') {
         currStatus.currentPlayerId = v.payload.nextPlayerId;
         RoundService.updateCardInfo(currStatus.cards, v.payload.card);
@@ -43,7 +45,8 @@ export class RoundService {
       } else if (v.event === 'roundStatusChanged') {
         currStatus.status = v.payload.status;
         if (v.payload.status === RoundStatus.PLAY) {
-          v.payload.finalBids.forEach((bid: KnownBidInfo) => RoundService.updateBidInfo(currStatus.bids, bid));
+          currStatus.bids = v.payload.bids;
+          currStatus.breakPoint = v.payload.breakPoint;
         }
       }
       return currStatus;

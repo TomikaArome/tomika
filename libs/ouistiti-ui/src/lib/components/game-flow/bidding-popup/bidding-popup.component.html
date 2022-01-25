@@ -17,7 +17,7 @@
 
       <div class="waiting-for-players">
         <tmk-ouistiti-bid-chip
-          *ngFor="let player of players"
+          *ngFor="let player of playersInOrder"
           [square]="true"
           [colour]="player.colour"
           [symbol]="player.symbol"
@@ -29,16 +29,16 @@
       <div class="bidding-ends-timer" *ngIf="biddingEndsTimestamp > -1">
         Bidding ends in:
 
-        <tmk-ouistiti-timer [timeLeft]="biddingEndsTimestamp"></tmk-ouistiti-timer>
+        <tmk-ouistiti-timer [timestamp]="roundInfo.breakPoint?.timerExpires"></tmk-ouistiti-timer>
 
-        <div class="proceeding-in-timer">
+        <div class="proceeding-in-timer" *ngIf="roundInfo.breakPoint?.buffer">
           Proceeding in:
-          <tmk-ouistiti-timer [timeLeft]="proceedingToPlayTimestamp" [large]="true"></tmk-ouistiti-timer>
+          <tmk-ouistiti-timer [timestamp]="roundInfo.breakPoint.buffer?.timerExpires" [large]="true"></tmk-ouistiti-timer>
         </div>
       </div>
     </div>
 
-    <button class="cancel-bid-button" [disabled]="selfBid === null" (click)="cancelBid()">Cancel bid</button>
+    <button class="cancel-bid-button" [disabled]="selfBid === -1" (click)="cancelBid()">Cancel bid</button>
   </div>
 
   <tmk-ouistiti-trump-card-wrapper

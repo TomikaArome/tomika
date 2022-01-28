@@ -1,5 +1,5 @@
-import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
-import { CARD_ORDER, CardInfo, CardSuit, KnownCardInfo, OwnedAndKnownCardInfo, OwnedAndUnknownCardInfo, PlayedCardInfo, PlayerInfo, RoundInfo, RoundStatus, TrumpCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { CARD_ORDER, CardInfo, CardSuit, KnownCardInfo, OwnedAndKnownCardInfo, OwnedAndUnknownCardInfo, PlayedCardInfo, PlayerInfo, RoundInfo, RoundStatus, TrumpCardInfo, UnownedAndUnknownCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
 
 interface PlayerRoundDetailsPosition {
   x: number;
@@ -31,6 +31,9 @@ export class CardContainerComponent implements OnInit {
   players: PlayerInfo[];
   @Input()
   selfId: string;
+
+  @Output()
+  cardPlayed = new EventEmitter<string>();
 
   private containerWidth: number;
   private containerHeight: number;
@@ -142,8 +145,8 @@ export class CardContainerComponent implements OnInit {
     let cardPos: CardPosition;
 
     if ((card as OwnedAndUnknownCardInfo).ownerId === undefined) {
-      cardPos = this.getUnownedCardPosition();
-    } else if ((card as WonCardInfo).winnerId !== undefined) {
+      cardPos = this.getUnownedCardPosition(card as UnownedAndUnknownCardInfo);
+    } else if ((card as WonCardInfo).winnerId !== undefined && (card as WonCardInfo).playedOnTurn < this.roundInfo.currentTurnNumber) {
       cardPos = this.getWonCardPosition(card as WonCardInfo);
     } else if ((card as PlayedCardInfo).playedOnTurn !== undefined) {
       cardPos = this.getPlayedCardPosition(card as PlayedCardInfo);
@@ -231,13 +234,14 @@ export class CardContainerComponent implements OnInit {
     };
   }
 
-  getUnownedCardPosition(): CardPosition {
+  getUnownedCardPosition(card?: UnownedAndUnknownCardInfo): CardPosition {
     const padding = 20;
     const cardHeight = 125;
     const cardWidth = cardHeight / 7 * 5;
     return {
       x: this.containerWidth - cardWidth / 2 - padding,
       y: this.containerHeight - cardHeight / 2 - padding,
+      z: (card as TrumpCardInfo)?.isTrumpCard ? 1 : 0,
       width: cardWidth,
       height: cardHeight
     };
@@ -264,5 +268,11 @@ export class CardContainerComponent implements OnInit {
       height: 125,
       rotation: playerPos.angle
     };
+  }
+
+  playCard(card: OwnedAndKnownCardInfo) {
+    if (this.getCardPositionInOwnHand(card).playable) {
+      this.cardPlayed.emit(card.id);
+    }
   }
 }

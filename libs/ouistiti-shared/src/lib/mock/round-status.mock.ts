@@ -254,7 +254,8 @@ const playedCards: CardInfo[] = [
     value: CardValue.EIGHT,
     suit: CardSuit.HEART,
     playedOnTurn: 2,
-    playedOrderPosition: 1
+    playedOrderPosition: 1,
+    winnerId: 'AXP9aX7pRu'
   },
   {
     id: "L2Aa3eJ_ty",
@@ -262,7 +263,8 @@ const playedCards: CardInfo[] = [
     value: CardValue.ACE,
     suit: CardSuit.SPADE,
     playedOnTurn: 2,
-    playedOrderPosition: 2
+    playedOrderPosition: 2,
+    winnerId: 'AXP9aX7pRu'
   },
   {
     id: "w-VJsHKwu0",
@@ -270,7 +272,8 @@ const playedCards: CardInfo[] = [
     value: CardValue.NINE,
     suit: CardSuit.CLUB,
     playedOnTurn: 2,
-    playedOrderPosition: 4
+    playedOrderPosition: 4,
+    winnerId: 'AXP9aX7pRu'
   },
   {
     id: "ioN8q-BnEW",
@@ -278,7 +281,8 @@ const playedCards: CardInfo[] = [
     value: CardValue.QUEEN,
     suit: CardSuit.HEART,
     playedOnTurn: 2,
-    playedOrderPosition: 3
+    playedOrderPosition: 3,
+    winnerId: 'AXP9aX7pRu'
   }
 ];
 
@@ -305,6 +309,6 @@ export const roundStatusMock: RoundInfo = {
     '5x89SitQIG'
   ],
   status: RoundStatus.PLAY,
-  cards: [...cards, trumpCard],
+  cards: [...cards, ...playedCards],
   bids: bids
 };

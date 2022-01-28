@@ -13,11 +13,15 @@ export class BreakPoint {
   private resolvedSource = new Subject<BreakPointMethod>();
   private cancelledSource = new Subject<BreakPointMethod>();
   private timerResetSource = new Subject<number>();
+  private acknowledgedSource = new Subject<string>();
+  private acknowledgementCancelledSource = new Subject<string>();
 
   readonly resolved$ = this.resolvedSource.asObservable();
   readonly cancelled$ = this.cancelledSource.asObservable();
-  readonly timerReset$ = this.timerResetSource.asObservable();
   readonly ended$ = merge(this.resolved$, this.cancelled$);
+  readonly timerReset$ = this.timerResetSource.asObservable().pipe(takeUntil(this.ended$));
+  readonly acknowledged$ = this.acknowledgedSource.asObservable().pipe(takeUntil(this.ended$));
+  readonly acknowledgementCancelled$ = this.acknowledgementCancelledSource.asObservable().pipe(takeUntil(this.ended$));
 
   private acknowledgements: { [key: string]: boolean } = {};
 
@@ -41,7 +45,7 @@ export class BreakPoint {
   get info(): BreakPointInfo {
     const info: BreakPointInfo = {};
     if (this.timestamp > -1) { info.timerExpires = this.timestamp; }
-    if (Object.keys(this.acknowledgements).length > 0) { info.acknowlegements = { ...this.acknowledgements }; }
+    if (Object.keys(this.acknowledgements).length > 0) { info.acknowledgements = { ...this.acknowledgements }; }
     if (this.buffer) { info.buffer = this.buffer.info; }
     return info;
   }
@@ -61,10 +65,10 @@ export class BreakPoint {
 
   private resolve(method: BreakPointMethod) {
     if (!this.cancelled && !this.resolved) {
+      this._resolved = true;
       this.resolvedSource.next(method);
       this.resolvedSource.complete();
       this.cancelledSource.complete();
-      this._resolved = true;
     }
   }
 
@@ -110,6 +114,7 @@ export class BreakPoint {
           this.resolve(BreakPointMethod.RESOLVED);
         }
       }
+      this.acknowledgedSource.next(id);
     }
   }
 
@@ -118,6 +123,7 @@ export class BreakPoint {
       this.acknowledgements[id] = false;
       this.buffer?.cancel();
       this.buffer = null;
+      this.acknowledgementCancelledSource.next(id);
     }
   }
 

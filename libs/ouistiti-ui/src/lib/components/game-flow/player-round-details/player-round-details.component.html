@@ -30,7 +30,8 @@
     <div class="count-row">
       <div
         class="won-trick"
-        *ngFor="let dotted of miniatureCards">
+        *ngFor="let dotted of miniatureCards"
+        [ngClass]="{ dotted: dotted }">
         <tmk-ouistiti-card
           [miniature]="true"
           [height]="40"

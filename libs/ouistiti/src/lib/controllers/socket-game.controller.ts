@@ -11,15 +11,14 @@ export class SocketGameController {
   gameCompleted$: Observable<unknown> = this.game.statusChanged$.pipe(
     filter((status: GameStatus) => status === GameStatus.COMPLETED || status === GameStatus.CANCELLED)
   );
+  stopIncludingGameCompleted$ = merge(this.stop$, this.gameCompleted$);
 
-  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stop$); }
+  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stopIncludingGameCompleted$); }
 
   constructor(readonly controller: SocketController,
               readonly game: Game,
               readonly stop$: Observable<unknown>,
               readonly lobbyController: SocketLobbyController) {
-    this.stop$ = merge(this.stop$, this.gameCompleted$);
-
     this.subscribeStatusChanged();
     this.subscribeRoundStarted();
 

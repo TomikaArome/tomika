@@ -9,7 +9,8 @@ import { SocketGameController } from './socket-game.controller';
 import { Game } from '../classes/game.class';
 
 export class SocketLobbyController {
-  stopIncludingSelfLeft$ = merge(this.stop$, this.lobby.playerLeft$.pipe(
+  stopIncludingLobbyClosed$ = merge(this.stop$, this.lobby.lobbyClosed$);
+  stopIncludingSelfLeft$ = merge(this.stopIncludingLobbyClosed$, this.lobby.playerLeft$.pipe(
     filter(({ player }: LobbyLeftObserved) => this.controller.player === player)
   ));
 
@@ -17,13 +18,11 @@ export class SocketLobbyController {
     return this.lobby === this.controller.player?.lobby;
   }
 
-  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stop$); }
+  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stopIncludingLobbyClosed$); }
 
   constructor(readonly controller: SocketController,
               readonly lobby: Lobby,
               readonly stop$: Observable<unknown>) {
-    this.stop$ = merge(this.stop$, this.lobby.lobbyClosed$);
-
     this.subscribePlayerJoined();
     this.subscribeUpdateLobby();
     this.subscribeLobbyClosed();
@@ -93,7 +92,9 @@ export class SocketLobbyController {
   }
 
   subscribeLobbyClosed() {
-    this.lobby.lobbyClosed$.pipe(this.stop).subscribe(() => {
+    this.lobby.lobbyClosed$.pipe(
+      takeUntil(this.stop$)
+    ).subscribe(() => {
       if (!this.controller.inLobby) {
         const payload: LobbyClosed = {
           id: this.lobby.id

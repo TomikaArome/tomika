@@ -10,6 +10,11 @@ export interface BidCancelledObserved {
 }
 
 export interface CardPlayedObserved {
-  card: Card;
-  nextPlayerId?: string;
+  affectedCards: Card[];
+  nextPlayerId: string;
+}
+
+export interface NewTurnStartedObserved {
+  newTurnNumber: number;
+  newTurnFirstPlayerId: string;
 }

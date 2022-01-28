@@ -31,7 +31,7 @@ export class LobbyService {
         }
 
       } else {
-
+        console.log('lobbyClose');
         const lobbyInfo = curr.payload as LobbyClosed;
         const index = acc.findIndex((lobby: LobbyInfo) => lobby.id === lobbyInfo.id);
         acc.splice(index, 1);

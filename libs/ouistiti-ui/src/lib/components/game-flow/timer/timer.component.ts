@@ -1,5 +1,5 @@
 import { Component, HostBinding, Input, OnDestroy } from '@angular/core';
-import { interval, Subject, timer } from 'rxjs';
+import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -20,7 +20,6 @@ export class TimerComponent implements OnDestroy {
   @Input()
   large = false;
 
-  private _timestamp = 0;
   _timeLeft = 0;
 
   private endTimer$ = new Subject<void>();

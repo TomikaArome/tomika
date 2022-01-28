@@ -1,4 +1,5 @@
-import { CardSuit, CardValue } from '@TomikaArome/ouistiti-shared';
+import { CardSuit } from '../enum/card-suit.enum';
+import { CardValue } from '../enum/card-value.enum';
 
 export interface UnownedAndUnknownCardInfo {
   id: string;

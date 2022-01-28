@@ -1,5 +1,5 @@
 export interface BreakPointInfo {
   timerExpires?: number;
-  acknowlegements?: { [key: string]: boolean };
+  acknowledgements?: { [key: string]: boolean };
   buffer?: BreakPointInfo;
 }

@@ -1,5 +1,5 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { BidParams, LobbyCreateParams, LobbyJoinParams, LobbyUpdateParams, OuistitiErrorType, PlayerKickParams, PlayerUpdateParams } from '@TomikaArome/ouistiti-shared';
+import { PlaceBidParams, LobbyCreateParams, LobbyJoinParams, LobbyUpdateParams, OuistitiErrorType, PlayerKickParams, PlayerUpdateParams, PlayCardParams } from '@TomikaArome/ouistiti-shared';
 import { UseFilters, UsePipes } from '@nestjs/common';
 import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
 import { SocketController } from './controllers/socket.controller';
@@ -108,7 +108,7 @@ export class OuistitiGateway {
 
   @UseFilters(new OuistitiExceptionFilter('placeBid'))
   @SubscribeMessage('placeBid')
-  placeBid(controller: SocketController, params: BidParams) {
+  placeBid(controller: SocketController, params: PlaceBidParams) {
     OuistitiException.checkIfInLobby(controller);
     OuistitiException.checkGameStarted(controller.player.lobby);
     OuistitiException.checkRequiredParams(params, ['bid']);
@@ -123,5 +123,24 @@ export class OuistitiGateway {
     OuistitiException.checkGameStarted(controller.player.lobby);
 
     controller.player.lobby.game.currentRound.cancelBid(controller.player.id);
+  }
+
+  @UseFilters(new OuistitiExceptionFilter('playCard'))
+  @SubscribeMessage('playCard')
+  playCard(controller: SocketController, params: PlayCardParams) {
+    OuistitiException.checkIfInLobby(controller);
+    OuistitiException.checkGameStarted(controller.player.lobby);
+    OuistitiException.checkRequiredParams(params, ['id']);
+
+    controller.player.lobby.game.currentRound.playCard(controller.player.id, params.id);
+  }
+
+  @UseFilters(new OuistitiExceptionFilter('acknowledgeBreakPoint'))
+  @SubscribeMessage('acknowledgeBreakPoint')
+  acknowledgeBreakPoint(controller: SocketController) {
+    OuistitiException.checkIfInLobby(controller);
+    OuistitiException.checkGameStarted(controller.player.lobby);
+
+    controller.player.lobby.game.currentRound.acknowledgeBreakPoint(controller.player.id);
   }
 }

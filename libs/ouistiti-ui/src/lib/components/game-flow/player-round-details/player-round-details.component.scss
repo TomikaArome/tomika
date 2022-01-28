@@ -51,11 +51,25 @@
 
       > tmk-ouistiti-bid-chip, tmk-ouistiti-card {
         position: absolute;
+        z-index: 2;
       }
 
-      &:nth-of-type(2n) > tmk-ouistiti-bid-chip, &:nth-of-type(2n) > tmk-ouistiti-card {
-        transform: translateY(15px);
-        z-index: 1;
+      &.dotted {
+        > tmk-ouistiti-bid-chip, tmk-ouistiti-card {
+          z-index: 0;
+        }
+      }
+
+      &:nth-of-type(2n) {
+        tmk-ouistiti-bid-chip, tmk-ouistiti-card {
+          transform: translateY(15px);
+          z-index: 3;
+        }
+        &.dotted {
+          tmk-ouistiti-bid-chip, tmk-ouistiti-card {
+            z-index: 1;
+          }
+        }
       }
     }
 

@@ -10,7 +10,10 @@
   *ngFor="let card of cards"
   [ngStyle]="cardStyle(getCardPosition(card))">
 
-  <div class="card-interact-wrapper" [ngClass]="{ interactable: getCardPosition(card).playable }">
+  <div
+    class="card-interact-wrapper"
+    [ngClass]="{ interactable: getCardPosition(card).playable }"
+    (click)="playCard(card)">
 
     <tmk-ouistiti-card
       [id]="card.id"
@@ -34,7 +37,8 @@
     [bid]="playerBid(player.id)"
     [wonCards]="cardsWonByPlayer(player.id)"
     [angle]="getPlayerRoundDetailsPosition(player.id).angle"
-    [bidsStillPending]="areBidsStillPending">
+    [bidsStillPending]="areBidsStillPending"
+    [currentTurnNumber]="roundInfo?.currentTurnNumber">
   </tmk-ouistiti-player-round-details>
 
 </div>

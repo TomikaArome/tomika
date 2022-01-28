@@ -21,4 +21,15 @@ tmk-ouistiti-bidding-popup {
   left: 50%;
   transform: translate(-50%,50%);
   box-shadow: 0 6px 4px hsla(0,0%,0%,0.5);
+  border-radius: 8px;
+}
+
+tmk-ouistiti-end-of-turn-popup {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 6px 4px hsla(0,0%,0%,0.5);
+  border-radius: 8px 8px 0 0;
 }

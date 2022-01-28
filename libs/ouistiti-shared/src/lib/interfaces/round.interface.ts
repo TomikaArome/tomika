@@ -1,4 +1,4 @@
-import { CardInfo, PlayedCardInfo } from './card.interface';
+import { CardInfo } from './card.interface';
 import { RoundStatus } from '../enum/round-status.enum';
 import { BreakPointInfo } from './break-point.interface';
 
@@ -22,8 +22,9 @@ export interface BidsChanged {
 }
 
 export interface CardPlayed {
-  card: PlayedCardInfo;
+  affectedCards: CardInfo[];
   nextPlayerId: string;
+  breakPoint?: BreakPointInfo;
 }
 
 interface RoundStatusChangedToPlay extends BidsChanged {
@@ -34,10 +35,19 @@ interface RoundStatusChangedToCompleted {
   status: RoundStatus.COMPLETED
 }
 
+export interface NewTurnStarted {
+  newTurnNumber: number;
+  newTurnFirstPlayerId: string;
+}
+
 export type RoundStatusChanged = RoundStatusChangedToPlay | RoundStatusChangedToCompleted;
 
 // Server events
 
-export interface BidParams {
+export interface PlaceBidParams {
   bid: number;
+}
+
+export interface PlayCardParams {
+  id: string;
 }

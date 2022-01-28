@@ -54,7 +54,7 @@ export class BiddingPopupComponent {
   }
 
   get startingPlayer(): PlayerInfo {
-    return this.players.find((p: PlayerInfo) => p.id === this.roundInfo.currentPlayerId);
+    return this.players.find((p: PlayerInfo) => p.id === this.roundInfo?.currentPlayerId);
   }
   get startingPlayerColour(): PlayerColour { return this.startingPlayer?.colour; }
   get startingPlayerSymbol(): PlayerSymbol { return this.startingPlayer?.symbol; }
@@ -71,7 +71,7 @@ export class BiddingPopupComponent {
   }
 
   waitingForPlayer(playerId: string): boolean {
-    return !this.roundInfo.breakPoint?.acknowlegements[playerId] ?? true;
+    return !((this.roundInfo.breakPoint?.acknowledgements ?? {})[playerId]);
   }
 
   selectBid(bid: number) {

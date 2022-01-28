@@ -1,84 +1,81 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
-import { merge, Observable } from 'rxjs';
-import { BidInfo, BidParams, BidsChanged, CardInfo, CardPlayed, RoundInfo, RoundStatus, RoundStatusChanged, WonCardInfo } from '@TomikaArome/ouistiti-shared';
-import { map, scan } from 'rxjs/operators';
-
-type RoundStatusTemporaryObservableValue = {
-  event: 'roundStatus';
-  payload: RoundInfo
-} | {
-  event: 'bidsChanged',
-  payload: BidsChanged
-} | {
-  event: 'cardPlayed',
-  payload: CardPlayed
-} | {
-  event: 'trickWon',
-  payload: WonCardInfo[]
-} | {
-  event: 'roundStatusChanged';
-  payload: RoundStatusChanged
-}
+import { BehaviorSubject } from 'rxjs';
+import { PlaceBidParams, BidsChanged, CardInfo, CardPlayed, RoundInfo, RoundStatus, RoundStatusChanged, NewTurnStarted, PlayCardParams, BreakPointInfo } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class RoundService {
-  roundStatus$: Observable<RoundInfo> = merge(
-    this.socketService.getEvent<RoundInfo>('roundStatus').pipe(map((v: RoundInfo) => { return { event: 'roundStatus', payload: v }; })),
-    this.socketService.getEvent<BidsChanged>('bidsChanged').pipe(map((v: BidsChanged) => { return { event: 'bidsChanged', payload: v }; })),
-    this.socketService.getEvent<CardPlayed>('cardPlayed').pipe(map((v: CardPlayed) => { return { event: 'cardPlayed', payload: v }; })),
-    this.socketService.getEvent<WonCardInfo[]>('trickWon').pipe(map((v: WonCardInfo[]) => { return { event: 'trickWon', payload: v }; })),
-    this.socketService.getEvent<RoundStatusChanged>('roundStatusChanged').pipe(map((v: RoundStatusChanged) => { return { event: 'roundStatusChanged', payload: v }; }))
-  ).pipe(
-    scan((currStatus: RoundInfo, v: RoundStatusTemporaryObservableValue) => {
-      // console.log(v);
-      if (v.event === 'roundStatus') {
-        currStatus = v.payload;
-      } else if (v.event === 'bidsChanged') {
-        currStatus.bids = v.payload.bids;
-        currStatus.breakPoint = v.payload.breakPoint;
-      } else if (v.event === 'cardPlayed') {
-        currStatus.currentPlayerId = v.payload.nextPlayerId;
-        RoundService.updateCardInfo(currStatus.cards, v.payload.card);
-      } else if (v.event === 'trickWon') {
-        v.payload.forEach((cardInfo: WonCardInfo) => RoundService.updateCardInfo(currStatus.cards, cardInfo));
-      } else if (v.event === 'roundStatusChanged') {
-        currStatus.status = v.payload.status;
-        if (v.payload.status === RoundStatus.PLAY) {
-          currStatus.bids = v.payload.bids;
-          currStatus.breakPoint = v.payload.breakPoint;
-        }
-      }
-      return currStatus;
-    }, SocketService.roundStatusInitialValue)
-  );
+  private currentRoundInfo: RoundInfo = SocketService.roundStatusInitialValue;
 
-  private static updateBidInfo(bids: BidInfo[], newBid: BidInfo) {
-    const originalBidIndex = bids.findIndex((bid: BidInfo) => bid.playerId === newBid.playerId);
-    if (originalBidIndex === -1) {
-      bids.push(newBid);
-    } else {
-      bids[originalBidIndex] = newBid;
-    }
-  }
+  private currentRoundInfoSource = new BehaviorSubject<RoundInfo>(SocketService.roundStatusInitialValue);
+  currentRoundInfo$ = this.currentRoundInfoSource.asObservable();
 
   private static updateCardInfo(cards: CardInfo[], newCard: CardInfo) {
     const originalCardIndex = cards.findIndex((card: CardInfo) => card.id === newCard.id);
     if (originalCardIndex === -1) {
       cards.push(newCard);
     } else {
-      cards[originalCardIndex] = newCard;
+      Object.keys(cards[originalCardIndex]).forEach(key => delete cards[originalCardIndex][key]);
+      Object.assign(cards[originalCardIndex], newCard);
     }
   }
 
-  constructor(private socketService: SocketService) {}
+  constructor(private socketService: SocketService) {
+    this.listenToEvents();
+  }
+
+  listenToEvents() {
+    this.socketService.getEvent<RoundInfo>('roundStatus').subscribe((payload: RoundInfo) => {
+      this.currentRoundInfo = payload;
+      this.currentRoundInfoSource.next(this.currentRoundInfo);
+    });
+
+    this.socketService.getEvent<BidsChanged>('bidsChanged').subscribe((payload: BidsChanged) => {
+      this.currentRoundInfo.bids = payload.bids;
+      this.currentRoundInfo.breakPoint = payload.breakPoint;
+      this.currentRoundInfoSource.next(this.currentRoundInfo);
+    });
+
+    this.socketService.getEvent<CardPlayed>('cardPlayed').subscribe((payload: CardPlayed) => {
+      this.currentRoundInfo.currentPlayerId = payload.nextPlayerId;
+      payload.affectedCards.forEach((cardInfo: CardInfo) => RoundService.updateCardInfo(this.currentRoundInfo.cards, cardInfo));
+      this.currentRoundInfo.breakPoint = payload.breakPoint;
+    });
+
+    this.socketService.getEvent<NewTurnStarted>('newTurnStarted').subscribe((payload: NewTurnStarted) => {
+      this.currentRoundInfo.currentTurnNumber = payload.newTurnNumber;
+      this.currentRoundInfo.currentPlayerId = payload.newTurnFirstPlayerId;
+    });
+
+    this.socketService.getEvent<RoundStatusChanged>('roundStatusChanged').subscribe((payload: RoundStatusChanged) => {
+      this.currentRoundInfo.status = payload.status;
+      if (payload.status === RoundStatus.PLAY) {
+        this.currentRoundInfo.bids = payload.bids;
+        this.currentRoundInfo.breakPoint = payload.breakPoint;
+      }
+      this.currentRoundInfoSource.next(this.currentRoundInfo);
+    });
+
+    this.socketService.getEvent<BreakPointInfo>('breakPointChanged').subscribe((payload: BreakPointInfo) => {
+      this.currentRoundInfo.breakPoint = payload;
+    });
+  }
 
   placeBid(bid: number) {
-    const params: BidParams = { bid };
+    const params: PlaceBidParams = { bid };
     this.socketService.emitEvent('placeBid', params);
   }
 
   cancelBid() {
     this.socketService.emitEvent('cancelBid');
+  }
+
+  playCard(cardId: string) {
+    const params: PlayCardParams = { id: cardId };
+    this.socketService.emitEvent('playCard', params);
+  }
+
+  acknowledgeBreakPoint() {
+    this.socketService.emitEvent('acknowledgeBreakPoint');
   }
 }

@@ -1,13 +1,23 @@
 <tmk-ouistiti-card-container
   [roundInfo]="roundStatus$ | async"
   [players]="currentLobbyPlayers$ | async"
-  [selfId]="selfId$ | async">
+  [selfId]="selfId$ | async"
+  (cardPlayed)="playCard($event)">
 </tmk-ouistiti-card-container>
 
 <tmk-ouistiti-bidding-popup
+  *ngIf="showBiddingPopup((roundStatus$ | async).status)"
   [roundInfo]="roundStatus$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
   (bidPlaced)="placeBid($event)"
   (bidCancelled)="cancelBid()">
 </tmk-ouistiti-bidding-popup>
+
+<tmk-ouistiti-end-of-turn-popup
+  *ngIf="showEndOfTurnPopup(roundStatus$ | async)"
+  [roundInfo]="roundStatus$ | async"
+  [players]="currentLobbyPlayers$ | async"
+  [selfId]="selfId$ | async"
+  (nextButtonClicked)="acknowledgeBreakPoint()">
+</tmk-ouistiti-end-of-turn-popup>

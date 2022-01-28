@@ -14,6 +14,7 @@ import { CardComponent } from './components/game-flow/card/card.component';
 import { CardContainerComponent } from './components/game-flow/card-container/card-container.component';
 import { ContainerComponent } from './components/container/container.component';
 import { ColourSelectorComponent} from './components/game-setup/colour-selector/colour-selector.component';
+import { EndOfTurnPopupComponent } from './components/game-flow/end-of-turn-popup/end-of-turn-popup.component';
 import { LandingScreenComponent } from './components/landing-screen/landing-screen.component';
 import { LobbyCreateComponent } from './components/lobby-create/lobby-create.component';
 import { LobbyJoinComponent } from './components/lobby-join/lobby-join.component';
@@ -48,6 +49,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     CardContainerComponent,
     ContainerComponent,
     ColourSelectorComponent,
+    EndOfTurnPopupComponent,
     LandingScreenComponent,
     LobbyCreateComponent,
     LobbyJoinComponent,

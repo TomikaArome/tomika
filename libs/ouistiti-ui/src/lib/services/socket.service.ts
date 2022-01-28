@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, WonCardInfo, CardPlayed, RoundStatus, RoundStatusChanged, BidsChanged } from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, CardPlayed, RoundStatus, RoundStatusChanged, BidsChanged, NewTurnStarted, BreakPointInfo } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
 
 @Injectable({ providedIn: 'root' })
@@ -31,8 +31,9 @@ export class SocketService {
     new ServerEvent<RoundInfo>('roundStatus', SocketService.roundStatusInitialValue),
     new ServerEvent<BidsChanged>('bidsChanged'),
     new ServerEvent<CardPlayed>('cardPlayed'),
-    new ServerEvent<WonCardInfo[]>('trickWon'),
-    new ServerEvent<RoundStatusChanged>('roundStatusChanged')
+    new ServerEvent<NewTurnStarted>('newTurnStarted'),
+    new ServerEvent<RoundStatusChanged>('roundStatusChanged'),
+    new ServerEvent<BreakPointInfo>('breakPointChanged')
   ];
 
   private socketDisconnected$: BehaviorSubject<boolean>;

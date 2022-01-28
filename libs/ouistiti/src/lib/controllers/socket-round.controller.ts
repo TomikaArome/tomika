@@ -1,9 +1,10 @@
 import { SocketController } from './socket.controller';
 import { Round } from '../classes/round.class';
-import { BidsChanged, CardPlayed, PlayedCardInfo, RoundStatus, RoundStatusChanged } from '@TomikaArome/ouistiti-shared';
+import { BidsChanged, BreakPointInfo, CardPlayed, NewTurnStarted, PlayedCardInfo, RoundStatus, RoundStatusChanged } from '@TomikaArome/ouistiti-shared';
 import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CardPlayedObserved } from '../interfaces/round-observed.interface';
+import { CardPlayedObserved, NewTurnStartedObserved } from '../interfaces/round-observed.interface';
+import { Card } from '../classes/card.class';
 
 export class SocketRoundController {
   private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stop$); }
@@ -16,6 +17,8 @@ export class SocketRoundController {
     this.subscribeStatusChanged();
     this.subscribeEmitBidsChanged();
     this.subscribeCardPlayed();
+    this.subscribeNewTurnStarted();
+    this.subscribeBreakPointAcknowledged();
 
     this.emitInitialRoundStatus();
   }
@@ -30,7 +33,7 @@ export class SocketRoundController {
         const payload: RoundStatusChanged = {
           status,
           bids: this.round.bids,
-          breakPoint: this.round.breakPoint.info
+          breakPoint: null
         };
         this.controller.emit('roundStatusChanged', payload);
       } else if (status === RoundStatus.COMPLETED) {
@@ -55,10 +58,30 @@ export class SocketRoundController {
   subscribeCardPlayed() {
     this.round.cardPlayed$.pipe(this.stop).subscribe((observed: CardPlayedObserved) => {
       const payload: CardPlayed = {
-        card: observed.card.info as PlayedCardInfo,
+        affectedCards: observed.affectedCards.map((card: Card) => card.info),
         nextPlayerId: observed.nextPlayerId
       };
+      if (this.round.breakPoint) {
+        payload.breakPoint = this.round.breakPoint.info;
+      }
       this.controller.emit('cardPlayed', payload);
+    });
+  }
+
+  subscribeNewTurnStarted() {
+    this.round.newTurnStarted$.pipe(this.stop).subscribe((observed: NewTurnStartedObserved) => {
+      const payload: NewTurnStarted = {
+        newTurnNumber: observed.newTurnNumber,
+        newTurnFirstPlayerId: observed.newTurnFirstPlayerId
+      }
+      this.controller.emit('newTurnStarted', payload);
+    });
+  }
+
+  subscribeBreakPointAcknowledged() {
+    this.round.breakPointAcknowledged$.pipe(this.stop).subscribe(() => {
+      const payload: BreakPointInfo = this.round.breakPoint.info;
+      this.controller.emit('breakPointChanged', payload);
     });
   }
 }

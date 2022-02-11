@@ -1,46 +1,73 @@
 import { CardInfo } from './card.interface';
 import { RoundStatus } from '../enum/round-status.enum';
 import { BreakPointInfo } from './break-point.interface';
+import { CardSuit } from '../enum/card-suit.enum';
 
 // Client events
 
 export interface RoundInfo {
+  status: RoundStatus;
+  breakPoint: BreakPointInfo;
   currentPlayerId: string;
   currentTurnNumber: number;
   playerOrder: string[];
-  status: RoundStatus;
   cards: CardInfo[];
   bids: BidInfo;
-  breakPoint?: BreakPointInfo;
+}
+
+interface RoundStatusChangedToBidding extends RoundInfo {
+  status: RoundStatus.BIDDING;
 }
 
 export type BidInfo = { [key: string]: number };
 
 export interface BidsChanged {
-  bids: BidInfo;
   breakPoint: BreakPointInfo;
+  bids: BidInfo;
 }
 
-export interface CardPlayed {
-  affectedCards: CardInfo[];
-  nextPlayerId: string;
-  breakPoint?: BreakPointInfo;
-}
-
-interface RoundStatusChangedToPlay extends BidsChanged {
-  status: RoundStatus.PLAY
-}
-
-interface RoundStatusChangedToCompleted {
-  status: RoundStatus.COMPLETED
-}
-
-export interface NewTurnStarted {
+interface RoundStatusChangedToPlay {
+  status: RoundStatus.PLAY;
+  breakPoint: BreakPointInfo;
+  bids?: BidInfo;
   newTurnNumber: number;
   newTurnFirstPlayerId: string;
 }
 
-export type RoundStatusChanged = RoundStatusChangedToPlay | RoundStatusChangedToCompleted;
+export interface CardPlayed {
+  breakPoint: BreakPointInfo;
+  affectedCard: CardInfo;
+  nextPlayerId: string;
+}
+
+interface RoundStatusChangedToEndOfTurn {
+  status: RoundStatus.END_OF_TURN;
+  breakPoint: BreakPointInfo;
+  affectedCards: CardInfo[];
+}
+
+export interface RoundScores {
+  roundNumber: number;
+  numberOfCards: number;
+  knownTrump: boolean;
+  trump?: CardSuit;
+  playerScores?: PlayerScore[];
+}
+
+export interface PlayerScore {
+  playerId: string;
+  bid: number;
+  tricksWon: number;
+  pointDifference: number;
+}
+
+interface RoundStatusChangedToCompleted {
+  status: RoundStatus.COMPLETED;
+  breakPoint: BreakPointInfo;
+  scores: RoundScores[];
+}
+
+export type RoundStatusChanged = RoundStatusChangedToBidding | RoundStatusChangedToPlay | RoundStatusChangedToEndOfTurn | RoundStatusChangedToCompleted;
 
 // Server events
 

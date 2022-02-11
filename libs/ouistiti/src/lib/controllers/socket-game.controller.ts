@@ -31,7 +31,7 @@ export class SocketGameController {
     } else if (this.lobbyController.isOwnLobby) {
       this.lobbyController.emitLobbyStatus();
       if (this.game.rounds.length > 0) {
-        new SocketRoundController(this.controller, this.game.rounds[this.game.rounds.length - 1], this.stop$);
+        new SocketRoundController(this.controller, this.game.rounds[this.game.rounds.length - 1], this.stop$, this);
       }
     }
   }
@@ -44,7 +44,7 @@ export class SocketGameController {
 
   subscribeRoundStarted() {
     this.game.roundStarted$.pipe(this.stop).subscribe((round: Round) => {
-      new SocketRoundController(this.controller, round, this.stop$);
+      new SocketRoundController(this.controller, round, this.stop$, this);
     });
   }
 }

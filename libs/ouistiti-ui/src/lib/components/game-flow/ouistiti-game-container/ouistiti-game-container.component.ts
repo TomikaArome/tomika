@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RoundService } from '../../../services/round.service';
 import { PlayerService } from '../../../services/player.service';
-import { RoundInfo, RoundStatus, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import { RoundStatus } from '@TomikaArome/ouistiti-shared';
 
 @Component({
   selector: 'tmk-ouistiti-game-container',
@@ -21,10 +21,8 @@ export class OuistitiGameContainerComponent {
     return status === RoundStatus.BIDDING;
   }
 
-  showEndOfTurnPopup(info: RoundInfo): boolean {
-    const winningCardIndex = info.cards.findIndex((card: WonCardInfo) =>
-      card.playedOnTurn === info.currentTurnNumber && card.ownerId === card.winnerId);
-    return info.status === RoundStatus.PLAY && winningCardIndex > -1;
+  showEndOfTurnPopup(status: RoundStatus): boolean {
+    return status === RoundStatus.END_OF_TURN;
   }
 
   placeBid(bid: number) {

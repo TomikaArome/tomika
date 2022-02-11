@@ -15,7 +15,7 @@
 </tmk-ouistiti-bidding-popup>
 
 <tmk-ouistiti-end-of-turn-popup
-  *ngIf="showEndOfTurnPopup(roundStatus$ | async)"
+  *ngIf="showEndOfTurnPopup((roundStatus$ | async).status)"
   [roundInfo]="roundStatus$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"

@@ -300,6 +300,8 @@ const bids: BidInfo = {
 };
 
 export const roundStatusMock: RoundInfo = {
+  status: RoundStatus.PLAY,
+  breakPoint: null,
   currentPlayerId: "AXP9aX7pRu",
   currentTurnNumber: 2,
   playerOrder: [
@@ -308,7 +310,6 @@ export const roundStatusMock: RoundInfo = {
     'ne6NF08aL2',
     '5x89SitQIG'
   ],
-  status: RoundStatus.PLAY,
   cards: [...cards, ...playedCards],
   bids: bids
 };

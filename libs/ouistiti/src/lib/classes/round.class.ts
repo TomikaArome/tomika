@@ -1,24 +1,20 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
-import { BidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundStatus } from '@TomikaArome/ouistiti-shared';
+import { BidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { BidCancelledObserved, BidPlacedObserved, CardPlayedObserved, NewTurnStartedObserved } from '../interfaces/round-observed.interface';
+import { BidPlacedObserved } from '../interfaces/round-observed.interface';
 import { BreakPoint } from './break-point.class';
-
-export enum RoundStage {
-  ASC, NO_TRUMPS, DESC
-}
 
 export interface RoundSettings {
   roundNumber: number;
   playerIds: string[];
   maxCardsPerPlayer: number;
+  numberOfCardsPerPlayer: number;
 }
 
 export class Round {
   roundNumber: number;
-  stage: RoundStage;
   status: RoundStatus = RoundStatus.BIDDING;
   cards: Card[] = [];
   trumpCard: Card;
@@ -34,9 +30,8 @@ export class Round {
 
   private statusChangedSource = new Subject<RoundStatus>();
   private bidPlacedSource = new Subject<BidPlacedObserved>();
-  private bidCancelledSource = new Subject<BidCancelledObserved>();
-  private cardPlayedSource = new Subject<CardPlayedObserved>();
-  private newTurnStartedSource = new Subject<NewTurnStartedObserved>();
+  private bidCancelledSource = new Subject<string>();
+  private cardPlayedSource = new Subject<Card>();
   private breakPointAcknowledgedSource = new Subject<string>();
 
   statusChanged$ = this.statusChangedSource.asObservable();
@@ -45,15 +40,10 @@ export class Round {
   bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
   bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
   cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.completed$));
-  newTurnStarted$ = this.newTurnStartedSource.asObservable().pipe(takeUntil(this.completed$));
   breakPointAcknowledged$ = this.breakPointAcknowledgedSource.asObservable();
 
   get isLastTurn(): boolean {
     return this.currentTurnNumber === this.numberOfCardsPerPlayer;
-  }
-
-  get isLastRound(): boolean {
-    return this.numberOfCardsPerPlayer === 1 && this.stage === RoundStage.DESC;
   }
 
   get startingPlayerId(): string {
@@ -62,25 +52,49 @@ export class Round {
 
   get info(): RoundInfo {
     const info: RoundInfo = {
+      status: this.status,
+      breakPoint: (this.breakPoint && !this.breakPoint.ended) ? this.breakPoint.info : null,
       currentPlayerId: this.currentPlayerId,
       currentTurnNumber: this.currentTurnNumber,
       playerOrder: this.playerIds,
-      status: this.status,
       cards: this.cards.map((card: Card) => {
         if (card === this.trumpCard) { return { ...card.info, isTrumpCard: true }; }
         return card.info;
       }),
       bids: this.bids
     }
-    if (this.breakPoint && !this.breakPoint.ended) {
-      info.breakPoint = this.breakPoint.info;
-    }
     return info;
+  }
+
+  get scores(): RoundScores {
+    const scores: RoundScores = {
+      knownTrump: true,
+      roundNumber: this.roundNumber,
+      numberOfCards: this.numberOfCardsPerPlayer
+    };
+    if (this.trumpCard) {
+      scores.trump = this.trumpCard.suit;
+    }
+    if (this.status === RoundStatus.COMPLETED) {
+      scores.playerScores = this.playerIds.map((playerId: string) => {
+        const tricksWon = this.cards.reduce((tricksWon: number[], card: Card) => {
+          if (card.winnerId === playerId && tricksWon.indexOf(card.playedOnTurn) === -1) { tricksWon.push(card.playedOnTurn); }
+          return tricksWon;
+        }, []);
+        const pointDifference = (this.bids[playerId] === tricksWon.length ? this.bids[playerId] + 10 : -Math.abs(tricksWon.length - this.bids[playerId]));
+        return {
+          playerId,
+          bid: this.bids[playerId],
+          tricksWon: tricksWon.length,
+          pointDifference
+        };
+      })
+    }
+    return scores;
   }
 
   static createNewRound(settings: RoundSettings): Round {
     const round = new Round(settings);
-    round.initRound();
     round.generateCards();
     round.initBiddingBreakPoint();
     return round;
@@ -90,6 +104,8 @@ export class Round {
     this.roundNumber = settings.roundNumber;
     this.playerIds = settings.playerIds;
     this.maxCardsPerPlayer = settings.maxCardsPerPlayer;
+    this.numberOfCardsPerPlayer = settings.numberOfCardsPerPlayer;
+    this.currentPlayerId = this.startingPlayerId;
   }
 
   infoKnownToPlayer(playerId: string): RoundInfo {
@@ -113,21 +129,6 @@ export class Round {
     }, {});
   }
 
-  initRound() {
-    if (this.roundNumber < this.maxCardsPerPlayer) {
-      this.numberOfCardsPerPlayer = this.roundNumber;
-      this.stage = RoundStage.ASC;
-    } else if (this.roundNumber < this.maxCardsPerPlayer + this.playerIds.length) {
-      this.numberOfCardsPerPlayer = this.maxCardsPerPlayer;
-      this.stage = RoundStage.NO_TRUMPS;
-    } else {
-      this.numberOfCardsPerPlayer = (2 * (this.maxCardsPerPlayer - 1) + this.playerIds.length) - this.roundNumber + 1;
-      this.stage = RoundStage.DESC;
-    }
-
-    this.currentPlayerId = this.startingPlayerId;
-  }
-
   generateCards() {
     const unshuffledDeck = Card.generateUnshuffledDeck(this.maxCardsPerPlayer * this.playerIds.length);
     for (let i = 0; i < this.numberOfCardsPerPlayer; i++) {
@@ -138,7 +139,7 @@ export class Round {
         this.cards.push(card);
       });
     }
-    if (this.stage !== RoundStage.NO_TRUMPS) {
+    if (this.numberOfCardsPerPlayer < this.maxCardsPerPlayer) {
       const randomIndex = Math.floor(Math.random() * unshuffledDeck.length);
       this.trumpCard = unshuffledDeck[randomIndex];
     }
@@ -219,8 +220,7 @@ export class Round {
 
     delete this.bids[playerId];
     this.breakPoint.cancelAcknowledgement(playerId);
-    const payload: BidCancelledObserved = { playerId };
-    this.bidCancelledSource.next(payload);
+    this.bidCancelledSource.next(playerId);
   }
 
   finaliseBids() {
@@ -260,27 +260,28 @@ export class Round {
         param: 'id'
       });
     }
+
+    // TODO Check card can be played
+
     const cardsPlayedThisTurn = this.getCardsOnTurn(this.currentTurnNumber);
     card.playedOnTurn = this.currentTurnNumber;
     card.playedOrderPosition = cardsPlayedThisTurn.length + 1;
     this.currentPlayerId = this.playerIds[(this.playerIds.indexOf(this.currentPlayerId) + 1) % this.playerIds.length];
 
-    let affectedCards: Card[] = [card];
-
     if (card.playedOrderPosition === this.playerIds.length) {
+      this.status = RoundStatus.END_OF_TURN;
       const winningCard = this.getTurnWinningCard(this.currentTurnNumber);
 
-      affectedCards = this.cards.filter((card: Card) => card.playedOnTurn === this.currentTurnNumber);
-      affectedCards.forEach((card: Card) => {
+      this.cards.filter((card: Card) => card.playedOnTurn === this.currentTurnNumber).forEach((card: Card) => {
         card.winnerId = winningCard.ownerId;
       });
 
       const endOfTurnBreakPoint = new BreakPoint({
-        duration: 10000,
+        duration: 5000,
         acknowledgements: this.playerIds
       });
-      endOfTurnBreakPoint.acknowledged$.subscribe(() => {
-        this.breakPointAcknowledgedSource.next(playerId);
+      endOfTurnBreakPoint.acknowledged$.subscribe((acknowledgedPlayerId: string) => {
+        this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
       });
       endOfTurnBreakPoint.resolved$.subscribe(() => {
         this.manualBreakPointInProgress = false;
@@ -290,12 +291,10 @@ export class Round {
       this.manualBreakPointInProgress = true;
     }
 
-    const observed: CardPlayedObserved = {
-      affectedCards,
-      nextPlayerId: this.currentPlayerId
-    };
-    this.cardPlayedSource.next(observed);
-
+    this.cardPlayedSource.next(card);
+    if (this.status === RoundStatus.END_OF_TURN) {
+      this.statusChangedSource.next(this.status);
+    }
   }
 
   acknowledgeBreakPoint(playerId: string) {
@@ -306,20 +305,30 @@ export class Round {
 
   completeTurn() {
     if (this.isLastTurn) {
-      this.completeRound();
+      this.endOfRound();
     } else {
       const winningCard = this.getTurnWinningCard(this.currentTurnNumber);
       this.currentTurnNumber++;
       this.currentPlayerId = winningCard.ownerId;
-      this.newTurnStartedSource.next({
-        newTurnNumber: this.currentTurnNumber,
-        newTurnFirstPlayerId: this.currentPlayerId
-      });
+      this.status = RoundStatus.PLAY
+      this.statusChangedSource.next(this.status);
     }
   }
 
-  completeRound() {
-    console.log('completed round');
+  endOfRound() {
+    const endOfRoundBreakPoint = new BreakPoint({
+      duration: 5000,
+      acknowledgements: this.playerIds
+    });
+    endOfRoundBreakPoint.acknowledged$.subscribe((acknowledgedPlayerId: string) => {
+      this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
+    });
+    endOfRoundBreakPoint.resolved$.subscribe(() => {
+      this.manualBreakPointInProgress = false;
+    });
+    this.breakPoint = endOfRoundBreakPoint;
+    this.manualBreakPointInProgress = true;
+
     this.status = RoundStatus.COMPLETED;
     this.statusChangedSource.next(this.status);
     this.statusChangedSource.complete();

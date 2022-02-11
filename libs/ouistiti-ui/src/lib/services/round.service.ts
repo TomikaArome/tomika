@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
 import { BehaviorSubject } from 'rxjs';
-import { PlaceBidParams, BidsChanged, CardInfo, CardPlayed, RoundInfo, RoundStatus, RoundStatusChanged, NewTurnStarted, PlayCardParams, BreakPointInfo } from '@TomikaArome/ouistiti-shared';
+import { BidsChanged, BreakPointInfo, CardInfo, CardPlayed, PlaceBidParams, PlayCardParams, RoundInfo, RoundStatus, RoundStatusChanged } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class RoundService {
@@ -10,22 +10,12 @@ export class RoundService {
   private currentRoundInfoSource = new BehaviorSubject<RoundInfo>(SocketService.roundStatusInitialValue);
   currentRoundInfo$ = this.currentRoundInfoSource.asObservable();
 
-  private static updateCardInfo(cards: CardInfo[], newCard: CardInfo) {
-    const originalCardIndex = cards.findIndex((card: CardInfo) => card.id === newCard.id);
-    if (originalCardIndex === -1) {
-      cards.push(newCard);
-    } else {
-      Object.keys(cards[originalCardIndex]).forEach(key => delete cards[originalCardIndex][key]);
-      Object.assign(cards[originalCardIndex], newCard);
-    }
-  }
-
   constructor(private socketService: SocketService) {
     this.listenToEvents();
   }
 
   listenToEvents() {
-    this.socketService.getEvent<RoundInfo>('roundStatus').subscribe((payload: RoundInfo) => {
+    this.socketService.getEvent<RoundInfo>('roundInfo').subscribe((payload: RoundInfo) => {
       this.currentRoundInfo = payload;
       this.currentRoundInfoSource.next(this.currentRoundInfo);
     });
@@ -37,28 +27,51 @@ export class RoundService {
     });
 
     this.socketService.getEvent<CardPlayed>('cardPlayed').subscribe((payload: CardPlayed) => {
-      this.currentRoundInfo.currentPlayerId = payload.nextPlayerId;
-      payload.affectedCards.forEach((cardInfo: CardInfo) => RoundService.updateCardInfo(this.currentRoundInfo.cards, cardInfo));
       this.currentRoundInfo.breakPoint = payload.breakPoint;
-    });
-
-    this.socketService.getEvent<NewTurnStarted>('newTurnStarted').subscribe((payload: NewTurnStarted) => {
-      this.currentRoundInfo.currentTurnNumber = payload.newTurnNumber;
-      this.currentRoundInfo.currentPlayerId = payload.newTurnFirstPlayerId;
+      this.updateCardInfo(payload.affectedCard);
+      this.currentRoundInfo.currentPlayerId = payload.nextPlayerId;
+      this.currentRoundInfoSource.next(this.currentRoundInfo);
     });
 
     this.socketService.getEvent<RoundStatusChanged>('roundStatusChanged').subscribe((payload: RoundStatusChanged) => {
       this.currentRoundInfo.status = payload.status;
-      if (payload.status === RoundStatus.PLAY) {
-        this.currentRoundInfo.bids = payload.bids;
-        this.currentRoundInfo.breakPoint = payload.breakPoint;
+      this.currentRoundInfo.breakPoint = payload.breakPoint ?? null;
+
+      if (payload.status === RoundStatus.BIDDING) {
+        this.currentRoundInfo = payload;
       }
+
+      else if (payload.status === RoundStatus.PLAY) {
+        this.currentRoundInfo.currentTurnNumber = payload.newTurnNumber;
+        this.currentRoundInfo.currentPlayerId = payload.newTurnFirstPlayerId;
+        this.currentRoundInfo.bids = payload.bids;
+      }
+
+      else if (payload.status === RoundStatus.END_OF_TURN) {
+        payload.affectedCards.forEach((cardInfo: CardInfo) => this.updateCardInfo(cardInfo));
+      }
+
+      else {
+        console.log(payload.scores);
+      }
+
       this.currentRoundInfoSource.next(this.currentRoundInfo);
     });
 
     this.socketService.getEvent<BreakPointInfo>('breakPointChanged').subscribe((payload: BreakPointInfo) => {
       this.currentRoundInfo.breakPoint = payload;
+      this.currentRoundInfoSource.next(this.currentRoundInfo);
     });
+  }
+
+  private updateCardInfo(cardInfo: CardInfo) {
+    const originalCardIndex = this.currentRoundInfo.cards.findIndex((card: CardInfo) => card.id === cardInfo.id);
+    if (originalCardIndex === -1) {
+      this.currentRoundInfo.cards.push(cardInfo);
+    } else {
+      Object.keys(this.currentRoundInfo.cards[originalCardIndex]).forEach(key => delete this.currentRoundInfo.cards[originalCardIndex][key]);
+      Object.assign(this.currentRoundInfo.cards[originalCardIndex], cardInfo);
+    }
   }
 
   placeBid(bid: number) {

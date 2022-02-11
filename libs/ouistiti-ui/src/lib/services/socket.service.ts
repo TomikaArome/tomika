@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, CardPlayed, RoundStatus, RoundStatusChanged, BidsChanged, NewTurnStarted, BreakPointInfo } from '@TomikaArome/ouistiti-shared';
+import { LobbyInfo, OuistitiError, LobbyStatus, LobbyClosed, RoundInfo, CardPlayed, RoundStatus, RoundStatusChanged, BidsChanged, BreakPointInfo } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
 
 @Injectable({ providedIn: 'root' })
@@ -11,10 +11,11 @@ export class SocketService {
   };
 
   static readonly roundStatusInitialValue: RoundInfo = {
+    status: RoundStatus.BIDDING,
+    breakPoint: null,
     currentPlayerId: '',
     currentTurnNumber: 1,
     playerOrder: [],
-    status: RoundStatus.BIDDING,
     cards: [],
     bids: {}
   };
@@ -28,10 +29,9 @@ export class SocketService {
     new ServerEvent<LobbyInfo>('lobbyUpdated'),
     new ServerEvent<LobbyClosed>('lobbyClosed'),
 
-    new ServerEvent<RoundInfo>('roundStatus', SocketService.roundStatusInitialValue),
+    new ServerEvent<RoundInfo>('roundInfo'),
     new ServerEvent<BidsChanged>('bidsChanged'),
     new ServerEvent<CardPlayed>('cardPlayed'),
-    new ServerEvent<NewTurnStarted>('newTurnStarted'),
     new ServerEvent<RoundStatusChanged>('roundStatusChanged'),
     new ServerEvent<BreakPointInfo>('breakPointChanged')
   ];

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RoundService } from '../../../services/round.service';
 import { PlayerService } from '../../../services/player.service';
 import { RoundStatus } from '@TomikaArome/ouistiti-shared';
+import { pluck } from 'rxjs/operators';
 
 @Component({
   selector: 'tmk-ouistiti-game-container',
@@ -9,9 +10,10 @@ import { RoundStatus } from '@TomikaArome/ouistiti-shared';
   styleUrls: ['./ouistiti-game-container.component.scss']
 })
 export class OuistitiGameContainerComponent {
-  roundStatus$ = this.roundService.currentRoundInfo$;
+  roundInfo$ = this.roundService.currentRoundInfo$;
   selfId$ = this.playerService.selfId$;
   currentLobbyPlayers$ = this.playerService.currentLobbyPlayers$;
+  roundStatus$ = this.roundInfo$.pipe(pluck('status'));
 
   constructor(private roundService: RoundService,
               private playerService: PlayerService) {
@@ -23,6 +25,10 @@ export class OuistitiGameContainerComponent {
 
   showEndOfTurnPopup(status: RoundStatus): boolean {
     return status === RoundStatus.END_OF_TURN;
+  }
+
+  showEndOfRoundContainer(status: RoundStatus): boolean {
+    return status !== RoundStatus.COMPLETED;
   }
 
   placeBid(bid: number) {

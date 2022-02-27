@@ -14,6 +14,7 @@ import { CardComponent } from './components/game-flow/card/card.component';
 import { CardContainerComponent } from './components/game-flow/card-container/card-container.component';
 import { ContainerComponent } from './components/container/container.component';
 import { ColourSelectorComponent} from './components/game-setup/colour-selector/colour-selector.component';
+import { EndOfRoundContainerComponent } from './components/game-flow/end-of-round-container/end-of-round-container.component';
 import { EndOfTurnPopupComponent } from './components/game-flow/end-of-turn-popup/end-of-turn-popup.component';
 import { LandingScreenComponent } from './components/landing-screen/landing-screen.component';
 import { LobbyCreateComponent } from './components/lobby-create/lobby-create.component';
@@ -27,6 +28,7 @@ import { PlayerListComponent } from './components/player-list/player-list.compon
 import { PlayerListItemComponent } from './components/player-list/player-list-item.component';
 import { PlayerRoundDetailsComponent } from './components/game-flow/player-round-details/player-round-details.component';
 import { PlayerSettingsComponent } from './components/game-setup/player-settings/player-settings.component';
+import { ScoreboardComponent } from './components/analysis/scoreboard.component';
 import { SymbolSelectorComponent } from './components/game-setup/symbol-selector/symbol-selector.component';
 import { TimerComponent } from './components/game-flow/timer/timer.component';
 import { TrumpCardWrapperComponent } from './components/game-flow/trump-card-wrapper/trump-card-wrapper.component';
@@ -49,6 +51,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     CardContainerComponent,
     ContainerComponent,
     ColourSelectorComponent,
+    EndOfRoundContainerComponent,
     EndOfTurnPopupComponent,
     LandingScreenComponent,
     LobbyCreateComponent,
@@ -62,6 +65,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     PlayerListItemComponent,
     PlayerRoundDetailsComponent,
     PlayerSettingsComponent,
+    ScoreboardComponent,
     SymbolSelectorComponent,
     TimerComponent,
     TrumpCardWrapperComponent,

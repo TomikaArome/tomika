@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, Input, QueryList, ViewChildren } from '@angular/core';
 import { PlayerColour, PlayerInfo, PlayerScore, PlayerSymbol, RoundScores } from '@TomikaArome/ouistiti-shared';
 import { faBan, faCaretUp, faCaretDown, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { PlayerService } from '../../services/player.service';
@@ -8,11 +8,20 @@ import { PlayerService } from '../../services/player.service';
   templateUrl: 'scoreboard.component.html',
   styleUrls: ['scoreboard.component.scss']
 })
-export class ScoreboardComponent {
+export class ScoreboardComponent implements AfterViewInit {
   @Input()
   scores: RoundScores[] = [];
   @Input()
   playersInOrder: PlayerInfo[];
+  private _scrollToRoundSetBeforeViewInit = -1;
+  @Input()
+  set scrollToRound(roundNumber: number) {
+    if (this.viewHasInit) {
+      this.scrollToRoundElement(roundNumber);
+    } else {
+      this._scrollToRoundSetBeforeViewInit = roundNumber;
+    }
+  }
 
   roundHover = -1;
   playerHover = '';
@@ -21,6 +30,8 @@ export class ScoreboardComponent {
   faCaretDown = faCaretDown;
   faBan = faBan;
   faQuestion = faQuestion;
+
+  private viewHasInit = false;
 
   @HostBinding('style.--roundsCount')
   get roundsCount(): number {
@@ -31,6 +42,9 @@ export class ScoreboardComponent {
   get playersCount(): number {
     return this.playersInOrder.length;
   }
+
+  @ViewChildren('roundHeaderElement')
+  roundHeaderElements: QueryList<ElementRef>;
 
   getPlayerScoresInOrder(playerScores: PlayerScore[]): Partial<PlayerScore>[] {
     return this.playersInOrder.map(player => playerScores.find(score => score.playerId === player.id));
@@ -78,5 +92,20 @@ export class ScoreboardComponent {
 
   getPlayerFromId(playerId: string): PlayerInfo {
     return this.playersInOrder.find((player: PlayerInfo) => playerId === player.id);
+  }
+
+  private scrollToRoundElement(roundNumber: number) {
+    let elRef: ElementRef = this.roundHeaderElements.get(roundNumber) as ElementRef;
+    if (!elRef) {
+      elRef = this.roundHeaderElements.last as ElementRef;
+    }
+    (elRef.nativeElement as HTMLDivElement).scrollIntoView({ behavior: this._scrollToRoundSetBeforeViewInit > -1 ? 'auto' : 'smooth' });
+  }
+
+  ngAfterViewInit() {
+    this.viewHasInit = true;
+    if (this._scrollToRoundSetBeforeViewInit > -1) {
+      this.scrollToRoundElement(this._scrollToRoundSetBeforeViewInit);
+    }
   }
 }

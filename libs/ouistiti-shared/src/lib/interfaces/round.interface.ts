@@ -6,6 +6,7 @@ import { CardSuit } from '../enum/card-suit.enum';
 // Client events
 
 export interface RoundInfo {
+  number: number;
   status: RoundStatus;
   breakPoint: BreakPointInfo;
   currentPlayerId: string;

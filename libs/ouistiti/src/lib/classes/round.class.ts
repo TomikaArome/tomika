@@ -52,6 +52,7 @@ export class Round {
 
   get info(): RoundInfo {
     const info: RoundInfo = {
+      number: this.roundNumber,
       status: this.status,
       breakPoint: (this.breakPoint && !this.breakPoint.ended) ? this.breakPoint.info : null,
       currentPlayerId: this.currentPlayerId,

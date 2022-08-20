@@ -13,6 +13,7 @@
 
 <ng-container *ngFor="let roundScores of scores; index as i">
   <div
+    #roundHeaderElement
     class="round-header"
     [class]="getCellHoverClass(roundScores.roundNumber, '')"
     [style]="{ 'grid-column': i + 2 }"

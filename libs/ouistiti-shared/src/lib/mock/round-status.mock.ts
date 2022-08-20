@@ -300,6 +300,7 @@ const bids: BidInfo = {
 };
 
 export const roundStatusMock: RoundInfo = {
+  number: 8,
   status: RoundStatus.COMPLETED,
   breakPoint: null,
   currentPlayerId: "AXP9aX7pRu",

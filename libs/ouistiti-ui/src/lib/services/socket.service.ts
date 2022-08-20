@@ -11,6 +11,7 @@ export class SocketService {
   };
 
   static readonly roundStatusInitialValue: RoundInfo = {
+    number: 1,
     status: RoundStatus.BIDDING,
     breakPoint: null,
     currentPlayerId: '',

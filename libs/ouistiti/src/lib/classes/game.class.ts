@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Round } from './round.class';
-import { GameCreateParams, GameStatus, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
+import { GameCreateParams, GameStatus, RoundScores } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -33,7 +33,11 @@ export class Game {
         return {
           roundNumber,
           numberOfCards,
-          knownTrump: numberOfCards === this.maxCardsPerPlayer
+          startingPlayerId: this.playerOrder[(roundNumber - 1) % this.playerOrder.length],
+          knownTrump: numberOfCards === this.maxCardsPerPlayer,
+          playerScores: this.playerOrder.map((playerId: string) => {
+            return { playerId };
+          })
         };
       }
     });

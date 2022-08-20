@@ -49,6 +49,7 @@ interface RoundStatusChangedToEndOfTurn {
 export interface RoundScores {
   roundNumber: number;
   numberOfCards: number;
+  startingPlayerId: string;
   knownTrump: boolean;
   trump?: CardSuit;
   playerScores?: PlayerScore[];
@@ -56,9 +57,9 @@ export interface RoundScores {
 
 export interface PlayerScore {
   playerId: string;
-  bid: number;
-  tricksWon: number;
-  pointDifference: number;
+  bid?: number;
+  tricksWon?: number;
+  pointDifference?: number;
 }
 
 interface RoundStatusChangedToCompleted {

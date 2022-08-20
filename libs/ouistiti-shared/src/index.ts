@@ -19,5 +19,6 @@ export * from './lib/interfaces/player.interface';
 export * from './lib/interfaces/round.interface';
 
 // Mocks
+export * from './lib/mock/game-scores.mock';
 export * from './lib/mock/lobbies.mock';
 export * from './lib/mock/round-status.mock';

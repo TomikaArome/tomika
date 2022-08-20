@@ -70,7 +70,11 @@ export class Round {
     const scores: RoundScores = {
       knownTrump: true,
       roundNumber: this.roundNumber,
-      numberOfCards: this.numberOfCardsPerPlayer
+      startingPlayerId: this.startingPlayerId,
+      numberOfCards: this.numberOfCardsPerPlayer,
+      playerScores: this.playerIds.map((playerId: string) => {
+        return { playerId };
+      })
     };
     if (this.trumpCard) {
       scores.trump = this.trumpCard.suit;
@@ -178,7 +182,7 @@ export class Round {
       else if (winningCard.suit === currentCard.suit) {
         return winningCard.compareByValue(currentCard) > 0 ? winningCard : currentCard;
       }
-      else if (winningCard.suit !== this.trumpCard.suit && currentCard.suit === this.trumpCard.suit) { return currentCard; }
+      else if (this.trumpCard && winningCard.suit !== this.trumpCard.suit && currentCard.suit === this.trumpCard.suit) { return currentCard; }
       else { return winningCard; }
     }, null);
   }

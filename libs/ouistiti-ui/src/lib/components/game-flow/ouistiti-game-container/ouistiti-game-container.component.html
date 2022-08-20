@@ -23,5 +23,10 @@
 </tmk-ouistiti-end-of-turn-popup>
 
 <tmk-ouistiti-end-of-round-container
-  *ngIf="showEndOfRoundContainer(roundStatus$ | async)">
+  *ngIf="showEndOfRoundContainer(roundStatus$ | async)"
+  [scores]="currentGameScores$ | async"
+  [roundInfo]="roundInfo$ | async"
+  [players]="currentLobbyPlayers$ | async"
+  [selfId]="selfId$ | async"
+  (nextButtonClicked)="acknowledgeBreakPoint()">
 </tmk-ouistiti-end-of-round-container>

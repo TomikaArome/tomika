@@ -51,10 +51,6 @@ export class RoundService {
         payload.affectedCards.forEach((cardInfo: CardInfo) => this.updateCardInfo(cardInfo));
       }
 
-      else {
-        console.log(payload.scores);
-      }
-
       this.currentRoundInfoSource.next(this.currentRoundInfo);
     });
 

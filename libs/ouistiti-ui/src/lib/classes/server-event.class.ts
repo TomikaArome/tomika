@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
-import { lobbyStatusPlayerIsHostMock, roundStatusMock } from '@TomikaArome/ouistiti-shared';
+import { lobbyStatusPlayerIsHostMock, RoundStatus, roundStatusMock } from '@TomikaArome/ouistiti-shared';
 
 export class ServerEvent<T> {
   private eventSource: Subject<T>;

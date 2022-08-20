@@ -1,0 +1,64 @@
+<div class="top-left-header"></div>
+
+<div
+  class="player-header"
+  *ngFor="let player of playersInOrder; index as i"
+  [class]="getPlayerColourClass(player.colour, player.id)"
+  [style]="{ 'grid-row': i + 2 }"
+  (mouseenter)="setCellHover(-1, player.id)"
+  (mouseleave)="setCellHover()">
+  <mat-icon class="player-symbol" [svgIcon]="getSymbolIconName(player.symbol)"></mat-icon>
+  <div>{{ player.nickname }}</div>
+</div>
+
+<ng-container *ngFor="let roundScores of scores; index as i">
+  <div
+    class="round-header"
+    [class]="getCellHoverClass(roundScores.roundNumber, '')"
+    [style]="{ 'grid-column': i + 2 }"
+    (mouseenter)="setCellHover(roundScores.roundNumber)"
+    (mouseleave)="setCellHover()">
+    <div class="round-number">round {{ roundScores.roundNumber }}</div>
+    <div class="starting-player">{{ getPlayerFromId(roundScores.startingPlayerId).nickname }}</div>
+    <div class="number-of-cards">{{ roundScores.numberOfCards }}</div>
+    <div class="trump-suit">
+      <mat-icon *ngIf="roundScores.knownTrump && roundScores.trump; else noTrumpsRound" [svgIcon]="getSymbolIconName(roundScores.trump.toUpperCase())"></mat-icon>
+      <ng-template #noTrumpsRound>
+        <fa-icon *ngIf="roundScores.knownTrump; else unknownTrump" [icon]="faBan"></fa-icon>
+      </ng-template>
+      <ng-template #unknownTrump>
+        <fa-icon [icon]="faQuestion"></fa-icon>
+      </ng-template>
+    </div>
+  </div>
+
+  <div
+    class="score-cell"
+    *ngFor="let playerScore of getPlayerScoresInOrder(roundScores.playerScores); index as j"
+    [class]="getCellClass(roundScores, playerScore)"
+    [style]="{ 'grid-column': i + 2, 'grid-row': j + 2 }"
+    (mouseenter)="setCellHover(roundScores.roundNumber, playerScore.playerId)"
+    (mouseleave)="setCellHover()">
+    <ng-container *ngIf="playerScore.pointDifference">
+      <div class="cumulative-score">
+        <fa-icon [icon]="isScoreHigherThanLast(playerScore.playerId, roundScores.roundNumber) ? faCaretUp : faCaretDown"></fa-icon>
+        {{ getCumulativeScore(playerScore.playerId, roundScores.roundNumber) }}
+      </div>
+      <div class="tricks-bid">
+
+        <div class="tricks">
+          <span>tricks</span>
+          <div>{{ playerScore.tricksWon }}</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="bids">
+          <span>bid</span>
+          <div>{{ playerScore.bid }}</div>
+        </div>
+
+      </div>
+    </ng-container>
+  </div>
+</ng-container>

@@ -1,5 +1,4 @@
 import { randomBytes, createHash } from 'crypto';
-import { uuidv4 } from 'uuid';
 
 type SplatnetConnectorOptions = {
   cookie: string;

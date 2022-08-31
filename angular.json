@@ -228,6 +228,29 @@
         }
       }
     },
+    "splatnet": {
+      "root": "libs/splatnet",
+      "sourceRoot": "libs/splatnet/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/splatnet/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/splatnet"],
+          "options": {
+            "jestConfig": "libs/splatnet/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "ouistiti": {
       "root": "libs/ouistiti",
       "sourceRoot": "libs/ouistiti/src",

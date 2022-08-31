@@ -6,5 +6,6 @@ module.exports = {
     '<rootDir>/libs/ouistiti',
     '<rootDir>/libs/ouistiti-ui',
     '<rootDir>/libs/splatnet',
+    '<rootDir>/apps/splatnet-cli',
   ],
 };

@@ -1,32 +1,5 @@
 {
   "version": 1,
-  "schematics": {
-    "@nrwl/angular": {
-      "application": {
-        "linter": "eslint"
-      },
-      "library": {
-        "linter": "eslint"
-      },
-      "storybook-configuration": {
-        "linter": "eslint"
-      }
-    },
-    "@nrwl/angular:application": {
-      "style": "scss",
-      "linter": "eslint",
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
-    },
-    "@nrwl/angular:library": {
-      "style": "scss",
-      "linter": "eslint",
-      "unitTestRunner": "jest"
-    },
-    "@nrwl/angular:component": {
-      "style": "scss"
-    }
-  },
   "projects": {
     "backend": {
       "root": "apps/backend",
@@ -315,6 +288,64 @@
           "outputs": ["coverage/libs/splatnet"],
           "options": {
             "jestConfig": "libs/splatnet/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "splatnet-cli": {
+      "root": "apps/splatnet-cli",
+      "sourceRoot": "apps/splatnet-cli/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/splatnet-cli",
+            "main": "apps/splatnet-cli/src/main.ts",
+            "tsConfig": "apps/splatnet-cli/tsconfig.app.json",
+            "assets": ["apps/splatnet-cli/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/splatnet-cli/src/environments/environment.ts",
+                  "with": "apps/splatnet-cli/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "run": {
+          "builder": "@nrwl/node:node",
+          "options": {
+            "buildTarget": "splatnet-cli:build",
+            "watch": false
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "splatnet-cli:build:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/splatnet-cli/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/splatnet-cli"],
+          "options": {
+            "jestConfig": "apps/splatnet-cli/jest.config.ts",
             "passWithNoTests": true
           }
         }

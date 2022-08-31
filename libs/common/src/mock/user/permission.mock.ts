@@ -6,14 +6,11 @@ export const permissionTreeMock = {
       children: [
         {
           label: 'manage-users',
-          children: [
-            { label: 'edit-info' },
-            { label: 'ban' }
-          ]
+          children: [{ label: 'edit-info' }, { label: 'ban' }],
         },
         { label: 'manage-groups' },
-        { label: 'manage-permission-tree' }
-      ]
+        { label: 'manage-permission-tree' },
+      ],
     },
     {
       label: 'post',
@@ -21,14 +18,11 @@ export const permissionTreeMock = {
         { label: 'submit' },
         {
           label: 'view',
-          children: [
-            { label: 'general' },
-            { label: 'subscribed' }
-          ]
+          children: [{ label: 'general' }, { label: 'subscribed' }],
         },
         { label: 'comment' },
-        { label: 'rate' }
-      ]
-    }
-  ]
-}
+        { label: 'rate' },
+      ],
+    },
+  ],
+};

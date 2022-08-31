@@ -1,7 +1,8 @@
 <tmk-ouistiti-scoreboard
   [scores]="scores"
   [playersInOrder]="playersInOrder"
-  [scrollToRound]="roundInfo.number">
+  [scrollToRound]="roundInfo.number"
+>
 </tmk-ouistiti-scoreboard>
 
 <div class="break-point">
@@ -9,7 +10,8 @@
     Proceeding in:
     <tmk-ouistiti-timer
       [timestamp]="roundInfo.breakPoint.timerExpires"
-      [large]="true">
+      [large]="true"
+    >
     </tmk-ouistiti-timer>
   </div>
 
@@ -22,10 +24,17 @@
         [diameter]="24"
         [colour]="player?.colour"
         [symbol]="player?.symbol"
-        [ngClass]="{ acknowledged: playerAcknowledgedEndOfTurn(player?.id) }">
+        [ngClass]="{ acknowledged: playerAcknowledgedEndOfTurn(player?.id) }"
+      >
       </tmk-ouistiti-bid-chip>
 
-      <button class="next-button" (click)="clickNextButton()" [disabled]="playerAcknowledgedEndOfTurn(selfId)">Next</button>
+      <button
+        class="next-button"
+        (click)="clickNextButton()"
+        [disabled]="playerAcknowledgedEndOfTurn(selfId)"
+      >
+        Next
+      </button>
     </div>
   </div>
 </div>

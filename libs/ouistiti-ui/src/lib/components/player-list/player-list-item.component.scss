@@ -1,4 +1,4 @@
-@import "../../ouistiti-theme";
+@import '../../ouistiti-theme';
 
 :host {
   --player-list-item-border-radius: 12px;
@@ -6,7 +6,7 @@
   position: relative;
   display: block;
   width: 400px;
-  background-color: hsl(0,0%,10%);
+  background-color: hsl(0, 0%, 10%);
   user-select: none;
   border-radius: var(--player-list-item-border-radius);
 
@@ -17,23 +17,24 @@
     padding: 6px;
     border-radius: var(--player-list-item-border-radius);
 
-    & > fa-icon, & > mat-icon {
+    & > fa-icon,
+    & > mat-icon {
       width: 40px;
       height: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: hsla(0,0%,100%,0.5);
+      color: hsla(0, 0%, 100%, 0.5);
       transition: color 100ms, background-color 100ms;
       border-radius: calc(var(--player-list-item-border-radius) / 2);
 
       &.active {
-        color: hsl(0,0%,100%);
+        color: hsl(0, 0%, 100%);
       }
 
       &.tmk-sortable-list-gripped {
-        color: hsl(0,0%,100%);
-        background-color: hsla(0,0%,100%,0.1);
+        color: hsl(0, 0%, 100%);
+        background-color: hsla(0, 0%, 100%, 0.1);
       }
     }
 
@@ -46,15 +47,15 @@
       .host-indicator {
         font-size: 0.8em;
         margin-left: 6px;
-        color: hsl(50,50%,50%);
+        color: hsl(50, 50%, 50%);
       }
     }
   }
 
-  &:not(.tmk-player-list-item-dragging) .player-list-item-row  {
+  &:not(.tmk-player-list-item-dragging) .player-list-item-row {
     fa-icon:hover {
       cursor: pointer;
-      background-color: hsla(0,0%,100%,0.1);
+      background-color: hsla(0, 0%, 100%, 0.1);
     }
   }
 

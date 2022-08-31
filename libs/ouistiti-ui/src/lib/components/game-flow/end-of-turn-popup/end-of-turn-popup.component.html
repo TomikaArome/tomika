@@ -2,7 +2,8 @@
   Proceeding in:
   <tmk-ouistiti-timer
     [timestamp]="roundInfo.breakPoint.timerExpires"
-    [large]="true">
+    [large]="true"
+  >
   </tmk-ouistiti-timer>
 </div>
 
@@ -13,7 +14,8 @@
       [square]="true"
       [diameter]="30"
       [colour]="winner?.colour"
-      [symbol]="winner?.symbol">
+      [symbol]="winner?.symbol"
+    >
     </tmk-ouistiti-bid-chip>
     <div>{{ winner?.nickname }}</div>
   </div>
@@ -28,9 +30,16 @@
       [diameter]="24"
       [colour]="player?.colour"
       [symbol]="player?.symbol"
-      [ngClass]="{ acknowledged: playerAcknowledgedEndOfTurn(player?.id) }">
+      [ngClass]="{ acknowledged: playerAcknowledgedEndOfTurn(player?.id) }"
+    >
     </tmk-ouistiti-bid-chip>
 
-    <button class="next-button" (click)="clickNextButton()" [disabled]="playerAcknowledgedEndOfTurn(selfId)">Next</button>
+    <button
+      class="next-button"
+      (click)="clickNextButton()"
+      [disabled]="playerAcknowledgedEndOfTurn(selfId)"
+    >
+      Next
+    </button>
   </div>
 </div>

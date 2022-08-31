@@ -11,18 +11,14 @@ import { CardsTestComponent } from '../cards-test/cards-test.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    IndexComponent,
-    CardsTestComponent
-  ],
+  declarations: [AppComponent, IndexComponent, CardsTestComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AdminPanelModule,
     BrowserAnimationsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

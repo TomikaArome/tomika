@@ -1,7 +1,7 @@
 <div class="timer-section" *ngIf="minutes > 0">
   <span class="number">{{ this.minutes }}</span>
   <ng-container *ngIf="!large">&nbsp;</ng-container>
-  <span>minute{{ (this.minutes === 1 ? '' : 's') }}</span>
+  <span>minute{{ this.minutes === 1 ? '' : 's' }}</span>
   <ng-container *ngIf="!large">&nbsp;</ng-container>
 </div>
 

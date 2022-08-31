@@ -2,6 +2,7 @@
   class="symbol-option"
   *ngFor="let symbol of symbols"
   [ngClass]="symbolClasses(symbol)"
-  (click)="chosen = symbol">
+  (click)="chosen = symbol"
+>
   <mat-icon [svgIcon]="symbolIconName(symbol)"></mat-icon>
 </div>

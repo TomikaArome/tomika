@@ -1,5 +1,27 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { CARD_ORDER, CardInfo, CardSuit, KnownCardInfo, OwnedAndKnownCardInfo, OwnedAndUnknownCardInfo, PlayedCardInfo, PlayerInfo, RoundInfo, RoundStatus, TrumpCardInfo, UnownedAndUnknownCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  CARD_ORDER,
+  CardInfo,
+  CardSuit,
+  KnownCardInfo,
+  OwnedAndKnownCardInfo,
+  OwnedAndUnknownCardInfo,
+  PlayedCardInfo,
+  PlayerInfo,
+  RoundInfo,
+  RoundStatus,
+  TrumpCardInfo,
+  UnownedAndUnknownCardInfo,
+  WonCardInfo,
+} from '@TomikaArome/ouistiti-shared';
 
 interface PlayerRoundDetailsPosition {
   x: number;
@@ -22,7 +44,7 @@ interface CardPosition {
 @Component({
   selector: 'tmk-ouistiti-card-container',
   templateUrl: './card-container.component.html',
-  styleUrls: ['./card-container.component.scss']
+  styleUrls: ['./card-container.component.scss'],
 })
 export class CardContainerComponent implements OnInit {
   @Input()
@@ -44,10 +66,18 @@ export class CardContainerComponent implements OnInit {
 
   get playersWithoutSelf(): PlayerInfo[] {
     const playersInOrder = [...this.players];
-    playersInOrder.sort((pA: PlayerInfo, pB: PlayerInfo) =>
-      this.roundInfo.playerOrder.indexOf(pA.id) - this.roundInfo.playerOrder.indexOf(pB.id));
-    const selfIndex = playersInOrder.findIndex((player: PlayerInfo) => player.id === this.selfId);
-    return [...playersInOrder.slice(selfIndex + 1), ...playersInOrder.slice(0, selfIndex)];
+    playersInOrder.sort(
+      (pA: PlayerInfo, pB: PlayerInfo) =>
+        this.roundInfo.playerOrder.indexOf(pA.id) -
+        this.roundInfo.playerOrder.indexOf(pB.id)
+    );
+    const selfIndex = playersInOrder.findIndex(
+      (player: PlayerInfo) => player.id === this.selfId
+    );
+    return [
+      ...playersInOrder.slice(selfIndex + 1),
+      ...playersInOrder.slice(0, selfIndex),
+    ];
   }
 
   get areBidsStillPending(): boolean {
@@ -57,21 +87,27 @@ export class CardContainerComponent implements OnInit {
   get trumpCardOutsideWrapperStyle() {
     const cardPos = this.getUnownedCardPosition();
     return {
-      transform: `translate(${cardPos.x}px,${cardPos.y}px)`
+      transform: `translate(${cardPos.x}px,${cardPos.y}px)`,
     };
   }
 
   get hasTrumps(): boolean {
-    return this.roundInfo.cards.findIndex((c: CardInfo) => (c as TrumpCardInfo).isTrumpCard) > -1;
+    return (
+      this.roundInfo.cards.findIndex(
+        (c: CardInfo) => (c as TrumpCardInfo).isTrumpCard
+      ) > -1
+    );
   }
 
   private static toRadians(degrees: number): number {
-    return degrees * Math.PI / 180;
+    return (degrees * Math.PI) / 180;
   }
   private static getAngle(distance: number, radius: number): number {
     const twoRSquared = 2 * radius * radius;
-    const radians = Math.acos((twoRSquared - distance * distance) / twoRSquared);
-    return radians * 180 / Math.PI;
+    const radians = Math.acos(
+      (twoRSquared - distance * distance) / twoRSquared
+    );
+    return (radians * 180) / Math.PI;
   }
 
   constructor(private elRef: ElementRef) {}
@@ -82,12 +118,18 @@ export class CardContainerComponent implements OnInit {
 
   @HostListener('window:resize')
   setContainerSizes() {
-    this.containerWidth = (this.elRef.nativeElement as HTMLElement).getBoundingClientRect().width / 2;
-    this.containerHeight = (this.elRef.nativeElement as HTMLElement).getBoundingClientRect().height / 2;
+    this.containerWidth =
+      (this.elRef.nativeElement as HTMLElement).getBoundingClientRect().width /
+      2;
+    this.containerHeight =
+      (this.elRef.nativeElement as HTMLElement).getBoundingClientRect().height /
+      2;
   }
 
   cardsWonByPlayer(playerId: string): WonCardInfo[] {
-    return this.cards.filter((c: CardInfo) => (c as WonCardInfo).winnerId === playerId) as WonCardInfo[];
+    return this.cards.filter(
+      (c: CardInfo) => (c as WonCardInfo).winnerId === playerId
+    ) as WonCardInfo[];
   }
   playerBid(playerId: string): number {
     return this.roundInfo.bids[playerId] ?? -1;
@@ -95,23 +137,26 @@ export class CardContainerComponent implements OnInit {
 
   playerRoundDetailsStyle(pos: PlayerRoundDetailsPosition) {
     return {
-      transform: `translate(${pos.x}px,${pos.y}px)`
-    }
+      transform: `translate(${pos.x}px,${pos.y}px)`,
+    };
   }
 
   cardStyle(pos: CardPosition) {
     return {
       transform: `translate(${pos.x}px,${pos.y}px) rotate(${pos.rotation}deg)`,
-      zIndex: pos.z
-    }
+      zIndex: pos.z,
+    };
   }
 
   getPlayerRoundDetailsPosition(playerId: string): PlayerRoundDetailsPosition {
-    const players = this.playersWithoutSelf.map((player: PlayerInfo) => player.id);
+    const players = this.playersWithoutSelf.map(
+      (player: PlayerInfo) => player.id
+    );
 
     let rx, ry, width, height;
-    const el = ((this.elRef.nativeElement as HTMLElement)
-      .querySelector('#player-round-details-' + playerId) as HTMLElement);
+    const el = (this.elRef.nativeElement as HTMLElement).querySelector(
+      '#player-round-details-' + playerId
+    ) as HTMLElement;
     if (el) {
       const box = el.getBoundingClientRect();
       rx = this.containerWidth - box.width / 2;
@@ -124,20 +169,21 @@ export class CardContainerComponent implements OnInit {
       return {
         x: -rx,
         y: ry,
-        angle: 180
-      }
+        angle: 180,
+      };
     } else {
       const maxAngle = 180;
       const angleStep = maxAngle / (players.length - 1);
-      const angle = (players.indexOf(playerId) - ((players.length - 1) / 2)) * angleStep;
+      const angle =
+        (players.indexOf(playerId) - (players.length - 1) / 2) * angleStep;
 
       return {
         x: Math.cos(CardContainerComponent.toRadians(angle - 90)) * rx,
         y: Math.sin(CardContainerComponent.toRadians(angle - 90)) * ry,
         angle,
         width,
-        height
-      }
+        height,
+      };
     }
   }
 
@@ -146,14 +192,19 @@ export class CardContainerComponent implements OnInit {
 
     if ((card as OwnedAndUnknownCardInfo).ownerId === undefined) {
       cardPos = this.getUnownedCardPosition(card as UnownedAndUnknownCardInfo);
-    } else if ((card as WonCardInfo).winnerId !== undefined && (card as WonCardInfo).playedOnTurn < this.roundInfo.currentTurnNumber) {
+    } else if (
+      (card as WonCardInfo).winnerId !== undefined &&
+      (card as WonCardInfo).playedOnTurn < this.roundInfo.currentTurnNumber
+    ) {
       cardPos = this.getWonCardPosition(card as WonCardInfo);
     } else if ((card as PlayedCardInfo).playedOnTurn !== undefined) {
       cardPos = this.getPlayedCardPosition(card as PlayedCardInfo);
     } else if ((card as OwnedAndKnownCardInfo).ownerId === this.selfId) {
       cardPos = this.getCardPositionInOwnHand(card as OwnedAndKnownCardInfo);
     } else {
-      cardPos = this.getCardPositionInOtherHand(card as OwnedAndUnknownCardInfo);
+      cardPos = this.getCardPositionInOtherHand(
+        card as OwnedAndUnknownCardInfo
+      );
     }
 
     return {
@@ -164,86 +215,133 @@ export class CardContainerComponent implements OnInit {
       height: 175,
       rotation: 0,
       playable: false,
-      ...cardPos
-    }
+      ...cardPos,
+    };
   }
 
   sortCards(cardsToSort: KnownCardInfo[]): KnownCardInfo[] {
     const suits = Object.values(CardSuit);
-    return cardsToSort.sort((cA: OwnedAndKnownCardInfo, cB: OwnedAndKnownCardInfo) => {
-      let diff = suits.indexOf(cA.suit) - suits.indexOf(cB.suit);
-      if (diff === 0) {
-        diff = CARD_ORDER.indexOf(cA.value) - CARD_ORDER.indexOf(cB.value);
+    return cardsToSort.sort(
+      (cA: OwnedAndKnownCardInfo, cB: OwnedAndKnownCardInfo) => {
+        let diff = suits.indexOf(cA.suit) - suits.indexOf(cB.suit);
+        if (diff === 0) {
+          diff = CARD_ORDER.indexOf(cA.value) - CARD_ORDER.indexOf(cB.value);
+        }
+        return diff;
       }
-      return diff;
-    })
+    );
   }
 
-  isCardPlayable(card: OwnedAndKnownCardInfo, cardsInHand: OwnedAndKnownCardInfo[]): boolean {
-    if (this.roundInfo.status !== RoundStatus.PLAY || this.roundInfo.currentPlayerId !== card.ownerId) { return false; }
-    const leadingCard = this.roundInfo.cards.find((c: PlayedCardInfo) =>
-      c.playedOnTurn === this.roundInfo.currentTurnNumber && c.playedOrderPosition === 1) as PlayedCardInfo;
-    if (!leadingCard || card.suit === leadingCard.suit) { return true; }
-    return cardsInHand.findIndex((c: OwnedAndKnownCardInfo) => c.suit === leadingCard.suit) === -1;
+  isCardPlayable(
+    card: OwnedAndKnownCardInfo,
+    cardsInHand: OwnedAndKnownCardInfo[]
+  ): boolean {
+    if (
+      this.roundInfo.status !== RoundStatus.PLAY ||
+      this.roundInfo.currentPlayerId !== card.ownerId
+    ) {
+      return false;
+    }
+    const leadingCard = this.roundInfo.cards.find(
+      (c: PlayedCardInfo) =>
+        c.playedOnTurn === this.roundInfo.currentTurnNumber &&
+        c.playedOrderPosition === 1
+    ) as PlayedCardInfo;
+    if (!leadingCard || card.suit === leadingCard.suit) {
+      return true;
+    }
+    return (
+      cardsInHand.findIndex(
+        (c: OwnedAndKnownCardInfo) => c.suit === leadingCard.suit
+      ) === -1
+    );
   }
 
   getCardPositionInOwnHand(card: OwnedAndKnownCardInfo): CardPosition {
-    let cardsInHand: OwnedAndKnownCardInfo[] = this.cards.filter((c: CardInfo) => {
-      return (c as OwnedAndKnownCardInfo).ownerId === card.ownerId
-        && (c as PlayedCardInfo).playedOnTurn === undefined;
-    }) as OwnedAndKnownCardInfo[];
+    let cardsInHand: OwnedAndKnownCardInfo[] = this.cards.filter(
+      (c: CardInfo) => {
+        return (
+          (c as OwnedAndKnownCardInfo).ownerId === card.ownerId &&
+          (c as PlayedCardInfo).playedOnTurn === undefined
+        );
+      }
+    ) as OwnedAndKnownCardInfo[];
     cardsInHand = this.sortCards(cardsInHand) as OwnedAndKnownCardInfo[];
 
     const radius = 1000;
     const spreadDistance = 100;
     const angleStep = CardContainerComponent.getAngle(spreadDistance, radius);
-    const angle = (cardsInHand.indexOf(card) - ((cardsInHand.length - 1) / 2)) * angleStep;
+    const angle =
+      (cardsInHand.indexOf(card) - (cardsInHand.length - 1) / 2) * angleStep;
     const angleOfFirstCard = (-(cardsInHand.length - 1) / 2) * angleStep;
 
     return {
       x: Math.cos(CardContainerComponent.toRadians(angle - 90)) * radius,
-      y: this.containerHeight - (Math.sin(CardContainerComponent.toRadians(angle + 90)) - Math.sin(CardContainerComponent.toRadians(angleOfFirstCard + 90))) * radius - 125,
+      y:
+        this.containerHeight -
+        (Math.sin(CardContainerComponent.toRadians(angle + 90)) -
+          Math.sin(CardContainerComponent.toRadians(angleOfFirstCard + 90))) *
+          radius -
+        125,
       z: cardsInHand.indexOf(card),
       rotation: angle,
-      playable: this.isCardPlayable(card, cardsInHand)
-    }
+      playable: this.isCardPlayable(card, cardsInHand),
+    };
   }
 
   getCardPositionInOtherHand(card: OwnedAndUnknownCardInfo): CardPosition {
-    const cardsInHand: OwnedAndUnknownCardInfo[] = (this.cards
-      .filter((c: CardInfo) => {
-        return (c as OwnedAndUnknownCardInfo).ownerId === card.ownerId
-          && (c as PlayedCardInfo).playedOnTurn === undefined;
-      }) as OwnedAndUnknownCardInfo[])
-      .sort((cA: OwnedAndUnknownCardInfo, cB: OwnedAndUnknownCardInfo) => cA.id.localeCompare(cB.id));
+    const cardsInHand: OwnedAndUnknownCardInfo[] = (
+      this.cards.filter((c: CardInfo) => {
+        return (
+          (c as OwnedAndUnknownCardInfo).ownerId === card.ownerId &&
+          (c as PlayedCardInfo).playedOnTurn === undefined
+        );
+      }) as OwnedAndUnknownCardInfo[]
+    ).sort((cA: OwnedAndUnknownCardInfo, cB: OwnedAndUnknownCardInfo) =>
+      cA.id.localeCompare(cB.id)
+    );
 
     const playerPos = this.getPlayerRoundDetailsPosition(card.ownerId);
     const maxArc = 90;
     const maxArcStep = maxArc / (cardsInHand.length - 1);
     const radius = (playerPos.width / 2 + playerPos.height / 2) / 2;
     const spreadDistance = 15;
-    const angleStep = Math.min(CardContainerComponent.getAngle(spreadDistance, radius), maxArcStep);
-    const angle = (cardsInHand.indexOf(card) - ((cardsInHand.length - 1) / 2)) * angleStep + playerPos.angle + 180;
+    const angleStep = Math.min(
+      CardContainerComponent.getAngle(spreadDistance, radius),
+      maxArcStep
+    );
+    const angle =
+      (cardsInHand.indexOf(card) - (cardsInHand.length - 1) / 2) * angleStep +
+      playerPos.angle +
+      180;
 
     return {
-      x: playerPos.x + Math.cos(CardContainerComponent.toRadians(angle - 90)) * playerPos.width / 2,
-      y: playerPos.y + Math.sin(CardContainerComponent.toRadians(angle - 90)) * playerPos.height / 2,
+      x:
+        playerPos.x +
+        (Math.cos(CardContainerComponent.toRadians(angle - 90)) *
+          playerPos.width) /
+          2,
+      y:
+        playerPos.y +
+        (Math.sin(CardContainerComponent.toRadians(angle - 90)) *
+          playerPos.height) /
+          2,
       z: cardsInHand.indexOf(card),
       height: 100,
-      rotation: angle
+      rotation: angle,
     };
   }
 
   getUnownedCardPosition(card?: UnownedAndUnknownCardInfo): CardPosition {
     const padding = 20;
     const cardHeight = 125;
-    const cardWidth = cardHeight / 7 * 5;
+    const cardWidth = (cardHeight / 7) * 5;
     return {
       x: this.containerWidth - cardWidth / 2 - padding,
       y: this.containerHeight - cardHeight / 2 - padding,
       z: (card as TrumpCardInfo)?.isTrumpCard ? 1 : 0,
       width: cardWidth,
-      height: cardHeight
+      height: cardHeight,
     };
   }
 
@@ -253,7 +351,7 @@ export class CardContainerComponent implements OnInit {
       x: playerPos.x,
       y: playerPos.y,
       z: 0,
-      height: 50
+      height: 50,
     };
   }
 
@@ -266,7 +364,7 @@ export class CardContainerComponent implements OnInit {
       y: Math.sin(CardContainerComponent.toRadians(playerPos.angle - 90)) * ry,
       z: card.playedOrderPosition,
       height: 125,
-      rotation: playerPos.angle
+      rotation: playerPos.angle,
     };
   }
 

@@ -10,12 +10,16 @@ export class SocketPlayerController {
     filter(({ player }: LobbyLeftObserved) => player === this.player)
   );
 
-  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stop$); }
+  private get stop(): MonoTypeOperatorFunction<unknown> {
+    return takeUntil(this.stop$);
+  }
 
-  constructor(readonly controller: SocketController,
-              readonly player: Player,
-              readonly stop$: Observable<unknown>,
-              readonly lobbyController: SocketLobbyController) {
+  constructor(
+    readonly controller: SocketController,
+    readonly player: Player,
+    readonly stop$: Observable<unknown>,
+    readonly lobbyController: SocketLobbyController
+  ) {
     this.stop$ = merge(this.stop$, this.controlledPlayerLeftLobby$);
 
     this.subscribeInfoChanged();
@@ -26,15 +30,14 @@ export class SocketPlayerController {
       this.player.nicknameChanged$,
       this.player.colourChanged$,
       this.player.symbolChanged$
-    ).pipe(
-      this.stop,
-      debounceTime(SocketController.debounceTime)
-    ).subscribe(() => {
-      if (!this.controller.inLobby) {
-        this.controller.emit('lobbyUpdated', this.player.lobby.info);
-      } else if (this.player.lobby === this.controller.player.lobby) {
-        this.lobbyController.emitLobbyStatus();
-      }
-    });
+    )
+      .pipe(this.stop, debounceTime(SocketController.debounceTime))
+      .subscribe(() => {
+        if (!this.controller.inLobby) {
+          this.controller.emit('lobbyUpdated', this.player.lobby.info);
+        } else if (this.player.lobby === this.controller.player.lobby) {
+          this.lobbyController.emitLobbyStatus();
+        }
+      });
   }
 }

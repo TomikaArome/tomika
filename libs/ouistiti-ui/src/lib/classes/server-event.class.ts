@@ -1,13 +1,20 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
-import { lobbyStatusPlayerIsHostMock, RoundStatus, roundStatusMock } from '@TomikaArome/ouistiti-shared';
+import {
+  lobbyStatusPlayerIsHostMock,
+  RoundStatus,
+  roundStatusMock,
+} from '@TomikaArome/ouistiti-shared';
 
 export class ServerEvent<T> {
   private eventSource: Subject<T>;
   readonly event$: Observable<T>;
 
   constructor(readonly name: string, initialValue?: T) {
-    this.eventSource = (initialValue === undefined ? new Subject<T>() : new BehaviorSubject<T>(initialValue))
+    this.eventSource =
+      initialValue === undefined
+        ? new Subject<T>()
+        : new BehaviorSubject<T>(initialValue);
     this.event$ = this.eventSource.asObservable();
   }
 

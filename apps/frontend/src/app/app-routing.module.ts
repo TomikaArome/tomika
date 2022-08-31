@@ -9,21 +9,21 @@ import { ContainerComponent as OuistitiContainerComponent } from '@TomikaArome/o
 const routes: Routes = [
   {
     path: '',
-    component: IndexComponent
+    component: IndexComponent,
   },
   {
     path: 'admin',
-    loadChildren: () => AdminPanelModule
+    loadChildren: () => AdminPanelModule,
   },
   // TODO - Remove cards test component
   {
     path: 'cards',
-    component: OuistitiContainerComponent
-  }
+    component: OuistitiContainerComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

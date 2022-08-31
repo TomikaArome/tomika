@@ -9,11 +9,16 @@
 </mat-toolbar>
 
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-  <mat-tree-node
-    *matTreeNodeDef="let node">
-    <div *ngIf="showExpandButton(node); else noExpandButton" matTreeNodeToggle
-      class="expand-button" [style.paddingLeft]="nodeIndent(node)">
-      <mat-icon>{{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+  <mat-tree-node *matTreeNodeDef="let node">
+    <div
+      *ngIf="showExpandButton(node); else noExpandButton"
+      matTreeNodeToggle
+      class="expand-button"
+      [style.paddingLeft]="nodeIndent(node)"
+    >
+      <mat-icon>{{
+        treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'
+      }}</mat-icon>
     </div>
     <ng-template #noExpandButton>
       <div [style.width]="nodeIndent(node)"></div>

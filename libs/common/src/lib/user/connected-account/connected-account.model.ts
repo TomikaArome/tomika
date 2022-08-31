@@ -16,7 +16,9 @@ export interface ConnectedAccountAvatarOptions {
   extension?: string;
 }
 
-export function createConnectedAccountInstance(model: ConnectedAccountModel): ConnectedAccount {
+export function createConnectedAccountInstance(
+  model: ConnectedAccountModel
+): ConnectedAccount {
   // More account types would involve a switch case on the accountType here
   return new DiscordAccount(model as DiscordAccountModel);
 }

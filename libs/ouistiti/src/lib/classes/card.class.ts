@@ -1,4 +1,13 @@
-import { CARD_ORDER, CardSuit, CardValue, KnownCardInfo, OwnedAndUnknownCardInfo, PlayedCardInfo, UnknownCardInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
+import {
+  CARD_ORDER,
+  CardSuit,
+  CardValue,
+  KnownCardInfo,
+  OwnedAndUnknownCardInfo,
+  PlayedCardInfo,
+  UnknownCardInfo,
+  WonCardInfo,
+} from '@TomikaArome/ouistiti-shared';
 import { nanoid } from 'nanoid';
 
 export class Card {
@@ -18,7 +27,11 @@ export class Card {
     if (this.ownerId) {
       info = { ...info, ownerId: this.ownerId } as OwnedAndUnknownCardInfo;
       if (this.played) {
-        info = { ...info, playedOnTurn: this.playedOnTurn, playedOrderPosition: this.playedOrderPosition } as PlayedCardInfo;
+        info = {
+          ...info,
+          playedOnTurn: this.playedOnTurn,
+          playedOrderPosition: this.playedOrderPosition,
+        } as PlayedCardInfo;
         if (this.winnerId) {
           info = { ...info, winnerId: this.winnerId } as WonCardInfo;
         }
@@ -31,8 +44,8 @@ export class Card {
     return {
       ...this.incompleteInfo,
       value: this.value,
-      suit: this.suit
-    }
+      suit: this.suit,
+    };
   }
 
   constructor(public value: CardValue, public suit: CardSuit) {}

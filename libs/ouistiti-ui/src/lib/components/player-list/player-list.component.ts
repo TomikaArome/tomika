@@ -1,18 +1,29 @@
-import { Component, ContentChild, EventEmitter, Input, Output } from '@angular/core';
-import { MAX_NUMBER_OF_PLAYERS_PER_LOBBY, PlayerInfo } from '@TomikaArome/ouistiti-shared';
+import {
+  Component,
+  ContentChild,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import {
+  MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
+  PlayerInfo,
+} from '@TomikaArome/ouistiti-shared';
 import { PlayerListItemContentDirective } from '../../directives/player-list-item-content.directive';
 
 @Component({
   selector: 'tmk-ouistiti-player-list',
   templateUrl: './player-list.component.html',
-  styleUrls: ['./player-list.component.scss']
+  styleUrls: ['./player-list.component.scss'],
 })
 export class PlayerListComponent {
   @Input()
   players: PlayerInfo[] = [];
   _hostId: string;
   @Input()
-  get hostId(): string { return this._hostId; }
+  get hostId(): string {
+    return this._hostId;
+  }
   set hostId(value: string) {
     if (this._hostId === this.selfId) {
       this.expandedPlayerId = null;

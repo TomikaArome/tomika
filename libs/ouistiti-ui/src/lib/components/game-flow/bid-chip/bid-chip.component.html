@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" [ngClass]="chipClass">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="50"
+  height="50"
+  viewBox="0 0 50 50"
+  [ngClass]="chipClass"
+>
   <rect class="square" *ngIf="square; else chipTemplate"></rect>
   <ng-template #chipTemplate>
     <circle class="circle" r="25" />
@@ -15,7 +21,8 @@
     [attr.width]="symbolSize"
     [attr.height]="symbolSize"
     x="25"
-    y="25">
+    y="25"
+  >
     <path [attr.d]="symbolPath" />
   </svg>
 </svg>

@@ -12,10 +12,10 @@ const urlSafeBase64Encode = (val: string): string => {
 const buildQuery = (parameters: { [key: string]: string }): string => {
   let query = '';
   for (const i in parameters) {
-    query += (i + '=' + parameters[i] + '&');
+    query += i + '=' + parameters[i] + '&';
   }
   query = query.replace(/&$/, '');
   return query;
 };
 
-export { urlSafeBase64Encode, buildQuery }
+export { urlSafeBase64Encode, buildQuery };

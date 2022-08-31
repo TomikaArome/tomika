@@ -4,12 +4,14 @@ import { Socket } from 'socket.io';
 
 @Injectable()
 export class SocketControllerPipe implements PipeTransform {
-  private static socketControllers: { [socketId: string]: SocketController } = {};
+  private static socketControllers: { [socketId: string]: SocketController } =
+    {};
 
   static registerController(socket: Socket): SocketController {
     const controller = new SocketController(socket);
     SocketControllerPipe.socketControllers[socket.id] = controller;
-    controller.stop$.subscribe(() => { // TODO move the socket controllers array to the SocketController class as a static property
+    controller.stop$.subscribe(() => {
+      // TODO move the socket controllers array to the SocketController class as a static property
       delete this.socketControllers[socket.id];
     });
     return controller;
@@ -21,7 +23,9 @@ export class SocketControllerPipe implements PipeTransform {
 
   transform(value: unknown): unknown {
     if (value instanceof Socket) {
-      value = SocketControllerPipe.socketControllers[value.id] ?? SocketControllerPipe.registerController(value);
+      value =
+        SocketControllerPipe.socketControllers[value.id] ??
+        SocketControllerPipe.registerController(value);
     }
     return value;
   }

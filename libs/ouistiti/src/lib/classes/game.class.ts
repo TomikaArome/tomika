@@ -1,6 +1,10 @@
 import { nanoid } from 'nanoid';
 import { Round } from './round.class';
-import { GameCreateParams, GameStatus, RoundScores } from '@TomikaArome/ouistiti-shared';
+import {
+  GameCreateParams,
+  GameStatus,
+  RoundScores,
+} from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -33,11 +37,12 @@ export class Game {
         return {
           roundNumber,
           numberOfCards,
-          startingPlayerId: this.playerOrder[(roundNumber - 1) % this.playerOrder.length],
+          startingPlayerId:
+            this.playerOrder[(roundNumber - 1) % this.playerOrder.length],
           knownTrump: numberOfCards === this.maxCardsPerPlayer,
           playerScores: this.playerOrder.map((playerId: string) => {
             return { playerId };
-          })
+          }),
         };
       }
     });
@@ -47,8 +52,12 @@ export class Game {
   private statusChangedSource = new Subject<GameStatus>();
   private roundStartedSource = new Subject<Round>();
 
-  statusChanged$ = this.statusChangedSource.asObservable().pipe(takeUntil(this.completed$));
-  roundStarted$ = this.roundStartedSource.asObservable().pipe(takeUntil(this.completed$));
+  statusChanged$ = this.statusChangedSource
+    .asObservable()
+    .pipe(takeUntil(this.completed$));
+  roundStarted$ = this.roundStartedSource
+    .asObservable()
+    .pipe(takeUntil(this.completed$));
 
   static createNewGame(settings: GameCreateSettings): Game {
     const newGame = new Game();
@@ -59,8 +68,12 @@ export class Game {
   }
 
   numberOfCardsOnRound(roundNumber: number): number {
-    if (roundNumber < this.maxCardsPerPlayer) { return roundNumber; }
-    if (roundNumber < this.maxCardsPerPlayer + this.playerOrder.length) { return this.maxCardsPerPlayer; }
+    if (roundNumber < this.maxCardsPerPlayer) {
+      return roundNumber;
+    }
+    if (roundNumber < this.maxCardsPerPlayer + this.playerOrder.length) {
+      return this.maxCardsPerPlayer;
+    }
     return this.totalRoundCount - roundNumber + 1;
   }
 
@@ -76,12 +89,14 @@ export class Game {
       this.completed$.complete();
     } else {
       const newRoundNumber = this.rounds.length + 1;
-      this.rounds.push(Round.createNewRound({
-        roundNumber: newRoundNumber,
-        playerIds: this.playerOrder,
-        maxCardsPerPlayer: this.maxCardsPerPlayer,
-        numberOfCardsPerPlayer: this.numberOfCardsOnRound(newRoundNumber)
-      }));
+      this.rounds.push(
+        Round.createNewRound({
+          roundNumber: newRoundNumber,
+          playerIds: this.playerOrder,
+          maxCardsPerPlayer: this.maxCardsPerPlayer,
+          numberOfCardsPerPlayer: this.numberOfCardsOnRound(newRoundNumber),
+        })
+      );
       this.roundStartedSource.next(this.currentRound);
 
       this.currentRound.completed$.subscribe(() => {

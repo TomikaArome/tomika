@@ -18,7 +18,8 @@ export interface OwnedAndUnknownCardInfo extends UnownedAndUnknownCardInfo {
   ownerId: string;
 }
 
-export type OwnedAndKnownCardInfo = OwnedAndUnknownCardInfo & UnownedAndKnownCardInfo;
+export type OwnedAndKnownCardInfo = OwnedAndUnknownCardInfo &
+  UnownedAndKnownCardInfo;
 
 export interface PlayedCardInfo extends OwnedAndKnownCardInfo {
   playedOnTurn: number;
@@ -29,8 +30,15 @@ export interface WonCardInfo extends PlayedCardInfo {
   winnerId: string;
 }
 
-export type UnknownCardInfo = UnownedAndUnknownCardInfo | OwnedAndUnknownCardInfo;
-export type KnownCardInfo = UnownedAndKnownCardInfo | TrumpCardInfo | OwnedAndKnownCardInfo | PlayedCardInfo | WonCardInfo;
+export type UnknownCardInfo =
+  | UnownedAndUnknownCardInfo
+  | OwnedAndUnknownCardInfo;
+export type KnownCardInfo =
+  | UnownedAndKnownCardInfo
+  | TrumpCardInfo
+  | OwnedAndKnownCardInfo
+  | PlayedCardInfo
+  | WonCardInfo;
 
 export type CardInfo = UnknownCardInfo | KnownCardInfo;
 
@@ -46,9 +54,14 @@ export function isWonCardInfo(obj: CardInfo): obj is WonCardInfo {
 
 export function isPlayedCardInfo(obj: CardInfo): obj is PlayedCardInfo {
   const playedCard = obj as PlayedCardInfo;
-  return playedCard.playedOnTurn !== undefined && playedCard.playedOrderPosition !== undefined;
+  return (
+    playedCard.playedOnTurn !== undefined &&
+    playedCard.playedOrderPosition !== undefined
+  );
 }
 
-export function isOwnedAndKnownCardInfo(obj: CardInfo): obj is OwnedAndKnownCardInfo {
+export function isOwnedAndKnownCardInfo(
+  obj: CardInfo
+): obj is OwnedAndKnownCardInfo {
   return (obj as OwnedAndKnownCardInfo).ownerId !== undefined;
 }

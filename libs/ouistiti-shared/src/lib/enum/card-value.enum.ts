@@ -11,5 +11,5 @@ export enum CardValue {
   JACK = 'JACK',
   QUEEN = 'QUEEN',
   KING = 'KING',
-  ACE = 'ACE'
+  ACE = 'ACE',
 }

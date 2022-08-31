@@ -1,7 +1,7 @@
 :host {
   display: flex;
   flex-direction: row;
-  color: hsl(0,0%,80%);
+  color: hsl(0, 0%, 80%);
 
   &.large {
     gap: 0.5em;
@@ -20,5 +20,5 @@
 
 .number {
   font-weight: bold;
-  color: hsl(0,0%,100%);
+  color: hsl(0, 0%, 100%);
 }

@@ -10,7 +10,9 @@ export class SocketController {
   player: Player = null;
   stop$ = new Subject<void>();
 
-  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stop$); }
+  private get stop(): MonoTypeOperatorFunction<unknown> {
+    return takeUntil(this.stop$);
+  }
 
   get inLobby(): boolean {
     return this.player !== null;
@@ -30,7 +32,9 @@ export class SocketController {
     this.socket.on('disconnect', (reason: string) => {
       this.onDisconnect(reason);
     });
-    Lobby.getLobbyList().forEach((lobby: Lobby) => { new SocketLobbyController(this, lobby, this.stop$); });
+    Lobby.getLobbyList().forEach((lobby: Lobby) => {
+      new SocketLobbyController(this, lobby, this.stop$);
+    });
   }
 
   onDisconnect(reason: string) {
@@ -54,6 +58,9 @@ export class SocketController {
   }
 
   emitLobbyList() {
-    this.emit('lobbyList', Lobby.getLobbyList().map(lobby => lobby.info));
+    this.emit(
+      'lobbyList',
+      Lobby.getLobbyList().map((lobby) => lobby.info)
+    );
   }
 }

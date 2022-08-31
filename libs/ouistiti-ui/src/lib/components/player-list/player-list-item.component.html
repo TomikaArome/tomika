@@ -3,7 +3,8 @@
     [colour]="player.colour"
     [symbol]="player.symbol"
     [square]="true"
-    [diameter]="40">
+    [diameter]="40"
+  >
   </tmk-ouistiti-bid-chip>
 
   <div class="nickname">
@@ -15,13 +16,11 @@
     *ngIf="expandable"
     [icon]="faUserCog"
     [ngClass]="{ active: contentVisible }"
-    (click)="toggleContent()">
+    (click)="toggleContent()"
+  >
   </fa-icon>
 
-  <fa-icon
-    [icon]="faGripVertical"
-    *ngIf="grabbable"
-    tmkSortableListGrip>
+  <fa-icon [icon]="faGripVertical" *ngIf="grabbable" tmkSortableListGrip>
     drag_indicator
   </fa-icon>
 </div>

@@ -1,26 +1,33 @@
 <h2>Join a lobby</h2>
 
-<tmk-ouistiti-lobby-list-item [lobbyInfo]="lobby"></tmk-ouistiti-lobby-list-item>
+<tmk-ouistiti-lobby-list-item
+  [lobbyInfo]="lobby"
+></tmk-ouistiti-lobby-list-item>
 
 <form [formGroup]="form">
   <div class="form-grid" *ngIf="lobby.passwordProtected">
     <div class="info-row">This lobby is password protected</div>
     <label>Password</label>
-    <input type="password" formControlName="password">
+    <input type="password" formControlName="password" />
 
-    <hr>
+    <hr />
   </div>
 
   <tmk-ouistiti-player-settings
     formControlName="playerSettings"
     [takenColours]="takenColours"
-    [takenNicknames]="takenNicknames">
+    [takenNicknames]="takenNicknames"
+  >
   </tmk-ouistiti-player-settings>
 
   <div class="form-grid">
-    <hr>
+    <hr />
     <div class="buttons-row">
-      <button class="button-colour-green" (click)="join()" [disabled]="form.invalid">
+      <button
+        class="button-colour-green"
+        (click)="join()"
+        [disabled]="form.invalid"
+      >
         Join lobby
       </button>
 

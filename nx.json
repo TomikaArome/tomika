@@ -18,31 +18,34 @@
       }
     }
   },
-  "projects": {
-    "frontend": {
-      "tags": []
+  "cli": {
+    "schematicCollections": ["@nrwl/angular"]
+  },
+  "generators": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
     },
-    "frontend-e2e": {
-      "tags": [],
-      "implicitDependencies": ["frontend"]
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
     },
-    "backend": {
-      "tags": []
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
     },
-    "common": {
-      "tags": []
-    },
-    "ouistiti": {
-      "tags": []
-    },
-    "ouistiti-ui": {
-      "tags": []
-    },
-    "ouistiti-shared": {
-      "tags": []
-    },
-    "splatnet": {
-      "tags": []
+    "@nrwl/angular:component": {
+      "style": "scss"
     }
   }
 }

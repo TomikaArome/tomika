@@ -3,7 +3,7 @@
 }
 
 .mat-toolbar {
-  border-bottom: 1px solid hsla(0,0%,0%,0.1);
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
 
   .title {
     flex-grow: 1;
@@ -20,11 +20,11 @@
   font-size: 16px;
 
   &:nth-child(2n) {
-    background-color: hsla(0,0%,0%,0.025);
+    background-color: hsla(0, 0%, 0%, 0.025);
   }
 
   &:hover {
-    background-color: hsla(200,100%,75%,0.1);
+    background-color: hsla(200, 100%, 75%, 0.1);
   }
 
   .expand-button {
@@ -35,7 +35,7 @@
     border-radius: 8px;
 
     &:hover {
-      background-color: hsla(0,0%,0%,0.05);
+      background-color: hsla(0, 0%, 0%, 0.05);
     }
 
     mat-icon {
@@ -49,14 +49,14 @@
   }
 
   .label {
-    font-family: "Ubuntu Mono", "Courier New", monospace;
+    font-family: 'Ubuntu Mono', 'Courier New', monospace;
     font-weight: bold;
   }
 
   .description {
     margin-left: 1em;
     flex-grow: 1;
-    color: hsla(0,0%,0%,0.5);
+    color: hsla(0, 0%, 0%, 0.5);
     font-size: 0.8em;
   }
 }

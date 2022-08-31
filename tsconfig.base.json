@@ -18,8 +18,8 @@
     "paths": {
       "@TomikaArome/common": ["libs/common/src/index.ts"],
       "@TomikaArome/ouistiti": ["libs/ouistiti/src/index.ts"],
-      "@TomikaArome/ouistiti-ui": ["libs/ouistiti-ui/src/index.ts"],
       "@TomikaArome/ouistiti-shared": ["libs/ouistiti-shared/src/index.ts"],
+      "@TomikaArome/ouistiti-ui": ["libs/ouistiti-ui/src/index.ts"],
       "@TomikaArome/splatnet": ["libs/splatnet/src/index.ts"]
     }
   },

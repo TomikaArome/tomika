@@ -1,18 +1,25 @@
-import { Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import {
   NICKNAME_MAX_LENGTH,
   PlayerColour,
-  PlayerUpdateParams
+  PlayerUpdateParams,
 } from '@TomikaArome/ouistiti-shared';
 import {
   AbstractControl,
   ControlValueAccessor,
   FormControl,
-  FormGroup,
+  UntypedFormGroup,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
-  Validators
+  Validators,
 } from '@angular/forms';
 
 @Component({
@@ -28,11 +35,13 @@ import {
     {
       provide: NG_VALIDATORS,
       useExisting: forwardRef(() => PlayerSettingsComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
-export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy {
+export class PlayerSettingsComponent
+  implements ControlValueAccessor, OnDestroy
+{
   @Input()
   takenNicknames: string[] = [];
   @Input()
@@ -47,18 +56,19 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
   @Output()
   nicknameUpdateButtonClicked = new EventEmitter<string>();
 
-  form = new FormGroup({
+  form = new UntypedFormGroup({
     nickname: new FormControl('', [
-      (control: AbstractControl) => this.nicknameUpdateButtonVisible ? null : Validators.required(control),
+      (control: AbstractControl) =>
+        this.nicknameUpdateButtonVisible ? null : Validators.required(control),
       (control: AbstractControl) => {
         if (this.takenNicknames.indexOf(control.value) > -1) {
-          return { 'taken': { takenNicknames: this.takenNicknames } };
+          return { taken: { takenNicknames: this.takenNicknames } };
         }
         return null;
-      }
+      },
     ]),
     colour: new FormControl(null),
-    symbol: new FormControl(null)
+    symbol: new FormControl(null),
   });
   private formSubscription = this.form.valueChanges.subscribe((value) => {
     this.valueChanged.emit(value);
@@ -68,7 +78,9 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
 
   readonly nicknameMaxLength = NICKNAME_MAX_LENGTH;
 
-  get nicknameControl(): AbstractControl { return this.form.get('nickname'); }
+  get nicknameControl(): AbstractControl {
+    return this.form.get('nickname');
+  }
 
   @Input()
   get value(): PlayerUpdateParams {
@@ -81,14 +93,18 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
       value = {
         nickname: '',
         colour: null,
-        symbol: null
+        symbol: null,
       };
     }
     value = {
       ...this.form.value,
-      ...value
+      ...value,
     };
-    if (this.form.value.nickname !== value.nickname || this.form.value.colour !== value.colour || this.form.value.symbol !== value.symbol) {
+    if (
+      this.form.value.nickname !== value.nickname ||
+      this.form.value.colour !== value.colour ||
+      this.form.value.symbol !== value.symbol
+    ) {
       this.form.setValue(value);
       this.onChange(this.form.value);
       if (touch) {
@@ -125,7 +141,9 @@ export class PlayerSettingsComponent implements ControlValueAccessor, OnDestroy 
   }
 
   validate(): ValidationErrors | null {
-    if (this.form.valid) { return null; }
+    if (this.form.valid) {
+      return null;
+    }
     const errors: { [i: string]: unknown } = {};
     if (this.nicknameControl.errors.required) {
       errors.nicknameRequired = { touched: this.nicknameControl.touched };

@@ -7,7 +7,7 @@
     .card-interact-wrapper {
       width: fit-content;
       height: fit-content;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
 
       &.interactable {
         cursor: pointer;
@@ -23,7 +23,9 @@
     }
   }
 
-  .player-round-details-wrapper, .card-wrapper, .trump-card-outside-wrapper {
+  .player-round-details-wrapper,
+  .card-wrapper,
+  .trump-card-outside-wrapper {
     position: absolute;
     width: 0;
     height: 0;
@@ -31,7 +33,7 @@
     left: 50%;
 
     tmk-ouistiti-player-round-details {
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
     }
   }
 
@@ -39,13 +41,13 @@
     z-index: 10000;
 
     tmk-ouistiti-player-round-details {
-      box-shadow: 0 6px 4px hsla(0,0%,0%,0.5);
+      box-shadow: 0 6px 4px hsla(0, 0%, 0%, 0.5);
     }
   }
 
   .trump-card-outside-wrapper {
     tmk-ouistiti-trump-card-wrapper {
-      transform: translate(-50%,calc(-50% - 6px));
+      transform: translate(-50%, calc(-50% - 6px));
     }
   }
 }

@@ -24,11 +24,8 @@ import { MatRippleModule } from '@angular/material/core';
     MatToolbarModule,
     MatListModule,
     MatButtonModule,
-    MatRippleModule
+    MatRippleModule,
   ],
-  declarations: [
-    AdminPanelComponent,
-    PermissionTreeComponent
-  ]
+  declarations: [AdminPanelComponent, PermissionTreeComponent],
 })
 export class AdminPanelModule {}

@@ -12,8 +12,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: forwardRef(() => ColourSelectorComponent),
-    }
-  ]
+    },
+  ],
 })
 export class ColourSelectorComponent implements ControlValueAccessor {
   @Input()
@@ -40,7 +40,7 @@ export class ColourSelectorComponent implements ControlValueAccessor {
   colourClasses(colour: PlayerColour): { [key: string]: boolean } {
     const classes = {
       chosen: this.chosen === colour,
-      taken: this.disabled || this.isTaken(colour)
+      taken: this.disabled || this.isTaken(colour),
     };
     classes[PlayerService.getColourClassName(colour)] = true;
     return classes;

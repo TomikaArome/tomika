@@ -3,26 +3,29 @@
     [colour]="player.colour"
     [symbol]="player.symbol"
     [diameter]="24"
-    [square]="true">
+    [square]="true"
+  >
   </tmk-ouistiti-bid-chip>
   {{ player.nickname }}
 </div>
 
-<div class="bid-still-pending" *ngIf="bidsStillPending; else bidsAndChipsTemplate">
+<div
+  class="bid-still-pending"
+  *ngIf="bidsStillPending; else bidsAndChipsTemplate"
+>
   Waiting for bids...
 </div>
 
 <ng-template #bidsAndChipsTemplate>
   <div class="bids-and-chips">
     <div class="count-row">
-      <div
-        class="bid-chip"
-        *ngFor="let dotted of bidChips">
+      <div class="bid-chip" *ngFor="let dotted of bidChips">
         <tmk-ouistiti-bid-chip
           [colour]="player.colour"
           [symbol]="player.symbol"
           [diameter]="30"
-          [dotted]="dotted">
+          [dotted]="dotted"
+        >
         </tmk-ouistiti-bid-chip>
       </div>
     </div>
@@ -31,11 +34,9 @@
       <div
         class="won-trick"
         *ngFor="let dotted of miniatureCards"
-        [ngClass]="{ dotted: dotted }">
-        <tmk-ouistiti-card
-          [miniature]="true"
-          [height]="40"
-          [dotted]="dotted">
+        [ngClass]="{ dotted: dotted }"
+      >
+        <tmk-ouistiti-card [miniature]="true" [height]="40" [dotted]="dotted">
         </tmk-ouistiti-card>
       </div>
     </div>

@@ -1,6 +1,4 @@
-export enum EventType {
-
-}
+export enum EventType {}
 
 export class Event {
   type: EventType;

@@ -6,8 +6,12 @@
   [class]="getPlayerColourClass(player.colour, player.id)"
   [style]="{ 'grid-row': i + 2 }"
   (mouseenter)="setCellHover(-1, player.id)"
-  (mouseleave)="setCellHover()">
-  <mat-icon class="player-symbol" [svgIcon]="getSymbolIconName(player.symbol)"></mat-icon>
+  (mouseleave)="setCellHover()"
+>
+  <mat-icon
+    class="player-symbol"
+    [svgIcon]="getSymbolIconName(player.symbol)"
+  ></mat-icon>
   <div>{{ player.nickname }}</div>
 </div>
 
@@ -18,14 +22,23 @@
     [class]="getCellHoverClass(roundScores.roundNumber, '')"
     [style]="{ 'grid-column': i + 2 }"
     (mouseenter)="setCellHover(roundScores.roundNumber)"
-    (mouseleave)="setCellHover()">
+    (mouseleave)="setCellHover()"
+  >
     <div class="round-number">round {{ roundScores.roundNumber }}</div>
-    <div class="starting-player">{{ getPlayerFromId(roundScores.startingPlayerId).nickname }}</div>
+    <div class="starting-player">
+      {{ getPlayerFromId(roundScores.startingPlayerId).nickname }}
+    </div>
     <div class="number-of-cards">{{ roundScores.numberOfCards }}</div>
     <div class="trump-suit">
-      <mat-icon *ngIf="roundScores.knownTrump && roundScores.trump; else noTrumpsRound" [svgIcon]="getSymbolIconName(roundScores.trump.toUpperCase())"></mat-icon>
+      <mat-icon
+        *ngIf="roundScores.knownTrump && roundScores.trump; else noTrumpsRound"
+        [svgIcon]="getSymbolIconName(roundScores.trump.toUpperCase())"
+      ></mat-icon>
       <ng-template #noTrumpsRound>
-        <fa-icon *ngIf="roundScores.knownTrump; else unknownTrump" [icon]="faBan"></fa-icon>
+        <fa-icon
+          *ngIf="roundScores.knownTrump; else unknownTrump"
+          [icon]="faBan"
+        ></fa-icon>
       </ng-template>
       <ng-template #unknownTrump>
         <fa-icon [icon]="faQuestion"></fa-icon>
@@ -35,18 +48,27 @@
 
   <div
     class="score-cell"
-    *ngFor="let playerScore of getPlayerScoresInOrder(roundScores.playerScores); index as j"
+    *ngFor="
+      let playerScore of getPlayerScoresInOrder(roundScores.playerScores);
+      index as j
+    "
     [class]="getCellClass(roundScores, playerScore)"
     [style]="{ 'grid-column': i + 2, 'grid-row': j + 2 }"
     (mouseenter)="setCellHover(roundScores.roundNumber, playerScore.playerId)"
-    (mouseleave)="setCellHover()">
+    (mouseleave)="setCellHover()"
+  >
     <ng-container *ngIf="playerScore.pointDifference">
       <div class="cumulative-score">
-        <fa-icon [icon]="isScoreHigherThanLast(playerScore.playerId, roundScores.roundNumber) ? faCaretUp : faCaretDown"></fa-icon>
+        <fa-icon
+          [icon]="
+            isScoreHigherThanLast(playerScore.playerId, roundScores.roundNumber)
+              ? faCaretUp
+              : faCaretDown
+          "
+        ></fa-icon>
         {{ getCumulativeScore(playerScore.playerId, roundScores.roundNumber) }}
       </div>
       <div class="tricks-bid">
-
         <div class="tricks">
           <span>tricks</span>
           <div>{{ playerScore.tricksWon }}</div>
@@ -58,7 +80,6 @@
           <span>bid</span>
           <div>{{ playerScore.bid }}</div>
         </div>
-
       </div>
     </ng-container>
   </div>

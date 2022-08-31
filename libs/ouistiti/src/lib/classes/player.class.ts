@@ -5,7 +5,7 @@ import {
   PlayerColour,
   PlayerCreateParams,
   PlayerInfo,
-  PlayerSymbol
+  PlayerSymbol,
 } from '@TomikaArome/ouistiti-shared';
 import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
@@ -29,8 +29,8 @@ export class Player {
       nickname: this.nickname,
       colour: this.colour,
       symbol: this.symbol,
-      vacant: this.isVacant
-    }
+      vacant: this.isVacant,
+    };
   }
 
   private nicknameChangedSource = new Subject<string>();
@@ -56,14 +56,22 @@ export class Player {
   }
 
   private static getRandomColour(exclude: PlayerColour[] = []): PlayerColour {
-    const colourKeys = Object.keys(PlayerColour).filter(colour => !Object.keys(exclude).includes(colour));
-    if (colourKeys.length === 0) { return null; }
-    return PlayerColour[colourKeys[Math.floor(Math.random() * colourKeys.length)]];
+    const colourKeys = Object.keys(PlayerColour).filter(
+      (colour) => !Object.keys(exclude).includes(colour)
+    );
+    if (colourKeys.length === 0) {
+      return null;
+    }
+    return PlayerColour[
+      colourKeys[Math.floor(Math.random() * colourKeys.length)]
+    ];
   }
 
   private static getRandomSymbol(): PlayerSymbol {
     const symbolKeys = Object.keys(PlayerSymbol);
-    return PlayerSymbol[symbolKeys[Math.floor(Math.random() * symbolKeys.length)]];
+    return PlayerSymbol[
+      symbolKeys[Math.floor(Math.random() * symbolKeys.length)]
+    ];
   }
 
   private static validateNickname(nickname: string) {
@@ -74,8 +82,8 @@ export class Player {
         detail: {
           value: nickname,
           requiredLength: NICKNAME_MAX_LENGTH,
-          actualLength: nickname.length
-        }
+          actualLength: nickname.length,
+        },
       });
     }
   }

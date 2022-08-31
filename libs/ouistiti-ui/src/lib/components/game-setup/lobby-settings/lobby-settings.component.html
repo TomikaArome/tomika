@@ -4,10 +4,13 @@
     type="password"
     autocomplete="off"
     formControlName="password"
-    placeholder="Leave blank for no password">
+    placeholder="Leave blank for no password"
+  />
 
   <label>Max players</label>
   <select formControlName="maxNumberOfPlayers">
-    <option *ngFor="let i of maxNumberOfPlayersValues" [value]="i">{{ i }}</option>
+    <option *ngFor="let i of maxNumberOfPlayersValues" [value]="i">
+      {{ i }}
+    </option>
   </select>
 </div>

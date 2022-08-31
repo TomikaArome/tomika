@@ -12,14 +12,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: forwardRef(() => SymbolSelectorComponent),
-    }
-  ]
+    },
+  ],
 })
 export class SymbolSelectorComponent implements ControlValueAccessor {
   @Input()
   disabled = false;
 
-  private _chosen: PlayerSymbol = null
+  private _chosen: PlayerSymbol = null;
   get chosen(): PlayerSymbol {
     return this._chosen;
   }
@@ -42,7 +42,7 @@ export class SymbolSelectorComponent implements ControlValueAccessor {
   symbolClasses(symbol: PlayerSymbol): { [key: string]: boolean } {
     return {
       chosen: this.chosen === symbol,
-      disabled: this.disabled
+      disabled: this.disabled,
     };
   }
 

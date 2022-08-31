@@ -1,6 +1,10 @@
 import { PermissionHelper } from './permission.model';
 import { Group } from './group.model';
-import { ConnectedAccountModel, ConnectedAccount, createConnectedAccountInstance } from './connected-account/module';
+import {
+  ConnectedAccountModel,
+  ConnectedAccount,
+  createConnectedAccountInstance,
+} from './connected-account/module';
 
 export interface UserModel {
   id: number;
@@ -22,7 +26,9 @@ export class User implements UserModel {
     this.permissions = model.permissions ?? [];
     this.groupIds = model.groupIds ?? [];
     this.primaryAccountIndex = model.primaryAccountIndex ?? 0;
-    this.connectedAccountInformation = model.connectedAccountInformation.map(createConnectedAccountInstance);
+    this.connectedAccountInformation = model.connectedAccountInformation.map(
+      createConnectedAccountInstance
+    );
   }
 
   get primaryAccount(): ConnectedAccountModel {
@@ -42,7 +48,10 @@ export class User implements UserModel {
   }
 
   hasPermission(permission: string): boolean {
-    let hasPermission = PermissionHelper.hasPermission(this.permissions, permission);
+    let hasPermission = PermissionHelper.hasPermission(
+      this.permissions,
+      permission
+    );
     for (let i = 0; !hasPermission && i < this.groupIds.length; i++) {
       hasPermission = Group.getById(this.groupIds[i]).hasPermission(permission);
     }

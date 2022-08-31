@@ -2,7 +2,8 @@
   [roundInfo]="roundInfo$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
-  (cardPlayed)="playCard($event)">
+  (cardPlayed)="playCard($event)"
+>
 </tmk-ouistiti-card-container>
 
 <tmk-ouistiti-bidding-popup
@@ -11,7 +12,8 @@
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
   (bidPlaced)="placeBid($event)"
-  (bidCancelled)="cancelBid()">
+  (bidCancelled)="cancelBid()"
+>
 </tmk-ouistiti-bidding-popup>
 
 <tmk-ouistiti-end-of-turn-popup
@@ -19,7 +21,8 @@
   [roundInfo]="roundInfo$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
-  (nextButtonClicked)="acknowledgeBreakPoint()">
+  (nextButtonClicked)="acknowledgeBreakPoint()"
+>
 </tmk-ouistiti-end-of-turn-popup>
 
 <tmk-ouistiti-end-of-round-container
@@ -28,5 +31,6 @@
   [roundInfo]="roundInfo$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
-  (nextButtonClicked)="acknowledgeBreakPoint()">
+  (nextButtonClicked)="acknowledgeBreakPoint()"
+>
 </tmk-ouistiti-end-of-round-container>

@@ -6,7 +6,7 @@ import { getGameScoresMock } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
-  private currentGameScoresSource = new BehaviorSubject<RoundScores[]>(getGameScoresMock(roundStatusMock.playerOrder));
+  private currentGameScoresSource = new BehaviorSubject<RoundScores[]>([]/*getGameScoresMock(roundStatusMock.playerOrder)*/);
   currentGameScores$ = this.currentGameScoresSource.asObservable();
 
   constructor(private socketService: SocketService) {

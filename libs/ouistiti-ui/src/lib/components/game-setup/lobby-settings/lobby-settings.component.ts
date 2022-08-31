@@ -1,9 +1,14 @@
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  UntypedFormGroup,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 import {
   LobbyCreateParams,
   MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
-  MIN_NUMBER_OF_PLAYERS_PER_LOBBY
+  MIN_NUMBER_OF_PLAYERS_PER_LOBBY,
 } from '@TomikaArome/ouistiti-shared';
 
 @Component({
@@ -15,18 +20,21 @@ import {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: forwardRef(() => LobbySettingsComponent),
-    }
-  ]
+    },
+  ],
 })
 export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
   @Input()
   disabled = false;
 
-  maxNumberOfPlayersValues = [...Array(MAX_NUMBER_OF_PLAYERS_PER_LOBBY - MIN_NUMBER_OF_PLAYERS_PER_LOBBY + 1).keys()]
-    .map(x => x + MIN_NUMBER_OF_PLAYERS_PER_LOBBY);
-  form = new FormGroup({
+  maxNumberOfPlayersValues = [
+    ...Array(
+      MAX_NUMBER_OF_PLAYERS_PER_LOBBY - MIN_NUMBER_OF_PLAYERS_PER_LOBBY + 1
+    ).keys(),
+  ].map((x) => x + MIN_NUMBER_OF_PLAYERS_PER_LOBBY);
+  form = new UntypedFormGroup({
     password: new FormControl(''),
-    maxNumberOfPlayers: new FormControl(8)
+    maxNumberOfPlayers: new FormControl(8),
   });
   private formSubscription = this.form.valueChanges.subscribe((value) => {
     this.onChange(value);
@@ -41,13 +49,13 @@ export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
     if (value === null) {
       touch = false;
       value = {
-        password: ''
+        password: '',
       };
     }
     if (this.form.value !== value) {
       this.form.setValue({
         ...this.form.value,
-        ...value
+        ...value,
       });
       this.onChange(this.form.value);
       if (touch) {
@@ -58,7 +66,8 @@ export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
     }
   }
 
-  onChange: (lobbySettings: Partial<LobbyCreateParams>) => void = () => undefined;
+  onChange: (lobbySettings: Partial<LobbyCreateParams>) => void = () =>
+    undefined;
   onTouch: () => void = () => undefined;
 
   registerOnChange(fn: (lobbySettings: Partial<LobbyCreateParams>) => void) {

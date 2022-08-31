@@ -4,8 +4,8 @@
 
   .symbol-option {
     flex: 1;
-    background-color: hsla(0,0%,100%,0.05);
-    border: 1px solid hsla(0,0%,100%,0.1);
+    background-color: hsla(0, 0%, 100%, 0.05);
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
     border-radius: 0.5em;
     cursor: pointer;
     height: 28px;
@@ -19,7 +19,7 @@
     }
 
     &.chosen {
-      outline: 2px solid hsl(0,0%,100%);
+      outline: 2px solid hsl(0, 0%, 100%);
     }
 
     &.disabled {

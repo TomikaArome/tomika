@@ -1,8 +1,5 @@
 {
   "version": 1,
-  "cli": {
-    "defaultCollection": "@nrwl/angular"
-  },
   "schematics": {
     "@nrwl/angular": {
       "application": {
@@ -31,6 +28,79 @@
     }
   },
   "projects": {
+    "backend": {
+      "root": "apps/backend",
+      "sourceRoot": "apps/backend/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/backend",
+            "main": "apps/backend/src/main.ts",
+            "tsConfig": "apps/backend/tsconfig.app.json",
+            "assets": ["apps/backend/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/backend/src/environments/environment.ts",
+                  "with": "apps/backend/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:node",
+          "options": {
+            "buildTarget": "backend:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/backend/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/backend"],
+          "options": {
+            "jestConfig": "apps/backend/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "common": {
+      "root": "libs/common",
+      "sourceRoot": "libs/common/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/common/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/common"],
+          "options": {
+            "jestConfig": "libs/common/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "frontend": {
       "projectType": "application",
       "root": "apps/frontend",
@@ -54,7 +124,10 @@
                 "output": "./assets/ouistiti/"
               }
             ],
-            "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "apps/frontend/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "apps/frontend/src/styles.scss"
+            ],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -129,7 +202,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "frontend-e2e": {
       "root": "apps/frontend-e2e",
@@ -155,101 +229,9 @@
             "lintFilePatterns": ["apps/frontend-e2e/**/*.{js,ts}"]
           }
         }
-      }
-    },
-    "backend": {
-      "root": "apps/backend",
-      "sourceRoot": "apps/backend/src",
-      "projectType": "application",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/backend",
-            "main": "apps/backend/src/main.ts",
-            "tsConfig": "apps/backend/tsconfig.app.json",
-            "assets": ["apps/backend/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/backend/src/environments/environment.ts",
-                  "with": "apps/backend/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "backend:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/backend/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/backend"],
-          "options": {
-            "jestConfig": "apps/backend/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "common": {
-      "root": "libs/common",
-      "sourceRoot": "libs/common/src",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/common/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/common"],
-          "options": {
-            "jestConfig": "libs/common/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "splatnet": {
-      "root": "libs/splatnet",
-      "sourceRoot": "libs/splatnet/src",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/splatnet/**/*.ts"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/splatnet"],
-          "options": {
-            "jestConfig": "libs/splatnet/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["frontend"]
     },
     "ouistiti": {
       "root": "libs/ouistiti",
@@ -270,7 +252,26 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
+    },
+    "ouistiti-shared": {
+      "projectType": "library",
+      "root": "libs/ouistiti-shared",
+      "sourceRoot": "libs/ouistiti-shared/src",
+      "prefix": "TomikaArome",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/ouistiti-shared/src/**/*.ts",
+              "libs/ouistiti-shared/src/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": []
     },
     "ouistiti-ui": {
       "projectType": "library",
@@ -295,24 +296,30 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
-    "ouistiti-shared": {
+    "splatnet": {
+      "root": "libs/splatnet",
+      "sourceRoot": "libs/splatnet/src",
       "projectType": "library",
-      "root": "libs/ouistiti-shared",
-      "sourceRoot": "libs/ouistiti-shared/src",
-      "prefix": "TomikaArome",
       "architect": {
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/ouistiti-shared/src/**/*.ts",
-              "libs/ouistiti-shared/src/**/*.html"
-            ]
+            "lintFilePatterns": ["libs/splatnet/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/splatnet"],
+          "options": {
+            "jestConfig": "libs/splatnet/jest.config.js",
+            "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     }
   }
 }

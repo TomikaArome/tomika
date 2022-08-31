@@ -35,7 +35,7 @@ export class Splatnet2statinkApi {
     const result = await fetch(Splatnet2statinkApi.API_URL, {
       method: 'POST',
       headers: this.buildHeaders(),
-      body: this.buildBodyQuery()
+      body: this.buildBodyQuery(),
     });
     return Splatnet2statinkApi.getHashFromApiReponse(await result.json());
   }
@@ -46,8 +46,8 @@ export class Splatnet2statinkApi {
     }
     return {
       'User-Agent': this.userAgent,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
   }
 
   private buildBodyQuery(): string {

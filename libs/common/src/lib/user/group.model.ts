@@ -40,6 +40,8 @@ export class Group implements GroupModel {
   }
 
   static getGroupArrayFromIdArray(groupIds: number[]): Group[] {
-    return groupIds.map(Group.getById).filter(groupObject => groupObject !== null);
+    return groupIds
+      .map(Group.getById)
+      .filter((groupObject) => groupObject !== null);
   }
 }

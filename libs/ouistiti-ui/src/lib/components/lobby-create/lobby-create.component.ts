@@ -1,21 +1,22 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { FormControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { LobbyService } from '../../services/lobby.service';
 import { LobbyCreateParams } from '@TomikaArome/ouistiti-shared';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-create',
   templateUrl: './lobby-create.component.html',
-  styleUrls: ['./lobby-create.component.scss']
+  styleUrls: ['./lobby-create.component.scss'],
 })
 export class LobbyCreateComponent {
-  form = new FormGroup({
+  form = new UntypedFormGroup({
     playerSettings: new FormControl(null),
-    lobbySettings: new FormControl(null)
+    lobbySettings: new FormControl(null),
   });
 
   get errorMessage(): string {
-    const errors: ValidationErrors = this.form.get('playerSettings').errors ?? {};
+    const errors: ValidationErrors =
+      this.form.get('playerSettings').errors ?? {};
     if (errors.nicknameRequired?.touched) {
       return 'The nickname is required';
     }
@@ -28,7 +29,7 @@ export class LobbyCreateComponent {
     if (this.form.valid) {
       const params: LobbyCreateParams = {
         host: this.form.value.playerSettings,
-        ...this.form.value.lobbySettings
+        ...this.form.value.lobbySettings,
       };
       this.lobbyService.createLobby(params);
     }

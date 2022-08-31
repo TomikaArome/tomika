@@ -1,7 +1,25 @@
-import { ConnectedAccountModel, ConnectedAccount, ConnectedAccountAvatarOptions } from './connected-account.model';
+import {
+  ConnectedAccountModel,
+  ConnectedAccount,
+  ConnectedAccountAvatarOptions,
+} from './connected-account.model';
 
-type DiscordAccountAvatarValidExtensions = 'png' | 'jpg' | 'jpeg' | 'webp' | 'gif';
-type DiscordAccountAvatarValidSizes = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096;
+type DiscordAccountAvatarValidExtensions =
+  | 'png'
+  | 'jpg'
+  | 'jpeg'
+  | 'webp'
+  | 'gif';
+type DiscordAccountAvatarValidSizes =
+  | 16
+  | 32
+  | 64
+  | 128
+  | 256
+  | 512
+  | 1024
+  | 2048
+  | 4096;
 interface DiscordAccountAvatarOptions extends ConnectedAccountAvatarOptions {
   size?: DiscordAccountAvatarValidSizes;
   extension?: DiscordAccountAvatarValidExtensions;
@@ -35,14 +53,20 @@ export class DiscordAccount implements DiscordAccountModel, ConnectedAccount {
   getAvatarUrl(options: DiscordAccountAvatarOptions = {}): string {
     let url = 'https://cdn.discordapp.com/';
     if (this.avatarHash) {
-      url += `avatars/${this.id}/${this.avatarHash}.${this.getAvatarExtension(options.extension, options.animated)}?size=${options.size ?? 4096}`;
+      url += `avatars/${this.id}/${this.avatarHash}.${this.getAvatarExtension(
+        options.extension,
+        options.animated
+      )}?size=${options.size ?? 4096}`;
     } else {
       url += `embed/avatars/${parseInt(this.discriminator) % 5}.png`;
     }
     return url;
   }
 
-  private getAvatarExtension(extension: DiscordAccountAvatarValidExtensions = 'png', animated = true): string {
+  private getAvatarExtension(
+    extension: DiscordAccountAvatarValidExtensions = 'png',
+    animated = true
+  ): string {
     if (animated && this.isAvatarAnimated()) {
       extension = 'gif';
     } else if (extension === 'gif') {

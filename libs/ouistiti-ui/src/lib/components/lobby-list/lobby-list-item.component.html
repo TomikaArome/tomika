@@ -4,17 +4,27 @@
 
 <div class="nicknames">
   <h2>
-    <mat-icon [inline]="true" class="password-protected" *ngIf="lobbyInfo.passwordProtected">lock</mat-icon>
+    <mat-icon
+      [inline]="true"
+      class="password-protected"
+      *ngIf="lobbyInfo.passwordProtected"
+      >lock</mat-icon
+    >
     {{ host()?.nickname }}
     <div *ngIf="isLobbyJoinable()" class="joinable-tag">JOINABLE</div>
   </h2>
 
   <div class="player-nicknames-row">
-    <span class="no-other-players" *ngIf="noOtherPlayers(); else hasOtherPlayers">
+    <span
+      class="no-other-players"
+      *ngIf="noOtherPlayers(); else hasOtherPlayers"
+    >
       No other players yet
     </span>
     <ng-template #hasOtherPlayers>
-      <ng-container *ngFor="let nickname of otherPlayerNicknames(); let last = last">
+      <ng-container
+        *ngFor="let nickname of otherPlayerNicknames(); let last = last"
+      >
         {{ nickname + (last ? '' : ',') }}
       </ng-container>
     </ng-template>
@@ -23,8 +33,21 @@
 
 <div class="players-and-rounds-count">
   <div>
-    <span class="current-count">{{ showNumberOfRounds() ? lobbyInfo.currentRoundNumber : lobbyInfo.players.length }}</span>
-    <span class="maximum-count"> / {{ showNumberOfRounds() ? lobbyInfo.totalRoundCount : lobbyInfo.maxNumberOfPlayers }}</span>
+    <span class="current-count">{{
+      showNumberOfRounds()
+        ? lobbyInfo.currentRoundNumber
+        : lobbyInfo.players.length
+    }}</span>
+    <span class="maximum-count">
+      /
+      {{
+        showNumberOfRounds()
+          ? lobbyInfo.totalRoundCount
+          : lobbyInfo.maxNumberOfPlayers
+      }}</span
+    >
   </div>
-  <div class="count-type-label">{{ showNumberOfRounds() ? 'ROUND' : 'PLAYERS' }}</div>
+  <div class="count-type-label">
+    {{ showNumberOfRounds() ? 'ROUND' : 'PLAYERS' }}
+  </div>
 </div>

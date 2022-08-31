@@ -1,25 +1,31 @@
 import { Component, Input } from '@angular/core';
-import { GameStatus, LobbyInfo, PlayerInfo } from '@TomikaArome/ouistiti-shared';
+import {
+  GameStatus,
+  LobbyInfo,
+  PlayerInfo,
+} from '@TomikaArome/ouistiti-shared';
 import { PlayerService } from '../../services/player.service';
 import { LobbyService } from '../../services/lobby.service';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-list-item',
   templateUrl: './lobby-list-item.component.html',
-  styleUrls: ['./lobby-list-item.component.scss']
+  styleUrls: ['./lobby-list-item.component.scss'],
 })
 export class LobbyListItemComponent {
   @Input()
   lobbyInfo: LobbyInfo;
 
   host(): PlayerInfo {
-    return this.lobbyInfo.players.find((player: PlayerInfo) => player.id === this.lobbyInfo.hostId);
+    return this.lobbyInfo.players.find(
+      (player: PlayerInfo) => player.id === this.lobbyInfo.hostId
+    );
   }
 
   otherPlayerNicknames(): string[] {
     return this.lobbyInfo.players
-      .filter(player => player.id !== this.lobbyInfo.hostId)
-      .map(player => player.nickname)
+      .filter((player) => player.id !== this.lobbyInfo.hostId)
+      .map((player) => player.nickname)
       .sort();
   }
 

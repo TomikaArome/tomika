@@ -1,4 +1,4 @@
-@import "../../../ouistiti-theme";
+@import '../../../ouistiti-theme';
 
 :host {
   display: block;
@@ -18,31 +18,31 @@
     }
 
     .circle {
-      fill: hsl(var(--player-colour-hue),50%,40%);
-      stroke: hsl(var(--player-colour-hue),50%,30%);
+      fill: hsl(var(--player-colour-hue), 50%, 40%);
+      stroke: hsl(var(--player-colour-hue), 50%, 30%);
       stroke-width: 1;
     }
 
     .notches {
-      fill: hsl(var(--player-colour-hue),50%,30%);
+      fill: hsl(var(--player-colour-hue), 50%, 30%);
     }
 
     .notches-inner-outline {
-      fill: hsl(var(--player-colour-hue),50%,50%);
-      stroke: hsl(var(--player-colour-hue),50%,30%);
+      fill: hsl(var(--player-colour-hue), 50%, 50%);
+      stroke: hsl(var(--player-colour-hue), 50%, 30%);
       stroke-width: 1;
     }
 
     .symbol {
-      fill: hsl(var(--player-colour-hue),50%,80%);
-      stroke: hsl(var(--player-colour-hue),50%,30%);
+      fill: hsl(var(--player-colour-hue), 50%, 80%);
+      stroke: hsl(var(--player-colour-hue), 50%, 30%);
       stroke-width: 48;
       x: 50%;
       y: 50%;
 
       &.dotted {
         fill: none;
-        stroke: hsla(0,0%,100%,0.5);
+        stroke: hsla(0, 0%, 100%, 0.5);
         stroke-dasharray: 96;
       }
     }
@@ -50,14 +50,14 @@
     .square {
       width: 50px;
       height: 50px;
-      fill: hsl(var(--player-colour-hue),50%,50%);
+      fill: hsl(var(--player-colour-hue), 50%, 50%);
       rx: 8px;
     }
 
     &.dotted {
       .circle {
-        fill: hsla(0,0%,0%,0.5);
-        stroke: hsla(0,0%,100%,0.5);
+        fill: hsla(0, 0%, 0%, 0.5);
+        stroke: hsla(0, 0%, 100%, 0.5);
         stroke-width: 2;
         stroke-dasharray: 4;
       }

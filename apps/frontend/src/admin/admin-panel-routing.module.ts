@@ -11,14 +11,14 @@ const routes: Routes = [
     children: [
       {
         path: 'permissions',
-        component: PermissionTreeComponent
-      }
-    ]
-  }
+        component: PermissionTreeComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AdminPanelRoutingModule {}

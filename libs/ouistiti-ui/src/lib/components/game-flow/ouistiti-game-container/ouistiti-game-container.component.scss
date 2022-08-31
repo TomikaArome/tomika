@@ -3,7 +3,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: hsl(220,30%,30%);
+  background-color: hsl(220, 30%, 30%);
 }
 
 tmk-ouistiti-card-container {
@@ -17,10 +17,10 @@ tmk-ouistiti-card-container {
 tmk-ouistiti-bidding-popup {
   position: absolute;
   z-index: 1;
-  bottom: max(50%,500px);
+  bottom: max(50%, 500px);
   left: 50%;
-  transform: translate(-50%,50%);
-  box-shadow: 0 6px 4px hsla(0,0%,0%,0.5);
+  transform: translate(-50%, 50%);
+  box-shadow: 0 6px 4px hsla(0, 0%, 0%, 0.5);
   border-radius: 8px;
 }
 
@@ -30,6 +30,6 @@ tmk-ouistiti-end-of-turn-popup {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 6px 4px hsla(0,0%,0%,0.5);
+  box-shadow: 0 6px 4px hsla(0, 0%, 0%, 0.5);
   border-radius: 8px 8px 0 0;
 }

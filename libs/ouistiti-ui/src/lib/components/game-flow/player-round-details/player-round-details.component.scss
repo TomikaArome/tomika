@@ -1,4 +1,4 @@
-@import "../../../ouistiti-theme";
+@import '../../../ouistiti-theme';
 
 :host {
   --tmk-ouistiti-player-round-details-border-radius: 20px;
@@ -7,7 +7,7 @@
   flex-direction: column;
   gap: 8px;
   align-items: center;
-  background-color: hsl(0,0%,10%);
+  background-color: hsl(0, 0%, 10%);
   border-radius: var(--tmk-ouistiti-player-round-details-border-radius);
   padding: 20px;
   width: 200px;
@@ -23,10 +23,10 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    color: hsla(0,0%,100%,0.5);
+    color: hsla(0, 0%, 100%, 0.5);
     border-radius: 6px;
     padding: 11px;
-    background-color: hsl(var(--player-colour-hue),50%,50%);
+    background-color: hsl(var(--player-colour-hue), 50%, 50%);
   }
 
   .nickname {
@@ -49,24 +49,28 @@
       display: flex;
       justify-content: center;
 
-      > tmk-ouistiti-bid-chip, tmk-ouistiti-card {
+      > tmk-ouistiti-bid-chip,
+      tmk-ouistiti-card {
         position: absolute;
         z-index: 2;
       }
 
       &.dotted {
-        > tmk-ouistiti-bid-chip, tmk-ouistiti-card {
+        > tmk-ouistiti-bid-chip,
+        tmk-ouistiti-card {
           z-index: 0;
         }
       }
 
       &:nth-of-type(2n) {
-        tmk-ouistiti-bid-chip, tmk-ouistiti-card {
+        tmk-ouistiti-bid-chip,
+        tmk-ouistiti-card {
           transform: translateY(15px);
           z-index: 3;
         }
         &.dotted {
-          tmk-ouistiti-bid-chip, tmk-ouistiti-card {
+          tmk-ouistiti-bid-chip,
+          tmk-ouistiti-card {
             z-index: 1;
           }
         }
@@ -86,6 +90,6 @@
   .bid-still-pending {
     display: flex;
     align-items: center;
-    color: hsl(0,0%,75%);
+    color: hsl(0, 0%, 75%);
   }
 }

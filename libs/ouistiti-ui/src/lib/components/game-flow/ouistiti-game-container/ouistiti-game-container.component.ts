@@ -8,7 +8,7 @@ import { GameService } from '../../../services/game.service';
 @Component({
   selector: 'tmk-ouistiti-game-container',
   templateUrl: './ouistiti-game-container.component.html',
-  styleUrls: ['./ouistiti-game-container.component.scss']
+  styleUrls: ['./ouistiti-game-container.component.scss'],
 })
 export class OuistitiGameContainerComponent {
   roundInfo$ = this.roundService.currentRoundInfo$;
@@ -17,10 +17,11 @@ export class OuistitiGameContainerComponent {
   roundStatus$ = this.roundInfo$.pipe(pluck('status'));
   currentGameScores$ = this.gameService.currentGameScores$;
 
-  constructor(private roundService: RoundService,
-              private playerService: PlayerService,
-              private gameService: GameService) {
-  }
+  constructor(
+    private roundService: RoundService,
+    private playerService: PlayerService,
+    private gameService: GameService
+  ) {}
 
   showBiddingPopup(status: RoundStatus): boolean {
     return status === RoundStatus.BIDDING;

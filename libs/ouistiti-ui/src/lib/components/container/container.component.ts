@@ -9,7 +9,7 @@ import { RoundService } from '../../services/round.service';
 @Component({
   selector: 'tmk-ouistiti-container',
   templateUrl: './container.component.html',
-  styleUrls: ['./container.component.scss']
+  styleUrls: ['./container.component.scss'],
 })
 export class ContainerComponent {
   showLobbySelector$ = this.playerService.selfInLobby$.pipe(
@@ -20,10 +20,12 @@ export class ContainerComponent {
     map((lobby: LobbyInfo) => lobby.gameStatus === GameStatus.INIT)
   );
 
-  constructor(private socketService: SocketService,
-              private playerService: PlayerService,
-              private lobbyService: LobbyService,
-              private roundService: RoundService) {
+  constructor(
+    private socketService: SocketService,
+    private playerService: PlayerService,
+    private lobbyService: LobbyService,
+    private roundService: RoundService
+  ) {
     this.socketService.connect();
   }
 }

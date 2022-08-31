@@ -1,4 +1,9 @@
-import { GameStatus, OuistitiError, OuistitiErrorType, OuistitiInvalidActionReason } from '@TomikaArome/ouistiti-shared';
+import {
+  GameStatus,
+  OuistitiError,
+  OuistitiErrorType,
+  OuistitiInvalidActionReason,
+} from '@TomikaArome/ouistiti-shared';
 import { WsException } from '@nestjs/websockets';
 import { SocketController } from '../controllers/socket.controller';
 import { Lobby } from './lobby.class';
@@ -7,16 +12,20 @@ export class OuistitiException extends WsException {
   static requiredParam(requiredParamKey: string): OuistitiException {
     return new OuistitiException({
       type: OuistitiErrorType.REQUIRED_PARAM,
-      param: requiredParamKey
+      param: requiredParamKey,
     });
   }
 
   static checkRequiredParams(obj: unknown, keys: string[]) {
-    if (typeof obj !== 'object' || obj === null) { throw OuistitiException.requiredParam(keys[0]); }
+    if (typeof obj !== 'object' || obj === null) {
+      throw OuistitiException.requiredParam(keys[0]);
+    }
     keys.forEach((fullKey: string) => {
       const splitKey: string[] = fullKey.split('.');
       splitKey.reduce((acc: unknown, currentKey: string) => {
-        if (acc[currentKey] === undefined) { throw OuistitiException.requiredParam(fullKey); }
+        if (acc[currentKey] === undefined) {
+          throw OuistitiException.requiredParam(fullKey);
+        }
         return acc[currentKey];
       }, obj);
     });
@@ -27,8 +36,8 @@ export class OuistitiException extends WsException {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
         detail: {
-          reason: OuistitiInvalidActionReason.NOT_IN_LOBBY
-        }
+          reason: OuistitiInvalidActionReason.NOT_IN_LOBBY,
+        },
       });
     }
   }
@@ -38,8 +47,8 @@ export class OuistitiException extends WsException {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
         detail: {
-          reason: OuistitiInvalidActionReason.NOT_HOST
-        }
+          reason: OuistitiInvalidActionReason.NOT_HOST,
+        },
       });
     }
   }
@@ -49,8 +58,8 @@ export class OuistitiException extends WsException {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
         detail: {
-          reason: OuistitiInvalidActionReason.GAME_NOT_STARTED
-        }
+          reason: OuistitiInvalidActionReason.GAME_NOT_STARTED,
+        },
       });
     }
   }

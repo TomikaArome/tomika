@@ -1,36 +1,39 @@
-<div class="trump-card-outside-wrapper" [ngStyle]="trumpCardOutsideWrapperStyle">
+<div
+  class="trump-card-outside-wrapper"
+  [ngStyle]="trumpCardOutsideWrapperStyle"
+>
   <tmk-ouistiti-trump-card-wrapper
     [cardHeight]="getUnownedCardPosition().height"
-    [hideNoTrumps]="hasTrumps">
+    [hideNoTrumps]="hasTrumps"
+  >
   </tmk-ouistiti-trump-card-wrapper>
 </div>
 
 <div
   class="card-wrapper"
   *ngFor="let card of cards"
-  [ngStyle]="cardStyle(getCardPosition(card))">
-
+  [ngStyle]="cardStyle(getCardPosition(card))"
+>
   <div
     class="card-interact-wrapper"
     [ngClass]="{ interactable: getCardPosition(card).playable }"
-    (click)="playCard(card)">
-
+    (click)="playCard(card)"
+  >
     <tmk-ouistiti-card
       [id]="card.id"
       [value]="card.value"
       [suit]="card.suit"
-      [height]="getCardPosition(card).height">
+      [height]="getCardPosition(card).height"
+    >
     </tmk-ouistiti-card>
-
   </div>
-
 </div>
 
 <div
   class="player-round-details-wrapper"
   *ngFor="let player of players"
-  [ngStyle]="playerRoundDetailsStyle(getPlayerRoundDetailsPosition(player.id))">
-
+  [ngStyle]="playerRoundDetailsStyle(getPlayerRoundDetailsPosition(player.id))"
+>
   <tmk-ouistiti-player-round-details
     [attr.id]="'player-round-details-' + player.id"
     [player]="player"
@@ -38,7 +41,7 @@
     [wonCards]="cardsWonByPlayer(player.id)"
     [angle]="getPlayerRoundDetailsPosition(player.id).angle"
     [bidsStillPending]="areBidsStillPending"
-    [currentTurnNumber]="roundInfo?.currentTurnNumber">
+    [currentTurnNumber]="roundInfo?.currentTurnNumber"
+  >
   </tmk-ouistiti-player-round-details>
-
 </div>

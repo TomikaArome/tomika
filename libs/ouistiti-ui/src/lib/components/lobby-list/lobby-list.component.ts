@@ -5,7 +5,7 @@ import { LobbyService } from '../../services/lobby.service';
 @Component({
   selector: 'tmk-ouistiti-lobby-list',
   templateUrl: './lobby-list.component.html',
-  styleUrls: ['lobby-list.component.scss']
+  styleUrls: ['lobby-list.component.scss'],
 })
 export class LobbyListComponent {
   @Input()

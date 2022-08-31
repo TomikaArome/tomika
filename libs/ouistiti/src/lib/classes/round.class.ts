@@ -1,6 +1,13 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
-import { BidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
+import {
+  BidInfo,
+  OuistitiErrorType,
+  OuistitiInvalidActionReason,
+  RoundInfo,
+  RoundScores,
+  RoundStatus,
+} from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { BidPlacedObserved } from '../interfaces/round-observed.interface';
@@ -35,11 +42,21 @@ export class Round {
   private breakPointAcknowledgedSource = new Subject<string>();
 
   statusChanged$ = this.statusChangedSource.asObservable();
-  bidsFinalised$ = this.statusChanged$.pipe(filter((status: RoundStatus) => status === RoundStatus.PLAY));
-  completed$ = this.statusChanged$.pipe(filter((status: RoundStatus) => status === RoundStatus.COMPLETED));
-  bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
-  bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
-  cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.completed$));
+  bidsFinalised$ = this.statusChanged$.pipe(
+    filter((status: RoundStatus) => status === RoundStatus.PLAY)
+  );
+  completed$ = this.statusChanged$.pipe(
+    filter((status: RoundStatus) => status === RoundStatus.COMPLETED)
+  );
+  bidPlaced$ = this.bidPlacedSource
+    .asObservable()
+    .pipe(takeUntil(this.bidsFinalised$));
+  bidCancelled$ = this.bidCancelledSource
+    .asObservable()
+    .pipe(takeUntil(this.bidsFinalised$));
+  cardPlayed$ = this.cardPlayedSource
+    .asObservable()
+    .pipe(takeUntil(this.completed$));
   breakPointAcknowledged$ = this.breakPointAcknowledgedSource.asObservable();
 
   get isLastTurn(): boolean {
@@ -54,16 +71,19 @@ export class Round {
     const info: RoundInfo = {
       number: this.roundNumber,
       status: this.status,
-      breakPoint: (this.breakPoint && !this.breakPoint.ended) ? this.breakPoint.info : null,
+      breakPoint:
+        this.breakPoint && !this.breakPoint.ended ? this.breakPoint.info : null,
       currentPlayerId: this.currentPlayerId,
       currentTurnNumber: this.currentTurnNumber,
       playerOrder: this.playerIds,
       cards: this.cards.map((card: Card) => {
-        if (card === this.trumpCard) { return { ...card.info, isTrumpCard: true }; }
+        if (card === this.trumpCard) {
+          return { ...card.info, isTrumpCard: true };
+        }
         return card.info;
       }),
-      bids: this.bids
-    }
+      bids: this.bids,
+    };
     return info;
   }
 
@@ -75,25 +95,36 @@ export class Round {
       numberOfCards: this.numberOfCardsPerPlayer,
       playerScores: this.playerIds.map((playerId: string) => {
         return { playerId };
-      })
+      }),
     };
     if (this.trumpCard) {
       scores.trump = this.trumpCard.suit;
     }
     if (this.status === RoundStatus.COMPLETED) {
       scores.playerScores = this.playerIds.map((playerId: string) => {
-        const tricksWon = this.cards.reduce((tricksWon: number[], card: Card) => {
-          if (card.winnerId === playerId && tricksWon.indexOf(card.playedOnTurn) === -1) { tricksWon.push(card.playedOnTurn); }
-          return tricksWon;
-        }, []);
-        const pointDifference = (this.bids[playerId] === tricksWon.length ? this.bids[playerId] + 10 : -Math.abs(tricksWon.length - this.bids[playerId]));
+        const tricksWon = this.cards.reduce(
+          (tricksWon: number[], card: Card) => {
+            if (
+              card.winnerId === playerId &&
+              tricksWon.indexOf(card.playedOnTurn) === -1
+            ) {
+              tricksWon.push(card.playedOnTurn);
+            }
+            return tricksWon;
+          },
+          []
+        );
+        const pointDifference =
+          this.bids[playerId] === tricksWon.length
+            ? this.bids[playerId] + 10
+            : -Math.abs(tricksWon.length - this.bids[playerId]);
         return {
           playerId,
           bid: this.bids[playerId],
           tricksWon: tricksWon.length,
-          pointDifference
+          pointDifference,
         };
-      })
+      });
     }
     return scores;
   }
@@ -117,29 +148,38 @@ export class Round {
     return {
       ...this.info,
       cards: this.cards.map((card: Card) => {
-        if (card === this.trumpCard) { return { ...card.info, isTrumpCard: true }; }
-        if (card.ownerId !== playerId && !card.played) { return card.incompleteInfo; }
+        if (card === this.trumpCard) {
+          return { ...card.info, isTrumpCard: true };
+        }
+        if (card.ownerId !== playerId && !card.played) {
+          return card.incompleteInfo;
+        }
         return card.info;
       }),
-      bids: this.bidsKnownToPlayer(playerId)
-    }
+      bids: this.bidsKnownToPlayer(playerId),
+    };
   }
 
   bidsKnownToPlayer(playerId: string): BidInfo {
-    return Object.keys(this.bids).reduce((acc: BidInfo, currPlayerId: string) => {
-      if (this.status !== RoundStatus.BIDDING || currPlayerId === playerId) {
-        acc[playerId] = this.bids[playerId];
-      }
-      return acc;
-    }, {});
+    return Object.keys(this.bids).reduce(
+      (acc: BidInfo, currPlayerId: string) => {
+        if (this.status !== RoundStatus.BIDDING || currPlayerId === playerId) {
+          acc[playerId] = this.bids[playerId];
+        }
+        return acc;
+      },
+      {}
+    );
   }
 
   generateCards() {
-    const unshuffledDeck = Card.generateUnshuffledDeck(this.maxCardsPerPlayer * this.playerIds.length);
+    const unshuffledDeck = Card.generateUnshuffledDeck(
+      this.maxCardsPerPlayer * this.playerIds.length
+    );
     for (let i = 0; i < this.numberOfCardsPerPlayer; i++) {
       this.playerIds.forEach((playerId: string) => {
         const randomIndex = Math.floor(Math.random() * unshuffledDeck.length);
-        const [card] = unshuffledDeck.splice(randomIndex,1);
+        const [card] = unshuffledDeck.splice(randomIndex, 1);
         card.ownerId = playerId;
         this.cards.push(card);
       });
@@ -155,7 +195,7 @@ export class Round {
     const biddingBreakPoint = new BreakPoint({
       duration: 120000,
       acknowledgements: this.playerIds,
-      bufferDuration: 5000
+      bufferDuration: 5000,
     });
     biddingBreakPoint.resolved$.subscribe(() => {
       this.finaliseBids();
@@ -168,44 +208,65 @@ export class Round {
   }
 
   getCardsOwnedBy(playerId: string, onlyNotPlayed = false): Card[] {
-    return this.cards.filter((card: Card) => card.ownerId === playerId && !(onlyNotPlayed && card.played));
+    return this.cards.filter(
+      (card: Card) =>
+        card.ownerId === playerId && !(onlyNotPlayed && card.played)
+    );
   }
 
   getCardsOnTurn(turnNumber: number): Card[] {
     return this.cards
       .filter((card: Card) => card.playedOnTurn === turnNumber)
-      .sort((cardA: Card, cardB: Card) => cardA.compareByPlayedOrderPosition(cardB));
+      .sort((cardA: Card, cardB: Card) =>
+        cardA.compareByPlayedOrderPosition(cardB)
+      );
   }
 
   getTurnWinningCard(turnNumber: number): Card {
-    return this.getCardsOnTurn(turnNumber).reduce((winningCard, currentCard) => {
-      if (winningCard === null) { return currentCard; }
-      else if (winningCard.suit === currentCard.suit) {
-        return winningCard.compareByValue(currentCard) > 0 ? winningCard : currentCard;
-      }
-      else if (this.trumpCard && winningCard.suit !== this.trumpCard.suit && currentCard.suit === this.trumpCard.suit) { return currentCard; }
-      else { return winningCard; }
-    }, null);
+    return this.getCardsOnTurn(turnNumber).reduce(
+      (winningCard, currentCard) => {
+        if (winningCard === null) {
+          return currentCard;
+        } else if (winningCard.suit === currentCard.suit) {
+          return winningCard.compareByValue(currentCard) > 0
+            ? winningCard
+            : currentCard;
+        } else if (
+          this.trumpCard &&
+          winningCard.suit !== this.trumpCard.suit &&
+          currentCard.suit === this.trumpCard.suit
+        ) {
+          return currentCard;
+        } else {
+          return winningCard;
+        }
+      },
+      null
+    );
   }
 
   placeBid(playerId: string, bid: number) {
     if (this.status !== RoundStatus.BIDDING) {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
-        detail: { reason: OuistitiInvalidActionReason.BIDDING_FINISHED }
+        detail: { reason: OuistitiInvalidActionReason.BIDDING_FINISHED },
       });
     }
     if (this.playerIds.indexOf(playerId) === -1) {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ID,
-        detail: { provided: playerId }
+        detail: { provided: playerId },
       });
     }
     if (bid < 0 || bid > this.numberOfCardsPerPlayer) {
       throw new OuistitiException({
         type: OuistitiErrorType.NUMBER_OUT_OF_RANGE,
-        detail: { provided: bid, minimum: 0, maximum: this.numberOfCardsPerPlayer },
-        param: 'bid'
+        detail: {
+          provided: bid,
+          minimum: 0,
+          maximum: this.numberOfCardsPerPlayer,
+        },
+        param: 'bid',
       });
     }
 
@@ -219,7 +280,7 @@ export class Round {
     if (this.playerIds.indexOf(playerId) === -1) {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ID,
-        detail: { provided: playerId }
+        detail: { provided: playerId },
       });
     }
 
@@ -236,7 +297,9 @@ export class Round {
       this.playerIds.forEach((playerId: string) => {
         if (Object.keys(this.bids).indexOf(playerId) === -1) {
           // Assign to the player the most likely average bid for that round
-          this.bids[playerId] = Math.round(this.numberOfCardsPerPlayer / this.playerIds.length);
+          this.bids[playerId] = Math.round(
+            this.numberOfCardsPerPlayer / this.playerIds.length
+          );
         }
       });
 
@@ -249,8 +312,8 @@ export class Round {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
         detail: {
-          reason: OuistitiInvalidActionReason.NOT_PLAYERS_TURN
-        }
+          reason: OuistitiInvalidActionReason.NOT_PLAYERS_TURN,
+        },
       });
     }
 
@@ -260,9 +323,11 @@ export class Round {
         type: OuistitiErrorType.PLAYER_DOESNT_HAVE_CARD,
         detail: {
           provided: cardId,
-          actual: this.getCardsOwnedBy(playerId, true).map((card: Card) => card.id)
+          actual: this.getCardsOwnedBy(playerId, true).map(
+            (card: Card) => card.id
+          ),
         },
-        param: 'id'
+        param: 'id',
       });
     }
 
@@ -271,23 +336,31 @@ export class Round {
     const cardsPlayedThisTurn = this.getCardsOnTurn(this.currentTurnNumber);
     card.playedOnTurn = this.currentTurnNumber;
     card.playedOrderPosition = cardsPlayedThisTurn.length + 1;
-    this.currentPlayerId = this.playerIds[(this.playerIds.indexOf(this.currentPlayerId) + 1) % this.playerIds.length];
+    this.currentPlayerId =
+      this.playerIds[
+        (this.playerIds.indexOf(this.currentPlayerId) + 1) %
+          this.playerIds.length
+      ];
 
     if (card.playedOrderPosition === this.playerIds.length) {
       this.status = RoundStatus.END_OF_TURN;
       const winningCard = this.getTurnWinningCard(this.currentTurnNumber);
 
-      this.cards.filter((card: Card) => card.playedOnTurn === this.currentTurnNumber).forEach((card: Card) => {
-        card.winnerId = winningCard.ownerId;
-      });
+      this.cards
+        .filter((card: Card) => card.playedOnTurn === this.currentTurnNumber)
+        .forEach((card: Card) => {
+          card.winnerId = winningCard.ownerId;
+        });
 
       const endOfTurnBreakPoint = new BreakPoint({
         duration: 5000,
-        acknowledgements: this.playerIds
+        acknowledgements: this.playerIds,
       });
-      endOfTurnBreakPoint.acknowledged$.subscribe((acknowledgedPlayerId: string) => {
-        this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
-      });
+      endOfTurnBreakPoint.acknowledged$.subscribe(
+        (acknowledgedPlayerId: string) => {
+          this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
+        }
+      );
       endOfTurnBreakPoint.resolved$.subscribe(() => {
         this.manualBreakPointInProgress = false;
         this.completeTurn();
@@ -315,7 +388,7 @@ export class Round {
       const winningCard = this.getTurnWinningCard(this.currentTurnNumber);
       this.currentTurnNumber++;
       this.currentPlayerId = winningCard.ownerId;
-      this.status = RoundStatus.PLAY
+      this.status = RoundStatus.PLAY;
       this.statusChangedSource.next(this.status);
     }
   }
@@ -323,11 +396,13 @@ export class Round {
   endOfRound() {
     const endOfRoundBreakPoint = new BreakPoint({
       duration: 5000,
-      acknowledgements: this.playerIds
+      acknowledgements: this.playerIds,
     });
-    endOfRoundBreakPoint.acknowledged$.subscribe((acknowledgedPlayerId: string) => {
-      this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
-    });
+    endOfRoundBreakPoint.acknowledged$.subscribe(
+      (acknowledgedPlayerId: string) => {
+        this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
+      }
+    );
     endOfRoundBreakPoint.resolved$.subscribe(() => {
       this.manualBreakPointInProgress = false;
     });

@@ -3,9 +3,7 @@ import { OuistitiGateway } from './ouistiti.gateway';
 
 @Module({
   controllers: [],
-  providers: [
-    OuistitiGateway
-  ],
+  providers: [OuistitiGateway],
   exports: [],
 })
 export class OuistitiModule {}

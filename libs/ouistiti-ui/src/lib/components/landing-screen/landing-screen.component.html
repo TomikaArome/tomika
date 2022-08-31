@@ -4,14 +4,16 @@
 
     <tmk-ouistiti-lobby-list
       [lobbyList]="lobbyList$ | async"
-      (selectLobby)="selectLobby($event)">
+      (selectLobby)="selectLobby($event)"
+    >
     </tmk-ouistiti-lobby-list>
 
     <div
       class="create-lobby-button"
       matRipple
       [matRippleColor]="'hsla(0,0%,100%,0.05)'"
-      (click)="createNewLobby()">
+      (click)="createNewLobby()"
+    >
       Create new lobby
     </div>
   </div>
@@ -19,7 +21,9 @@
 
 <div class="section">
   <div class="inner-section" *ngIf="showLobbyJoin()">
-    <tmk-ouistiti-lobby-join [lobby]="selectedLobby$ | async"></tmk-ouistiti-lobby-join>
+    <tmk-ouistiti-lobby-join
+      [lobby]="selectedLobby$ | async"
+    ></tmk-ouistiti-lobby-join>
   </div>
 
   <div class="inner-section" *ngIf="createMode">

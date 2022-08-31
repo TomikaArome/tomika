@@ -1,6 +1,9 @@
 <fieldset>
   <legend>Trump</legend>
-  <div *ngIf="noTrumps; else hasTrumps" [ngStyle]="trumpCardBorderContentsStyle">
+  <div
+    *ngIf="noTrumps; else hasTrumps"
+    [ngStyle]="trumpCardBorderContentsStyle"
+  >
     <ng-container *ngIf="!hideNoTrumps">
       <fa-icon [icon]="faBan"></fa-icon>
       No trumps
@@ -11,7 +14,8 @@
       [id]="card.id"
       [suit]="card.suit"
       [value]="card.value"
-      [height]="cardHeight">
+      [height]="cardHeight"
+    >
     </tmk-ouistiti-card>
   </ng-template>
 </fieldset>

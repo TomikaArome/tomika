@@ -6,12 +6,16 @@
       formControlName="nickname"
       [maxlength]="nicknameMaxLength"
       [ngClass]="{ error: nicknameControl.invalid && nicknameControl.touched }"
-      (blur)="forceOnChange()">
+      (blur)="forceOnChange()"
+    />
     <button
       *ngIf="nicknameUpdateButtonVisible"
       class="button-colour-green"
-      [disabled]="this.nicknameControl.invalid || this.nicknameControl.value.length === 0"
-      (click)="nicknameUpdateButtonClick()">
+      [disabled]="
+        this.nicknameControl.invalid || this.nicknameControl.value.length === 0
+      "
+      (click)="nicknameUpdateButtonClick()"
+    >
       Update
     </button>
   </div>
@@ -21,5 +25,7 @@
   </tmk-ouistiti-colour-selector>
 
   <label>Symbol</label>
-  <tmk-ouistiti-symbol-selector formControlName="symbol"></tmk-ouistiti-symbol-selector>
+  <tmk-ouistiti-symbol-selector
+    formControlName="symbol"
+  ></tmk-ouistiti-symbol-selector>
 </div>

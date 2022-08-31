@@ -1,20 +1,21 @@
 import {
   Component,
-  ContentChild, EventEmitter,
+  ContentChild,
+  EventEmitter,
   forwardRef,
   HostBinding,
   HostListener,
   Input,
   Output,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { SortableListItemDirective } from './sortable-list-item.directive';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 interface SortableListRect {
-  start: number,
-  end: number,
-  size: number
+  start: number;
+  end: number;
+  size: number;
 }
 
 interface SortableListTemplateContext<T> {
@@ -32,8 +33,8 @@ interface SortableListTemplateContext<T> {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: forwardRef(() => SortableListComponent),
-    }
-  ]
+    },
+  ],
 })
 export class SortableListComponent<T> implements ControlValueAccessor {
   // Items as set by the input
@@ -44,7 +45,7 @@ export class SortableListComponent<T> implements ControlValueAccessor {
   set items(value: T[]) {
     // Remove duplicates
     this.realItems = [...new Set(value)];
-  };
+  }
 
   @HostBinding('class.horizontal-list')
   @Input()
@@ -55,7 +56,9 @@ export class SortableListComponent<T> implements ControlValueAccessor {
 
   private _disabled = false;
   @Input()
-  get disabled(): boolean { return this._disabled };
+  get disabled(): boolean {
+    return this._disabled;
+  }
   set disabled(value: boolean) {
     this._disabled = value;
     this.disabledChanged.emit(value);
@@ -85,21 +88,39 @@ export class SortableListComponent<T> implements ControlValueAccessor {
   private contexts: SortableListTemplateContext<T>[] = [];
 
   @HostBinding('class.dragging-in-progress')
-  get dragging(): boolean { return !!this.itemDragging; }
-  @HostBinding('class.vertical-list')
-  get vertical(): boolean { return !this.horizontal; }
-  @HostBinding('style.gap')
-  get gapPx(): string { return `${this.gap}px`; }
-
-  private get rect(): SortableListRect { return this.getRect(this.viewContainerRef.element.nativeElement); }
-  private get itemRect(): SortableListRect { return this.getRect(this.draggingElement); }
-  private get allRects(): SortableListRect[] {
-    const htmlCollection = (this.viewContainerRef.element.nativeElement as HTMLElement).children;
-    return Array.from(htmlCollection).map((element: HTMLElement) => this.getRect(element));
+  get dragging(): boolean {
+    return !!this.itemDragging;
   }
-  private get draggingIndex(): number { return this.activeItems.indexOf(this.itemDragging); }
+  @HostBinding('class.vertical-list')
+  get vertical(): boolean {
+    return !this.horizontal;
+  }
+  @HostBinding('style.gap')
+  get gapPx(): string {
+    return `${this.gap}px`;
+  }
 
-  get activeItems(): T[] { return this.dragging ? this.savedItems : this.realItems; }
+  private get rect(): SortableListRect {
+    return this.getRect(this.viewContainerRef.element.nativeElement);
+  }
+  private get itemRect(): SortableListRect {
+    return this.getRect(this.draggingElement);
+  }
+  private get allRects(): SortableListRect[] {
+    const htmlCollection = (
+      this.viewContainerRef.element.nativeElement as HTMLElement
+    ).children;
+    return Array.from(htmlCollection).map((element: HTMLElement) =>
+      this.getRect(element)
+    );
+  }
+  private get draggingIndex(): number {
+    return this.activeItems.indexOf(this.itemDragging);
+  }
+
+  get activeItems(): T[] {
+    return this.dragging ? this.savedItems : this.realItems;
+  }
 
   constructor(private viewContainerRef: ViewContainerRef) {}
 
@@ -111,7 +132,7 @@ export class SortableListComponent<T> implements ControlValueAccessor {
     return {
       start: this.vertical ? rect.top : rect.left,
       end: this.vertical ? rect.bottom : rect.right,
-      size: this.vertical ? rect.height : rect.width
+      size: this.vertical ? rect.height : rect.width,
     };
   }
 
@@ -119,8 +140,8 @@ export class SortableListComponent<T> implements ControlValueAccessor {
     return {
       $implicit: item,
       dragging: item === this.itemDragging,
-      notDragging: this.dragging && item !== this.itemDragging
-    }
+      notDragging: this.dragging && item !== this.itemDragging,
+    };
   }
 
   cancelDrag() {
@@ -151,8 +172,7 @@ export class SortableListComponent<T> implements ControlValueAccessor {
   private mouseMove(event: MouseEvent) {
     if (this.disabled && this.itemDragging) {
       this.cancelDrag();
-    }
-    else if (this.itemDragging) {
+    } else if (this.itemDragging) {
       const currentIndex = this.draggingIndex;
       const allRects = this.allRects;
       // Check if moved past element before
@@ -181,9 +201,16 @@ export class SortableListComponent<T> implements ControlValueAccessor {
       const minValue = this.rect.start - this.elementStart;
       const maxValue = this.lastElementEnd - this.elementEnd;
       const difference = Math.min(
-          Math.max((this.vertical ? event.y : event.x) - this.mouseDownStart, minValue),
-        maxValue);
-      this.draggingElement.style.setProperty('--drag-difference', `${difference}px`);
+        Math.max(
+          (this.vertical ? event.y : event.x) - this.mouseDownStart,
+          minValue
+        ),
+        maxValue
+      );
+      this.draggingElement.style.setProperty(
+        '--drag-difference',
+        `${difference}px`
+      );
     }
   }
 
@@ -194,9 +221,13 @@ export class SortableListComponent<T> implements ControlValueAccessor {
       this.cancelDrag();
 
       // Compare new order with real items in case some were added or removed
-      const finalItems = this.savedItems.filter((item: T) => this.realItems.indexOf(item) > -1);
+      const finalItems = this.savedItems.filter(
+        (item: T) => this.realItems.indexOf(item) > -1
+      );
       this.realItems.forEach((item: T) => {
-        if (finalItems.indexOf(item) === -1) { finalItems.push(item); }
+        if (finalItems.indexOf(item) === -1) {
+          finalItems.push(item);
+        }
       });
       this.writeValue(finalItems);
     }
@@ -221,8 +252,15 @@ export class SortableListComponent<T> implements ControlValueAccessor {
   }
 
   private arraysAreEqual(value: T[]) {
-    if (value === this.items) { return true; }
-    if (value.length !== this.items.length) { return false; }
-    return this.items.reduce((acc: boolean, curr: T, index: number) => acc && curr === value[index], true);
+    if (value === this.items) {
+      return true;
+    }
+    if (value.length !== this.items.length) {
+      return false;
+    }
+    return this.items.reduce(
+      (acc: boolean, curr: T, index: number) => acc && curr === value[index],
+      true
+    );
   }
 }

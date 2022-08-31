@@ -1,13 +1,24 @@
-import { Component, EventEmitter, HostBinding, Input, OnDestroy, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { PlayerInfo } from '@TomikaArome/ouistiti-shared';
 import { SortableListComponent } from '../../utility/sortable-list.component';
 import { Subject } from 'rxjs';
-import { faCrown, faGripVertical, faUserCog } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCrown,
+  faGripVertical,
+  faUserCog,
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'tmk-ouistiti-player-list-item',
   templateUrl: './player-list-item.component.html',
-  styleUrls: ['./player-list-item.component.scss']
+  styleUrls: ['./player-list-item.component.scss'],
 })
 export class PlayerListItemComponent implements OnDestroy {
   @Input()
@@ -21,8 +32,12 @@ export class PlayerListItemComponent implements OnDestroy {
 
   private _contentVisible = false;
   @Input()
-  get contentVisible(): boolean { return this._contentVisible; }
-  set contentVisible(value: boolean) { this._contentVisible = value; }
+  get contentVisible(): boolean {
+    return this._contentVisible;
+  }
+  set contentVisible(value: boolean) {
+    this._contentVisible = value;
+  }
 
   @Output()
   contentVisibledToggled = new EventEmitter<boolean>();

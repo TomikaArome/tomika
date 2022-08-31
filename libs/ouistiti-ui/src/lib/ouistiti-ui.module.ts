@@ -13,7 +13,7 @@ import { BiddingPopupComponent } from './components/game-flow/bidding-popup/bidd
 import { CardComponent } from './components/game-flow/card/card.component';
 import { CardContainerComponent } from './components/game-flow/card-container/card-container.component';
 import { ContainerComponent } from './components/container/container.component';
-import { ColourSelectorComponent} from './components/game-setup/colour-selector/colour-selector.component';
+import { ColourSelectorComponent } from './components/game-setup/colour-selector/colour-selector.component';
 import { EndOfRoundContainerComponent } from './components/game-flow/end-of-round-container/end-of-round-container.component';
 import { EndOfTurnPopupComponent } from './components/game-flow/end-of-turn-popup/end-of-turn-popup.component';
 import { LandingScreenComponent } from './components/landing-screen/landing-screen.component';
@@ -42,7 +42,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     MatIconModule,
     MatRippleModule,
     ReactiveFormsModule,
-    UtilityModule
+    UtilityModule,
   ],
   declarations: [
     BidChipComponent,
@@ -70,7 +70,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     TimerComponent,
     TrumpCardWrapperComponent,
 
-    PlayerListItemContentDirective
-  ]
+    PlayerListItemContentDirective,
+  ],
 })
 export class OuistitiUiModule {}

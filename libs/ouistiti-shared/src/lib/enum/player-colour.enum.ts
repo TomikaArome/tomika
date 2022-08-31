@@ -6,5 +6,5 @@ export enum PlayerColour {
   AQUA = 'AQUA',
   BLUE = 'BLUE',
   PURPLE = 'PURPLE',
-  PINK = 'PINK'
+  PINK = 'PINK',
 }

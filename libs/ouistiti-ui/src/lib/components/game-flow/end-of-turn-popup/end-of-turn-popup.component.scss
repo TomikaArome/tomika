@@ -1,14 +1,16 @@
 :host {
-  background-color: hsl(0,0%,10%);
+  background-color: hsl(0, 0%, 10%);
   padding: 16px 32px;
   display: flex;
   flex-direction: row;
   gap: 32px;
   align-items: center;
-  color: hsl(0,0%,80%);
+  color: hsl(0, 0%, 80%);
 }
 
-.proceeding-in, .won-by, .waiting-for {
+.proceeding-in,
+.won-by,
+.waiting-for {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,7 +25,7 @@
     flex-direction: row;
     align-items: center;
     gap: 8px;
-    color: hsl(0,0%,100%);
+    color: hsl(0, 0%, 100%);
     font-weight: bold;
     font-size: 24px;
   }
@@ -47,8 +49,8 @@
       width: 52px;
       border: none;
       border-radius: 8px;
-      background-color: hsl(0,0%,20%);
-      color: hsla(0,0%,100%,0.8);
+      background-color: hsl(0, 0%, 20%);
+      color: hsla(0, 0%, 100%, 0.8);
       cursor: pointer;
 
       &:disabled {

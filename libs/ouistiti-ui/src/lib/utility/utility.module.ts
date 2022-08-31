@@ -8,18 +8,16 @@ import { SortableListGripDirective } from './sortable-list-grip.directive';
    some point (not Ouistiti specific) */
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [
     SortableListComponent,
     SortableListItemDirective,
-    SortableListGripDirective
+    SortableListGripDirective,
   ],
   exports: [
     SortableListComponent,
     SortableListItemDirective,
-    SortableListGripDirective
-  ]
+    SortableListGripDirective,
+  ],
 })
 export class UtilityModule {}

@@ -11,7 +11,7 @@ describe('DiscordAccount', () => {
       accountType: 'discord',
       id: '248813886583603210',
       name: 'Tomika',
-      discriminator: '4051'
+      discriminator: '4051',
     });
   });
 
@@ -43,17 +43,25 @@ describe('DiscordAccount', () => {
   });
 
   it('should get the URL of the default avatar', () => {
-    expect(account.getAvatarUrl({ extension: 'jpg', size: 32 })).toBe('https://cdn.discordapp.com/embed/avatars/1.png');
+    expect(account.getAvatarUrl({ extension: 'jpg', size: 32 })).toBe(
+      'https://cdn.discordapp.com/embed/avatars/1.png'
+    );
 
     account.discriminator = '8008';
-    expect(account.getAvatarUrl({ extension: 'jpg', size: 32 })).toBe('https://cdn.discordapp.com/embed/avatars/3.png');
+    expect(account.getAvatarUrl({ extension: 'jpg', size: 32 })).toBe(
+      'https://cdn.discordapp.com/embed/avatars/3.png'
+    );
   });
 
-  it('should get the URL of the user\'s avatar', () => {
+  it("should get the URL of the user's avatar", () => {
     account.avatarHash = avatarHash;
-    expect(account.getAvatarUrl()).toBe('https://cdn.discordapp.com/avatars/248813886583603210/101db103245e43089b1f70fcb74f0efc.png?size=4096');
+    expect(account.getAvatarUrl()).toBe(
+      'https://cdn.discordapp.com/avatars/248813886583603210/101db103245e43089b1f70fcb74f0efc.png?size=4096'
+    );
 
     account.avatarHash = avatarHashAnimated;
-    expect(account.getAvatarUrl({ size: 32 })).toBe('https://cdn.discordapp.com/avatars/248813886583603210/a_101db103245e43089b1f70fcb74f0efc.gif?size=32');
+    expect(account.getAvatarUrl({ size: 32 })).toBe(
+      'https://cdn.discordapp.com/avatars/248813886583603210/a_101db103245e43089b1f70fcb74f0efc.gif?size=32'
+    );
   });
 });

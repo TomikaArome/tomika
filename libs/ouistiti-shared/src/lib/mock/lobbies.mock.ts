@@ -14,39 +14,34 @@ export const lobby1Mock: LobbyInfo = {
       nickname: 'Thomas',
       colour: PlayerColour.AQUA,
       symbol: PlayerSymbol.SPADE,
-      vacant: false
+      vacant: false,
     },
     {
       id: 'So5DdHmXOR',
       nickname: 'Steve',
       colour: PlayerColour.RED,
       symbol: PlayerSymbol.CLUB,
-      vacant: false
+      vacant: false,
     },
     {
       id: '5x89SitQIG',
       nickname: 'Claire',
       colour: PlayerColour.GREEN,
       symbol: PlayerSymbol.DIAMOND,
-      vacant: false
+      vacant: false,
     },
     {
       id: 'ne6NF08aL2',
       nickname: 'David',
       colour: PlayerColour.BLUE,
       symbol: PlayerSymbol.SPADE,
-      vacant: false
-    }
+      vacant: false,
+    },
   ],
-  playerOrder: [
-    'AXP9aX7pRu',
-    'So5DdHmXOR',
-    'ne6NF08aL2',
-    '5x89SitQIG'
-  ],
+  playerOrder: ['AXP9aX7pRu', 'So5DdHmXOR', 'ne6NF08aL2', '5x89SitQIG'],
   hostId: 'AXP9aX7pRu',
   currentRoundNumber: 5,
-  totalRoundCount: 18
+  totalRoundCount: 18,
 };
 
 export const lobby2Mock: LobbyInfo = {
@@ -60,14 +55,12 @@ export const lobby2Mock: LobbyInfo = {
       nickname: 'Jon',
       colour: PlayerColour.PINK,
       symbol: PlayerSymbol.CLUB,
-      vacant: false
-    }
+      vacant: false,
+    },
   ],
-  playerOrder: [
-    'IqqU4-U37a'
-  ],
-  hostId: 'IqqU4-U37a'
-}
+  playerOrder: ['IqqU4-U37a'],
+  hostId: 'IqqU4-U37a',
+};
 
 export const lobby3Mock: LobbyInfo = {
   id: '6DK77-nQPu',
@@ -80,39 +73,32 @@ export const lobby3Mock: LobbyInfo = {
       nickname: 'Madeline',
       colour: PlayerColour.RED,
       symbol: PlayerSymbol.DIAMOND,
-      vacant: false
+      vacant: false,
     },
     {
       id: 'NEnVNgoucJ',
       nickname: 'Celia',
       colour: PlayerColour.GREEN,
       symbol: PlayerSymbol.HEART,
-      vacant: true
-    }
+      vacant: true,
+    },
   ],
-  playerOrder: [
-    '3_qFtX8jK-',
-    'NEnVNgoucJ'
-  ],
+  playerOrder: ['3_qFtX8jK-', 'NEnVNgoucJ'],
   hostId: '3_qFtX8jK-',
   currentRoundNumber: 13,
-  totalRoundCount: 18
-}
+  totalRoundCount: 18,
+};
 
-export const lobbyListMock: LobbyInfo[] = [
-  lobby1Mock,
-  lobby2Mock,
-  lobby3Mock
-];
+export const lobbyListMock: LobbyInfo[] = [lobby1Mock, lobby2Mock, lobby3Mock];
 
 export const lobbyStatusPlayerIsHostMock: LobbyStatus = {
   inLobby: true,
   lobby: lobby1Mock,
-  playerId: 'AXP9aX7pRu'
-}
+  playerId: 'AXP9aX7pRu',
+};
 
 export const lobbyStatusPlayerIsNotHostMock: LobbyStatus = {
   inLobby: true,
   lobby: lobby1Mock,
-  playerId: '5x89SitQIG'
-}
+  playerId: '5x89SitQIG',
+};

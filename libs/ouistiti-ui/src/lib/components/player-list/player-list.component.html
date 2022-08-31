@@ -2,18 +2,27 @@
   [items]="players"
   [disabled]="!isSortable"
   [gap]="8"
-  (orderChanged)="sortableListOrderChanged($event)">
+  (orderChanged)="sortableListOrderChanged($event)"
+>
   <tmk-ouistiti-player-list-item
-    *tmkSortableListItem="let player; let dragging=dragging; let notDragging=notDragging"
+    *tmkSortableListItem="
+      let player;
+      let dragging = dragging;
+      let notDragging = notDragging
+    "
     [ngClass]="{ dragging: dragging, notDragging: notDragging }"
     [player]="player"
     [grabbable]="isSortable"
     [isHost]="isHost(player)"
     [expandable]="isExpandable(player)"
     [contentVisible]="isExpanded(player)"
-    (contentVisibledToggled)="setExpandedPlayer(player, $event)">
-
-    <ng-container *ngTemplateOutlet="playerListItemContent.templateRef; context: { $implicit: player }"></ng-container>
-
+    (contentVisibledToggled)="setExpandedPlayer(player, $event)"
+  >
+    <ng-container
+      *ngTemplateOutlet="
+        playerListItemContent.templateRef;
+        context: { $implicit: player }
+      "
+    ></ng-container>
   </tmk-ouistiti-player-list-item>
 </tmk-sortable-list>

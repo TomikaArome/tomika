@@ -69,7 +69,11 @@ interface RoundStatusChangedToCompleted {
   scores: RoundScores[];
 }
 
-export type RoundStatusChanged = RoundStatusChangedToBidding | RoundStatusChangedToPlay | RoundStatusChangedToEndOfTurn | RoundStatusChangedToCompleted;
+export type RoundStatusChanged =
+  | RoundStatusChangedToBidding
+  | RoundStatusChangedToPlay
+  | RoundStatusChangedToEndOfTurn
+  | RoundStatusChangedToCompleted;
 
 // Server events
 

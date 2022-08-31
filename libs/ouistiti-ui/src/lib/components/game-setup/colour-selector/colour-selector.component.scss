@@ -1,4 +1,4 @@
-@import "../../../ouistiti-theme";
+@import '../../../ouistiti-theme';
 
 :host {
   display: flex;
@@ -6,14 +6,14 @@
 
   .colour-option {
     flex: 1;
-    background-color: hsl(var(--player-colour-hue),50%,50%);
-    border: 3px solid hsl(var(--player-colour-hue),50%,30%);
+    background-color: hsl(var(--player-colour-hue), 50%, 50%);
+    border: 3px solid hsl(var(--player-colour-hue), 50%, 30%);
     height: 28px;
     border-radius: 0.5em;
     cursor: pointer;
 
     &.chosen {
-      outline: 2px solid hsl(0,0%,100%);
+      outline: 2px solid hsl(0, 0%, 100%);
     }
 
     &.taken {

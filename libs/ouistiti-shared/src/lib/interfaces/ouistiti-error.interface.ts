@@ -1,14 +1,20 @@
-import { OuistitiErrorType, OuistitiInvalidActionReason } from '../enum/ouistiti-error-type.enum';
+import {
+  OuistitiErrorType,
+  OuistitiInvalidActionReason,
+} from '../enum/ouistiti-error-type.enum';
 
 interface NoDetail {
-  type: OuistitiErrorType.REQUIRED_PARAM | OuistitiErrorType.INCORRECT_PASSWORD | OuistitiErrorType.HOST_CANNOT_KICK_SELF;
+  type:
+    | OuistitiErrorType.REQUIRED_PARAM
+    | OuistitiErrorType.INCORRECT_PASSWORD
+    | OuistitiErrorType.HOST_CANNOT_KICK_SELF;
 }
 
 interface InvalidActionDetail {
   type: OuistitiErrorType.INVALID_ACTION;
   detail: {
-    reason: OuistitiInvalidActionReason
-  }
+    reason: OuistitiInvalidActionReason;
+  };
 }
 
 interface StringLengthDetail {
@@ -17,7 +23,7 @@ interface StringLengthDetail {
     value: string;
     requiredLength: number;
     actualLength: number;
-  }
+  };
 }
 
 interface NumberRangeDetail {
@@ -26,14 +32,14 @@ interface NumberRangeDetail {
     provided: number;
     minimum?: number;
     maximum?: number;
-  }
+  };
 }
 
 interface InvalidIdDetail {
-  type: OuistitiErrorType.INVALID_ID,
+  type: OuistitiErrorType.INVALID_ID;
   detail: {
     provided: string;
-  }
+  };
 }
 
 interface ElementInArrayTakenDetail {
@@ -41,7 +47,7 @@ interface ElementInArrayTakenDetail {
   detail: {
     provided: unknown;
     taken: unknown[];
-  }
+  };
 }
 
 interface OrderArrayIncompleteDetail {
@@ -49,21 +55,28 @@ interface OrderArrayIncompleteDetail {
   detail: {
     provided: string[];
     missing: string[];
-  }
+  };
 }
 
 interface PlayerDoesntHaveCardDetail {
-  type: OuistitiErrorType.PLAYER_DOESNT_HAVE_CARD,
+  type: OuistitiErrorType.PLAYER_DOESNT_HAVE_CARD;
   detail: {
     provided: string;
     actual: string[];
-  }
+  };
 }
 
-type CombinedErrorType = NoDetail | InvalidActionDetail | StringLengthDetail | NumberRangeDetail | InvalidIdDetail |
-  ElementInArrayTakenDetail | OrderArrayIncompleteDetail | PlayerDoesntHaveCardDetail;
+type CombinedErrorType =
+  | NoDetail
+  | InvalidActionDetail
+  | StringLengthDetail
+  | NumberRangeDetail
+  | InvalidIdDetail
+  | ElementInArrayTakenDetail
+  | OrderArrayIncompleteDetail
+  | PlayerDoesntHaveCardDetail;
 
 export type OuistitiError = CombinedErrorType & {
   param?: string;
   caller?: string;
-}
+};

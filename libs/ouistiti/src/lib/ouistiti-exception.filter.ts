@@ -10,12 +10,11 @@ export class OuistitiExceptionFilter implements ExceptionFilter {
     this.caller = caller;
   }
 
-
   catch(exception: OuistitiException, host: ArgumentsHost) {
     const socket: Socket = host.switchToWs().getClient();
     socket.emit('error', {
       caller: this.caller,
-      ...exception.getError()
+      ...exception.getError(),
     });
   }
 }

@@ -4,7 +4,7 @@ import { io, Socket } from 'socket.io-client';
 @Component({
   selector: 'tmk-cards-test',
   templateUrl: './cards-test.component.html',
-  styleUrls: ['./cards-test.component.scss']
+  styleUrls: ['./cards-test.component.scss'],
 })
 export class CardsTestComponent {
   socket: Socket;

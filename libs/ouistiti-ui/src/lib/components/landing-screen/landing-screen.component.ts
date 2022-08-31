@@ -7,12 +7,17 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'tmk-ouistiti-landing-screen',
   templateUrl: './landing-screen.component.html',
-  styleUrls: ['./landing-screen.component.scss']
+  styleUrls: ['./landing-screen.component.scss'],
 })
 export class LandingScreenComponent {
   lobbyList$: Observable<LobbyInfo[]> = this.lobbyService.lobbyList$;
   selectedLobby$: Observable<LobbyInfo> = this.lobbyService.lobbyList$.pipe(
-    map((lobbyList: LobbyInfo[]) => lobbyList.find((lobby: LobbyInfo) => lobby.id === this.selectedLobbyId) ?? null)
+    map(
+      (lobbyList: LobbyInfo[]) =>
+        lobbyList.find(
+          (lobby: LobbyInfo) => lobby.id === this.selectedLobbyId
+        ) ?? null
+    )
   );
 
   private selectedLobbyId: string = null;

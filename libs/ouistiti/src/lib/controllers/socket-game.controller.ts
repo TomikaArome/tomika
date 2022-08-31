@@ -9,16 +9,23 @@ import { SocketLobbyController } from './socket-lobby.controller';
 
 export class SocketGameController {
   gameCompleted$: Observable<unknown> = this.game.statusChanged$.pipe(
-    filter((status: GameStatus) => status === GameStatus.COMPLETED || status === GameStatus.CANCELLED)
+    filter(
+      (status: GameStatus) =>
+        status === GameStatus.COMPLETED || status === GameStatus.CANCELLED
+    )
   );
   stopIncludingGameCompleted$ = merge(this.stop$, this.gameCompleted$);
 
-  private get stop(): MonoTypeOperatorFunction<unknown> { return takeUntil(this.stopIncludingGameCompleted$); }
+  private get stop(): MonoTypeOperatorFunction<unknown> {
+    return takeUntil(this.stopIncludingGameCompleted$);
+  }
 
-  constructor(readonly controller: SocketController,
-              readonly game: Game,
-              readonly stop$: Observable<unknown>,
-              readonly lobbyController: SocketLobbyController) {
+  constructor(
+    readonly controller: SocketController,
+    readonly game: Game,
+    readonly stop$: Observable<unknown>,
+    readonly lobbyController: SocketLobbyController
+  ) {
     this.subscribeStatusChanged();
     this.subscribeRoundStarted();
 
@@ -31,7 +38,12 @@ export class SocketGameController {
     } else if (this.lobbyController.isOwnLobby) {
       this.lobbyController.emitLobbyStatus();
       if (this.game.rounds.length > 0) {
-        new SocketRoundController(this.controller, this.game.rounds[this.game.rounds.length - 1], this.stop$, this);
+        new SocketRoundController(
+          this.controller,
+          this.game.rounds[this.game.rounds.length - 1],
+          this.stop$,
+          this
+        );
       }
     }
   }

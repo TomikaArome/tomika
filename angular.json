@@ -1,7 +1,9 @@
 {
   "version": 1,
   "cli": {
-    "defaultCollection": "@nrwl/angular"
+    "schematicCollections": [
+      "@nrwl/angular"
+    ]
   },
   "schematics": {
     "@nrwl/angular": {

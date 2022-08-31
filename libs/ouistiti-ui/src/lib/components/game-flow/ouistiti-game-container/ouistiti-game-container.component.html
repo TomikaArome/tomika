@@ -1,0 +1,32 @@
+<tmk-ouistiti-card-container
+  [roundInfo]="roundInfo$ | async"
+  [players]="currentLobbyPlayers$ | async"
+  [selfId]="selfId$ | async"
+  (cardPlayed)="playCard($event)">
+</tmk-ouistiti-card-container>
+
+<tmk-ouistiti-bidding-popup
+  *ngIf="showBiddingPopup(roundStatus$ | async)"
+  [roundInfo]="roundInfo$ | async"
+  [players]="currentLobbyPlayers$ | async"
+  [selfId]="selfId$ | async"
+  (bidPlaced)="placeBid($event)"
+  (bidCancelled)="cancelBid()">
+</tmk-ouistiti-bidding-popup>
+
+<tmk-ouistiti-end-of-turn-popup
+  *ngIf="showEndOfTurnPopup(roundStatus$ | async)"
+  [roundInfo]="roundInfo$ | async"
+  [players]="currentLobbyPlayers$ | async"
+  [selfId]="selfId$ | async"
+  (nextButtonClicked)="acknowledgeBreakPoint()">
+</tmk-ouistiti-end-of-turn-popup>
+
+<tmk-ouistiti-end-of-round-container
+  *ngIf="showEndOfRoundContainer(roundStatus$ | async)"
+  [scores]="currentGameScores$ | async"
+  [roundInfo]="roundInfo$ | async"
+  [players]="currentLobbyPlayers$ | async"
+  [selfId]="selfId$ | async"
+  (nextButtonClicked)="acknowledgeBreakPoint()">
+</tmk-ouistiti-end-of-round-container>

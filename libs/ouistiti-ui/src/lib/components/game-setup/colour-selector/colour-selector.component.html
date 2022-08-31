@@ -1,0 +1,6 @@
+<div
+  class="colour-option"
+  *ngFor="let colour of colours"
+  [ngClass]="colourClasses(colour)"
+  (click)="chosen = colour">
+</div>

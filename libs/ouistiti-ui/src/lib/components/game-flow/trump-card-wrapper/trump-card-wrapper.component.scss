@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  width: fit-content;
+  height: fit-content;
+}
+
+fieldset {
+  width: fit-content;
+  height: fit-content;
+  padding: 0;
+  margin: 0;
+  border: 4px solid hsla(0,0%,100%,0.25);
+  border-radius: 8px;
+  color: hsla(0,0%,100%,0.5);
+  font-variant: all-small-caps;
+  font-size: 20px;
+
+  legend {
+    height: 16px;
+    text-align: center;
+    padding: 0 8px;
+    font-weight: bold;
+    transform: translateY(-50%);
+    user-select: none;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: hsla(0,0%,100%,0.25);
+    transition: opacity 100ms;
+
+    fa-icon {
+      font-size: 48px;
+    }
+  }
+
+  tmk-ouistiti-card {
+    font-variant: initial;
+    margin: 6px;
+  }
+}

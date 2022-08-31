@@ -1,0 +1,9 @@
+<tmk-ouistiti-landing-screen *ngIf="showLobbySelector$ | async; else inLobby"></tmk-ouistiti-landing-screen>
+
+<ng-template #inLobby>
+  <tmk-ouistiti-lobby-screen *ngIf="showLobbyScreen$ | async; else gameInProgress"></tmk-ouistiti-lobby-screen>
+</ng-template>
+
+<ng-template #gameInProgress>
+  <tmk-ouistiti-game-container></tmk-ouistiti-game-container>
+</ng-template>

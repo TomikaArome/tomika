@@ -1,0 +1,7 @@
+<div
+  class="tmk-sortable-list-item"
+  *ngFor="let item of activeItems"
+  [ngClass]="{ dragging: itemDragging === item }"
+  (mousedown)="mouseDown($event, item)">
+  <ng-container *ngTemplateOutlet="itemContent.templateRef; context: getTemplateContext(item)"></ng-container>
+</div>

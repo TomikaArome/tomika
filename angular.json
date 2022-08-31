@@ -47,7 +47,12 @@
             "tsConfig": "apps/frontend/tsconfig.app.json",
             "assets": [
               "apps/frontend/src/favicon.ico",
-              "apps/frontend/src/assets"
+              "apps/frontend/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/ouistiti-ui/src/assets/",
+                "output": "./assets/ouistiti/"
+              }
             ],
             "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "apps/frontend/src/styles.scss"],
             "scripts": [],
@@ -219,6 +224,69 @@
           "options": {
             "jestConfig": "libs/common/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ouistiti": {
+      "root": "libs/ouistiti",
+      "sourceRoot": "libs/ouistiti/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/ouistiti/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/ouistiti"],
+          "options": {
+            "jestConfig": "libs/ouistiti/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ouistiti-ui": {
+      "projectType": "library",
+      "root": "libs/ouistiti-ui",
+      "sourceRoot": "libs/ouistiti-ui/src",
+      "prefix": "TomikaArome",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/ouistiti-ui/src/**/*.ts",
+              "libs/ouistiti-ui/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/ouistiti-ui"],
+          "options": {
+            "jestConfig": "libs/ouistiti-ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ouistiti-shared": {
+      "projectType": "library",
+      "root": "libs/ouistiti-shared",
+      "sourceRoot": "libs/ouistiti-shared/src",
+      "prefix": "TomikaArome",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/ouistiti-shared/src/**/*.ts",
+              "libs/ouistiti-shared/src/**/*.html"
+            ]
           }
         }
       }

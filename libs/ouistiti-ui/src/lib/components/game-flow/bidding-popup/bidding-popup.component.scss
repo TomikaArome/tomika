@@ -1,0 +1,184 @@
+@import "../../../ouistiti-theme";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  background-color: hsl(0,0%,10%);
+  overflow: hidden;
+}
+
+.bidding-info-row {
+  display: flex;
+  gap: 20px;
+  min-width: 400px;
+  padding: 32px 40px 4px 40px;
+
+  .bidding-info-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+
+    h1 {
+      font-size: 20px;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: hsl(0,0%,80%);
+      gap: 8px;
+      font-weight: initial;
+      display: flex;
+      align-items: center;
+
+      .nickname {
+        font-weight: bold;
+        color: hsl(0,0%,100%);
+      }
+    }
+
+    .waiting-for {
+      flex: 1;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      color: hsl(0,0%,80%);
+      font-style: italic;
+      position: relative;
+      padding: 8px;
+
+      .waiting-for-players {
+        display: flex;
+        gap: 4px;
+
+        .bid-placed {
+          opacity: 0.2;
+        }
+      }
+
+      .bidding-ends-timer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .proceeding-in-timer {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: hsla(0,0%,0%,0.9);
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+
+    .cancel-bid-button {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      background-color: hsl(0,0%,20%);
+      color: hsla(0,0%,100%,0.8);
+      cursor: pointer;
+
+      &:disabled {
+        cursor: initial;
+        opacity: 0.3;
+      }
+    }
+  }
+}
+
+.chip-stack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  justify-content: center;
+  flex-direction: row;
+  pointer-events: none;
+
+  .chip-stack-item {
+    display: flex;
+    justify-content: center;
+    height: 120px;
+    background: linear-gradient(180deg, transparent 33%,
+      hsla(var(--player-colour-hue),50%,30%,0.1) 50%,
+      hsla(var(--player-colour-hue),50%,30%,0.3) 66%,
+      hsl(var(--player-colour-hue),50%,30%) 100%);
+    position: relative;
+    pointer-events: initial;
+    cursor: default;
+    user-select: none;
+
+    &:nth-child(2n+1) {
+      background: linear-gradient(180deg, transparent 33%,
+        hsla(var(--player-colour-hue),50%,35%,0.1) 50%,
+        hsla(var(--player-colour-hue),50%,35%,0.3) 66%,
+        hsl(var(--player-colour-hue),50%,35%) 100%);
+    }
+
+    .chip-stack-item-number {
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      transform: translateX(-50%);
+      font-size: 40px;
+      font-weight: bold;
+      color: hsla(0,0%,100%,0.7);
+      transition: opacity 100ms;
+      letter-spacing: -0.1em;
+      line-height: 1em;
+
+      &.double-digit {
+        transform: translateX(-50%) scaleX(0.7);
+      }
+    }
+
+    tmk-ouistiti-bid-chip {
+      position: absolute;
+      transition: opacity 100ms;
+      margin-top: 10px;
+    }
+
+    &:nth-child(4n) tmk-ouistiti-bid-chip { transform: translate(1px,4px); }
+    &:nth-child(4n + 1) tmk-ouistiti-bid-chip { transform: translate(-1px,-2px); }
+    &:nth-child(4n + 2) tmk-ouistiti-bid-chip { transform: translate(2px,6px); }
+    &:nth-child(4n + 3) tmk-ouistiti-bid-chip { transform: translate(-2px,-6px); }
+  }
+
+  .chip-stack-item.selected, &:not(.bid-selected) .chip-stack-item:hover {
+    background: linear-gradient(180deg, transparent 0%,
+      hsla(var(--player-colour-hue),50%,40%,0.1) 33%,
+      hsla(var(--player-colour-hue),50%,40%,0.3) 50%,
+      hsl(var(--player-colour-hue),50%,40%) 100%);
+    z-index: 1;
+    cursor: pointer;
+
+    &.selected {
+      background: linear-gradient(180deg, transparent 0%,
+        hsla(var(--player-colour-hue),50%,50%,0.1) 33%,
+        hsla(var(--player-colour-hue),50%,50%,0.3) 50%,
+        hsl(var(--player-colour-hue),50%,50%) 100%);
+      cursor: default;
+    }
+
+    ~ .chip-stack-item {
+      tmk-ouistiti-bid-chip {
+        opacity: 0;
+      }
+    }
+  }
+
+  &.bid-selected .chip-stack-item:not(.selected) .chip-stack-item-number,
+  &:not(.bid-selected):hover .chip-stack-item:not(:hover) .chip-stack-item-number {
+    opacity: 0.2;
+  }
+}

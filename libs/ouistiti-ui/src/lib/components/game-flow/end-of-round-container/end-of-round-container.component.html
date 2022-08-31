@@ -1,0 +1,31 @@
+<tmk-ouistiti-scoreboard
+  [scores]="scores"
+  [playersInOrder]="playersInOrder"
+  [scrollToRound]="roundInfo.number">
+</tmk-ouistiti-scoreboard>
+
+<div class="break-point">
+  <div class="proceeding-in" *ngIf="breakPointHasTimer">
+    Proceeding in:
+    <tmk-ouistiti-timer
+      [timestamp]="roundInfo.breakPoint.timerExpires"
+      [large]="true">
+    </tmk-ouistiti-timer>
+  </div>
+
+  <div class="waiting-for" *ngIf="breakPointHasAcknowledgements">
+    Waiting for:
+    <div class="waiting-for-grid">
+      <tmk-ouistiti-bid-chip
+        *ngFor="let player of playersInOrder"
+        [square]="true"
+        [diameter]="24"
+        [colour]="player?.colour"
+        [symbol]="player?.symbol"
+        [ngClass]="{ acknowledged: playerAcknowledgedEndOfTurn(player?.id) }">
+      </tmk-ouistiti-bid-chip>
+
+      <button class="next-button" (click)="clickNextButton()" [disabled]="playerAcknowledgedEndOfTurn(selfId)">Next</button>
+    </div>
+  </div>
+</div>

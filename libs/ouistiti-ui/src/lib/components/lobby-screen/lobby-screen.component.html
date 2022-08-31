@@ -1,0 +1,56 @@
+<div class="section">
+  <div class="inner-section">
+    <tmk-ouistiti-player-list
+      [players]="playerList$ | async"
+      [hostId]="hostId$ | async"
+      [selfId]="selfId"
+      [maxNumberOfPlayers]="maxNumberOfPlayers$ | async"
+      [sortable]="isHost"
+      (orderChanged)="onOrderChange($event)">
+
+      <ng-container *tmkOuistitiPlayerListItemContent="let player">
+        <div class="update-player-settings" *ngIf="isHost || selfId === player.id">
+          <tmk-ouistiti-player-settings
+            [takenColours]="omitColourFromTakenColours(player.colour, takenColours$ | async)"
+            [takenNicknames]="takenNicknames$ | async"
+            [nicknameUpdateButtonVisible]="true"
+            [value]="onlyColourAndSymbol(player)"
+            (valueChanged)="onPlayerSettingsChanged(player, $event)"
+            (nicknameUpdateButtonClicked)="onNicknameUpdate(player, $event)">
+          </tmk-ouistiti-player-settings>
+
+          <div class="form-grid">
+            <hr>
+
+            <div class="buttons-row">
+              <button class="button-colour-red" (click)="leaveLobbyOrKickPlayer(player.id)">
+                <fa-icon [icon]="(isHost && selfId !== player.id) ? faBan : faDoorOpen"></fa-icon>
+                {{ (isHost && selfId !== player.id) ? 'Kick' : 'Leave lobby' }}
+              </button>
+
+              <button class="button-colour-gold"
+                *ngIf="isHost"
+                [disabled]="selfId === player.id"
+                (click)="changeHost(player.id)">
+                <fa-icon [icon]="faCrown"></fa-icon>Make host
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+    </tmk-ouistiti-player-list>
+
+    <div class="form-grid" *ngIf="isHost">
+      <hr>
+
+      <div class="buttons-row">
+        <button class="button-colour-green" (click)="startGame()">
+          <fa-icon [icon]="faPlay"></fa-icon>Start game
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section"></div>

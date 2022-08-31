@@ -1,0 +1,66 @@
+<div class="bidding-info-row">
+  <div class="bidding-info-column">
+    <h1>Place your bid</h1>
+
+    <h2>
+      <tmk-ouistiti-bid-chip
+        [square]="true"
+        [diameter]="20"
+        [colour]="startingPlayerColour"
+        [symbol]="startingPlayerSymbol">
+      </tmk-ouistiti-bid-chip>
+      <div><span class="nickname">{{ startingPlayerNickname }}</span> {{ startingPlayerTense }} starting this round</div>
+    </h2>
+
+    <div class="waiting-for">
+      Waiting for:
+
+      <div class="waiting-for-players">
+        <tmk-ouistiti-bid-chip
+          *ngFor="let player of playersInOrder"
+          [square]="true"
+          [colour]="player.colour"
+          [symbol]="player.symbol"
+          [diameter]="30"
+          [ngClass]="{ 'bid-placed': !waitingForPlayer(player.id) }">
+        </tmk-ouistiti-bid-chip>
+      </div>
+
+      <div class="bidding-ends-timer" *ngIf="biddingEndsTimestamp > -1">
+        Bidding ends in:
+
+        <tmk-ouistiti-timer [timestamp]="roundInfo.breakPoint?.timerExpires"></tmk-ouistiti-timer>
+
+        <div class="proceeding-in-timer" *ngIf="roundInfo.breakPoint?.buffer">
+          Proceeding in:
+          <tmk-ouistiti-timer [timestamp]="roundInfo.breakPoint.buffer?.timerExpires" [large]="true"></tmk-ouistiti-timer>
+        </div>
+      </div>
+    </div>
+
+    <button class="cancel-bid-button" [disabled]="selfBid === -1" (click)="cancelBid()">Cancel bid</button>
+  </div>
+
+  <tmk-ouistiti-trump-card-wrapper
+    [card]="trumpCard"
+    [cardHeight]="150">
+  </tmk-ouistiti-trump-card-wrapper>
+</div>
+
+<div class="chip-stack" [ngClass]="bidStackClass">
+  <div
+    class="chip-stack-item"
+    *ngFor="let bid of bidArray"
+    [ngClass]="{ selected: this.selfBid === bid }"
+    (click)="selectBid(bid)">
+
+    <tmk-ouistiti-bid-chip
+      [colour]="self.colour"
+      [symbol]="self.symbol"
+      [dotted]="bid === 0"
+      [diameter]="50">
+    </tmk-ouistiti-bid-chip>
+
+    <div class="chip-stack-item-number" [ngClass]="{ 'double-digit': bid > 9 }">{{ bid }}</div>
+  </div>
+</div>

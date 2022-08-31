@@ -7,18 +7,22 @@ import { AdminPanelModule } from '../admin/admin-panel.module';
 import { AppComponent } from './app.component';
 import { IndexComponent } from '../index/index.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CardsTestComponent } from '../cards-test/cards-test.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
     AppComponent,
-    IndexComponent
+    IndexComponent,
+    CardsTestComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AdminPanelModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FontAwesomeModule
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

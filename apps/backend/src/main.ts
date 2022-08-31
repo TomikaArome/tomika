@@ -5,10 +5,12 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { config as dotenvConfig } from 'dotenv';
 
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
+  dotenvConfig();
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);

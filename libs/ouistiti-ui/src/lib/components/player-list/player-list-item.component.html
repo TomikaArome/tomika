@@ -1,0 +1,31 @@
+<div class="player-list-item-row">
+  <tmk-ouistiti-bid-chip
+    [colour]="player.colour"
+    [symbol]="player.symbol"
+    [square]="true"
+    [diameter]="40">
+  </tmk-ouistiti-bid-chip>
+
+  <div class="nickname">
+    {{ player.nickname }}
+    <fa-icon *ngIf="isHost" class="host-indicator" [icon]="faCrown"></fa-icon>
+  </div>
+
+  <fa-icon
+    *ngIf="expandable"
+    [icon]="faUserCog"
+    [ngClass]="{ active: contentVisible }"
+    (click)="toggleContent()">
+  </fa-icon>
+
+  <fa-icon
+    [icon]="faGripVertical"
+    *ngIf="grabbable"
+    tmkSortableListGrip>
+    drag_indicator
+  </fa-icon>
+</div>
+
+<div class="player-list-item-content" *ngIf="contentVisible">
+  <ng-content></ng-content>
+</div>

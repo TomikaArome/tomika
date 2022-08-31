@@ -1,0 +1,59 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: hsl(0,0%,5%);
+  padding: 20px;
+}
+
+tmk-ouistiti-scoreboard {
+  width: 100%;
+}
+
+.break-point {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+
+  .proceeding-in, .waiting-for {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .waiting-for {
+    gap: 8px;
+
+    .waiting-for-grid {
+      display: grid;
+      gap: 4px;
+      grid-template-rows: repeat(2, auto);
+      grid-auto-flow: column;
+
+      tmk-ouistiti-bid-chip.acknowledged {
+        opacity: 0.2;
+      }
+
+      .next-button {
+        grid-row: 1 / -1;
+        width: 52px;
+        border: none;
+        border-radius: 8px;
+        background-color: hsl(0,0%,20%);
+        color: hsla(0,0%,100%,0.8);
+        cursor: pointer;
+
+        &:disabled {
+          cursor: initial;
+          opacity: 0.3;
+        }
+      }
+    }
+  }
+}

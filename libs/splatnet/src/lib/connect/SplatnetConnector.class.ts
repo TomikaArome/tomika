@@ -9,6 +9,11 @@ type SplatnetConnectorOptions = {
   sessionTokenCode: string;
 };
 
+interface GetSessionTokenResult {
+  session_token: string;
+  code: string;
+}
+
 export class SplatnetConnector {
   static readonly NSO_APP_APPLE_STORE_URI =
     'https://apps.apple.com/us/app/nintendo-switch-online/id1234806557';
@@ -102,7 +107,7 @@ export class SplatnetConnector {
     this.cookie = params.cookie ?? null;
   }
 
-  extractSessionTokenCode(redirectUri: string): string {
+  static extractSessionTokenCode(redirectUri: string): string {
     return redirectUri.replace(
       /^(.*)session_token_code=([a-zA-Z0-9\\._-]*)(&.*)?$/,
       '$2'
@@ -128,7 +133,7 @@ export class SplatnetConnector {
         session_token_code_verifier: authCodeVerifier,
       }).toString(),
     });
-    const objFromJson = await result.json();
+    const objFromJson = await result.json() as GetSessionTokenResult;
     return objFromJson.session_token;
   }
 }

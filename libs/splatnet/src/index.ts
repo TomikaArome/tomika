@@ -1,1 +1,1 @@
-export * from './lib/splatnet';
+export * from './lib/connect/SplatnetConnector.class';

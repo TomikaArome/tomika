@@ -1,13 +1,21 @@
 import * as crypto from 'crypto';
 import fetch from 'node-fetch';
 
-export class NintendoApi {
+type SplatnetConnectorOptions = {
+  cookie: string;
+  sessionTokenCode: never;
+} | {
+  cookie: never;
+  sessionTokenCode: string;
+};
+
+export class SplatnetConnector {
   static readonly NSO_APP_APPLE_STORE_URI =
     'https://apps.apple.com/us/app/nintendo-switch-online/id1234806557';
 
   static readonly BASE_URI = 'https://accounts.nintendo.com/connect/1.0.0';
-  static readonly AUTH_URI = `${NintendoApi.BASE_URI}/authorize`;
-  static readonly API_URI = `${NintendoApi.BASE_URI}/api`;
+  static readonly AUTH_URI = `${SplatnetConnector.BASE_URI}/authorize`;
+  static readonly API_URI = `${SplatnetConnector.BASE_URI}/api`;
 
   static readonly REDIRECT_URI = 'npf71b963c1b7b6d119://auth';
   static readonly CLIENT_ID = '71b963c1b7b6d119';
@@ -40,7 +48,7 @@ export class NintendoApi {
     if (this.splatnet2AppVersion) {
       return this.splatnet2AppVersion;
     }
-    const htmlResult = await fetch(NintendoApi.NSO_APP_APPLE_STORE_URI, {
+    const htmlResult = await fetch(SplatnetConnector.NSO_APP_APPLE_STORE_URI, {
       method: 'GET',
       headers: {
         Accept: 'text/html,application/xhtml+xml,application/xml',
@@ -63,26 +71,35 @@ export class NintendoApi {
     }
   }
 
-  generateAuthUri() {
-    const authState = NintendoApi.generateUrlSafeBase64String();
-    const authCodeVerifier = NintendoApi.generateUrlSafeBase64String();
+  static generateAuthUri(authCodeVerifier: string) {
+    const authState = SplatnetConnector.generateUrlSafeBase64String();
     const authCvHash = crypto.createHash('sha256');
     authCvHash.update(authCodeVerifier);
-    const authCodeChallenge = NintendoApi.toUrlSafeBase64Encode(
+    const authCodeChallenge = SplatnetConnector.toUrlSafeBase64Encode(
       authCvHash.digest()
     );
 
     const params = new URLSearchParams({
       state: authState,
-      redirect_uri: NintendoApi.REDIRECT_URI,
-      client_id: NintendoApi.CLIENT_ID,
-      scope: NintendoApi.SCOPES.join(' '),
+      redirect_uri: SplatnetConnector.REDIRECT_URI,
+      client_id: SplatnetConnector.CLIENT_ID,
+      scope: SplatnetConnector.SCOPES.join(' '),
       response_type: 'session_token_code',
       session_token_code_challenge: authCodeChallenge,
       session_token_code_challenge_method: 'S256',
       theme: 'login_form',
     });
-    return `${NintendoApi.AUTH_URI}?${params.toString()}`;
+    return `${SplatnetConnector.AUTH_URI}?${params.toString()}`;
+  }
+
+  static generateAuthCodeVerifier(): string {
+    return SplatnetConnector.generateUrlSafeBase64String();
+  }
+
+  private cookie: string;
+
+  constructor(params: SplatnetConnectorOptions) {
+    this.cookie = params.cookie ?? null;
   }
 
   extractSessionTokenCode(redirectUri: string): string {
@@ -93,7 +110,7 @@ export class NintendoApi {
   }
 
   async getSessionToken(sessionTokenCode: string, authCodeVerifier: string) {
-    const result = await fetch(`${NintendoApi.API_URI}/session_token`, {
+    const result = await fetch(`${SplatnetConnector.API_URI}/session_token`, {
       method: 'POST',
       headers: {
         'User-Agent': `OnlineLounge/${await this.getSplatnet2AppVersion()} NASDKAPI Android`,
@@ -106,7 +123,7 @@ export class NintendoApi {
         'Accept-Encoding': 'gzip',
       },
       body: new URLSearchParams({
-        client_id: NintendoApi.CLIENT_ID,
+        client_id: SplatnetConnector.CLIENT_ID,
         session_token_code: sessionTokenCode,
         session_token_code_verifier: authCodeVerifier,
       }).toString(),

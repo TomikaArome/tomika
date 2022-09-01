@@ -1,11 +1,7 @@
-import { NintendoApi } from './NintendoApi.class';
+import { SplatnetConnector } from './SplatnetConnector.class';
 
 describe('NintendoApi', () => {
-  let api: NintendoApi;
-
-  beforeEach(() => {
-    api = new NintendoApi();
-  });
+  let api: SplatnetConnector;
 
   it('should be able to get the app version', async () => {
     const appVersion = await api.getSplatnet2AppVersion();
@@ -13,7 +9,7 @@ describe('NintendoApi', () => {
   });
 
   it('should generate a valid authorisation URL', async () => {
-    const uri = api.generateAuthUri();
+    const uri = SplatnetConnector.generateAuthUri('');
     console.log(uri);
     expect(true).toBeTruthy();
   });

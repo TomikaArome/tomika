@@ -1,12 +1,13 @@
 import { type PromptModule } from 'inquirer';
 import { SplatnetConnector } from '@TomikaArome/splatnet';
+import * as readline from 'node:readline';
+import { WriteStream } from 'fs';
 
 let prompt: PromptModule = null;
 const getInquirerPrompt = async (): Promise<PromptModule> => {
   if (prompt !== null) { return prompt; }
   const module = await (eval(`import('inquirer')`) as Promise<typeof import('inquirer')>);
   prompt = module.createPromptModule();
-  // prompt = createPromptModule();
   return prompt;
 };
 
@@ -53,13 +54,11 @@ const generateIksm = async () => {
   const cyan = '\u001b[36m';
   const button = '\u001b[41m\u001b[37m';
 
-  console.group()
   console.log(`
 Open the following link in your browser:
 ${reset+cyan+authUri+reset}
 Right click on ${button}Select this person${reset}, click on ${bold}Copy link address${reset}.
 `);
-  console.groupEnd()
   await prompt([{
     type: 'input',
     name: 'redirectUri',
@@ -67,6 +66,26 @@ Right click on ${button}Select this person${reset}, click on ${bold}Copy link ad
   }]);
 };
 
-const readLineTest = async () => {
+const delay = (time) => new Promise(resolve => setTimeout(resolve, time));
 
+const wrapProgressMessage = async (task: Promise<unknown>, message = '', stream: typeof process.stdout = process.stdout) => {
+  let resolved = false;
+  task.then(() => { resolved = true; });
+  const timestampBefore = +new Date();
+  let timeDiff;
+  while (!resolved) {
+    stream.clearLine(0);
+    readline.cursorTo(process.stdout, 0);
+    timeDiff = Math.floor((+new Date() - timestampBefore) / 1000);
+    stream.write(`\u001b[31m\u00D7\u001b[0m ${message} \u001b[90m${timeDiff}s\u001b[0m`);
+    await delay(10);
+  }
+  readline.cursorTo(process.stdout, 0);
+  stream.clearLine(0);
+  stream.write(`\u001b[32m\u2713\u001b[0m ${message} \u001b[90m${timeDiff}s\u001b[0m`);
+};
+
+const readLineTest = async () => {
+  await wrapProgressMessage(delay(10000), 'Test task');
+  process.exit();
 };

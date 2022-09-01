@@ -27,7 +27,7 @@ export class SplatnetConnector {
     'user.screenName',
   ];
 
-  private splatnet2AppVersion: string = null;
+  private static splatnet2AppVersion: string = null;
 
   private static toUrlSafeBase64Encode(value: Buffer): string {
     return value
@@ -44,9 +44,9 @@ export class SplatnetConnector {
   /**
    * Gets the Splatnet 2 app version from the Apple Store page by scraping the HTML
    */
-  async getSplatnet2AppVersion() {
-    if (this.splatnet2AppVersion) {
-      return this.splatnet2AppVersion;
+  static async getSplatnet2AppVersion() {
+    if (SplatnetConnector.splatnet2AppVersion) {
+      return SplatnetConnector.splatnet2AppVersion;
     }
     const htmlResult = await fetch(SplatnetConnector.NSO_APP_APPLE_STORE_URI, {
       method: 'GET',
@@ -64,7 +64,7 @@ export class SplatnetConnector {
         /^(.*)Version ([0-9]+\.[0-9]+\.[0-9]+)(.*)/,
         '$2'
       );
-      this.splatnet2AppVersion = version;
+      SplatnetConnector.splatnet2AppVersion = version;
       return version;
     } else {
       throw 'Could not fetch NSO app version';
@@ -109,11 +109,11 @@ export class SplatnetConnector {
     );
   }
 
-  async getSessionToken(sessionTokenCode: string, authCodeVerifier: string) {
+  static async getSessionToken(sessionTokenCode: string, authCodeVerifier: string) {
     const result = await fetch(`${SplatnetConnector.API_URI}/session_token`, {
       method: 'POST',
       headers: {
-        'User-Agent': `OnlineLounge/${await this.getSplatnet2AppVersion()} NASDKAPI Android`,
+        'User-Agent': `OnlineLounge/${await SplatnetConnector.getSplatnet2AppVersion()} NASDKAPI Android`,
         'Accept-Language': 'en-US',
         Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',

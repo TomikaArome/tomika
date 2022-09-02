@@ -1,6 +1,6 @@
 import { type PromptModule } from 'inquirer';
 import * as readline from 'node:readline';
-import { extractSessionTokenCode, generateAuthCodeVerifier, generateAuthUri, getFToken, getIdToken, getSessionToken, getSplatnet2AppVersion, getWebApiServerCredential, getUserInfo } from '@TomikaArome/splatnet';
+import { extractSessionTokenCode, generateAuthCodeVerifier, generateAuthUri, getFToken, getIdToken, getSessionToken, getNsoAppVersion, getWebApiServerCredential, getUserInfo, getSplatoonAccessToken, getCookie } from '@TomikaArome/splatnet';
 
 const userAgent = 'tomika-splatnet-cli/1.0.0';
 
@@ -63,15 +63,18 @@ Right click on ${button}Select this person${reset}, click on ${bold}Copy link ad
   }])).redirectUri;
   console.log('');
 
-  await wrapProgressMessage(getSplatnet2AppVersion(), 'Fetching NSO app version');
+  await wrapProgressMessage(getNsoAppVersion(), 'Fetching NSO app version');
   const sessionTokenCode = extractSessionTokenCode(redirectUri);
   const sessionTokenObj = await wrapProgressMessage(getSessionToken(sessionTokenCode, authCodeVerifier), 'Fetching session token from Nintendo API');
   const idTokenObj = await wrapProgressMessage(getIdToken(sessionTokenObj.session_token), 'Fetching ID token from Nintendo API');
   const userInfoObj = await wrapProgressMessage(getUserInfo(idTokenObj.access_token), 'Fetching user info from Nintendo API');
-  const fTokenObj = await wrapProgressMessage(getFToken(userAgent, idTokenObj.id_token, 1), 'First call to the IMINK API');
-  const webApiServerCredentialObj = await wrapProgressMessage(getWebApiServerCredential(idTokenObj.id_token, fTokenObj, userInfoObj), 'Fetching web API credentials');
+  const fTokenObj1 = await wrapProgressMessage(getFToken(userAgent, idTokenObj.id_token, 1), 'First call to get the f token from IMINK API');
+  const webApiServerCredentialObj = await wrapProgressMessage(getWebApiServerCredential(idTokenObj.id_token, fTokenObj1, userInfoObj), 'Fetching web API credentials from Nintendo API');
+  const fTokenObj2 = await wrapProgressMessage(getFToken(userAgent, webApiServerCredentialObj.accessToken, 2), 'Second call to get the f token from IMINK API');
+  const splatoonAccessTokenObj = await wrapProgressMessage(getSplatoonAccessToken(webApiServerCredentialObj, fTokenObj2), 'Fetching web service token from Nintendo API');
+  const cookie = await wrapProgressMessage(getCookie(splatoonAccessTokenObj), 'Fetching cookie from Splatnet');
 
-  console.log(`\n`, webApiServerCredentialObj);
+  console.log(`\nCookie`, cookie);
 };
 
 const wrapProgressMessage = async <T>(task: Promise<T>, message = '', stream: typeof process.stdout = process.stdout): Promise<T> => {

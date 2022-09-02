@@ -24,7 +24,13 @@ export interface FTokenResult {
   timestamp: number;
 }
 
-export interface WebApiServerCredentialResult {
+export interface AccessTokenResult {
   accessToken: string;
   expiresIn: number;
+}
+
+export interface IksmCookieResult {
+  fullHeader?: string;
+  iksm: string;
+  expires: number;
 }

@@ -59,13 +59,18 @@ Right click on ${button}Select this person${reset}, click on ${bold}Copy link ad
     name: 'redirectUri',
     message: 'Paste the copied link here:'
   }])).redirectUri;
+  console.log('');
+
+  await wrapProgressMessage(SplatnetConnector.getSplatnet2AppVersion(), 'Fetching NSO app version');
   const sessionTokenCode = SplatnetConnector.extractSessionTokenCode(redirectUri);
-  const sessionTokenPromise = SplatnetConnector.getSessionToken(sessionTokenCode, authCodeVerifier);
-  await wrapProgressMessage(sessionTokenPromise, 'Fetching session token from Nintendo API');
-  console.log(await sessionTokenPromise);
+  const sessionTokenObj = await wrapProgressMessage(SplatnetConnector.getSessionToken(sessionTokenCode, authCodeVerifier), 'Fetching session token from Nintendo API');
+  const idTokenObj = await wrapProgressMessage(SplatnetConnector.getIdToken(sessionTokenObj.session_token), 'Fetching ID token from Nintendo API');
+  const userInfoObj = await wrapProgressMessage(SplatnetConnector.getUserInfo(idTokenObj.access_token), 'Fetching user info from Nintendo API');
+
+  console.log(`\n`, userInfoObj);
 };
 
-const wrapProgressMessage = async (task: Promise<unknown>, message = '', stream: typeof process.stdout = process.stdout) => {
+const wrapProgressMessage = async <T>(task: Promise<T>, message = '', stream: typeof process.stdout = process.stdout): Promise<T> => {
   const delay = (time) => new Promise(resolve => setTimeout(resolve, time));
   const symbols = ['\u2846','\u2807','\u280B','\u2819','\u2838','\u28B0','\u28E0','\u28C4'];
   let taskStatus = 0;
@@ -85,4 +90,6 @@ const wrapProgressMessage = async (task: Promise<unknown>, message = '', stream:
   stream.clearLine(0);
   const symbol = taskStatus === 1 ? '\u001b[32m\u2713' : '\u001b[31m\u00D7';
   stream.write(`${symbol}\u001b[0m\u001b[1m ${message} \u001b[0m\u001b[90m${secondsDiff}s\u001b[0m\n`);
+
+  return task;
 };

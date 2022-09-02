@@ -1,5 +1,6 @@
 import * as crypto from 'crypto';
 import fetch from 'node-fetch';
+import { GetIdTokenResult, GetSessionTokenResult } from './connect.model';
 
 type SplatnetConnectorOptions = {
   cookie: string;
@@ -9,11 +10,6 @@ type SplatnetConnectorOptions = {
   sessionTokenCode: string;
 };
 
-interface GetSessionTokenResult {
-  session_token: string;
-  code: string;
-}
-
 export class SplatnetConnector {
   static readonly NSO_APP_APPLE_STORE_URI =
     'https://apps.apple.com/us/app/nintendo-switch-online/id1234806557';
@@ -21,6 +17,7 @@ export class SplatnetConnector {
   static readonly BASE_URI = 'https://accounts.nintendo.com/connect/1.0.0';
   static readonly AUTH_URI = `${SplatnetConnector.BASE_URI}/authorize`;
   static readonly API_URI = `${SplatnetConnector.BASE_URI}/api`;
+  static readonly USER_INFO_URI = 'https://api.accounts.nintendo.com/2.0.0/users/me';
 
   static readonly REDIRECT_URI = 'npf71b963c1b7b6d119://auth';
   static readonly CLIENT_ID = '71b963c1b7b6d119';
@@ -114,26 +111,63 @@ export class SplatnetConnector {
     );
   }
 
-  static async getSessionToken(sessionTokenCode: string, authCodeVerifier: string) {
+  static async getSessionToken(sessionTokenCode: string, authCodeVerifier: string): Promise<GetSessionTokenResult> {
     const result = await fetch(`${SplatnetConnector.API_URI}/session_token`, {
       method: 'POST',
       headers: {
-        'User-Agent': `OnlineLounge/${await SplatnetConnector.getSplatnet2AppVersion()} NASDKAPI Android`,
+        'User-Agent':      `OnlineLounge/${await SplatnetConnector.getSplatnet2AppVersion()} NASDKAPI Android`,
         'Accept-Language': 'en-US',
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': '540',
-        Host: 'accounts.nintendo.com',
-        Connection: 'Keep-Alive',
+        'Accept':          'application/json',
+        'Content-Type':    'application/x-www-form-urlencoded',
+        'Content-Length':  '540',
+        'Host':            'accounts.nintendo.com',
+        'Connection':      'Keep-Alive',
         'Accept-Encoding': 'gzip',
       },
       body: new URLSearchParams({
-        client_id: SplatnetConnector.CLIENT_ID,
-        session_token_code: sessionTokenCode,
-        session_token_code_verifier: authCodeVerifier,
-      }).toString(),
+        'client_id':                   SplatnetConnector.CLIENT_ID,
+        'session_token_code':          sessionTokenCode,
+        'session_token_code_verifier': authCodeVerifier
+      }).toString()
     });
-    const objFromJson = await result.json() as GetSessionTokenResult;
-    return objFromJson.session_token;
+    return await result.json() as GetSessionTokenResult;
+  }
+
+  static async getIdToken(sessionToken: string): Promise<GetIdTokenResult> {
+    const result = await fetch(`${SplatnetConnector.API_URI}/token`, {
+      method: 'POST',
+      headers: {
+        'Host':            'accounts.nintendo.com',
+        'Accept-Encoding': 'gzip',
+        'Content-Type':    'application/json; charset=utf-8',
+        'Accept-Language': 'en-GB',
+        'Content-Length':  '439',
+        'Accept':          'application/json',
+        'Connection':      'Keep-Alive',
+        'User-Agent':      `OnlineLounge/${await SplatnetConnector.getSplatnet2AppVersion()} NASDKAPI Android`
+      },
+      body: JSON.stringify({
+        'client_id':     '71b963c1b7b6d119',
+        'session_token': sessionToken,
+        'grant_type':    'urn:ietf:params:oauth:grant-type:jwt-bearer-session-token'
+      })
+    });
+    return await result.json() as GetIdTokenResult;
+  }
+
+  static async getUserInfo(accessToken: string) {
+    const result = await fetch(SplatnetConnector.USER_INFO_URI, {
+      method: 'GET',
+      headers: {
+        'User-Agent':      `OnlineLounge/${await SplatnetConnector.getSplatnet2AppVersion()} NASDKAPI Android`,
+        'Accept-Language': 'en-GB',
+        'Accept':          'application/json',
+        'Authorization':   `Bearer ${accessToken}`,
+        'Host':            'api.accounts.nintendo.com',
+        'Connection':      'Keep-Alive',
+        'Accept-Encoding': 'gzip'
+      }
+    });
+    return await result.json();
   }
 }

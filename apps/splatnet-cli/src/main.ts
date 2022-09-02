@@ -1,6 +1,6 @@
 import { type PromptModule } from 'inquirer';
-import { SplatnetConnector } from '@TomikaArome/splatnet';
 import * as readline from 'node:readline';
+import { extractSessionTokenCode, generateAuthCodeVerifier, generateAuthUri, getIdToken, getSessionToken, getSplatnet2AppVersion, getUserInfo } from '@TomikaArome/splatnet';
 
 let prompt: PromptModule = null;
 const getInquirerPrompt = async (): Promise<PromptModule> => {
@@ -41,8 +41,8 @@ const getInquirerPrompt = async (): Promise<PromptModule> => {
 })();
 
 const generateIksm = async () => {
-  const authCodeVerifier = SplatnetConnector.generateAuthCodeVerifier();
-  const authUri = SplatnetConnector.generateAuthUri(authCodeVerifier);
+  const authCodeVerifier = generateAuthCodeVerifier();
+  const authUri = generateAuthUri(authCodeVerifier);
 
   const reset = '\u001b[0m';
   const bold = '\u001b[1m';
@@ -61,11 +61,13 @@ Right click on ${button}Select this person${reset}, click on ${bold}Copy link ad
   }])).redirectUri;
   console.log('');
 
-  await wrapProgressMessage(SplatnetConnector.getSplatnet2AppVersion(), 'Fetching NSO app version');
-  const sessionTokenCode = SplatnetConnector.extractSessionTokenCode(redirectUri);
-  const sessionTokenObj = await wrapProgressMessage(SplatnetConnector.getSessionToken(sessionTokenCode, authCodeVerifier), 'Fetching session token from Nintendo API');
-  const idTokenObj = await wrapProgressMessage(SplatnetConnector.getIdToken(sessionTokenObj.session_token), 'Fetching ID token from Nintendo API');
-  const userInfoObj = await wrapProgressMessage(SplatnetConnector.getUserInfo(idTokenObj.access_token), 'Fetching user info from Nintendo API');
+  await wrapProgressMessage(getSplatnet2AppVersion(), 'Fetching NSO app version');
+  const sessionTokenCode = extractSessionTokenCode(redirectUri);
+  const sessionTokenObj = await wrapProgressMessage(getSessionToken(sessionTokenCode, authCodeVerifier), 'Fetching session token from Nintendo API');
+  const idTokenObj = await wrapProgressMessage(getIdToken(sessionTokenObj.session_token), 'Fetching ID token from Nintendo API');
+  const userInfoObj = await wrapProgressMessage(getUserInfo(idTokenObj.access_token), 'Fetching user info from Nintendo API');
+
+  //'tomika-splatnet-cli/1.0.0'
 
   console.log(`\n`, userInfoObj);
 };

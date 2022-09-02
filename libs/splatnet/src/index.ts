@@ -1,1 +1,1 @@
-export * from './lib/connect/SplatnetConnector.class';
+export * from './lib/connect/generate-iksm.module';

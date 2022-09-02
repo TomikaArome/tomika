@@ -1,6 +1,8 @@
 import { type PromptModule } from 'inquirer';
 import * as readline from 'node:readline';
-import { extractSessionTokenCode, generateAuthCodeVerifier, generateAuthUri, getIdToken, getSessionToken, getSplatnet2AppVersion, getUserInfo } from '@TomikaArome/splatnet';
+import { extractSessionTokenCode, generateAuthCodeVerifier, generateAuthUri, getFToken, getIdToken, getSessionToken, getSplatnet2AppVersion, getWebApiServerCredential, getUserInfo } from '@TomikaArome/splatnet';
+
+const userAgent = 'tomika-splatnet-cli/1.0.0';
 
 let prompt: PromptModule = null;
 const getInquirerPrompt = async (): Promise<PromptModule> => {
@@ -66,10 +68,10 @@ Right click on ${button}Select this person${reset}, click on ${bold}Copy link ad
   const sessionTokenObj = await wrapProgressMessage(getSessionToken(sessionTokenCode, authCodeVerifier), 'Fetching session token from Nintendo API');
   const idTokenObj = await wrapProgressMessage(getIdToken(sessionTokenObj.session_token), 'Fetching ID token from Nintendo API');
   const userInfoObj = await wrapProgressMessage(getUserInfo(idTokenObj.access_token), 'Fetching user info from Nintendo API');
+  const fTokenObj = await wrapProgressMessage(getFToken(userAgent, idTokenObj.id_token, 1), 'First call to the IMINK API');
+  const webApiServerCredentialObj = await wrapProgressMessage(getWebApiServerCredential(idTokenObj.id_token, fTokenObj, userInfoObj), 'Fetching web API credentials');
 
-  //'tomika-splatnet-cli/1.0.0'
-
-  console.log(`\n`, userInfoObj);
+  console.log(`\n`, webApiServerCredentialObj);
 };
 
 const wrapProgressMessage = async <T>(task: Promise<T>, message = '', stream: typeof process.stdout = process.stdout): Promise<T> => {

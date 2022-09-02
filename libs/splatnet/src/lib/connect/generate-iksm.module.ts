@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import fetch from 'node-fetch';
-import { GetIdTokenResult, GetSessionTokenResult } from './generate-iksm.model';
+import { FTokenResult, GetIdTokenResult, GetSessionTokenResult, UserInfoNeededForIksm, WebApiServerCredentialResult } from './generate-iksm.model';
 
 // Apple Store URI
 const NSO_APP_APPLE_STORE_URI = 'https://apps.apple.com/us/app/nintendo-switch-online/id1234806557';
@@ -11,6 +11,7 @@ const AUTHORIZE_URI = `${CONNECT_BASE_URI}/authorize`;
 const SESSION_TOKEN_ENDPOINT_URI = `${CONNECT_BASE_URI}/api/session_token`;
 const TOKEN_ENDPOINT_URI = `${CONNECT_BASE_URI}/api/token`;
 const USER_INFO_ENDPOINT_URI = 'https://api.accounts.nintendo.com/2.0.0/users/me';
+const SPLATOON_ACCESS_TOKEN_ENDPOINT_URI = 'https://api-lp1.znc.srv.nintendo.net/v3/Account/Login';
 
 // Splatnet 2
 const SPLATNET_2_CLIENT_ID = '71b963c1b7b6d119';
@@ -124,7 +125,7 @@ export const getIdToken = async (sessionToken: string): Promise<GetIdTokenResult
   return await result.json() as GetIdTokenResult;
 };
 
-export const getUserInfo = async (accessToken: string) => {
+export const getUserInfo = async (accessToken: string): Promise<UserInfoNeededForIksm> => {
   const result = await fetch(USER_INFO_ENDPOINT_URI, {
     method: 'GET',
     headers: {
@@ -137,10 +138,11 @@ export const getUserInfo = async (accessToken: string) => {
       'Accept-Encoding': 'gzip'
     }
   });
-  return await result.json();
+  const { nickname, birthday, country, language } = await result.json();
+  return { nickname, birthday, country, language } as UserInfoNeededForIksm;
 };
 
-export const getFToken = async (userAgent: string, idToken: string, step: 1 | 2) => {
+export const getFToken = async (userAgent: string, idToken: string, step: 1 | 2): Promise<FTokenResult> => {
   const result = await fetch(IMINK_API_F_ENDPOINT_URI, {
     method: 'POST',
     headers: {
@@ -152,5 +154,42 @@ export const getFToken = async (userAgent: string, idToken: string, step: 1 | 2)
       'hashMethod': `${step}`
     })
   });
-  return await result.json();
+  const jsonObj = await result.json();
+  return {
+    f: jsonObj.f,
+    uuid: jsonObj.request_id,
+    timestamp: jsonObj.timestamp
+  } as FTokenResult;
+};
+
+export const getWebApiServerCredential = async (idToken: string, fTokenResult: FTokenResult, userInfo: UserInfoNeededForIksm): Promise<WebApiServerCredentialResult> => {
+  const nsoAppVersion = await getSplatnet2AppVersion();
+  const result = await fetch(SPLATOON_ACCESS_TOKEN_ENDPOINT_URI, {
+    method: 'POST',
+    headers: {
+      'Host':             'api-lp1.znc.srv.nintendo.net',
+      'Accept-Language':  'en-GB',
+      'User-Agent':       `com.nintendo.znca/${nsoAppVersion} (Android/7.1.2)`,
+      'Accept':           'application/json',
+      'X-ProductVersion': nsoAppVersion,
+      'Content-Type':     'application/json; charset=utf-8',
+      'Connection':       'Keep-Alive',
+      'Authorization':    'Bearer',
+      'X-Platform':       'Android',
+      'Accept-Encoding':  'gzip'
+    },
+    body: JSON.stringify({
+      parameter: {
+        'f':          fTokenResult.f,
+        'naIdToken':  idToken,
+        'timestamp':  fTokenResult.timestamp,
+        'requestId':  fTokenResult.uuid,
+        'naCountry':  userInfo.country,
+        'naBirthday': userInfo.birthday,
+        'language':   userInfo.language
+      }
+    })
+  });
+  const jsonObj = await result.json();
+  return jsonObj.result.webApiServerCredential as WebApiServerCredentialResult;
 };

@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import fetch from 'node-fetch';
-import { FTokenResult, GetIdTokenResult, GetSessionTokenResult, UserInfoNeededForIksm, AccessTokenResult, NsoGameServiceCookie, NsoGameService } from './generate-iksm.model';
+import { FTokenResult, GetIdTokenResult, SessionTokenResponse, UserInfoNeededForIksm, AccessTokenResult, NsoGameServiceCookie, NsoGameService } from './generate-iksm.model';
 import { parse } from 'set-cookie-parser';
 
 const userLang = 'en-GB';
@@ -23,9 +23,6 @@ const NSO_APP_REDIRECT_URI = `npf${NSO_APP_CLIENT_ID}://auth`;
 const SCOPES = ['openid', 'user', 'user.birthday', 'user.mii', 'user.screenName'];
 
 // NSO service info
-const SPLATNET_2_URI = `https://app.splatoon2.nintendo.net`;
-const SMASH_URI = `https://app.smashbros.nintendo.net`;
-const ANIMAL_CROSSING_URI = `https://web.sd.lp1.acbaa.srv.nintendo.net`;
 export const NSO_GAME_SERVICES = {
   SPLATOON_2: {
     id: 5741031244955648,
@@ -110,7 +107,7 @@ export const generateAuthUri = (authCodeVerifier: string): string => {
   return `${AUTHORIZE_URI}?${params.toString()}`;
 };
 
-export const getSessionToken = async (sessionTokenCode: string, authCodeVerifier: string): Promise<GetSessionTokenResult> => {
+export const getSessionToken = async (sessionTokenCode: string, authCodeVerifier: string): Promise<SessionTokenResponse> => {
   const result = await fetch(SESSION_TOKEN_ENDPOINT_URI, {
     method: 'POST',
     headers: {
@@ -129,7 +126,7 @@ export const getSessionToken = async (sessionTokenCode: string, authCodeVerifier
       'session_token_code_verifier': authCodeVerifier
     }).toString()
   });
-  return await result.json() as GetSessionTokenResult;
+  return await result.json() as SessionTokenResponse;
 };
 
 export const getIdToken = async (sessionToken: string): Promise<GetIdTokenResult> => {
@@ -220,7 +217,7 @@ export const getWebApiServerCredential = async (idToken: string, fToken: FTokenR
     })
   });
   const jsonObj = await result.json();
-  console.log(jsonObj);
+  // console.log(jsonObj);
   return jsonObj.result.webApiServerCredential as AccessTokenResult;
 };
 
@@ -251,12 +248,12 @@ export const getNsoGameServiceAccessToken = async (webApiServerCredential: Acces
     })
   });
   const jsonObj = await result.json();
-  console.log(jsonObj);
+  // console.log(jsonObj);
   return jsonObj.result as AccessTokenResult;
 };
 
 export const getCookie = async (nsoGameServiceAccessToken: AccessTokenResult, game: NsoGameService = NSO_GAME_SERVICES.SPLATOON_2): Promise<NsoGameServiceCookie> => {
-  const result = await fetch(SPLATNET_2_URI, {
+  const result = await fetch(`https://${game.host}/`, {
     method: 'GET',
     headers: {
       'Host':                    game.host,

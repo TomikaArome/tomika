@@ -5,10 +5,11 @@ export interface NsoGameService {
   cookieName: string;
 }
 
-export interface GetSessionTokenResult {
+export interface SessionTokenResponse {
   session_token: string;
   code: string;
 }
+export const isSessionTokenResponse = (obj): obj is SessionTokenResponse => obj.session_token && obj.code;
 
 export interface GetIdTokenResult {
   scope: string[];

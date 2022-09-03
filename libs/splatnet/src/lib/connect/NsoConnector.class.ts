@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { isSessionTokenResponse } from './generate-iksm.model';
+import { AccessTokenResponse, FTokenResponse, IdTokenResponse, isFTokenResponse, isIdTokenResponse, isSessionTokenResponse, isUserInfoForAuth, isWebApiServerCredentialResponse, UserInfoForAuth } from './generate-iksm.model';
 import { getNsoAppVersion } from './nso-app-version';
 import { NsoError, NsoErrorCode } from '../NsoError';
 import * as crypto from 'crypto';
@@ -28,6 +28,8 @@ const toUrlSafeBase64Encode = (value: Buffer): string => value
   .replace(/\//g, '_')
   .replace(/=+$/, '');
 const generateUrlSafeBase64String = (size): string => toUrlSafeBase64Encode(crypto.randomBytes(size));
+
+const userLang = 'en-GB';
 
 type NsoConnectorArgsSessionToken = {
   sessionToken: string;
@@ -82,35 +84,161 @@ export class NsoConnector {
       return new NsoConnector(args.sessionToken);
     }
     const sessionTokenCode = isNsoConnectorArgsSessionTokenCode(args) ? args.sessionTokenCode : NsoConnector.extractSessionTokenCode(args.redirectUri);
+    const headers = {
+      'User-Agent': `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`,
+      'Accept-Language': 'en-US',
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': '540',
+      'Host': 'accounts.nintendo.com',
+      'Connection': 'Keep-Alive',
+      'Accept-Encoding': 'gzip',
+    };
+    const body = {
+      'client_id': NSO_APP_CLIENT_ID,
+      'session_token_code': sessionTokenCode,
+      'session_token_code_verifier': args.authCodeVerifier
+    };
     let response;
     try {
-      response = await fetch(SESSION_TOKEN_ENDPOINT_URI, {
-        method: 'POST',
-        headers: {
-          'User-Agent': `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`,
-          'Accept-Language': 'en-US',
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': '540',
-          'Host': 'accounts.nintendo.com',
-          'Connection': 'Keep-Alive',
-          'Accept-Encoding': 'gzip',
-        },
-        body: new URLSearchParams({
-          'client_id': NSO_APP_CLIENT_ID,
-          'session_token_code': sessionTokenCode,
-          'session_token_code_verifier': args.authCodeVerifier
-        }).toString()
+      response = await fetch(SESSION_TOKEN_ENDPOINT_URI, { method: 'POST', headers, body: new URLSearchParams(body).toString()
       });
     } catch (error) {
-      throw new NsoError('Failed when trying to fetch the session token', NsoErrorCode.SESSION_TOKEN_FETCH_FAILED, { error });
+      throw new NsoError('Error trying to fetch the session token', NsoErrorCode.SESSION_TOKEN_FETCH_FAILED, { headers, body, error });
     }
     const obj = await response.json();
     if (!isSessionTokenResponse(obj)) {
-      throw new NsoError('Unsuccessful session token response', NsoErrorCode.SESSION_TOKEN_FETCH_BAD_RESPONSE, obj);
+      throw new NsoError('Unsuccessful session token response', NsoErrorCode.SESSION_TOKEN_FETCH_BAD_RESPONSE, { headers, body, response: obj });
     }
     return new NsoConnector(obj.session_token);
   }
 
+  private static async getFToken(userAgent: string, token: IdTokenResponse | AccessTokenResponse): Promise<FTokenResponse> {
+    const headers = {
+      'User-Agent': userAgent,
+      'Content-Type': 'application/json; charset=utf-8'
+    };
+    const body = {
+      'token': isIdTokenResponse(token) ? token.id_token : token.accessToken,
+      'hash_method': isIdTokenResponse(token) ? 1 : 2
+    };
+    let response;
+    try {
+      response = await fetch(IMINK_API_F_ENDPOINT_URI, { method: 'POST', headers, body: JSON.stringify(body) });
+    } catch (error) {
+      throw new NsoError('Error trying to fetch the f token', NsoErrorCode.F_TOKEN_FETCH_FAILED, { headers, body, error });
+    }
+    const obj = await response.json();
+    if (!isFTokenResponse(obj)) {
+      throw new NsoError('Unsuccessful f token response', NsoErrorCode.F_TOKEN_FETCH_BAD_RESPONSE, { headers, body, response: obj });
+    }
+    return obj;
+  }
+
+  private idToken: IdTokenResponse;
+  private userInfo: UserInfoForAuth;
+  private webApiAccessToken: AccessTokenResponse;
+
+  get nintendoAccountId(): string { return this.userInfo.id; }
+  get nickname(): string { return this.userInfo.nickname; }
+
   private constructor(public readonly sessionToken: string) {}
+
+  private async fetchIdToken(): Promise<void> {
+    const headers = {
+      'Host': 'accounts.nintendo.com',
+      'Accept-Encoding': 'gzip',
+      'Content-Type': 'application/json; charset=utf-8',
+      'Accept-Language': userLang,
+      'Content-Length': '439',
+      'Accept': 'application/json',
+      'Connection': 'Keep-Alive',
+      'User-Agent': `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`
+    };
+    const body = {
+      'client_id': NSO_APP_CLIENT_ID,
+      'session_token': this.sessionToken,
+      'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer-session-token'
+    };
+    let response;
+    try {
+      response = await fetch(TOKEN_ENDPOINT_URI, { method: 'POST', headers, body: JSON.stringify(body) });
+    } catch (error) {
+      throw new NsoError('Error trying to fetch the ID token', NsoErrorCode.ID_TOKEN_FETCH_FAILED, { headers, body, error });
+    }
+    const obj = await response.json();
+    if (!isIdTokenResponse(obj)) {
+      throw new NsoError('Unsuccessful ID token response', NsoErrorCode.ID_TOKEN_FETCH_BAD_RESPONSE, { headers, body, response: obj });
+    }
+    this.idToken = obj;
+  }
+
+  private async fetchUserInfo(): Promise<void> {
+    const headers = {
+      'User-Agent':      `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`,
+      'Accept-Language': userLang,
+      'Accept':          'application/json',
+      'Authorization':   `Bearer ${this.idToken.access_token}`,
+      'Host':            'api.accounts.nintendo.com',
+      'Connection':      'Keep-Alive',
+      'Accept-Encoding': 'gzip'
+    };
+    let response;
+    try {
+      response = await fetch(USER_INFO_ENDPOINT_URI, { method: 'GET', headers });
+    } catch (error) {
+      throw new NsoError('Error trying to fetch the user info', NsoErrorCode.USER_INFO_FETCH_FAILED, { headers, error });
+    }
+    const obj = await response.json();
+    if (!isUserInfoForAuth(obj)) {
+      throw new NsoError('Unsuccessful user info response', NsoErrorCode.USER_INFO_FETCH_BAD_RESPONSE, { headers, response: obj });
+    }
+    const { id, nickname, birthday, country, language } = obj;
+    this.userInfo = { id, nickname, birthday, country, language };
+  }
+
+  private async fetchWebApiAccessToken(fToken: FTokenResponse): Promise<void> {
+    const nsoAppVersion = await getNsoAppVersion();
+    const headers = {
+      'Host':             'api-lp1.znc.srv.nintendo.net',
+      'Accept-Language':  userLang,
+      'User-Agent':       `com.nintendo.znca/${nsoAppVersion} (Android/7.1.2)`,
+      'Accept':           'application/json',
+      'X-ProductVersion': nsoAppVersion,
+      'Content-Type':     'application/json; charset=utf-8',
+      'Connection':       'Keep-Alive',
+      'Authorization':    'Bearer',
+      'X-Platform':       'Android',
+      'Accept-Encoding':  'gzip'
+    };
+    const body = {
+      parameter: {
+        'f':          fToken.f,
+        'naIdToken':  this.idToken.id_token,
+        'timestamp':  fToken.timestamp,
+        'requestId':  fToken.request_id,
+        'naCountry':  this.userInfo.country,
+        'naBirthday': this.userInfo.birthday,
+        'language':   this.userInfo.language
+      }
+    };
+    let response;
+    try {
+      response = await fetch(WEB_API_SERVER_CREDENTIAL_ENDPOINT_URI, { method: 'POST', headers, body: JSON.stringify(body) });
+    } catch (error) {
+      throw new NsoError('Error trying to fetch the web api server credential', NsoErrorCode.WEB_API_CREDENTIAL_FETCH_FAILED, { headers, body, error });
+    }
+    const obj = await response.json();
+    if (!isWebApiServerCredentialResponse(obj)) {
+      throw new NsoError('Unsuccessful web api server credential response', NsoErrorCode.WEB_API_CREDENTIAL_FETCH_BAD_RESPONSE, { headers, body, response: obj });
+    }
+    this.webApiAccessToken = obj.result.webApiServerCredential;
+  }
+
+  async getAccessToken(userAgent: string): Promise<AccessTokenResponse> {
+    await this.fetchIdToken();
+    await this.fetchUserInfo();
+    await this.fetchWebApiAccessToken(await NsoConnector.getFToken(userAgent, this.idToken));
+    return this.webApiAccessToken;
+  }
 }

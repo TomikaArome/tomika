@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import fetch from 'node-fetch';
-import { FTokenResult, GetIdTokenResult, SessionTokenResponse, UserInfoNeededForIksm, AccessTokenResult, NsoGameServiceCookie, NsoGameService } from './generate-iksm.model';
+import { FTokenResponse, IdTokenResponse, SessionTokenResponse, UserInfoForAuth, AccessTokenResponse, NsoGameServiceCookie, NsoGameService } from './generate-iksm.model';
 import { parse } from 'set-cookie-parser';
 import { getNsoAppVersion } from './nso-app-version';
 
@@ -48,7 +48,7 @@ export const NSO_GAME_SERVICES = {
 // Imink API URI
 const IMINK_API_F_ENDPOINT_URI = 'https://api.imink.app/f';
 
-export const getIdToken = async (sessionToken: string): Promise<GetIdTokenResult> => {
+export const getIdToken = async (sessionToken: string): Promise<IdTokenResponse> => {
   const result = await fetch(TOKEN_ENDPOINT_URI, {
     method: 'POST',
     headers: {
@@ -67,10 +67,10 @@ export const getIdToken = async (sessionToken: string): Promise<GetIdTokenResult
       'grant_type':    'urn:ietf:params:oauth:grant-type:jwt-bearer-session-token'
     })
   });
-  return await result.json() as GetIdTokenResult;
+  return await result.json() as IdTokenResponse;
 };
 
-export const getUserInfo = async (accessToken: string): Promise<UserInfoNeededForIksm> => {
+export const getUserInfo = async (accessToken: string): Promise<UserInfoForAuth> => {
   const result = await fetch(USER_INFO_ENDPOINT_URI, {
     method: 'GET',
     headers: {
@@ -84,10 +84,10 @@ export const getUserInfo = async (accessToken: string): Promise<UserInfoNeededFo
     }
   });
   const { nickname, birthday, country, language } = await result.json();
-  return { nickname, birthday, country, language } as UserInfoNeededForIksm;
+  return { nickname, birthday, country, language } as UserInfoForAuth;
 };
 
-export const getFToken = async (userAgent: string, idToken: string, step: 1 | 2): Promise<FTokenResult> => {
+export const getFToken = async (userAgent: string, idToken: string, step: 1 | 2): Promise<FTokenResponse> => {
   const result = await fetch(IMINK_API_F_ENDPOINT_URI, {
     method: 'POST',
     headers: {
@@ -102,12 +102,12 @@ export const getFToken = async (userAgent: string, idToken: string, step: 1 | 2)
   const jsonObj = await result.json();
   return {
     f: jsonObj.f,
-    uuid: jsonObj.request_id,
+    request_id: jsonObj.request_id,
     timestamp: jsonObj.timestamp
-  } as FTokenResult;
+  } as FTokenResponse;
 };
 
-export const getWebApiServerCredential = async (idToken: string, fToken: FTokenResult, userInfo: UserInfoNeededForIksm): Promise<AccessTokenResult> => {
+export const getWebApiServerCredential = async (idToken: string, fToken: FTokenResponse, userInfo: UserInfoForAuth): Promise<AccessTokenResponse> => {
   const nsoAppVersion = await getNsoAppVersion();
   const result = await fetch(WEB_API_SERVER_CREDENTIAL_ENDPOINT_URI, {
     method: 'POST',
@@ -128,7 +128,7 @@ export const getWebApiServerCredential = async (idToken: string, fToken: FTokenR
         'f':          fToken.f,
         'naIdToken':  idToken,
         'timestamp':  fToken.timestamp,
-        'requestId':  fToken.uuid,
+        'requestId':  fToken.request_id,
         'naCountry':  userInfo.country,
         'naBirthday': userInfo.birthday,
         'language':   userInfo.language
@@ -137,10 +137,10 @@ export const getWebApiServerCredential = async (idToken: string, fToken: FTokenR
   });
   const jsonObj = await result.json();
   // console.log(jsonObj);
-  return jsonObj.result.webApiServerCredential as AccessTokenResult;
+  return jsonObj.result.webApiServerCredential as AccessTokenResponse;
 };
 
-export const getNsoGameServiceAccessToken = async (webApiServerCredential: AccessTokenResult, fToken: FTokenResult, game: NsoGameService = NSO_GAME_SERVICES.SPLATOON_2) => {
+export const getNsoGameServiceAccessToken = async (webApiServerCredential: AccessTokenResponse, fToken: FTokenResponse, game: NsoGameService = NSO_GAME_SERVICES.SPLATOON_2) => {
   const nsoAppVersion = await getNsoAppVersion();
   const result = await fetch(WEB_SERVICE_TOKEN_ENDPOINT_URI, {
     method: 'POST',
@@ -162,16 +162,16 @@ export const getNsoGameServiceAccessToken = async (webApiServerCredential: Acces
         'f':                 fToken.f,
         'registrationToken': webApiServerCredential.accessToken,
         'timestamp':         fToken.timestamp,
-        'requestId':         fToken.uuid
+        'requestId':         fToken.request_id
       }
     })
   });
   const jsonObj = await result.json();
   // console.log(jsonObj);
-  return jsonObj.result as AccessTokenResult;
+  return jsonObj.result as AccessTokenResponse;
 };
 
-export const getCookie = async (nsoGameServiceAccessToken: AccessTokenResult, game: NsoGameService = NSO_GAME_SERVICES.SPLATOON_2): Promise<NsoGameServiceCookie> => {
+export const getCookie = async (nsoGameServiceAccessToken: AccessTokenResponse, game: NsoGameService = NSO_GAME_SERVICES.SPLATOON_2): Promise<NsoGameServiceCookie> => {
   const result = await fetch(`https://${game.host}/`, {
     method: 'GET',
     headers: {

@@ -2,6 +2,7 @@ import * as crypto from 'crypto';
 import fetch from 'node-fetch';
 import { FTokenResult, GetIdTokenResult, SessionTokenResponse, UserInfoNeededForIksm, AccessTokenResult, NsoGameServiceCookie, NsoGameService } from './generate-iksm.model';
 import { parse } from 'set-cookie-parser';
+import { getNsoAppVersion } from './nso-app-version';
 
 const userLang = 'en-GB';
 
@@ -46,88 +47,6 @@ export const NSO_GAME_SERVICES = {
 
 // Imink API URI
 const IMINK_API_F_ENDPOINT_URI = 'https://api.imink.app/f';
-
-// Utility functions
-const toUrlSafeBase64Encode = (value: Buffer): string => value
-  .toString('base64')
-  .replace(/\+/g, '-')
-  .replace(/\//g, '_')
-  .replace(/=+$/, '');
-const generateUrlSafeBase64String = (size = 32): string => toUrlSafeBase64Encode(crypto.randomBytes(size));
-
-export const generateAuthCodeVerifier = (): string => generateUrlSafeBase64String(32);
-export const extractSessionTokenCode = (redirectUri: string): string => redirectUri.replace(
-  /^(.*)session_token_code=([a-zA-Z0-9\\._-]*)(&.*)?$/,
-  '$2'
-);
-
-let nsoAppVersion: string = null;
-export const getNsoAppVersion = async (): Promise<string> => {
-  if (nsoAppVersion) {
-    return nsoAppVersion;
-  }
-  const htmlResult = await fetch(NSO_APP_APPLE_STORE_URI, {
-    method: 'GET',
-    headers: {
-      Accept: 'text/html,application/xhtml+xml,application/xml',
-    },
-  });
-  const versionRegex = /^(.*)Version ([0-9]+\.[0-9]+\.[0-9]+)(.*)/;
-  const htmlLines = (await htmlResult.text()).split(/(?:\r\n|\r|\n)/g);
-  const lineWithVersion = htmlLines.find((htmlLine: string) =>
-    /whats-new__latest__version/.test(htmlLine)
-  );
-  if (versionRegex.test(lineWithVersion)) {
-    const version = lineWithVersion.replace(
-      /^(.*)Version ([0-9]+\.[0-9]+\.[0-9]+)(.*)/,
-      '$2'
-    );
-    nsoAppVersion = version;
-    return version;
-  } else {
-    throw 'Could not fetch NSO app version';
-  }
-};
-
-export const generateAuthUri = (authCodeVerifier: string): string => {
-  const authState = generateUrlSafeBase64String();
-  const authCvHash = crypto.createHash('sha256');
-  authCvHash.update(authCodeVerifier);
-  const authCodeChallenge = toUrlSafeBase64Encode(authCvHash.digest());
-  const params = new URLSearchParams({
-    'state':                               authState,
-    'redirect_uri':                        NSO_APP_REDIRECT_URI,
-    'client_id':                           NSO_APP_CLIENT_ID,
-    'scope':                               SCOPES.join(' '),
-    'response_type':                       'session_token_code',
-    'session_token_code_challenge':        authCodeChallenge,
-    'session_token_code_challenge_method': 'S256',
-    'theme':                               'login_form',
-  });
-  return `${AUTHORIZE_URI}?${params.toString()}`;
-};
-
-export const getSessionToken = async (sessionTokenCode: string, authCodeVerifier: string): Promise<SessionTokenResponse> => {
-  const result = await fetch(SESSION_TOKEN_ENDPOINT_URI, {
-    method: 'POST',
-    headers: {
-      'User-Agent':      `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`,
-      'Accept-Language': 'en-US',
-      'Accept':          'application/json',
-      'Content-Type':    'application/x-www-form-urlencoded',
-      'Content-Length':  '540',
-      'Host':            'accounts.nintendo.com',
-      'Connection':      'Keep-Alive',
-      'Accept-Encoding': 'gzip',
-    },
-    body: new URLSearchParams({
-      'client_id':                   NSO_APP_CLIENT_ID,
-      'session_token_code':          sessionTokenCode,
-      'session_token_code_verifier': authCodeVerifier
-    }).toString()
-  });
-  return await result.json() as SessionTokenResponse;
-};
 
 export const getIdToken = async (sessionToken: string): Promise<GetIdTokenResult> => {
   const result = await fetch(TOKEN_ENDPOINT_URI, {

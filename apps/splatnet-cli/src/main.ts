@@ -1,12 +1,8 @@
 import { type PromptModule } from 'inquirer';
 import * as readline from 'node:readline';
 import {
-  extractSessionTokenCode,
-  generateAuthCodeVerifier,
-  generateAuthUri,
   getFToken,
   getIdToken,
-  getSessionToken,
   getNsoAppVersion,
   getWebApiServerCredential,
   getUserInfo,
@@ -78,22 +74,24 @@ const test = async () => {
 
     const nsoConnector = await NsoConnector.get({
       sessionTokenCode: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MWI5NjNjMWI3YjZkMTE5Iiwic3ViIjoiZmUwNWU3Y2Q1MTU2MWE2MiIsImp0aSI6IjYwNzczODQ5NTIzIiwidHlwIjoic2Vzc2lvbl90b2tlbl9jb2RlIiwiaWF0IjoxNjYyMTQ2NDc0LCJpc3MiOiJodHRwczovL2FjY291bnRzLm5pbnRlbmRvLmNvbSIsInN0YzpzY3AiOlswLDgsOSwxNywyM10sInN0YzpjIjoiSmVFRjEtbzFnbEVFM0thb3pOVjlld2M2ZmpIQThHU0tVSzVEbzAxOGRVNCIsImV4cCI6MTY2MjE0NzA3NCwic3RjOm0iOiJTMjU2In0.hhniVzsb2ONCTcwxxg73liRPr7_8kbbhmwUyNP1Srxc',
-      authCodeVerifier: generateAuthCodeVerifier()
+      authCodeVerifier: NsoConnector.generateAuthCodeVerifier()
     });
     console.log(nsoConnector.sessionToken);
 
   } catch (error) {
     if (error instanceof NsoError) {
       console.group();
-      console.log(`\n\u001b[0;1;31mNSO Error caught\n\u001b[0;90m${error.code}\n\u001b[0;31m${error.message}\n\n\u001b[0m`, error.details, '\n');
+      console.log(`\n\u001b[0;31mNSO Error caught: ${error.code}\n${error.message}\u001b[0m\n\n`, error.details, '\n');
       console.groupEnd();
+    } else {
+      throw error;
     }
   }
 }
 
-const promptForSessionToken = async (): Promise<SessionTokenResponse> => {
-  const authCodeVerifier = generateAuthCodeVerifier();
-  const authUri = generateAuthUri(authCodeVerifier);
+const promptForSessionToken = async (): Promise<NsoConnector> => {
+  const authCodeVerifier = NsoConnector.generateAuthCodeVerifier();
+  const authUri = NsoConnector.generateAuthUri(authCodeVerifier);
 
   console.log(`
 Open the following link in your browser:
@@ -108,8 +106,10 @@ Right click on "${bold}Select this person${reset}", click on "${bold}Copy link a
   console.log('');
 
   await wrapProgressMessage(getNsoAppVersion(), 'Fetching NSO app version');
-  const sessionTokenCode = extractSessionTokenCode(redirectUri);
-  return await wrapProgressMessage(getSessionToken(sessionTokenCode, authCodeVerifier), 'Fetching session token from Nintendo API');
+  return await wrapProgressMessage(NsoConnector.get({
+    sessionTokenCode: NsoConnector.extractSessionTokenCode(redirectUri),
+    authCodeVerifier
+  }), 'Fetching session token from Nintendo API');
 };
 
 const generateSessionToken = async () => {
@@ -134,7 +134,7 @@ const generateCookie = async () => {
     message: 'Paste here your session token (leave blank to generate a new one):'
   }])).sessionToken;
   if (sessionToken.length === 0) {
-    sessionToken = (await promptForSessionToken()).session_token;
+    sessionToken = (await promptForSessionToken()).sessionToken;
   } else {
     console.log('');
   }

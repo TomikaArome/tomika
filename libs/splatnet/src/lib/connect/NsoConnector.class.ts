@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
-import { isSessionTokenResponse, SessionTokenResponse } from './generate-iksm.model';
+import { isSessionTokenResponse } from './generate-iksm.model';
 import { getNsoAppVersion } from './nso-app-version';
 import { NsoError, NsoErrorCode } from '../NsoError';
+import * as crypto from 'crypto';
 
 // Nintendo connect API
 const CONNECT_BASE_URI = 'https://accounts.nintendo.com/connect/1.0.0';
@@ -20,6 +21,14 @@ const SCOPES = ['openid', 'user', 'user.birthday', 'user.mii', 'user.screenName'
 // Imink API URI
 const IMINK_API_F_ENDPOINT_URI = 'https://api.imink.app/f';
 
+// Utility functions
+const toUrlSafeBase64Encode = (value: Buffer): string => value
+  .toString('base64')
+  .replace(/\+/g, '-')
+  .replace(/\//g, '_')
+  .replace(/=+$/, '');
+const generateUrlSafeBase64String = (size): string => toUrlSafeBase64Encode(crypto.randomBytes(size));
+
 type NsoConnectorArgsSessionToken = {
   sessionToken: string;
 };
@@ -36,6 +45,28 @@ const isNsoConnectorArgsSessionToken = (obj): obj is NsoConnectorArgsSessionToke
 const isNsoConnectorArgsSessionTokenCode = (obj): obj is NsoConnectorArgsSessionTokenCode => obj.sessionTokenCode && obj.authCodeVerifier;
 
 export class NsoConnector {
+  static generateAuthCodeVerifier(): string {
+    return generateUrlSafeBase64String(32);
+  }
+
+  static generateAuthUri(authCodeVerifier: string): string {
+    const authState = generateUrlSafeBase64String(32);
+    const authCvHash = crypto.createHash('sha256');
+    authCvHash.update(authCodeVerifier);
+    const authCodeChallenge = toUrlSafeBase64Encode(authCvHash.digest());
+    const params = new URLSearchParams({
+      'state':                               authState,
+      'redirect_uri':                        NSO_APP_REDIRECT_URI,
+      'client_id':                           NSO_APP_CLIENT_ID,
+      'scope':                               SCOPES.join(' '),
+      'response_type':                       'session_token_code',
+      'session_token_code_challenge':        authCodeChallenge,
+      'session_token_code_challenge_method': 'S256',
+      'theme':                               'login_form',
+    });
+    return `${AUTHORIZE_URI}?${params.toString()}`;
+  }
+
   static extractSessionTokenCode(redirectUri: string): string {
     const regex = /^(.*)session_token_code=([a-zA-Z0-9\\._-]*)(&.*)?$/;
     if (!regex.test(redirectUri)) {

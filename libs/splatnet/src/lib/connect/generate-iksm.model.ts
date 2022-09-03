@@ -1,3 +1,10 @@
+export interface NsoGameService {
+  id: number;
+  host: string;
+  name: string;
+  cookieName: string;
+}
+
 export interface GetSessionTokenResult {
   session_token: string;
   code: string;
@@ -29,8 +36,8 @@ export interface AccessTokenResult {
   expiresIn: number;
 }
 
-export interface IksmCookieResult {
+export interface NsoGameServiceCookie {
   fullHeader?: string;
-  iksm: string;
+  value: string;
   expires: number;
 }

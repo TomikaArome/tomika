@@ -1,6 +1,7 @@
 import * as crypto from 'crypto';
 import fetch from 'node-fetch';
-import { FTokenResult, GetIdTokenResult, GetSessionTokenResult, UserInfoNeededForIksm, AccessTokenResult, IksmCookieResult } from './generate-iksm.model';
+import { FTokenResult, GetIdTokenResult, GetSessionTokenResult, UserInfoNeededForIksm, AccessTokenResult, NsoGameServiceCookie, NsoGameService } from './generate-iksm.model';
+import { parse } from 'set-cookie-parser';
 
 const userLang = 'en-GB';
 
@@ -21,10 +22,30 @@ const NSO_APP_CLIENT_ID = '71b963c1b7b6d119';
 const NSO_APP_REDIRECT_URI = `npf${NSO_APP_CLIENT_ID}://auth`;
 const SCOPES = ['openid', 'user', 'user.birthday', 'user.mii', 'user.screenName'];
 
-// NSO service URIs
+// NSO service info
 const SPLATNET_2_URI = `https://app.splatoon2.nintendo.net`;
 const SMASH_URI = `https://app.smashbros.nintendo.net`;
 const ANIMAL_CROSSING_URI = `https://web.sd.lp1.acbaa.srv.nintendo.net`;
+export const NSO_GAME_SERVICES = {
+  SPLATOON_2: {
+    id: 5741031244955648,
+    host: 'app.splatoon2.nintendo.net',
+    name: 'Splatoon 2',
+    cookieName: 'iksm_session'
+  } as NsoGameService,
+  SUPER_SMASH_BROS_ULTIMATE: {
+    id: 5598642853249024,
+    host: 'app.smashbros.nintendo.net',
+    name: 'Super Smash Bros. Ultimate',
+    cookieName: 'super_smash_session'
+  } as NsoGameService,
+  ANIMAL_CROSSING_NEW_HORIZONS: {
+    id: 4953919198265344,
+    host: 'web.sd.lp1.acbaa.srv.nintendo.net',
+    name: 'Animal Crossing: New Horizons',
+    cookieName: '_gtoken'
+  } as NsoGameService
+};
 
 // Imink API URI
 const IMINK_API_F_ENDPOINT_URI = 'https://api.imink.app/f';
@@ -203,7 +224,7 @@ export const getWebApiServerCredential = async (idToken: string, fToken: FTokenR
   return jsonObj.result.webApiServerCredential as AccessTokenResult;
 };
 
-export const getSplatoonAccessToken = async (webApiServerCredential: AccessTokenResult, fToken: FTokenResult) => {
+export const getNsoGameServiceAccessToken = async (webApiServerCredential: AccessTokenResult, fToken: FTokenResult, game: NsoGameService = NSO_GAME_SERVICES.SPLATOON_2) => {
   const nsoAppVersion = await getNsoAppVersion();
   const result = await fetch(WEB_SERVICE_TOKEN_ENDPOINT_URI, {
     method: 'POST',
@@ -221,7 +242,7 @@ export const getSplatoonAccessToken = async (webApiServerCredential: AccessToken
     },
     body: JSON.stringify({
       parameter: {
-        'id':                5741031244955648,
+        'id':                game.id,
         'f':                 fToken.f,
         'registrationToken': webApiServerCredential.accessToken,
         'timestamp':         fToken.timestamp,
@@ -234,15 +255,15 @@ export const getSplatoonAccessToken = async (webApiServerCredential: AccessToken
   return jsonObj.result as AccessTokenResult;
 };
 
-export const getCookie = async (splatoonAccessToken: AccessTokenResult): Promise<IksmCookieResult> => {
+export const getCookie = async (nsoGameServiceAccessToken: AccessTokenResult, game: NsoGameService = NSO_GAME_SERVICES.SPLATOON_2): Promise<NsoGameServiceCookie> => {
   const result = await fetch(SPLATNET_2_URI, {
     method: 'GET',
     headers: {
-      'Host':                    'app.splatoon2.nintendo.net',
+      'Host':                    game.host,
       'X-IsAppAnalyticsOptedIn': 'false',
       'Accept':                  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding':         'gzip,deflate',
-      'X-GameWebToken':          splatoonAccessToken.accessToken,
+      'X-GameWebToken':          nsoGameServiceAccessToken.accessToken,
       'Accept-Language':         userLang,
       'X-IsAnalyticsOptedIn':    'false',
       'Connection':              'keep-alive',
@@ -251,15 +272,15 @@ export const getCookie = async (splatoonAccessToken: AccessTokenResult): Promise
       'X-Requested-With':        'com.nintendo.znca'
     }
   });
-  const iksmRegex = /^(.*)iksm_session=([0-9a-f]+);(.*)expires=([0-9a-zA-Z:, -]+);(.*)$/;
-  const cookieHeader = result.headers.get('Set-Cookie');
-  if (!iksmRegex.test(cookieHeader)) {
-    console.log(cookieHeader);
-    throw `Couldn't retrieve the iksm_session cookie for the cookie header`;
+  const cookieList = parse(result.headers.get('Set-Cookie'));
+  const cookie = cookieList.find(cookie => cookie.name === game.cookieName);
+  if (!cookie) {
+    console.log(cookieList);
+    throw `Couldn't retrieve "${game.cookieName}" cookie for the cookie header`;
   }
   return {
-    fullHeader: cookieHeader,
-    iksm: cookieHeader.replace(iksmRegex, '$2'),
-    expires: +(new Date(cookieHeader.replace(iksmRegex, '$4')))
+    fullHeader: result.headers.get('Set-Cookie'),
+    value: cookie.value,
+    expires: +cookie.expires
   };
 };

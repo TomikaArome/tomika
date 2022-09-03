@@ -1,6 +1,6 @@
 import { type PromptModule } from 'inquirer';
 import * as readline from 'node:readline';
-import { extractSessionTokenCode, generateAuthCodeVerifier, generateAuthUri, getFToken, getIdToken, getSessionToken, getNsoAppVersion, getWebApiServerCredential, getUserInfo, getSplatoonAccessToken, getCookie } from '@TomikaArome/splatnet';
+import { extractSessionTokenCode, generateAuthCodeVerifier, generateAuthUri, getFToken, getIdToken, getSessionToken, getNsoAppVersion, getWebApiServerCredential, getUserInfo, getNsoGameServiceAccessToken, getCookie } from '@TomikaArome/splatnet';
 
 const userAgent = 'tomika-splatnet-cli/1.0.0';
 
@@ -71,7 +71,7 @@ Right click on ${button}Select this person${reset}, click on ${bold}Copy link ad
   const fTokenObj1 = await wrapProgressMessage(getFToken(userAgent, idTokenObj.id_token, 1), 'First call to get the f token from IMINK API');
   const webApiServerCredentialObj = await wrapProgressMessage(getWebApiServerCredential(idTokenObj.id_token, fTokenObj1, userInfoObj), 'Fetching web API credentials from Nintendo API');
   const fTokenObj2 = await wrapProgressMessage(getFToken(userAgent, webApiServerCredentialObj.accessToken, 2), 'Second call to get the f token from IMINK API');
-  const splatoonAccessTokenObj = await wrapProgressMessage(getSplatoonAccessToken(webApiServerCredentialObj, fTokenObj2), 'Fetching web service token from Nintendo API');
+  const splatoonAccessTokenObj = await wrapProgressMessage(getNsoGameServiceAccessToken(webApiServerCredentialObj, fTokenObj2), 'Fetching web service token from Nintendo API');
   const cookie = await wrapProgressMessage(getCookie(splatoonAccessTokenObj), 'Fetching cookie from Splatnet');
 
   console.log(`\nCookie`, cookie);

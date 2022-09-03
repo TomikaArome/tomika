@@ -22,6 +22,16 @@ export interface IdTokenResponse {
 export const isIdTokenResponse = (obj): obj is IdTokenResponse =>
   obj?.scope instanceof Array && typeof obj?.expires_in === 'number' && typeof obj?.id_token === 'string' && typeof obj?.access_token === 'string' && obj?.token_type === 'Bearer';
 
+export interface IdToken {
+  scope: string[];
+  expires: number;
+  idToken: string;
+  accessToken: string;
+  tokenType: 'Bearer';
+}
+export const isIdToken = (obj): obj is IdToken =>
+  obj?.scope instanceof Array && typeof obj?.expires === 'number' && typeof obj?.idToken === 'string' && typeof obj?.accessToken === 'string' && obj?.tokenType === 'Bearer';
+
 export interface UserInfoForAuth {
   id: string;
   nickname: string;
@@ -54,6 +64,11 @@ export interface AccessTokenResponse {
 }
 export const isAccessTokenResponse = (obj): obj is AccessTokenResponse =>
   typeof obj?.accessToken === 'string' && typeof obj?.expiresIn === 'number';
+
+export interface AccessToken {
+  accessToken: string;
+  expires: number;
+}
 
 export interface NsoGameServiceCookie {
   fullHeader?: string;

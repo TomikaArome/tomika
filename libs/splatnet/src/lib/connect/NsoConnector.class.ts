@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { AccessTokenResponse, FTokenResponse, IdTokenResponse, isFTokenResponse, isIdTokenResponse, isSessionTokenResponse, isUserInfoForAuth, isWebApiServerCredentialResponse, UserInfoForAuth } from './generate-iksm.model';
+import { AccessToken, AccessTokenResponse, FTokenResponse, IdToken, IdTokenResponse, isFTokenResponse, isIdToken, isIdTokenResponse, isSessionTokenResponse, isUserInfoForAuth, isWebApiServerCredentialResponse, UserInfoForAuth } from './generate-iksm.model';
 import { getNsoAppVersion } from './nso-app-version';
 import { NsoError, NsoErrorCode } from '../NsoError';
 import * as crypto from 'crypto';
@@ -30,6 +30,7 @@ const toUrlSafeBase64Encode = (value: Buffer): string => value
 const generateUrlSafeBase64String = (size): string => toUrlSafeBase64Encode(crypto.randomBytes(size));
 
 const userLang = 'en-GB';
+const TIME_DIFF_BEFORE_REGEN = 60000;
 
 type NsoConnectorArgsSessionToken = {
   sessionToken: string;
@@ -113,14 +114,14 @@ export class NsoConnector {
     return new NsoConnector(obj.session_token);
   }
 
-  private static async getFToken(userAgent: string, token: IdTokenResponse | AccessTokenResponse): Promise<FTokenResponse> {
+  private static async getFToken(userAgent: string, token: IdToken | AccessToken): Promise<FTokenResponse> {
     const headers = {
       'User-Agent': userAgent,
       'Content-Type': 'application/json; charset=utf-8'
     };
     const body = {
-      'token': isIdTokenResponse(token) ? token.id_token : token.accessToken,
-      'hash_method': isIdTokenResponse(token) ? 1 : 2
+      'token': isIdToken(token) ? token.idToken : token.accessToken,
+      'hash_method': isIdToken(token) ? 1 : 2
     };
     let response;
     try {
@@ -135,9 +136,9 @@ export class NsoConnector {
     return obj;
   }
 
-  private idToken: IdTokenResponse;
+  private idToken: IdToken;
   private userInfo: UserInfoForAuth;
-  private webApiAccessToken: AccessTokenResponse;
+  private webApiAccessToken: AccessToken;
 
   get nintendoAccountId(): string { return this.userInfo.id; }
   get nickname(): string { return this.userInfo.nickname; }
@@ -170,7 +171,13 @@ export class NsoConnector {
     if (!isIdTokenResponse(obj)) {
       throw new NsoError('Unsuccessful ID token response', NsoErrorCode.ID_TOKEN_FETCH_BAD_RESPONSE, { headers, body, response: obj });
     }
-    this.idToken = obj;
+    this.idToken = {
+      scope: obj.scope,
+      expires: +(new Date()) + (obj.expires_in * 1000),
+      idToken: obj.id_token,
+      accessToken: obj.access_token,
+      tokenType: obj.token_type
+    };
   }
 
   private async fetchUserInfo(): Promise<void> {
@@ -178,7 +185,7 @@ export class NsoConnector {
       'User-Agent':      `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`,
       'Accept-Language': userLang,
       'Accept':          'application/json',
-      'Authorization':   `Bearer ${this.idToken.access_token}`,
+      'Authorization':   `Bearer ${this.idToken.accessToken}`,
       'Host':            'api.accounts.nintendo.com',
       'Connection':      'Keep-Alive',
       'Accept-Encoding': 'gzip'
@@ -214,7 +221,7 @@ export class NsoConnector {
     const body = {
       parameter: {
         'f':          fToken.f,
-        'naIdToken':  this.idToken.id_token,
+        'naIdToken':  this.idToken.idToken,
         'timestamp':  fToken.timestamp,
         'requestId':  fToken.request_id,
         'naCountry':  this.userInfo.country,
@@ -232,11 +239,25 @@ export class NsoConnector {
     if (!isWebApiServerCredentialResponse(obj)) {
       throw new NsoError('Unsuccessful web api server credential response', NsoErrorCode.WEB_API_CREDENTIAL_FETCH_BAD_RESPONSE, { headers, body, response: obj });
     }
-    this.webApiAccessToken = obj.result.webApiServerCredential;
+    this.webApiAccessToken = {
+      accessToken: obj.result.webApiServerCredential.accessToken,
+      expires: +(new Date()) + (obj.result.webApiServerCredential.expiresIn * 1000)
+    };
   }
 
-  async getAccessToken(userAgent: string): Promise<AccessTokenResponse> {
+  async getIdToken(): Promise<IdToken> {
+    if (this.idToken && +new Date() < this.idToken.expires - TIME_DIFF_BEFORE_REGEN) {
+      return this.idToken;
+    }
     await this.fetchIdToken();
+    return this.idToken;
+  }
+
+  async getWebApiAccessToken(userAgent: string): Promise<AccessToken> {
+    if (this.webApiAccessToken && +new Date() < this.webApiAccessToken.expires - TIME_DIFF_BEFORE_REGEN) {
+      return this.webApiAccessToken;
+    }
+    await this.getIdToken();
     await this.fetchUserInfo();
     await this.fetchWebApiAccessToken(await NsoConnector.getFToken(userAgent, this.idToken));
     return this.webApiAccessToken;

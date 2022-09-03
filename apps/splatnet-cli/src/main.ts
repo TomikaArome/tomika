@@ -40,10 +40,6 @@ const getInquirerPrompt = async (): Promise<PromptModule> => {
       message: 'Select a command:',
       choices: [
         {
-          name: 'Test',
-          value: 'test'
-        },
-        {
           name: 'Get session token',
           value: 'sessionToken'
         },
@@ -60,36 +56,25 @@ const getInquirerPrompt = async (): Promise<PromptModule> => {
         }
       ]
     }]);
-    switch (chosenCommand.command) {
-      case 'test': await test(); break;
-      case 'sessionToken': await generateSessionToken(); break;
-      case 'cookie': await generateCookie(); break;
-      default: continueApp = false;
+    try {
+      switch (chosenCommand.command) {
+        case 'sessionToken': await generateSessionToken(); break;
+        case 'cookie': await generateCookie(); break;
+        default: continueApp = false;
+      }
+    } catch (error) {
+      if (error instanceof NsoError) {
+        console.group();
+        console.log(`\n\u001b[0;31mNSO Error caught: ${error.code}\n${error.message}\u001b[0m\n\n`, error.details, '\n');
+        console.groupEnd();
+      } else {
+        throw error;
+      }
     }
   }
 })();
 
-const test = async () => {
-  try {
-
-    const nsoConnector = await NsoConnector.get({
-      sessionTokenCode: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MWI5NjNjMWI3YjZkMTE5Iiwic3ViIjoiZmUwNWU3Y2Q1MTU2MWE2MiIsImp0aSI6IjYwNzczODQ5NTIzIiwidHlwIjoic2Vzc2lvbl90b2tlbl9jb2RlIiwiaWF0IjoxNjYyMTQ2NDc0LCJpc3MiOiJodHRwczovL2FjY291bnRzLm5pbnRlbmRvLmNvbSIsInN0YzpzY3AiOlswLDgsOSwxNywyM10sInN0YzpjIjoiSmVFRjEtbzFnbEVFM0thb3pOVjlld2M2ZmpIQThHU0tVSzVEbzAxOGRVNCIsImV4cCI6MTY2MjE0NzA3NCwic3RjOm0iOiJTMjU2In0.hhniVzsb2ONCTcwxxg73liRPr7_8kbbhmwUyNP1Srxc',
-      authCodeVerifier: NsoConnector.generateAuthCodeVerifier()
-    });
-    console.log(nsoConnector.sessionToken);
-
-  } catch (error) {
-    if (error instanceof NsoError) {
-      console.group();
-      console.log(`\n\u001b[0;31mNSO Error caught: ${error.code}\n${error.message}\u001b[0m\n\n`, error.details, '\n');
-      console.groupEnd();
-    } else {
-      throw error;
-    }
-  }
-}
-
-const promptForSessionToken = async (): Promise<NsoConnector> => {
+const promptRedirectUri = async (): Promise<NsoConnector> => {
   const authCodeVerifier = NsoConnector.generateAuthCodeVerifier();
   const authUri = NsoConnector.generateAuthUri(authCodeVerifier);
 
@@ -113,41 +98,40 @@ Right click on "${bold}Select this person${reset}", click on "${bold}Copy link a
 };
 
 const generateSessionToken = async () => {
-  console.log(await promptForSessionToken());
+  console.log(await promptRedirectUri());
 };
 
 const generateCookie = async () => {
-  const selectedGame = (await prompt([{
-    type: 'list',
-    name: 'game',
-    message: 'Select an NSO game service to generate a cookie for:',
-    choices: Object.values(NSO_GAME_SERVICES).map((game: NsoGameService) => {
-      return {
-        name: game.name,
-        value: game
-      }
-    })
-  }])).game;
-  let sessionToken: string = (await prompt([{
+  // const selectedGame = (await prompt([{
+  //   type: 'list',
+  //   name: 'game',
+  //   message: 'Select an NSO game service to generate a cookie for:',
+  //   choices: Object.values(NSO_GAME_SERVICES).map((game: NsoGameService) => {
+  //     return {
+  //       name: game.name,
+  //       value: game
+  //     }
+  //   })
+  // }])).game;
+  const sessionToken: string = (await prompt([{
     type: 'input',
     name: 'sessionToken',
-    message: 'Paste here your session token (leave blank to generate a new one):'
+    message: 'Session token (leave blank to generate a new one):'
   }])).sessionToken;
-  if (sessionToken.length === 0) {
-    sessionToken = (await promptForSessionToken()).sessionToken;
-  } else {
-    console.log('');
-  }
+  const connector: NsoConnector = await (sessionToken.length === 0 ?  promptRedirectUri() : NsoConnector.get({ sessionToken }));
+  if (sessionToken.length !== 0) { console.log(''); }
 
-  const idTokenObj = await wrapProgressMessage(getIdToken(sessionToken), 'Fetching ID token from Nintendo API');
-  const userInfoObj = await wrapProgressMessage(getUserInfo(idTokenObj.access_token), 'Fetching user info from Nintendo API');
-  const fTokenObj1 = await wrapProgressMessage(getFToken(userAgent, idTokenObj.id_token, 1), 'First call to get the f token from IMINK API');
-  const webApiServerCredentialObj = await wrapProgressMessage(getWebApiServerCredential(idTokenObj.id_token, fTokenObj1, userInfoObj), 'Fetching web API credentials from Nintendo API');
-  const fTokenObj2 = await wrapProgressMessage(getFToken(userAgent, webApiServerCredentialObj.accessToken, 2), 'Second call to get the f token from IMINK API');
-  const nsoGameServiceAccessTokenObj = await wrapProgressMessage(getNsoGameServiceAccessToken(webApiServerCredentialObj, fTokenObj2, selectedGame), 'Fetching web service token from Nintendo API');
-  const cookie = await wrapProgressMessage(getCookie(nsoGameServiceAccessTokenObj, selectedGame), 'Fetching cookie from the NSO game service');
+  const idToken = await wrapProgressMessage(connector.getIdToken(), 'Generating ID token from session token');
 
-  console.log(`\nCookie`, cookie);
+  // const idTokenObj = await wrapProgressMessage(getIdToken(sessionToken), 'Fetching ID token from Nintendo API');
+  // const userInfoObj = await wrapProgressMessage(getUserInfo(idTokenObj.access_token), 'Fetching user info from Nintendo API');
+  // const fTokenObj1 = await wrapProgressMessage(getFToken(userAgent, idTokenObj.id_token, 1), 'First call to get the f token from IMINK API');
+  // const webApiServerCredentialObj = await wrapProgressMessage(getWebApiServerCredential(idTokenObj.id_token, fTokenObj1, userInfoObj), 'Fetching web API credentials from Nintendo API');
+  // const fTokenObj2 = await wrapProgressMessage(getFToken(userAgent, webApiServerCredentialObj.accessToken, 2), 'Second call to get the f token from IMINK API');
+  // const nsoGameServiceAccessTokenObj = await wrapProgressMessage(getNsoGameServiceAccessToken(webApiServerCredentialObj, fTokenObj2, selectedGame), 'Fetching web service token from Nintendo API');
+  // const cookie = await wrapProgressMessage(getCookie(nsoGameServiceAccessTokenObj, selectedGame), 'Fetching cookie from the NSO game service');
+
+  console.log(`\nCookie`, idToken);
 };
 
 const wrapProgressMessage = async <T>(task: Promise<T>, message = '', stream: typeof process.stdout = process.stdout): Promise<T> => {

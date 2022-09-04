@@ -1,9 +1,11 @@
 import { NsoGame, NsoGameCookie } from './nso-game.model';
-import { AccessToken, isAccessTokenResponse } from './nso-connect.model';
-import { NsoConnector, NsoConnectorArgs } from './nso-connector.class';
+import { AccessToken, isWebServiceTokenResponse } from './nso-connect.model';
+import { NsoConnector } from './nso-connector.class';
 import { NsoError, NsoErrorCode } from '../nso-error.class';
 import fetch from 'node-fetch';
 import { parse } from 'set-cookie-parser';
+import { NsoApp } from '../nso-app.class';
+import { NsoOperation, NsoOperationType } from '../nso-operation.class';
 
 const WEB_SERVICE_TOKEN_ENDPOINT_URI = 'https://api-lp1.znc.srv.nintendo.net/v2/Game/GetWebServiceToken';
 const TIME_DIFF_BEFORE_REGEN = 60000;
@@ -17,22 +19,15 @@ interface NsoGameConnectorArgsNsoConnectorObj {
   game: NsoGame;
   nsoConnector: NsoConnector;
 }
-const isNsoGameConnectorArgsNsoConnectorObj = (obj): obj is NsoGameConnectorArgsNsoConnectorObj => typeof obj.nsoConnector !== 'undefined';
-interface NsoGameConnectorArgsNsoConnectorArgs {
-  game: NsoGame;
-  nsoConnectorArgs: NsoConnectorArgs;
-}
-type NsoGameConnectorArgs = NsoGameConnectorArgsNsoConnectorObj | NsoGameConnectorArgsNsoConnectorArgs;
+type NsoGameConnectorArgs = NsoGameConnectorArgsNsoConnectorObj;
 
 export class NsoGameConnector {
   static async get(args: NsoGameConnectorArgs): Promise<NsoGameConnector> {
     const connector = new NsoGameConnector(args.game);
     if (isNsoGameConnectorArgsCookie(args)) {
       connector._cookie = args.cookie;
-    } else if (isNsoGameConnectorArgsNsoConnectorObj(args)) {
-      connector.nsoConnector = args.nsoConnector;
     } else {
-      connector.nsoConnector = await NsoConnector.get(args.nsoConnectorArgs);
+      connector.nsoConnector = args.nsoConnector;
     }
     return connector;
   }
@@ -46,9 +41,11 @@ export class NsoGameConnector {
     if (this.accessToken && +new Date() < this.accessToken.expires - TIME_DIFF_BEFORE_REGEN) {
       return this.accessToken;
     }
-    const nsoAppVersion = await this.nsoConnector.nsoApp.getVersion();
+    const nsoAppVersion = await NsoApp.get().getVersion();
     const webApiAccessToken = await this.nsoConnector.getAccessToken();
     const fToken = await this.nsoConnector.getFToken();
+    const operation = new NsoOperation(NsoOperationType.GET_GAME_ACCESS_TOKEN, `Fetching ${this.game.name} access token from Nintendo web API`);
+    NsoApp.get().currentOperation$.next(operation);
     const headers = {
       'Host':             'api-lp1.znc.srv.nintendo.net',
       'User-Agent':       `com.nintendo.znca/${nsoAppVersion} (Android/7.1.2)`,
@@ -74,16 +71,19 @@ export class NsoGameConnector {
     try {
       response = await fetch(WEB_SERVICE_TOKEN_ENDPOINT_URI, { method: 'POST', headers, body: JSON.stringify(body) });
     } catch (error) {
+      operation.fail();
       throw new NsoError('Error trying to fetch the game access token', NsoErrorCode.GAME_ACCESS_TOKEN_FETCH_FAILED, { headers, body, error });
     }
     const obj = await response.json();
-    if (!isAccessTokenResponse(obj)) {
-      throw new NsoError('Unsuccessful game access token response', NsoErrorCode.GAME_ACCESS_TOKEN_FETCH_BAD_RESPONSE, { headers, body, response: obj });
+    if (!isWebServiceTokenResponse(obj)) {
+      operation.fail();
+      throw new NsoError('Incorrect game access token response', NsoErrorCode.GAME_ACCESS_TOKEN_FETCH_BAD_RESPONSE, { headers, body, response: obj });
     }
     this.accessToken = {
-      accessToken: obj.accessToken,
-      expires: +(new Date()) + (obj.expiresIn * 1000)
-    }
+      accessToken: obj.result.accessToken,
+      expires: +(new Date()) + (obj.result.expiresIn * 1000)
+    };
+    operation.complete();
     return this.accessToken;
   }
 
@@ -95,12 +95,15 @@ export class NsoGameConnector {
         throw new NsoError(`The cookie has expired and a means of generating a new one wasn't provided`, NsoErrorCode.COOKIE_EXPIRED, { cookie: this._cookie });
       }
     }
+    const accessToken = (await this.getAccessToken()).accessToken;
+    const operation = new NsoOperation(NsoOperationType.GET_COOKIE, `Fetching ${this.game.name} cookie from game app headers`);
+    NsoApp.get().currentOperation$.next(operation);
     const headers = {
       'Host':                    this.game.host,
       'X-IsAppAnalyticsOptedIn': 'false',
       'Accept':                  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'Accept-Encoding':         'gzip,deflate',
-      'X-GameWebToken':          (await this.getAccessToken()).accessToken,
+      'X-GameWebToken':          accessToken,
       'Accept-Language':         this.nsoConnector.language,
       'X-IsAnalyticsOptedIn':    'false',
       'Connection':              'keep-alive',
@@ -112,14 +115,16 @@ export class NsoGameConnector {
     try {
       response = await fetch(`https://${this.game.host}/`, { method: 'GET', headers });
     } catch (error) {
+      operation.fail();
       throw new NsoError('Error trying to fetch the game access token', NsoErrorCode.COOKIE_FETCH_FAILED, { headers, error });
     }
     const cookieList = parse(response.headers.get('Set-Cookie'));
     const cookie = cookieList.find(cookie => cookie.name === this.game.cookieName);
     if (!cookie) {
-      console.log(cookieList);
+      operation.fail();
       throw new NsoError('Failed to parse the cookie from the headers', NsoErrorCode.COOKIE_PARSE_FAILED, { requestHeaders: headers, responseCookieHeader: response.headers.get('Set-Cookie') });
     }
+    operation.complete();
     return {
       fullHeader: response.headers.get('Set-Cookie'),
       value: cookie.value,

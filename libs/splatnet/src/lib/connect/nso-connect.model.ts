@@ -51,7 +51,12 @@ export interface WebApiServerCredentialResponse {
     webApiServerCredential: AccessTokenResponse;
   }
 }
-export const isWebApiServerCredentialResponse = (obj): obj is WebApiServerCredentialResponse => isAccessTokenResponse(obj?.result?.webApiServerCredential)
+export const isWebApiServerCredentialResponse = (obj): obj is WebApiServerCredentialResponse => isAccessTokenResponse(obj?.result?.webApiServerCredential);
+
+export interface WebServiceTokenResponse {
+  result: AccessTokenResponse;
+}
+export const isWebServiceTokenResponse = (obj): obj is WebServiceTokenResponse => isAccessTokenResponse(obj?.result);
 
 export interface AccessTokenResponse {
   accessToken: string;

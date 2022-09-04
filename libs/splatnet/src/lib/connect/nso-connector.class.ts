@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
-import { AccessToken, AccessTokenResponse, FTokenResponse, IdToken, IdTokenResponse, isFTokenResponse, isIdToken, isIdTokenResponse, isSessionTokenResponse, isUserInfoForAuth, isWebApiServerCredentialResponse, UserInfoForAuth } from './generate-iksm.model';
-import { getNsoAppVersion } from './nso-app-version';
-import { NsoError, NsoErrorCode } from '../NsoError';
+import { AccessToken, FTokenResponse, IdToken, isFTokenResponse, isIdToken, isIdTokenResponse, isSessionTokenResponse, isUserInfoForAuth, isWebApiServerCredentialResponse, UserInfoForAuth, LanguageCode } from './nso-connect.model';
+import { NsoError, NsoErrorCode } from '../nso-error.class';
 import * as crypto from 'crypto';
+import { NsoApp } from '../nso-app.class';
 
 // Nintendo connect API
 const CONNECT_BASE_URI = 'https://accounts.nintendo.com/connect/1.0.0';
@@ -11,7 +11,6 @@ const SESSION_TOKEN_ENDPOINT_URI = `${CONNECT_BASE_URI}/api/session_token`;
 const TOKEN_ENDPOINT_URI = `${CONNECT_BASE_URI}/api/token`;
 const USER_INFO_ENDPOINT_URI = 'https://api.accounts.nintendo.com/2.0.0/users/me';
 const WEB_API_SERVER_CREDENTIAL_ENDPOINT_URI = 'https://api-lp1.znc.srv.nintendo.net/v3/Account/Login';
-const WEB_SERVICE_TOKEN_ENDPOINT_URI = 'https://api-lp1.znc.srv.nintendo.net/v2/Game/GetWebServiceToken';
 
 // NSO app
 const NSO_APP_CLIENT_ID = '71b963c1b7b6d119';
@@ -29,21 +28,27 @@ const toUrlSafeBase64Encode = (value: Buffer): string => value
   .replace(/=+$/, '');
 const generateUrlSafeBase64String = (size): string => toUrlSafeBase64Encode(crypto.randomBytes(size));
 
-const userLang = 'en-GB';
+const DEFAULT_LANGUAGE = 'en-GB';
 const TIME_DIFF_BEFORE_REGEN = 60000;
 
-type NsoConnectorArgsSessionToken = {
+interface NsoConnectorArgsSessionToken {
+  nsoApp: NsoApp;
   sessionToken: string;
-};
-type NsoConnectorArgsSessionTokenCode = {
+  language?: LanguageCode;
+}
+interface NsoConnectorArgsSessionTokenCode {
+  nsoApp: NsoApp;
   sessionTokenCode: string;
-  authCodeVerifier: string
-};
-type NsoConnectorArgsRedirectUri = {
+  authCodeVerifier: string;
+  language?: LanguageCode;
+}
+interface NsoConnectorArgsRedirectUri {
+  nsoApp: NsoApp;
   redirectUri: string;
   authCodeVerifier: string;
-};
-type NsoConnectorArgs = NsoConnectorArgsSessionToken | NsoConnectorArgsSessionTokenCode | NsoConnectorArgsRedirectUri;
+  language?: LanguageCode;
+}
+export type NsoConnectorArgs = NsoConnectorArgsSessionToken | NsoConnectorArgsSessionTokenCode | NsoConnectorArgsRedirectUri;
 const isNsoConnectorArgsSessionToken = (obj): obj is NsoConnectorArgsSessionToken => !!obj.sessionToken;
 const isNsoConnectorArgsSessionTokenCode = (obj): obj is NsoConnectorArgsSessionTokenCode => obj.sessionTokenCode && obj.authCodeVerifier;
 
@@ -82,11 +87,11 @@ export class NsoConnector {
 
   static async get(args: NsoConnectorArgs): Promise<NsoConnector> {
     if (isNsoConnectorArgsSessionToken(args)) {
-      return new NsoConnector(args.sessionToken);
+      return new NsoConnector(args.sessionToken, args.nsoApp, args.language ?? DEFAULT_LANGUAGE);
     }
     const sessionTokenCode = isNsoConnectorArgsSessionTokenCode(args) ? args.sessionTokenCode : NsoConnector.extractSessionTokenCode(args.redirectUri);
     const headers = {
-      'User-Agent': `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`,
+      'User-Agent': `OnlineLounge/${await args.nsoApp.getVersion()} NASDKAPI Android`,
       'Accept-Language': 'en-US',
       'Accept': 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -111,7 +116,7 @@ export class NsoConnector {
     if (!isSessionTokenResponse(obj)) {
       throw new NsoError('Unsuccessful session token response', NsoErrorCode.SESSION_TOKEN_FETCH_BAD_RESPONSE, { headers, body, response: obj });
     }
-    return new NsoConnector(obj.session_token);
+    return new NsoConnector(obj.session_token, args.nsoApp, args.language ?? DEFAULT_LANGUAGE);
   }
 
   private static async getFToken(userAgent: string, token: IdToken | AccessToken): Promise<FTokenResponse> {
@@ -138,23 +143,26 @@ export class NsoConnector {
 
   private idToken: IdToken;
   private userInfo: UserInfoForAuth;
-  private webApiAccessToken: AccessToken;
+  private accessToken: AccessToken;
 
   get nintendoAccountId(): string { return this.userInfo.id; }
   get nickname(): string { return this.userInfo.nickname; }
 
-  private constructor(public readonly sessionToken: string) {}
+  private constructor(public readonly sessionToken: string, public nsoApp: NsoApp, readonly language: LanguageCode) {}
 
-  private async fetchIdToken(): Promise<void> {
+  async getIdToken(): Promise<IdToken> {
+    if (this.idToken && +new Date() < this.idToken.expires - TIME_DIFF_BEFORE_REGEN) {
+      return this.idToken;
+    }
     const headers = {
       'Host': 'accounts.nintendo.com',
       'Accept-Encoding': 'gzip',
       'Content-Type': 'application/json; charset=utf-8',
-      'Accept-Language': userLang,
+      'Accept-Language': this.language,
       'Content-Length': '439',
       'Accept': 'application/json',
       'Connection': 'Keep-Alive',
-      'User-Agent': `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`
+      'User-Agent': `OnlineLounge/${await this.nsoApp.getVersion()} NASDKAPI Android`
     };
     const body = {
       'client_id': NSO_APP_CLIENT_ID,
@@ -178,14 +186,16 @@ export class NsoConnector {
       accessToken: obj.access_token,
       tokenType: obj.token_type
     };
+    return this.idToken;
   }
 
-  private async fetchUserInfo(): Promise<void> {
+  private async getUserInfo(): Promise<UserInfoForAuth> {
+    const idToken = await this.getIdToken();
     const headers = {
-      'User-Agent':      `OnlineLounge/${await getNsoAppVersion()} NASDKAPI Android`,
-      'Accept-Language': userLang,
+      'User-Agent':      `OnlineLounge/${await this.nsoApp.getVersion()} NASDKAPI Android`,
+      'Accept-Language': this.language,
       'Accept':          'application/json',
-      'Authorization':   `Bearer ${this.idToken.accessToken}`,
+      'Authorization':   `Bearer ${idToken.accessToken}`,
       'Host':            'api.accounts.nintendo.com',
       'Connection':      'Keep-Alive',
       'Accept-Encoding': 'gzip'
@@ -202,13 +212,20 @@ export class NsoConnector {
     }
     const { id, nickname, birthday, country, language } = obj;
     this.userInfo = { id, nickname, birthday, country, language };
+    return this.userInfo;
   }
 
-  private async fetchWebApiAccessToken(fToken: FTokenResponse): Promise<void> {
-    const nsoAppVersion = await getNsoAppVersion();
+  async getAccessToken(): Promise<AccessToken> {
+    if (this.accessToken && +new Date() < this.accessToken.expires - TIME_DIFF_BEFORE_REGEN) {
+      return this.accessToken;
+    }
+    const idToken = await this.getIdToken();
+    const fToken = await NsoConnector.getFToken(this.nsoApp.userAgent, idToken)
+    const userInfo = await this.getUserInfo();
+    const nsoAppVersion = await this.nsoApp.getVersion();
     const headers = {
       'Host':             'api-lp1.znc.srv.nintendo.net',
-      'Accept-Language':  userLang,
+      'Accept-Language':  this.language,
       'User-Agent':       `com.nintendo.znca/${nsoAppVersion} (Android/7.1.2)`,
       'Accept':           'application/json',
       'X-ProductVersion': nsoAppVersion,
@@ -221,12 +238,12 @@ export class NsoConnector {
     const body = {
       parameter: {
         'f':          fToken.f,
-        'naIdToken':  this.idToken.idToken,
+        'naIdToken':  idToken.idToken,
         'timestamp':  fToken.timestamp,
         'requestId':  fToken.request_id,
-        'naCountry':  this.userInfo.country,
-        'naBirthday': this.userInfo.birthday,
-        'language':   this.userInfo.language
+        'naCountry':  userInfo.country,
+        'naBirthday': userInfo.birthday,
+        'language':   userInfo.language
       }
     };
     let response;
@@ -239,27 +256,14 @@ export class NsoConnector {
     if (!isWebApiServerCredentialResponse(obj)) {
       throw new NsoError('Unsuccessful web api server credential response', NsoErrorCode.WEB_API_CREDENTIAL_FETCH_BAD_RESPONSE, { headers, body, response: obj });
     }
-    this.webApiAccessToken = {
+    this.accessToken = {
       accessToken: obj.result.webApiServerCredential.accessToken,
       expires: +(new Date()) + (obj.result.webApiServerCredential.expiresIn * 1000)
     };
+    return this.accessToken;
   }
 
-  async getIdToken(): Promise<IdToken> {
-    if (this.idToken && +new Date() < this.idToken.expires - TIME_DIFF_BEFORE_REGEN) {
-      return this.idToken;
-    }
-    await this.fetchIdToken();
-    return this.idToken;
-  }
-
-  async getWebApiAccessToken(userAgent: string): Promise<AccessToken> {
-    if (this.webApiAccessToken && +new Date() < this.webApiAccessToken.expires - TIME_DIFF_BEFORE_REGEN) {
-      return this.webApiAccessToken;
-    }
-    await this.getIdToken();
-    await this.fetchUserInfo();
-    await this.fetchWebApiAccessToken(await NsoConnector.getFToken(userAgent, this.idToken));
-    return this.webApiAccessToken;
+  async getFToken(): Promise<FTokenResponse> {
+    return NsoConnector.getFToken(this.nsoApp.userAgent, await this.getAccessToken());
   }
 }

@@ -1,18 +1,6 @@
 import { type PromptModule } from 'inquirer';
 import * as readline from 'node:readline';
-import {
-  getFToken,
-  getIdToken,
-  getNsoAppVersion,
-  getWebApiServerCredential,
-  getUserInfo,
-  getNsoGameServiceAccessToken,
-  getCookie,
-  NSO_GAME_SERVICES,
-  NsoGameService,
-  SessionTokenResponse,
-  NsoConnector, NsoError
-} from '@TomikaArome/splatnet';
+import { NsoApp, NsoConnector, NsoError, NsoGame, NsoGameConnector } from '@TomikaArome/splatnet';
 
 const userAgent = 'tomika-splatnet-cli/1.0.0';
 
@@ -28,6 +16,8 @@ const getInquirerPrompt = async (): Promise<PromptModule> => {
   prompt = module.createPromptModule();
   return prompt;
 };
+
+const nsoApp = new NsoApp(userAgent);
 
 (async () => {
   await getInquirerPrompt();
@@ -90,10 +80,12 @@ Right click on "${bold}Select this person${reset}", click on "${bold}Copy link a
   }])).redirectUri;
   console.log('');
 
-  await wrapProgressMessage(getNsoAppVersion(), 'Fetching NSO app version');
+  await wrapProgressMessage(nsoApp.getVersion(), 'Fetching NSO app version');
   return await wrapProgressMessage(NsoConnector.get({
     sessionTokenCode: NsoConnector.extractSessionTokenCode(redirectUri),
-    authCodeVerifier
+    authCodeVerifier,
+    nsoApp,
+    language: 'en-GB'
   }), 'Fetching session token from Nintendo API');
 };
 
@@ -118,20 +110,16 @@ const generateCookie = async () => {
     name: 'sessionToken',
     message: 'Session token (leave blank to generate a new one):'
   }])).sessionToken;
-  const connector: NsoConnector = await (sessionToken.length === 0 ?  promptRedirectUri() : NsoConnector.get({ sessionToken }));
+  const connector: NsoConnector = await (sessionToken.length === 0 ?  promptRedirectUri() : NsoConnector.get({ nsoApp, sessionToken }));
   if (sessionToken.length !== 0) { console.log(''); }
 
-  const idToken = await wrapProgressMessage(connector.getIdToken(), 'Generating ID token from session token');
+  const splatoon2Connector = await wrapProgressMessage(NsoGameConnector.get({
+    nsoConnector: connector,
+    game: NsoApp.games.find((game: NsoGame) => game.name === 'Splatoon 2')
+  }), 'Connecting to Nintendo account');
+  const cookie = await wrapProgressMessage(splatoon2Connector.getCookie(), 'Generating cookie');
 
-  // const idTokenObj = await wrapProgressMessage(getIdToken(sessionToken), 'Fetching ID token from Nintendo API');
-  // const userInfoObj = await wrapProgressMessage(getUserInfo(idTokenObj.access_token), 'Fetching user info from Nintendo API');
-  // const fTokenObj1 = await wrapProgressMessage(getFToken(userAgent, idTokenObj.id_token, 1), 'First call to get the f token from IMINK API');
-  // const webApiServerCredentialObj = await wrapProgressMessage(getWebApiServerCredential(idTokenObj.id_token, fTokenObj1, userInfoObj), 'Fetching web API credentials from Nintendo API');
-  // const fTokenObj2 = await wrapProgressMessage(getFToken(userAgent, webApiServerCredentialObj.accessToken, 2), 'Second call to get the f token from IMINK API');
-  // const nsoGameServiceAccessTokenObj = await wrapProgressMessage(getNsoGameServiceAccessToken(webApiServerCredentialObj, fTokenObj2, selectedGame), 'Fetching web service token from Nintendo API');
-  // const cookie = await wrapProgressMessage(getCookie(nsoGameServiceAccessTokenObj, selectedGame), 'Fetching cookie from the NSO game service');
-
-  console.log(`\nCookie`, idToken);
+  console.log(`\nCookie`, cookie);
 };
 
 const wrapProgressMessage = async <T>(task: Promise<T>, message = '', stream: typeof process.stdout = process.stdout): Promise<T> => {

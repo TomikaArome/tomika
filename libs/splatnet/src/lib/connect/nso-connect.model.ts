@@ -1,9 +1,5 @@
-export interface NsoGameService {
-  id: number;
-  host: string;
-  name: string;
-  cookieName: string;
-}
+export type LanguageCode = 'en-US' | 'en-MX' | 'fr-CA' | 'ja-JP' | 'en-GB' | 'es-ES' | 'fr-FR' | 'de-DE' | 'it-IT' | 'nl-NL' | 'ru-RU';
+export const isLanguageCode = (value) => ['en-US', 'en-MX', 'fr-CA', 'ja-JP', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'nl-NL', 'ru-RU'].includes(value);
 
 export interface SessionTokenResponse {
   session_token: string;
@@ -37,11 +33,10 @@ export interface UserInfoForAuth {
   nickname: string;
   country: string;
   birthday: string;
-  language: 'en-US' | 'en-MX' | 'fr-CA' | 'ja-JP' | 'en-GB' | 'es-ES' | 'fr-FR' | 'de-DE' | 'it-IT' | 'nl-NL' | 'ru-RU';
+  language: LanguageCode;
 }
 export const isUserInfoForAuth = (obj): obj is UserInfoForAuth =>
-  typeof obj?.id === 'string' && typeof obj?.nickname === 'string' && typeof obj?.country === 'string' && typeof obj?.birthday === 'string'
-  && ['en-US', 'en-MX', 'fr-CA', 'ja-JP', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'nl-NL', 'ru-RU'].includes(obj?.language);
+  typeof obj?.id === 'string' && typeof obj?.nickname === 'string' && typeof obj?.country === 'string' && typeof obj?.birthday === 'string' && isLanguageCode(obj?.language);
 
 export interface FTokenResponse {
   f: string;
@@ -67,11 +62,5 @@ export const isAccessTokenResponse = (obj): obj is AccessTokenResponse =>
 
 export interface AccessToken {
   accessToken: string;
-  expires: number;
-}
-
-export interface NsoGameServiceCookie {
-  fullHeader?: string;
-  value: string;
   expires: number;
 }

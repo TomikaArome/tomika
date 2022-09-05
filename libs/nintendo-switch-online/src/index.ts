@@ -1,4 +1,9 @@
-export { NsoGame, NsoGameCookie, IdToken, AccessToken } from './lib/connect/model/nso-connect.model';
+export {
+  NsoGame,
+  NsoGameCookie,
+  IdToken,
+  AccessToken,
+} from './lib/connect/model/nso-connect.model';
 
 export * from './lib/nso-error.class';
 export * from './lib/nso-operation.class';

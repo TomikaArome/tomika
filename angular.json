@@ -206,6 +206,86 @@
       "tags": [],
       "implicitDependencies": ["frontend"]
     },
+    "nintendo-switch-online": {
+      "root": "libs/nintendo-switch-online",
+      "sourceRoot": "libs/nintendo-switch-online/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/nintendo-switch-online/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/nintendo-switch-online"],
+          "options": {
+            "jestConfig": "libs/nintendo-switch-online/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "nintendo-switch-online-cli": {
+      "root": "apps/nintendo-switch-online-cli",
+      "sourceRoot": "apps/nintendo-switch-online-cli/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:webpack",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/nintendo-switch-online-cli",
+            "main": "apps/nintendo-switch-online-cli/src/main.ts",
+            "tsConfig": "apps/nintendo-switch-online-cli/tsconfig.app.json",
+            "assets": ["apps/nintendo-switch-online-cli/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/nintendo-switch-online-cli/src/environments/environment.ts",
+                  "with": "apps/nintendo-switch-online-cli/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "run": {
+          "builder": "@nrwl/node:node",
+          "options": {
+            "buildTarget": "nintendo-switch-online-cli:build",
+            "watch": false
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "nintendo-switch-online-cli:build:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/nintendo-switch-online-cli/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/nintendo-switch-online-cli"],
+          "options": {
+            "jestConfig": "apps/nintendo-switch-online-cli/jest.config.ts",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "ouistiti": {
       "root": "libs/ouistiti",
       "sourceRoot": "libs/ouistiti/src",
@@ -266,86 +346,6 @@
           "outputs": ["coverage/libs/ouistiti-ui"],
           "options": {
             "jestConfig": "libs/ouistiti-ui/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "tags": []
-    },
-    "splatnet": {
-      "root": "libs/splatnet",
-      "sourceRoot": "libs/splatnet/src",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/splatnet/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/splatnet"],
-          "options": {
-            "jestConfig": "libs/splatnet/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "tags": []
-    },
-    "splatnet-cli": {
-      "root": "apps/splatnet-cli",
-      "sourceRoot": "apps/splatnet-cli/src",
-      "projectType": "application",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:webpack",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/splatnet-cli",
-            "main": "apps/splatnet-cli/src/main.ts",
-            "tsConfig": "apps/splatnet-cli/tsconfig.app.json",
-            "assets": ["apps/splatnet-cli/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/splatnet-cli/src/environments/environment.ts",
-                  "with": "apps/splatnet-cli/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "run": {
-          "builder": "@nrwl/node:node",
-          "options": {
-            "buildTarget": "splatnet-cli:build",
-            "watch": false
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "splatnet-cli:build:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["apps/splatnet-cli/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/splatnet-cli"],
-          "options": {
-            "jestConfig": "apps/splatnet-cli/jest.config.ts",
             "passWithNoTests": true
           }
         }

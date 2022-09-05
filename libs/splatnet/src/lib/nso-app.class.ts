@@ -1,17 +1,11 @@
 import fetch from 'node-fetch';
-import { NsoError, NsoErrorCode } from './nso-error.class';
-import { NsoGame } from './connect/nso-game.model';
 import { Subject } from 'rxjs';
+
+import { NSO_APP_APPLE_STORE_URI, VERSION_CHECK_INTERVAL_DEFAULT } from './nso-constants';
+import { NsoGame } from './connect/model/nso-connect.model';
+import { NsoAppArgs } from './model/nso-app-args.model';
+import { NsoError, NsoErrorCode } from './nso-error.class';
 import { NsoOperation, NsoOperationType } from './nso-operation.class';
-
-const NSO_APP_APPLE_STORE_URI = 'https://apps.apple.com/us/app/nintendo-switch-online/id1234806557';
-const VERSION_CHECK_INTERVAL_DEFAULT = 3600000;
-
-interface NsoAppArgs {
-  userAgent: string;
-  version?: string;
-  versionCheckInterval?: number;
-}
 
 export class NsoApp {
   private static instance: NsoApp;

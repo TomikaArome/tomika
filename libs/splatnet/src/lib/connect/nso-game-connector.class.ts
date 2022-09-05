@@ -1,36 +1,15 @@
-import { NsoGame, NsoGameCookie } from './nso-game.model';
-import { AccessToken, isWebServiceTokenResponse } from './nso-connect.model';
-import { NsoConnector } from './nso-connector.class';
-import { NsoError, NsoErrorCode } from '../nso-error.class';
 import fetch from 'node-fetch';
 import { parse } from 'set-cookie-parser';
-import { NsoApp } from '../nso-app.class';
+
+import { TIME_DIFF_BEFORE_REGEN, WEB_SERVICE_TOKEN_ENDPOINT_URI } from '../nso-constants';
+import { NsoGame, NsoGameCookie } from './model/nso-connect.model';
+import { AccessToken } from './model/nso-connect.model';
+import { isWebServiceTokenResponse } from './model/nso-connect-response.model';
+import { NsoError, NsoErrorCode } from '../nso-error.class';
 import { NsoOperation, NsoOperationType } from '../nso-operation.class';
-
-const WEB_SERVICE_TOKEN_ENDPOINT_URI = 'https://api-lp1.znc.srv.nintendo.net/v2/Game/GetWebServiceToken';
-const TIME_DIFF_BEFORE_REGEN = 60000;
-
-interface NsoGameConnectorArgsCookieHeader {
-  game: NsoGame;
-  cookieHeader: string;
-}
-const isNsoGameConnectorArgsCookieHeader = (obj): obj is NsoGameConnectorArgsCookieHeader => typeof obj?.cookieHeader === 'string';
-interface NsoGameConnectorArgsCookieValue {
-  game: NsoGame;
-  cookieValue: string;
-  cookieExpires: number;
-}
-const isNsoGameConnectorArgsCookieValue = (obj): obj is NsoGameConnectorArgsCookieValue => typeof obj?.cookieValue === 'string' && typeof obj?.cookieExpires === 'number';
-interface NsoGameConnectorArgsCookie {
-  game: NsoGame;
-  cookie: NsoGameCookie;
-}
-const isNsoGameConnectorArgsCookie = (obj): obj is NsoGameConnectorArgsCookie => typeof obj?.cookie !== 'undefined';
-interface NsoGameConnectorArgsNsoConnectorObj {
-  game: NsoGame;
-  nsoConnector: NsoConnector;
-}
-type NsoGameConnectorArgs = NsoGameConnectorArgsCookieHeader | NsoGameConnectorArgsCookieValue | NsoGameConnectorArgsCookie | NsoGameConnectorArgsNsoConnectorObj;
+import { NsoApp } from '../nso-app.class';
+import { NsoConnector } from './nso-connector.class';
+import { isNsoGameConnectorArgsCookie, isNsoGameConnectorArgsCookieHeader, isNsoGameConnectorArgsCookieValue, NsoGameConnectorArgs } from './model/nso-game-connector-args.model';
 
 export class NsoGameConnector {
   static parseCookieHeader(cookieHeader: string, cookieName: string): NsoGameCookie {

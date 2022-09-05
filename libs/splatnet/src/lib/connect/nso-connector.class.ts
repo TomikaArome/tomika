@@ -1,25 +1,20 @@
-import fetch from 'node-fetch';
-import { AccessToken, FTokenResponse, IdToken, isFTokenResponse, isIdToken, isIdTokenResponse, isSessionTokenResponse, isUserInfoForAuth, isWebApiServerCredentialResponse, LanguageCode, UserInfoForAuth } from './nso-connect.model';
-import { NsoError, NsoErrorCode } from '../nso-error.class';
 import * as crypto from 'crypto';
-import { NsoApp } from '../nso-app.class';
+import fetch from 'node-fetch';
+
+import {
+  DEFAULT_LANGUAGE, NSO_APP_CLIENT_ID, TIME_DIFF_BEFORE_REGEN, TOKEN_ENDPOINT_URI, SESSION_TOKEN_ENDPOINT_URI,
+  IMINK_API_F_ENDPOINT_URI, USER_INFO_ENDPOINT_URI, WEB_API_SERVER_CREDENTIAL_ENDPOINT_URI, AUTHORIZE_URI,
+  NSO_APP_REDIRECT_URI, SCOPES
+} from '../nso-constants';
+import { LanguageCode } from '../model/language-code.model';
+import { isNsoConnectorArgsSessionToken, isNsoConnectorArgsSessionTokenCode, NsoConnectorArgs } from './model/nso-connector-args.model';
+import { AccessToken, IdToken, isIdToken } from './model/nso-connect.model';
+import { FTokenResponse, isFTokenResponse, isIdTokenResponse, isSessionTokenResponse, isUserInfoForAuthResponse,
+  isWebApiServerCredentialResponse, UserInfoForAuthResponse
+} from './model/nso-connect-response.model';
+import { NsoError, NsoErrorCode } from '../nso-error.class';
 import { NsoOperation, NsoOperationType } from '../nso-operation.class';
-
-// Nintendo connect API
-const CONNECT_BASE_URI = 'https://accounts.nintendo.com/connect/1.0.0';
-const AUTHORIZE_URI = `${CONNECT_BASE_URI}/authorize`;
-const SESSION_TOKEN_ENDPOINT_URI = `${CONNECT_BASE_URI}/api/session_token`;
-const TOKEN_ENDPOINT_URI = `${CONNECT_BASE_URI}/api/token`;
-const USER_INFO_ENDPOINT_URI = 'https://api.accounts.nintendo.com/2.0.0/users/me';
-const WEB_API_SERVER_CREDENTIAL_ENDPOINT_URI = 'https://api-lp1.znc.srv.nintendo.net/v3/Account/Login';
-
-// NSO app
-const NSO_APP_CLIENT_ID = '71b963c1b7b6d119';
-const NSO_APP_REDIRECT_URI = `npf${NSO_APP_CLIENT_ID}://auth`;
-const SCOPES = ['openid', 'user', 'user.birthday', 'user.mii', 'user.screenName'];
-
-// Imink API URI
-const IMINK_API_F_ENDPOINT_URI = 'https://api.imink.app/f';
+import { NsoApp } from '../nso-app.class';
 
 // Utility functions
 const toUrlSafeBase64Encode = (value: Buffer): string => value
@@ -28,27 +23,6 @@ const toUrlSafeBase64Encode = (value: Buffer): string => value
   .replace(/\//g, '_')
   .replace(/=+$/, '');
 const generateUrlSafeBase64String = (size): string => toUrlSafeBase64Encode(crypto.randomBytes(size));
-
-const DEFAULT_LANGUAGE = 'en-GB';
-const TIME_DIFF_BEFORE_REGEN = 60000;
-
-interface NsoConnectorArgsSessionToken {
-  sessionToken: string;
-  language?: LanguageCode;
-}
-interface NsoConnectorArgsSessionTokenCode {
-  sessionTokenCode: string;
-  authCodeVerifier: string;
-  language?: LanguageCode;
-}
-interface NsoConnectorArgsRedirectUri {
-  redirectUri: string;
-  authCodeVerifier: string;
-  language?: LanguageCode;
-}
-export type NsoConnectorArgs = NsoConnectorArgsSessionToken | NsoConnectorArgsSessionTokenCode | NsoConnectorArgsRedirectUri;
-const isNsoConnectorArgsSessionToken = (obj): obj is NsoConnectorArgsSessionToken => !!obj.sessionToken;
-const isNsoConnectorArgsSessionTokenCode = (obj): obj is NsoConnectorArgsSessionTokenCode => obj.sessionTokenCode && obj.authCodeVerifier;
 
 export class NsoConnector {
   static generateAuthCodeVerifier(): string {
@@ -154,7 +128,7 @@ export class NsoConnector {
   }
 
   private idToken: IdToken;
-  private userInfo: UserInfoForAuth;
+  private userInfo: UserInfoForAuthResponse;
   private accessToken: AccessToken;
 
   get nintendoAccountId(): string { return this.userInfo.id; }
@@ -207,7 +181,7 @@ export class NsoConnector {
     return this.idToken;
   }
 
-  private async getUserInfo(): Promise<UserInfoForAuth> {
+  private async getUserInfo(): Promise<UserInfoForAuthResponse> {
     const idToken = await this.getIdToken();
     const nsoAppVersion = await NsoApp.get().getVersion();
     const operation = new NsoOperation(NsoOperationType.GET_USER_INFO, 'Fetching user info from Nintendo accounts API');
@@ -229,7 +203,7 @@ export class NsoConnector {
       throw new NsoError('Error trying to fetch the user info', NsoErrorCode.USER_INFO_FETCH_FAILED, { headers, error });
     }
     const obj = await response.json();
-    if (!isUserInfoForAuth(obj)) {
+    if (!isUserInfoForAuthResponse(obj)) {
       operation.fail();
       throw new NsoError('Incorrect user info response', NsoErrorCode.USER_INFO_FETCH_BAD_RESPONSE, { headers, response: obj });
     }

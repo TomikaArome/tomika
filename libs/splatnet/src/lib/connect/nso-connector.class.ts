@@ -127,7 +127,7 @@ export class NsoConnector {
     const hashMethod = isIdToken(token) ? 1 : 2;
     const operation = new NsoOperation(
       hashMethod === 1 ? NsoOperationType.GET_F_TOKEN_HASH_METHOD_1 : NsoOperationType.GET_F_TOKEN_HASH_METHOD_2,
-      `Fetching f token from IMINK API using method method ${hashMethod}`);
+      `Fetching f token from IMINK API using hash method ${hashMethod}`);
     NsoApp.get().currentOperation$.next(operation);
     const headers = {
       'User-Agent': userAgent,

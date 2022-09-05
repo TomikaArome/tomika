@@ -5,6 +5,7 @@ module.exports = {
     '<rootDir>/libs/common',
     '<rootDir>/libs/ouistiti',
     '<rootDir>/libs/ouistiti-ui',
-    '<rootDir>/libs/splatnet',
+    '<rootDir>/libs/nintendo-switch-online',
+    '<rootDir>/apps/nintendo-switch-online-cli',
   ],
 };

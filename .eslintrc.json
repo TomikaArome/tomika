@@ -20,6 +20,12 @@
               { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
             ]
           }
+        ],
+        "@typescript-eslint/no-empty-function": [
+          "error",
+          {
+            "allow": ["protected-constructors", "private-constructors"]
+          }
         ]
       }
     },

@@ -1,5 +1,7 @@
-import { DistinctQuestion, PromptModule } from 'inquirer';
+import { DistinctQuestion, PromptModule, SeparatorOptions } from 'inquirer';
 import { Options as OraOptions, Ora } from 'ora';
+import { NsoError } from '@TomikaArome/nintendo-switch-online';
+import { NsoCliError, NsoCliErrorCode } from './nso-cli-error.class';
 
 export class NsoCliSteam {
   private static _prompt: PromptModule = null;
@@ -22,11 +24,24 @@ export class NsoCliSteam {
     return NsoCliSteam._ora;
   }
 
-  constructor(private writeStream = process.stdout, private readStream = process.stdin, private errorStream = process.stderr) {
+  readonly separator = { type: 'separator' } as SeparatorOptions;
+
+  emptyLine() {
+    console.log('');
   }
 
-  log(...args) {
-    this.writeStream.write(args.map(arg => String(arg)).join(''));
+  handleNsoError(error: Error) {
+    if (error instanceof NsoError || error instanceof NsoCliError) {
+      console.group();
+      console.log(
+        `\n\u001b[0;31mNSO Error caught: ${error.code}\n${error.message}\u001b[0m\n\n`,
+        error.details,
+        '\n'
+      );
+      console.groupEnd();
+    } else {
+      console.error(error);
+    }
   }
 
   async wrapSpinner<T>(promise: Promise<T>, message = ''): Promise<T> {
@@ -58,6 +73,8 @@ export class NsoCliSteam {
   }
 
   async prompt(question: DistinctQuestion) {
-    return (await NsoCliSteam.getPrompt())([question])[question.name];
+    const promptModule = await NsoCliSteam.getPrompt()
+    const answers = await promptModule([question])
+    return answers[question.name];
   }
 }

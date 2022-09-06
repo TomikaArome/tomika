@@ -23,6 +23,8 @@ export interface NsoGame {
   name: string;
   cookieName: string;
 }
+export const isNsoGame = (obj): obj is NsoGame =>
+  typeof obj.id === 'number' && typeof obj.host === 'string' && typeof obj.name === 'string' && typeof obj.cookieName === 'string';
 
 export interface NsoGameCookie {
   fullHeader?: string;

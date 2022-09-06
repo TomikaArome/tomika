@@ -38,7 +38,7 @@ export class NsoGameConnector {
     };
   }
 
-  static async get(args: NsoGameConnectorArgs): Promise<NsoGameConnector> {
+  static get(args: NsoGameConnectorArgs): NsoGameConnector {
     const connector = new NsoGameConnector(args.game);
     if (isNsoGameConnectorArgsCookieHeader(args)) {
       connector._cookie = NsoGameConnector.parseCookieHeader(
@@ -70,7 +70,7 @@ export class NsoGameConnector {
   private _cookie: NsoGameCookie = null;
   private accessToken: AccessToken = null;
 
-  private constructor(private game: NsoGame) {}
+  private constructor(readonly game: NsoGame) {}
 
   async getAccessToken(): Promise<AccessToken> {
     if (

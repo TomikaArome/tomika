@@ -1,4 +1,4 @@
-import { NsoConnector } from '@TomikaArome/nintendo-switch-online';
+import { isNsoGame, NsoApp, NsoConnector, NsoGame, NsoGameConnector } from '@TomikaArome/nintendo-switch-online';
 import { NsoCliSerialisedAccount } from './model/nso-cli-config.model';
 import { NsoCli } from './nso-cli.class';
 
@@ -40,10 +40,10 @@ Right click on \u001b[35mSelect this person\u001b[0m, click on \u001b[35mCopy li
 
     await nsoConnector.getAccessToken();
     const nsoCliAccount = new NsoCliAccount(nsoConnector, nsoConnector.nintendoAccountId, nsoConnector.nickname);
-    const existingNsoCliAccount = nsoCli.config.accounts.findIndex((account: NsoCliAccount) => account.id === nsoCliAccount.id);
-    if (existingNsoCliAccount > -1) {
+    const existingNsoCliAccountIndex = nsoCli.config.accounts.findIndex((account: NsoCliAccount) => account.id === nsoCliAccount.id);
+    if (existingNsoCliAccountIndex > -1) {
       console.log('Account already saved in configuration, over-writing...');
-      nsoCli.config.accounts.splice(existingNsoCliAccount, 1, nsoCliAccount);
+      nsoCli.config.accounts.splice(existingNsoCliAccountIndex, 1, nsoCliAccount);
     } else {
       nsoCli.config.accounts.push(nsoCliAccount);
     }
@@ -60,6 +60,7 @@ Right click on \u001b[35mSelect this person\u001b[0m, click on \u001b[35mCopy li
   get nsoConnector(): NsoConnector {
     return this._nsoConnector;
   }
+  private gameConnectors: NsoGameConnector[] = [];
 
   constructor(private _nsoConnector: NsoConnector, private loadedId: string, private loadedNickname: string) {}
 
@@ -69,5 +70,94 @@ Right click on \u001b[35mSelect this person\u001b[0m, click on \u001b[35mCopy li
       nickname: this.nickname,
       sessionToken: this.nsoConnector.sessionToken
     };
+  }
+
+  async showAccountInfo() {
+    const idToken = await this.nsoConnector.getIdToken();
+    const accessToken = await this.nsoConnector.getAccessToken();
+    console.group();
+    console.log(`
+Nintendo account name: \u001b[36m${this.nickname}\u001b[0m
+Nintendo account ID:   \u001b[36m${this.id}\u001b[0m
+Session token:
+    \u001b[36m${this.nsoConnector.sessionToken}\u001b[0m
+Id token: \u001b[90mexpires ${String(new Date(idToken.expires))}
+    \u001b[36m${idToken.idToken}\u001b[0m
+Access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
+    \u001b[36m${accessToken.accessToken}\u001b[0m`);
+    console.groupEnd();
+  }
+
+  async gamePicker() {
+    const nsoCli = NsoCli.get();
+    await this.showAccountInfo();
+    nsoCli.stream.emptyLine();
+    let continueApp = true;
+    while (continueApp) {
+      const gameChoices = NsoApp.games.map((game: NsoGame) => {
+        return {
+          name: game.name,
+          value: game
+        };
+      });
+      const chosenGame = await nsoCli.stream.prompt({
+        type: 'list',
+        name: 'game',
+        message: 'Select a game or a command:',
+        choices: [
+          ...gameChoices,
+          nsoCli.stream.separator,
+          {
+            name: 'Unregister account',
+            value: 'unregister'
+          },
+          {
+            name: 'Back',
+            value: 'back'
+          }
+        ]
+      });
+      nsoCli.stream.emptyLine();
+      try {
+        if (isNsoGame(chosenGame)) {
+          await this.showGameInfo(chosenGame);
+        } else if (chosenGame === 'unregister') {
+          const accountIndex = nsoCli.config.accounts.indexOf(this);
+          nsoCli.config.accounts.splice(accountIndex, 1);
+          await nsoCli.stream.wrapSpinner(nsoCli.config.save(), 'Removing account from configuration');
+          continueApp = false;
+        } else {
+          continueApp = false;
+        }
+      } catch (error) {
+        nsoCli.stream.handleNsoError(error);
+      }
+      if (continueApp) { nsoCli.stream.emptyLine(); }
+    }
+  }
+
+  getGameConnector(game: NsoGame): NsoGameConnector {
+    const existingGameConnector = this.gameConnectors.find((gameConnector: NsoGameConnector) => gameConnector.game === game);
+    if (existingGameConnector) { return existingGameConnector; }
+    const newGameConnector = NsoGameConnector.get({ nsoConnector: this.nsoConnector, game });
+    this.gameConnectors.push(newGameConnector);
+    return newGameConnector;
+  }
+
+  async showGameInfo(game: NsoGame) {
+    const gameConnector = this.getGameConnector(game);
+    const accessToken = await gameConnector.getAccessToken();
+    const cookie = await gameConnector.getCookie();
+    const cookieExpires = cookie.expires ? `expires ${String(new Date(cookie.expires))}` : `expiry not available`;
+    console.group();
+    console.log(`
+${game.name} address:      \u001b[36mhttps://${game.host}/\u001b[0m
+${game.name} access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
+    \u001b[36m${accessToken.accessToken}\u001b[0m
+${game.name} ${game.cookieName} cookie: \u001b[90m${cookieExpires}
+    \u001b[36m${cookie.value}\u001b[0m
+Full cookie header:
+    \u001b[36m${cookie.fullHeader}\u001b[0m`);
+    console.groupEnd();
   }
 }

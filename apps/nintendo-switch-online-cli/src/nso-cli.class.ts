@@ -65,7 +65,7 @@ export class NsoCli {
       }
       const chosenAccount = await this.stream.prompt({
         type: 'list',
-        name: 'command',
+        name: 'account',
         message: 'Select an account to use:',
         choices: [
           ...accountChoices,
@@ -76,9 +76,10 @@ export class NsoCli {
       this.stream.emptyLine();
       try {
         if (chosenAccount instanceof NsoCliAccount) {
-          console.log(`You selected ${chosenAccount.nickname}`);
+          await chosenAccount.gamePicker();
         } else if (chosenAccount === 'register') {
-          await NsoCliAccount.register();
+          const account = await NsoCliAccount.register();
+          await account.gamePicker();
         } else {
           continueApp = false;
         }

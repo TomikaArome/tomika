@@ -1,5 +1,6 @@
 export {
   NsoGame,
+  isNsoGame,
   NsoGameCookie,
   IdToken,
   AccessToken,

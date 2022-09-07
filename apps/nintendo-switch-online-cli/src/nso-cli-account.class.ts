@@ -27,14 +27,12 @@ Right click on \u001b[35mSelect this person\u001b[0m, click on \u001b[35mCopy li
         name: 'redirectUri',
         message: 'Paste the copied link here:',
       });
-      nsoCli.stream.emptyLine();
 
       nsoConnector = await NsoConnector.get({
         sessionTokenCode: NsoConnector.extractSessionTokenCode(redirectUri),
         authCodeVerifier
       });
     } else {
-      nsoCli.stream.emptyLine();
       nsoConnector = await NsoConnector.get({ sessionToken });
     }
 
@@ -73,18 +71,22 @@ Right click on \u001b[35mSelect this person\u001b[0m, click on \u001b[35mCopy li
   }
 
   async showAccountInfo() {
-    const idToken = await this.nsoConnector.getIdToken();
-    const accessToken = await this.nsoConnector.getAccessToken();
-    console.group();
-    console.log(`
-Nintendo account name: \u001b[36m${this.nickname}\u001b[0m
-Nintendo account ID:   \u001b[36m${this.id}\u001b[0m
+    let moreDetail = '';
+    if (NsoCli.get().config.moreDetail) {
+      const idToken = await this.nsoConnector.getIdToken();
+      const accessToken = await this.nsoConnector.getAccessToken();
+      moreDetail = `
 Session token:
     \u001b[36m${this.nsoConnector.sessionToken}\u001b[0m
 Id token: \u001b[90mexpires ${String(new Date(idToken.expires))}
     \u001b[36m${idToken.idToken}\u001b[0m
 Access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
-    \u001b[36m${accessToken.accessToken}\u001b[0m`);
+    \u001b[36m${accessToken.accessToken}\u001b[0m`;
+    }
+    console.group();
+    console.log(`
+Nintendo account name: \u001b[36m${this.nickname}\u001b[0m
+Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
     console.groupEnd();
   }
 
@@ -94,7 +96,9 @@ Access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
     nsoCli.stream.emptyLine();
     let continueApp = true;
     while (continueApp) {
-      const gameChoices = NsoApp.games.map((game: NsoGame) => {
+      const gameChoices = NsoApp.games.filter((game: NsoGame) => {
+        return !(nsoCli.config.hiddenGames ?? []).includes(game.abbr);
+      }).map((game: NsoGame) => {
         return {
           name: game.name,
           value: game
@@ -117,7 +121,6 @@ Access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
           }
         ]
       });
-      nsoCli.stream.emptyLine();
       try {
         if (isNsoGame(chosenGame)) {
           await this.showGameInfo(chosenGame);
@@ -146,18 +149,23 @@ Access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
 
   async showGameInfo(game: NsoGame) {
     const gameConnector = this.getGameConnector(game);
-    const accessToken = await gameConnector.getAccessToken();
     const cookie = await gameConnector.getCookie();
     const cookieExpires = cookie.expires ? `expires ${String(new Date(cookie.expires))}` : `expiry not available`;
+    let moreDetail1 = '', moreDetail2 = '';
+    if (NsoCli.get().config.moreDetail) {
+      const accessToken = await gameConnector.getAccessToken();
+      moreDetail1 = `
+${game.name} access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
+    \u001b[36m${accessToken.accessToken}\u001b[0m`;
+      moreDetail2 = `
+Full cookie header:
+    \u001b[36m${cookie.fullHeader}\u001b[0m`;
+    }
     console.group();
     console.log(`
-${game.name} address:      \u001b[36mhttps://${game.host}/\u001b[0m
-${game.name} access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
-    \u001b[36m${accessToken.accessToken}\u001b[0m
+${game.name} address:      \u001b[36mhttps://${game.host}/\u001b[0m${moreDetail1}
 ${game.name} ${game.cookieName} cookie: \u001b[90m${cookieExpires}
-    \u001b[36m${cookie.value}\u001b[0m
-Full cookie header:
-    \u001b[36m${cookie.fullHeader}\u001b[0m`);
+    \u001b[36m${cookie.value}\u001b[0m${moreDetail2}`);
     console.groupEnd();
   }
 }

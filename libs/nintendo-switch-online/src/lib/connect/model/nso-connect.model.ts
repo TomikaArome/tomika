@@ -22,9 +22,10 @@ export interface NsoGame {
   host: string;
   name: string;
   cookieName: string;
+  abbr: string;
 }
 export const isNsoGame = (obj): obj is NsoGame =>
-  typeof obj.id === 'number' && typeof obj.host === 'string' && typeof obj.name === 'string' && typeof obj.cookieName === 'string';
+  typeof obj.id === 'number' && typeof obj.host === 'string' && typeof obj.name === 'string' && typeof obj.cookieName === 'string' && typeof obj.abbr === 'string';
 
 export interface NsoGameCookie {
   fullHeader?: string;

@@ -201,6 +201,7 @@ export class NsoGameConnector {
         }
       );
     }
+    this._cookie = cookie;
     operation.complete();
     return cookie;
   }

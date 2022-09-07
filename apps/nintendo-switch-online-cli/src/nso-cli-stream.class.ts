@@ -1,7 +1,7 @@
 import { DistinctQuestion, PromptModule, SeparatorOptions } from 'inquirer';
 import { Options as OraOptions, Ora } from 'ora';
 import { NsoError } from '@TomikaArome/nintendo-switch-online';
-import { NsoCliError, NsoCliErrorCode } from './nso-cli-error.class';
+import { NsoCliError } from './nso-cli-error.class';
 
 export class NsoCliSteam {
   private static _prompt: PromptModule = null;
@@ -73,8 +73,8 @@ export class NsoCliSteam {
   }
 
   async prompt(question: DistinctQuestion) {
-    const promptModule = await NsoCliSteam.getPrompt()
-    const answers = await promptModule([question])
+    const promptModule = await NsoCliSteam.getPrompt();
+    const answers = await promptModule([question]);
     return answers[question.name];
   }
 }

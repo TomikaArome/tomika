@@ -18,19 +18,22 @@ export class NsoApp {
       host: 'app.splatoon2.nintendo.net',
       name: 'Splatoon 2',
       cookieName: 'iksm_session',
+      abbr: 'splat2'
     },
     {
       id: 5598642853249024,
       host: 'app.smashbros.nintendo.net',
       name: 'Super Smash Bros. Ultimate',
       cookieName: 'super_smash_session',
+      abbr: 'ssbu'
     },
     {
       id: 4953919198265344,
       host: 'web.sd.lp1.acbaa.srv.nintendo.net',
       name: 'Animal Crossing: New Horizons',
       cookieName: '_gtoken',
-    },
+      abbr: 'acnh'
+    }
   ];
 
   private lastCheckedVersion = 0;
@@ -60,22 +63,22 @@ export class NsoApp {
   private constructor(
     readonly userAgent: string,
     private _version: string,
-    private versionCheckInterval
+    private versionCheckInterval: number
   ) {
-    if (this._version && !/^[0-9]+\.[0-9]+\.[0-9]+/.test(this._version)) {
-      throw new NsoError(
-        'NSO app version provided badly formatted',
-        NsoErrorCode.NSO_APP_VERSION_BADLY_FORMATTED,
-        { provided: this._version }
-      );
+    if (this._version) {
+      if (!/^[0-9]+\.[0-9]+\.[0-9]+/.test(this._version)) {
+        throw new NsoError(
+          'NSO app version provided badly formatted',
+          NsoErrorCode.NSO_APP_VERSION_BADLY_FORMATTED,
+          { provided: this._version }
+        );
+      }
+      this.lastCheckedVersion = -1;
     }
   }
 
   async getVersion(): Promise<string> {
-    if (
-      this._version &&
-      +new Date() < this.lastCheckedVersion + this.versionCheckInterval
-    ) {
+    if (this._version && (this.lastCheckedVersion === -1 || +new Date() < this.lastCheckedVersion + this.versionCheckInterval)) {
       return this._version;
     }
     const operation = new NsoOperation(

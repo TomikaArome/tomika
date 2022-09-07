@@ -5,7 +5,7 @@ import { isNsoCliSerialisedConfig, NsoCliSerialisedAccount, NsoCliSerialisedConf
 import { NsoCliAccount } from './nso-cli-account.class';
 import { NsoCliError, NsoCliErrorCode } from './nso-cli-error.class';
 import { NsoCli } from './nso-cli.class';
-import { NsoConnector } from '@TomikaArome/nintendo-switch-online';
+import { NsoApp, NsoConnector } from '@TomikaArome/nintendo-switch-online';
 
 export class NsoCliConfig {
   static readonly configFileName = '.nintendo-switch-online-cli-config.json';
@@ -21,13 +21,32 @@ export class NsoCliConfig {
   }
 
   accounts: NsoCliAccount[] = [];
+  checkVersionOnlyOnce: boolean = undefined;
+  hiddenGames: string[] = undefined;
+  moreDetail: boolean = undefined;
+  nsoAppVersionPrevious: string;
 
   private constructor(private configPath: string) {}
 
-  serialise(): NsoCliSerialisedConfig {
-    return {
-      accounts: this.accounts.map((account: NsoCliAccount) => account.serialise())
+  async serialise(): Promise<NsoCliSerialisedConfig> {
+    const serialised: NsoCliSerialisedConfig = {
+      accounts: this.accounts.map((account: NsoCliAccount) => account.serialise()),
+      nsoAppVersion: await NsoApp.get().getVersion()
     };
+    if (this.checkVersionOnlyOnce !== undefined) { serialised.checkVersionOnlyOnce = this.checkVersionOnlyOnce; }
+    if (this.hiddenGames !== undefined) { serialised.hiddenGames = this.hiddenGames; }
+    if (this.moreDetail !== undefined) { serialised.moreDetail = this.moreDetail; }
+    return serialised;
+  }
+
+  async deserialise(data: NsoCliSerialisedConfig) {
+    if (typeof data.accounts === 'undefined') { data.accounts = []; }
+    this.accounts = await Promise.all(data.accounts.map(async (accountData: NsoCliSerialisedAccount) =>
+      new NsoCliAccount(await NsoConnector.get({ sessionToken: accountData.sessionToken }), accountData.id, accountData.nickname)));
+    this.checkVersionOnlyOnce = data.checkVersionOnlyOnce;
+    this.hiddenGames = data.hiddenGames;
+    this.moreDetail = data.moreDetail;
+    this.nsoAppVersionPrevious = data.nsoAppVersion;
   }
 
   async load() {
@@ -46,18 +65,17 @@ export class NsoCliConfig {
     try {
       data = JSON.parse(json);
     } catch (error) {
-      throw new NsoCliError('JSON found within the config file badly formatted', NsoCliErrorCode.CONFIG_BADLY_FORMED_JSON, { data: json });
+      throw new NsoCliError('JSON found within the config file badly formatted', NsoCliErrorCode.CONFIG_BADLY_FORMED_JSON, { unparsedJson: json });
     }
     if (!isNsoCliSerialisedConfig(data)) {
-      throw new NsoCliError('JSON found within the config file badly formatted', NsoCliErrorCode.CONFIG_BADLY_FORMED_JSON, { data: json });
+      throw new NsoCliError('JSON found within the config file badly formatted', NsoCliErrorCode.CONFIG_BADLY_FORMED_JSON, { parsedJson: data });
     }
-    this.accounts = await Promise.all(data.accounts.map(async (accountData: NsoCliSerialisedAccount) =>
-      new NsoCliAccount(await NsoConnector.get({ sessionToken: accountData.sessionToken }), accountData.id, accountData.nickname)));
+    await this.deserialise(data);
   }
 
   async save() {
     try {
-      const json = JSON.stringify(this.serialise(), null, 2) + '\n';
+      const json = JSON.stringify(await this.serialise(), null, 2) + '\n';
       await writeFile(this.configPath, json, { encoding: 'utf-8' });
     } catch (error) {
       throw new NsoCliError('Failed to save the config file', NsoCliErrorCode.CONFIG_SAVE_FAILED, { error });

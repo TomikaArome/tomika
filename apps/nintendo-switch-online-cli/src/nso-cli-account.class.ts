@@ -151,7 +151,7 @@ Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
     const gameConnector = this.getGameConnector(game);
     const cookie = await gameConnector.getCookie();
     const cookieExpires = cookie.expires ? `expires ${String(new Date(cookie.expires))}` : `expiry not available`;
-    let moreDetail1 = '', moreDetail2 = '';
+    let moreDetail1 = '', moreDetail2 = '', moreDetailSpacing = '';
     if (NsoCli.get().config.moreDetail) {
       const accessToken = await gameConnector.getAccessToken();
       moreDetail1 = `
@@ -160,10 +160,11 @@ ${game.name} access token: \u001b[90mexpires ${String(new Date(accessToken.expir
       moreDetail2 = `
 Full cookie header:
     \u001b[36m${cookie.fullHeader}\u001b[0m`;
+      moreDetailSpacing = '     ';
     }
     console.group();
     console.log(`
-${game.name} address:      \u001b[36mhttps://${game.host}/\u001b[0m${moreDetail1}
+${game.name} address: ${moreDetailSpacing}\u001b[36mhttps://${game.host}/\u001b[0m${moreDetail1}
 ${game.name} ${game.cookieName} cookie: \u001b[90m${cookieExpires}
     \u001b[36m${cookie.value}\u001b[0m${moreDetail2}`);
     console.groupEnd();

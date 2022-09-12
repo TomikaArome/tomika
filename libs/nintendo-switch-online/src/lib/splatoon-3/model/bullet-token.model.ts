@@ -11,4 +11,5 @@ export interface Splatoon3BulletToken {
   bulletToken: string;
   lang: string;
   isNOECountry: boolean;
+  expires: number;
 }

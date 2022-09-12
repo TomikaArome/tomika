@@ -73,10 +73,7 @@ export class NsoGameConnector {
   private constructor(readonly game: NsoGame) {}
 
   async getAccessToken(): Promise<AccessToken> {
-    if (
-      this.accessToken &&
-      +new Date() < this.accessToken.expires - TIME_DIFF_BEFORE_REGEN
-    ) {
+    if (this.accessToken && +new Date() < this.accessToken.expires - TIME_DIFF_BEFORE_REGEN) {
       return this.accessToken;
     }
     const nsoAppVersion = await NsoApp.get().getVersion();

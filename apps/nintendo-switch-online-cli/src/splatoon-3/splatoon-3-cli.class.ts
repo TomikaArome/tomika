@@ -13,7 +13,7 @@ export class Splatoon3Cli extends GameCli {
   readonly gameSpecificCommands = [
     {
       name: 'Generate bullet tokens',
-      value: this.bulletTokens
+      value: this.bulletToken
     },
     {
       name: 'Save last 50 battles',
@@ -21,11 +21,14 @@ export class Splatoon3Cli extends GameCli {
     }
   ];
 
-  // async getGameInfo(showCookieDetail = true): Promise<string> {
-  //   return await super.getGameInfo();
-  // }
+  async getGameInfo(): Promise<string> {
+    const bulletToken = await this.controller.getBulletToken();
+    return (await super.getGameInfo()) + `
+Bullet token: \u001b[90mexpires ${String(new Date(bulletToken.expires))}
+    \u001b[36m${bulletToken.bulletToken}\u001b[0m`;
+  }
 
-  async bulletTokens() {
+  async bulletToken() {
     const response = await this.controller.getBulletToken();
     console.log(response);
   }

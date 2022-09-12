@@ -7,9 +7,12 @@ import { NsoOperation, NsoOperationType } from '../nso-operation.class';
 import { isSplatoon3BulletTokenRaw, Splatoon3BulletToken } from './model/bullet-token.model';
 import { isSplatoon3LatestBattleHistoriesRaw, Splatoon3LatestBattlesHistoriesRaw } from './model/battle-histories.model';
 import { isSplatoon3VsHistoryDetailRaw, Splatoon3VsHistoryDetailRaw } from './model/battle.model';
+import { TIME_DIFF_BEFORE_REGEN } from '../nso-constants';
 
 export class Splatoon3Controller {
   private static API_BASE_URI = 'https://api.lp1.av5ja.srv.nintendo.net/api';
+
+  private bulletToken: Splatoon3BulletToken = null;
 
   constructor(private nsoGameConnector: NsoGameConnector) {
     if (nsoGameConnector.game.abbr !== 'splat3') {
@@ -19,7 +22,19 @@ export class Splatoon3Controller {
     }
   }
 
+  toFilenameSafeDate(date: string | Date): string {
+    return (typeof date === 'string' ? date : date.toISOString().slice(0, 19) + date.toISOString().slice(23))
+      .replace(/:/g, ';');
+  }
+
+  fromFilenameSafeDate(dateString: string): string {
+    return dateString.replace(/;/g, ':');
+  }
+
   async getBulletToken(): Promise<Splatoon3BulletToken> {
+    if (this.bulletToken && +new Date() < this.bulletToken.expires - TIME_DIFF_BEFORE_REGEN) {
+      return this.bulletToken;
+    }
     const accessToken = await this.nsoGameConnector.getAccessToken();
     const operation = new NsoOperation(NsoOperationType.SPLATOON_3_BULLET_TOKEN, `Fetching bullet tokens from Splatoon 3 API`);
     NsoApp.get().currentOperation$.next(operation);
@@ -62,15 +77,25 @@ export class Splatoon3Controller {
       operation.fail();
       throw new NsoError('Incorrect Splatoon 3 bullet token response', NsoErrorCode.SPLATOON_3_BULLET_TOKEN_FETCH_BAD_RESPONSE, { headers, response: obj });
     }
-    operation.complete();
-    return {
+    let bulletTokenExpiresIn: number;
+    try {
+      const response = await this.fetchGraphql(obj.bulletToken, '49dd00428fb8e9b4dde62f585c8de1e0');
+      bulletTokenExpiresIn = +response.headers.get('x-bullettoken-remaining');
+    } catch (error) {
+      operation.fail();
+      throw new NsoError('Error trying to query the Splatoon 3 graphql endpoint', NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_FAILED, error);
+    }
+    this.bulletToken = {
       bulletToken: obj.bulletToken,
       lang: obj.lang,
-      isNOECountry: obj.is_noe_country === 'true'
+      isNOECountry: obj.is_noe_country === 'true',
+      expires: +new Date() + bulletTokenExpiresIn * 1000
     };
+    operation.complete();
+    return this.bulletToken;
   }
 
-  private async fetchGraphql(bulletToken: string, sha256Hash: string, variables) {
+  private async fetchGraphql(bulletToken: string, sha256Hash: string, variables = {}) {
     const headers = {
       'Accept':          '*/*',
       'Accept-Encoding': 'gzip, deflate, br',
@@ -92,11 +117,15 @@ export class Splatoon3Controller {
       },
       variables: variables
     };
-    return await fetch(`${Splatoon3Controller.API_BASE_URI}/graphql`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body)
-    });
+    try {
+      return await fetch(`${Splatoon3Controller.API_BASE_URI}/graphql`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+      });
+    } catch (error) {
+      throw { headers, body, error };
+    }
   }
 
   async graphql<T>(sha256Hash: string, typeGuardFn: (obj) => obj is T = null, variables = {}): Promise<T> {
@@ -108,12 +137,12 @@ export class Splatoon3Controller {
       response = await this.fetchGraphql(bulletToken.bulletToken, sha256Hash, variables);
     } catch (error) {
       operation.fail();
-      throw new NsoError('Error trying to query the Splatoon 3 graphql endpoint', NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_FAILED, { headers, body, error });
+      throw new NsoError('Error trying to query the Splatoon 3 graphql endpoint', NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_FAILED, error);
     }
     const obj = await response.json();
     if (typeGuardFn && !typeGuardFn(obj)) {
       operation.fail();
-      throw new NsoError('Incorrect Splatoon 3 bullet token response', NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_BAD_RESPONSE, { headers, response: obj });
+      throw new NsoError('Incorrect Splatoon 3 graphql endpoint response', NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_BAD_RESPONSE, { bulletToken: bulletToken.bulletToken, response: obj });
     }
     operation.complete();
     return obj;

@@ -1,6 +1,10 @@
 import { isNsoGame, NsoApp, NsoConnector, NsoGame, NsoGameConnector } from '@TomikaArome/nintendo-switch-online';
 import { NsoCliSerialisedAccount } from './model/nso-cli-config.model';
 import { NsoCli } from './nso-cli.class';
+import { Splatoon3Cli } from './splatoon-3/splatoon-3-cli.class';
+import { Splatoon2Cli } from './splatoon-2/splatoon-2-cli.class';
+import { SmashUltimateCli } from './smash-ultimate/smash-ultimate-cli.class';
+import { AcnhCliClass } from './acnh/acnh-cli.class';
 
 export class NsoCliAccount {
   static async register(): Promise<NsoCliAccount> {
@@ -59,6 +63,17 @@ Right click on \u001b[35mSelect this person\u001b[0m, click on \u001b[35mCopy li
     return this._nsoConnector;
   }
   private gameConnectors: NsoGameConnector[] = [];
+  private gameClis: {
+    splat3: Splatoon3Cli;
+    splat2: Splatoon2Cli;
+    ssbu: SmashUltimateCli;
+    acnh: AcnhCliClass;
+  } = {
+    splat3: null,
+    splat2: null,
+    ssbu: null,
+    acnh: null
+  };
 
   constructor(private _nsoConnector: NsoConnector, private loadedId: string, private loadedNickname: string) {}
 
@@ -94,8 +109,8 @@ Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
     const nsoCli = NsoCli.get();
     await this.showAccountInfo();
     nsoCli.stream.emptyLine();
-    let continueApp = true;
-    while (continueApp) {
+    let continuePicker = true;
+    while (continuePicker) {
       const gameChoices = NsoApp.games.filter((game: NsoGame) => {
         return !(nsoCli.config.hiddenGames ?? []).includes(game.abbr);
       }).map((game: NsoGame) => {
@@ -123,19 +138,29 @@ Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
       });
       try {
         if (isNsoGame(chosenGame)) {
-          await this.showGameInfo(chosenGame);
+          if (!this.gameClis[chosenGame.abbr]) {
+            let classObj;
+            switch (chosenGame.abbr) {
+              case 'splat3': classObj = Splatoon3Cli; break;
+              case 'splat2': classObj = Splatoon2Cli; break;
+              case 'ssbu': classObj = SmashUltimateCli; break;
+              case 'acnh': classObj = AcnhCliClass; break;
+            }
+            this.gameClis[chosenGame.abbr] = new classObj(this.getGameConnector(chosenGame));
+          }
+          await this.gameClis[chosenGame.abbr].commandPicker();
         } else if (chosenGame === 'unregister') {
           const accountIndex = nsoCli.config.accounts.indexOf(this);
           nsoCli.config.accounts.splice(accountIndex, 1);
           await nsoCli.stream.wrapSpinner(nsoCli.config.save(), 'Removing account from configuration');
-          continueApp = false;
+          continuePicker = false;
         } else {
-          continueApp = false;
+          continuePicker = false;
         }
       } catch (error) {
         nsoCli.stream.handleNsoError(error);
       }
-      if (continueApp) { nsoCli.stream.emptyLine(); }
+      if (continuePicker) { nsoCli.stream.emptyLine(); }
     }
   }
 

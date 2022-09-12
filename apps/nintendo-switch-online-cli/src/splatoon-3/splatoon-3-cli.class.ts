@@ -1,0 +1,49 @@
+import { NsoGameConnector, Splatoon3Controller } from '@TomikaArome/nintendo-switch-online';
+import { GameCli } from '../game-cli.class';
+import { NsoCli } from '../nso-cli.class';
+
+export class Splatoon3Cli extends GameCli {
+  private controller: Splatoon3Controller;
+  constructor(private nsoGameConnector: NsoGameConnector) {
+    super(nsoGameConnector);
+    this.controller = new Splatoon3Controller(nsoGameConnector);
+  }
+
+  readonly showCookieInfo = false;
+  readonly gameSpecificCommands = [
+    {
+      name: 'Generate bullet tokens',
+      value: this.bulletTokens
+    },
+    {
+      name: 'Save last 50 battles',
+      value: this.saveLatestBattles
+    }
+  ];
+
+  // async getGameInfo(showCookieDetail = true): Promise<string> {
+  //   return await super.getGameInfo();
+  // }
+
+  async bulletTokens() {
+    const response = await this.controller.getBulletToken();
+    console.log(response);
+  }
+
+  async fetchLatestBattles() {
+    const response = await this.controller.fetchLatestBattles();
+    console.log(response);
+  }
+
+  async saveLatestBattles() {
+    const nsoCli = NsoCli.get();
+    const battles = await this.controller.fetchLatestBattles();
+    for (const battle of battles.data.latestBattleHistories.historyGroups.nodes[0].historyDetails.nodes) {
+      const battleData = await this.controller.fetchBattle(battle.id);
+      console.log(`Would save \u001b[90m${battleData.data.vsHistoryDetail.id}\u001b[0m`);
+      await nsoCli.stream.wrapSpinner(
+        nsoCli.config.saveJsonToFile('splatoon-3/battles', battleData.data.vsHistoryDetail.id, battleData.data.vsHistoryDetail),
+        `Saving battle \u001b[90m${battleData.data.vsHistoryDetail.id}\u001b[0m`);
+    }
+  }
+}

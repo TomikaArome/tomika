@@ -12,10 +12,6 @@ export class Splatoon3Cli extends GameCli {
   readonly showCookieInfo = false;
   readonly gameSpecificCommands = [
     {
-      name: 'Generate bullet tokens',
-      value: this.bulletToken
-    },
-    {
       name: 'Save last 50 battles',
       value: this.saveLatestBattles
     }
@@ -28,25 +24,24 @@ Bullet token: \u001b[90mexpires ${String(new Date(bulletToken.expires))}
     \u001b[36m${bulletToken.bulletToken}\u001b[0m`;
   }
 
-  async bulletToken() {
-    const response = await this.controller.getBulletToken();
-    console.log(response);
-  }
-
-  async fetchLatestBattles() {
-    const response = await this.controller.fetchLatestBattles();
-    console.log(response);
-  }
-
   async saveLatestBattles() {
     const nsoCli = NsoCli.get();
     const battles = await this.controller.fetchLatestBattles();
+    const filenames = await nsoCli.config.getFilesInDirectory('splatoon-3/battles');
+    let newBattles = 0;
     for (const battle of battles.data.latestBattleHistories.historyGroups.nodes[0].historyDetails.nodes) {
-      const battleData = await this.controller.fetchBattle(battle.id);
-      console.log(`Would save \u001b[90m${battleData.data.vsHistoryDetail.id}\u001b[0m`);
-      await nsoCli.stream.wrapSpinner(
-        nsoCli.config.saveJsonToFile('splatoon-3/battles', battleData.data.vsHistoryDetail.id, battleData.data.vsHistoryDetail),
-        `Saving battle \u001b[90m${battleData.data.vsHistoryDetail.id}\u001b[0m`);
+      const idWithoutEquals = battle.id.replace(/=/, '');
+      if (!filenames.includes(`${idWithoutEquals}.json`)) {
+        newBattles++;
+        const battleData = await this.controller.fetchBattle(battle.id);
+        await nsoCli.stream.wrapSpinner(
+          nsoCli.config.saveJsonToFile('splatoon-3/battles', idWithoutEquals, battleData.data.vsHistoryDetail),
+          `Saving battle`
+        );
+      }
     }
+    console.log('');
+    console.log(newBattles === 0 ? 'No new battles' : `Done, \u001b[1;32m${newBattles}\u001b[0m new battles were saved`);
+    console.log(`\u001b[1;32m${filenames.length + newBattles}\u001b[0m total battles saved`);
   }
 }

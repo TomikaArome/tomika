@@ -9,6 +9,18 @@ import { isSplatoon3LatestBattleHistoriesRaw, Splatoon3LatestBattlesHistoriesRaw
 import { isSplatoon3VsHistoryDetailRaw, Splatoon3VsHistoryDetailRaw } from './model/battle.model';
 import { TIME_DIFF_BEFORE_REGEN } from '../nso-constants';
 
+interface GraphqlArgs<T> {
+  sha256Hash: string;
+  variables?: object;
+  typeGuardFn?: (obj) => obj is T;
+  fetchErrorCode?: NsoErrorCode;
+  fetchErrorMessage?: string;
+  typeGuardErrorCode?: NsoErrorCode;
+  typeGuardErrorMessage?: string;
+  operationType?: NsoOperationType;
+  operationMessage?: string;
+}
+
 export class Splatoon3Controller {
   private static API_BASE_URI = 'https://api.lp1.av5ja.srv.nintendo.net/api';
 
@@ -20,15 +32,6 @@ export class Splatoon3Controller {
         game: nsoGameConnector.game
       });
     }
-  }
-
-  toFilenameSafeDate(date: string | Date): string {
-    return (typeof date === 'string' ? date : date.toISOString().slice(0, 19) + date.toISOString().slice(23))
-      .replace(/:/g, ';');
-  }
-
-  fromFilenameSafeDate(dateString: string): string {
-    return dateString.replace(/;/g, ':');
   }
 
   async getBulletToken(): Promise<Splatoon3BulletToken> {
@@ -128,33 +131,61 @@ export class Splatoon3Controller {
     }
   }
 
-  async graphql<T>(sha256Hash: string, typeGuardFn: (obj) => obj is T = null, variables = {}): Promise<T> {
+  async graphql<T>(args: GraphqlArgs<T>): Promise<T> {
     const bulletToken = await this.getBulletToken();
-    const operation = new NsoOperation(NsoOperationType.SPLATOON_3_GRAPH_QL, `Performing graphql request on Splatoon 3 API`);
+    const operation = new NsoOperation(
+      args.operationType ?? NsoOperationType.SPLATOON_3_GRAPH_QL,
+      args.operationMessage ?? 'Performing graphql request on Splatoon 3 API'
+    );
     NsoApp.get().currentOperation$.next(operation);
     let response: Response;
     try {
-      response = await this.fetchGraphql(bulletToken.bulletToken, sha256Hash, variables);
+      response = await this.fetchGraphql(bulletToken.bulletToken, args.sha256Hash, args.variables);
     } catch (error) {
       operation.fail();
-      throw new NsoError('Error trying to query the Splatoon 3 graphql endpoint', NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_FAILED, error);
+      throw new NsoError(
+        args.fetchErrorMessage ?? 'Error trying to query the Splatoon 3 graphql endpoint',
+        args.fetchErrorCode ?? NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_FAILED,
+        error
+      );
     }
     const obj = await response.json();
-    if (typeGuardFn && !typeGuardFn(obj)) {
+    if (args.typeGuardFn && !args.typeGuardFn(obj)) {
       operation.fail();
-      throw new NsoError('Incorrect Splatoon 3 graphql endpoint response', NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_BAD_RESPONSE, { bulletToken: bulletToken.bulletToken, response: obj });
+      throw new NsoError(
+        args.typeGuardErrorMessage ?? 'Incorrect Splatoon 3 graphql endpoint response',
+        args.typeGuardErrorCode ?? NsoErrorCode.SPLATOON_3_GRAPH_QL_FETCH_BAD_RESPONSE,
+        { bulletToken: bulletToken.bulletToken, response: obj }
+      );
     }
     operation.complete();
     return obj;
   }
 
   async fetchLatestBattles(): Promise<Splatoon3LatestBattlesHistoriesRaw> {
-    return await this.graphql('7d8b560e31617e981cf7c8aa1ca13a00', isSplatoon3LatestBattleHistoriesRaw);
+    return await this.graphql({
+      sha256Hash: '7d8b560e31617e981cf7c8aa1ca13a00',
+      typeGuardFn: isSplatoon3LatestBattleHistoriesRaw,
+      fetchErrorMessage: 'Error trying to fetch the latest Splatoon 3 battles',
+      fetchErrorCode: NsoErrorCode.SPLATOON_3_LATEST_BATTLES_FETCH_FAILED,
+      typeGuardErrorMessage: 'Incorrect Splatoon 3 latest battles response',
+      typeGuardErrorCode: NsoErrorCode.SPLATOON_3_LATEST_BATTLES_FETCH_BAD_RESPONSE,
+      operationType: NsoOperationType.SPLATOON_3_LATEST_BATTLES,
+      operationMessage: 'Fetching latest battles'
+    });
   }
 
   async fetchBattle(battleId: string): Promise<Splatoon3VsHistoryDetailRaw> {
-    return await this.graphql('cd82f2ade8aca7687947c5f3210805a6', isSplatoon3VsHistoryDetailRaw, {
-      vsResultId: battleId
+    return await this.graphql({
+      sha256Hash: 'cd82f2ade8aca7687947c5f3210805a6',
+      variables: { vsResultId: battleId },
+      typeGuardFn: isSplatoon3VsHistoryDetailRaw,
+      fetchErrorMessage: 'Error trying to fetch the latest Splatoon 3 battles',
+      fetchErrorCode: NsoErrorCode.SPLATOON_3_BATTLE_FETCH_FAILED,
+      typeGuardErrorMessage: 'Incorrect Splatoon 3 latest battles response',
+      typeGuardErrorCode: NsoErrorCode.SPLATOON_3_BATTLE_FETCH_BAD_RESPONSE,
+      operationType: NsoOperationType.SPLATOON_3_BATTLE,
+      operationMessage: `Fetching battle ${battleId}`
     });
   }
 }

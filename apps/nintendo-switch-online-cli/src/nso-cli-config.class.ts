@@ -1,5 +1,5 @@
 import * as os from 'os';
-import { readFile, writeFile } from 'fs/promises';
+import { readdir, readFile, writeFile } from 'fs/promises';
 import { existsSync, mkdirSync } from 'fs';
 
 import { isNsoCliSerialisedConfig, NsoCliSerialisedAccount, NsoCliSerialisedConfig } from './model/nso-cli-config.model';
@@ -84,7 +84,7 @@ export class NsoCliConfig {
     }
   }
 
-  async saveJsonToFile(relativeDirectory: string, extensionLessFilename: string, data: unknown) {
+  async saveJsonToFile(relativeDirectory: string, extensionLessFilename: string, data: object) {
     const directory = `${os.homedir()}/${NsoCliConfig.saveDirectoryName}/${relativeDirectory}`;
     if (!existsSync(directory)) {
       mkdirSync(directory, { recursive: true });
@@ -97,5 +97,13 @@ export class NsoCliConfig {
       console.log(error);
       throw new NsoCliError('Failed to save json data', NsoCliErrorCode.JSON_SAVE_FAILED, { path, data, error });
     }
+  }
+
+  async getFilesInDirectory(relativeDirectory: string): Promise<string[]> {
+    const directory = `${os.homedir()}/${NsoCliConfig.saveDirectoryName}/${relativeDirectory}`;
+    if (!existsSync((directory))) {
+      return [];
+    }
+    return await readdir(directory);
   }
 }

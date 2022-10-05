@@ -5,9 +5,10 @@ import { NsoError, NsoErrorCode } from '../nso-error.class';
 import { NsoApp } from '../nso-app.class';
 import { NsoOperation, NsoOperationType } from '../nso-operation.class';
 import { isSplatoon3BulletTokenRaw, Splatoon3BulletToken } from './model/bullet-token.model';
-import { isSplatoon3LatestBattleHistoriesRaw, Splatoon3LatestBattlesHistoriesRaw } from './model/battle-histories.model';
+import { isSplatoon3LatestBattleHistoriesRaw, isSplatoon3LatestSalmonRunShiftsRaw, Splatoon3LatestBattlesHistoriesRaw, Splatoon3LatestSalmonRunShiftsRaw } from './model/battle-histories.model';
 import { isSplatoon3VsHistoryDetailRaw, Splatoon3VsHistoryDetailRaw } from './model/battle.model';
 import { TIME_DIFF_BEFORE_REGEN } from '../nso-constants';
+import { isSplatoon3CoopHistoryDetailRaw, Splatoon3CoopHistoryDetailRaw } from './model/salmon-run-shift.model';
 
 interface GraphqlArgs<T> {
   sha256Hash: string;
@@ -32,6 +33,14 @@ export class Splatoon3Controller {
         game: nsoGameConnector.game
       });
     }
+  }
+
+  static equalsToUnderscore(id: string): string {
+    return id.replace(/=/g, '_');
+  }
+
+  static underscoreToEquals(id: string): string {
+    return id.replace(/_/g, '=');
   }
 
   async getBulletToken(): Promise<Splatoon3BulletToken> {
@@ -180,12 +189,39 @@ export class Splatoon3Controller {
       sha256Hash: 'cd82f2ade8aca7687947c5f3210805a6',
       variables: { vsResultId: battleId },
       typeGuardFn: isSplatoon3VsHistoryDetailRaw,
-      fetchErrorMessage: 'Error trying to fetch the latest Splatoon 3 battles',
+      fetchErrorMessage: 'Error trying to fetch a Splatoon 3 battle',
       fetchErrorCode: NsoErrorCode.SPLATOON_3_BATTLE_FETCH_FAILED,
-      typeGuardErrorMessage: 'Incorrect Splatoon 3 latest battles response',
+      typeGuardErrorMessage: 'Incorrect Splatoon 3 battle response',
       typeGuardErrorCode: NsoErrorCode.SPLATOON_3_BATTLE_FETCH_BAD_RESPONSE,
       operationType: NsoOperationType.SPLATOON_3_BATTLE,
       operationMessage: `Fetching battle ${battleId}`
+    });
+  }
+
+  async fetchLatestSalmonRunShifts(): Promise<Splatoon3LatestSalmonRunShiftsRaw> {
+    return await this.graphql({
+      sha256Hash: '817618ce39bcf5570f52a97d73301b30',
+      typeGuardFn: isSplatoon3LatestSalmonRunShiftsRaw,
+      fetchErrorMessage: 'Error trying to fetch the latest Splatoon 3 salmon run shifts',
+      fetchErrorCode: NsoErrorCode.SPLATOON_3_LATEST_SALMON_RUN_SHIFTS_FETCH_FAILED,
+      typeGuardErrorMessage: 'Incorrect Splatoon 3 latest battles response',
+      typeGuardErrorCode: NsoErrorCode.SPLATOON_3_LATEST_SALMON_RUN_SHIFTS_FETCH_BAD_RESPONSE,
+      operationType: NsoOperationType.SPLATOON_3_LATEST_SALMON_RUN_SHIFTS,
+      operationMessage: 'Fetching latest salmon run shifts'
+    });
+  }
+
+  async fetchSalmonRunShift(shiftId: string): Promise<Splatoon3CoopHistoryDetailRaw> {
+    return await this.graphql({
+      sha256Hash: 'f3799a033f0a7ad4b1b396f9a3bafb1e',
+      variables: { coopHistoryDetailId: shiftId },
+      typeGuardFn: isSplatoon3CoopHistoryDetailRaw,
+      fetchErrorMessage: 'Error trying to fetch a Splatoon 3 salmon run shift',
+      fetchErrorCode: NsoErrorCode.SPLATOON_3_SALMON_RUN_SHIFT_FETCH_FAILED,
+      typeGuardErrorMessage: 'Incorrect Splatoon 3 salmon run shift response',
+      typeGuardErrorCode: NsoErrorCode.SPLATOON_3_SALMON_RUN_SHIFT_FETCH_BAD_RESPONSE,
+      operationType: NsoOperationType.SPLATOON_3_SALMON_RUN_SHIFT,
+      operationMessage: `Fetching shift ${shiftId}`
     });
   }
 }

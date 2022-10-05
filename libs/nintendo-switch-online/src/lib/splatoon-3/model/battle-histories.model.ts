@@ -31,3 +31,11 @@ export interface Splatoon3LatestBattlesHistoriesRaw {
 }
 export const isSplatoon3LatestBattleHistoriesRaw = (obj): obj is Splatoon3LatestBattlesHistoriesRaw =>
   typeof obj === 'object' && typeof obj.data === 'object' && isSplatoon3HistoryGroupsRaw(obj.data.latestBattleHistories);
+
+export interface Splatoon3LatestSalmonRunShiftsRaw {
+  data: {
+    coopResult: Splatoon3HistoryGroupsRaw;
+  }
+}
+export const isSplatoon3LatestSalmonRunShiftsRaw = (obj): obj is Splatoon3LatestSalmonRunShiftsRaw =>
+  typeof obj === 'object' && typeof obj.data === 'object' && isSplatoon3HistoryGroupsRaw(obj.data.coopResult);

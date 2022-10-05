@@ -14,6 +14,13 @@ export class NsoApp {
   private static instance: NsoApp;
   static games: NsoGame[] = [
     {
+      id: 4834290508791808,
+      host: 'api.lp1.av5ja.srv.nintendo.net',
+      name: 'Splatoon 3',
+      cookieName: '_gtoken',
+      abbr: 'splat3'
+    },
+    {
       id: 5741031244955648,
       host: 'app.splatoon2.nintendo.net',
       name: 'Splatoon 2',

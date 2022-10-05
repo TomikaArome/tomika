@@ -1,5 +1,6 @@
 import * as os from 'os';
-import { readFile, writeFile } from 'fs/promises';
+import { readdir, readFile, writeFile } from 'fs/promises';
+import { existsSync, mkdirSync } from 'fs';
 
 import { isNsoCliSerialisedConfig, NsoCliSerialisedAccount, NsoCliSerialisedConfig } from './model/nso-cli-config.model';
 import { NsoCliAccount } from './nso-cli-account.class';
@@ -9,6 +10,7 @@ import { NsoApp, NsoConnector } from '@TomikaArome/nintendo-switch-online';
 
 export class NsoCliConfig {
   static readonly configFileName = '.nintendo-switch-online-cli-config.json';
+  static readonly saveDirectoryName = 'nintendo-switch-online-cli';
 
   static async load(configDirPath: string = null): Promise<NsoCliConfig> {
     if (configDirPath === null) {
@@ -80,5 +82,28 @@ export class NsoCliConfig {
     } catch (error) {
       throw new NsoCliError('Failed to save the config file', NsoCliErrorCode.CONFIG_SAVE_FAILED, { error });
     }
+  }
+
+  async saveJsonToFile(relativeDirectory: string, extensionLessFilename: string, data: object) {
+    const directory = `${os.homedir()}/${NsoCliConfig.saveDirectoryName}/${relativeDirectory}`;
+    if (!existsSync(directory)) {
+      mkdirSync(directory, { recursive: true });
+    }
+    const path = `${directory}/${extensionLessFilename}.json`;
+    try {
+      const json = JSON.stringify(data, null, 2);
+      await writeFile(path, json, { encoding: 'utf-8' });
+    } catch (error) {
+      console.log(error);
+      throw new NsoCliError('Failed to save json data', NsoCliErrorCode.JSON_SAVE_FAILED, { path, data, error });
+    }
+  }
+
+  async getFilesInDirectory(relativeDirectory: string): Promise<string[]> {
+    const directory = `${os.homedir()}/${NsoCliConfig.saveDirectoryName}/${relativeDirectory}`;
+    if (!existsSync((directory))) {
+      return [];
+    }
+    return await readdir(directory);
   }
 }

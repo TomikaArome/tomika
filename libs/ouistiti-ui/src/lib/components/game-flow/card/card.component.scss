@@ -3,8 +3,6 @@
   --tmk-ouistiti-card-height: 175px;
   --tmk-ouistiti-card-face-width: 83px;
   --tmk-ouistiti-card-face-height: 135px;
-  --tmk-ouistiti-card-face-x: 21;
-  --tmk-ouistiti-card-face-y: 20;
 
   display: block;
   position: relative;
@@ -22,14 +20,8 @@
       fill: hsl(0, 0%, 100%);
       width: 100%;
       height: 100%;
-      rx: 5;
       stroke: hsl(0, 0%, 0%);
       stroke-width: 1;
-    }
-
-    path {
-      stroke: hsl(0, 0%, 100%);
-      stroke-width: 30;
     }
 
     .large {
@@ -45,24 +37,14 @@
       fill: hsl(0, 100%, 50%);
     }
 
-    .card-text {
-      font-weight: bold;
-      font-size: 24px;
-    }
-
     .face {
       width: var(--tmk-ouistiti-card-face-width);
       height: var(--tmk-ouistiti-card-face-height);
-      x: var(--tmk-ouistiti-card-face-x);
-      y: var(--tmk-ouistiti-card-face-y);
     }
 
     .face-outline {
       width: var(--tmk-ouistiti-card-face-width);
       height: var(--tmk-ouistiti-card-face-height);
-      x: var(--tmk-ouistiti-card-face-x);
-      y: var(--tmk-ouistiti-card-face-y);
-      rx: 3;
       fill: none;
       stroke: hsl(0, 0%, 0%);
       stroke-width: 2;
@@ -71,17 +53,12 @@
     .back {
       width: calc(100% - 2px);
       height: calc(100% - 3px);
-      x: 1px;
-      y: 2px;
     }
 
     .miniature-back {
       fill: #190c80;
       width: calc(100% - 12px);
       height: calc(100% - 12px);
-      x: 6px;
-      y: 6px;
-      rx: 4px;
     }
 
     &.dotted {

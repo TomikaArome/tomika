@@ -8,7 +8,7 @@ const cards: CardInfo[] = [
   {
     id: 'Bbcd9Mzix4',
     ownerId: 'AXP9aX7pRu',
-    value: CardValue.QUEEN,
+    value: CardValue.TEN,
     suit: CardSuit.DIAMOND,
   },
   {
@@ -301,7 +301,7 @@ const bids: BidInfo = {
 
 export const roundStatusMock: RoundInfo = {
   number: 8,
-  status: RoundStatus.COMPLETED,
+  status: RoundStatus.BIDDING,
   breakPoint: null,
   currentPlayerId: 'AXP9aX7pRu',
   currentTurnNumber: 2,

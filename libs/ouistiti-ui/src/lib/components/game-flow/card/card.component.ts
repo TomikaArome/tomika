@@ -14,7 +14,9 @@ interface SymbolPosition {
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent {
-  cardBackPath = `/assets/ouistiti/images/CARD_BACK.svg`;
+  readonly cardBackPath = `/assets/ouistiti/images/CARD_BACK.svg`;
+  readonly cardFaceX = 21;
+  readonly cardFaceY = 20;
 
   @Input()
   id: string;
@@ -73,146 +75,61 @@ export class CardComponent {
   }
 
   get symbolPositions(): SymbolPosition[] {
-    const row1 = 35,
-      row2 = 52.5,
-      row3 = 70,
-      row4 = 87.5,
-      row5 = 105,
-      row6 = 122.5,
-      row7 = 140;
-    const col1 = 35,
-      col2 = 62.5,
-      col3 = 90;
+    const row1 = 35, row2 = 52.5, row3 = 70, row4 = 87.5, row5 = 105, row6 = 122.5, row7 = 140;
+    const col1 = 35, col2 = 62.5, col3 = 90;
     switch (this.value) {
       case CardValue.ACE:
         return [{ x: col2, y: row4, large: true }];
       case CardValue.TWO:
-        return [
-          { x: col2, y: row1 },
-          { x: col2, y: row7, inv: true },
-        ];
+        return [{ x: col2, y: row1 }, { x: col2, y: row7, inv: true }];
       case CardValue.THREE:
-        return [
-          { x: col2, y: row1 },
-          { x: col2, y: row7, inv: true },
-          { x: col2, y: row4 },
-        ];
+        return [{ x: col2, y: row1 }, { x: col2, y: row7, inv: true }, { x: col2, y: row4 }];
       case CardValue.FOUR:
-        return [
-          { x: col1, y: row1 },
-          { x: col3, y: row1 },
-          { x: col1, y: row7, inv: true },
-          { x: col3, y: row7, inv: true },
-        ];
+        return [{ x: col1, y: row1 }, { x: col3, y: row1 }, { x: col1, y: row7, inv: true }, { x: col3, y: row7, inv: true }];
       case CardValue.FIVE:
-        return [
-          { x: col1, y: row1 },
-          { x: col3, y: row1 },
-          { x: col1, y: row7, inv: true },
-          { x: col3, y: row7, inv: true },
-          { x: col2, y: row4 },
-        ];
+        return [{ x: col1, y: row1 }, { x: col3, y: row1 }, { x: col1, y: row7, inv: true }, { x: col3, y: row7, inv: true }, { x: col2, y: row4 }];
       case CardValue.SIX:
-        return [
-          { x: col1, y: row1 },
-          { x: col3, y: row1 },
-          { x: col1, y: row7, inv: true },
-          { x: col3, y: row7, inv: true },
-          { x: col1, y: row4 },
-          { x: col3, y: row4 },
-        ];
+        return [{ x: col1, y: row1 }, { x: col3, y: row1 }, { x: col1, y: row7, inv: true }, { x: col3, y: row7, inv: true }, { x: col1, y: row4 }, { x: col3, y: row4 }];
       case CardValue.SEVEN:
-        return [
-          { x: col1, y: row1 },
-          { x: col3, y: row1 },
-          { x: col1, y: row7, inv: true },
-          { x: col3, y: row7, inv: true },
-          { x: col1, y: row4 },
-          { x: col3, y: row4 },
-          { x: col2, y: row3 },
-        ];
+        return [{ x: col1, y: row1 }, { x: col3, y: row1 }, { x: col1, y: row7, inv: true }, { x: col3, y: row7, inv: true }, { x: col1, y: row4 }, { x: col3, y: row4 },
+          { x: col2, y: row3 }];
       case CardValue.EIGHT:
-        return [
-          { x: col1, y: row1 },
-          { x: col3, y: row1 },
-          { x: col1, y: row7, inv: true },
-          { x: col3, y: row7, inv: true },
-          { x: col1, y: row4 },
-          { x: col3, y: row4 },
-          { x: col2, y: row2 },
-          { x: col2, y: row6, inv: true },
-        ];
+        return [{ x: col1, y: row1 }, { x: col3, y: row1 }, { x: col1, y: row7, inv: true }, { x: col3, y: row7, inv: true }, { x: col1, y: row4 }, { x: col3, y: row4 },
+          { x: col2, y: row2 },{ x: col2, y: row6, inv: true }];
       case CardValue.NINE:
-        return [
-          { x: col1, y: row1 },
-          { x: col3, y: row1 },
-          { x: col1, y: row7, inv: true },
-          { x: col3, y: row7, inv: true },
-          { x: col1, y: row3 },
-          { x: col3, y: row3 },
-          { x: col1, y: row5, inv: true },
-          { x: col3, y: row5, inv: true },
-          { x: col2, y: row4 },
-        ];
+        return [{ x: col1, y: row1 }, { x: col3, y: row1 }, { x: col1, y: row7, inv: true }, { x: col3, y: row7, inv: true }, { x: col1, y: row3 }, { x: col3, y: row3 },
+          { x: col1, y: row5, inv: true }, { x: col3, y: row5, inv: true }, { x: col2, y: row4 }];
       case CardValue.TEN:
-        return [
-          { x: col1, y: row1 },
-          { x: col3, y: row1 },
-          { x: col1, y: row7, inv: true },
-          { x: col3, y: row7, inv: true },
-          { x: col1, y: row3 },
-          { x: col3, y: row3 },
-          { x: col1, y: row5, inv: true },
-          { x: col3, y: row5, inv: true },
-          { x: col2, y: row2 },
-          { x: col2, y: row6, inv: true },
-        ];
+        return [{ x: col1, y: row1 }, { x: col3, y: row1 }, { x: col1, y: row7, inv: true }, { x: col3, y: row7, inv: true }, { x: col1, y: row3 }, { x: col3, y: row3 },
+          { x: col1, y: row5, inv: true }, { x: col3, y: row5, inv: true }, { x: col2, y: row2 }, { x: col2, y: row6, inv: true }];
       case CardValue.JACK:
       case CardValue.QUEEN:
       case CardValue.KING:
-        return [
-          { x: 35, y: 37 },
-          { x: 90, y: 138, inv: true },
-        ];
+        return [{ x: 35, y: 37 }, { x: 90, y: 138, inv: true }];
     }
     return [];
   }
 
   get numberValue(): string {
     switch (this.value) {
-      case CardValue.TWO:
-        return '2';
-      case CardValue.THREE:
-        return '3';
-      case CardValue.FOUR:
-        return '4';
-      case CardValue.FIVE:
-        return '5';
-      case CardValue.SIX:
-        return '6';
-      case CardValue.SEVEN:
-        return '7';
-      case CardValue.EIGHT:
-        return '8';
-      case CardValue.NINE:
-        return '9';
-      case CardValue.TEN:
-        return '10';
-      case CardValue.JACK:
-        return 'J';
-      case CardValue.QUEEN:
-        return 'Q';
-      case CardValue.KING:
-        return 'K';
-      case CardValue.ACE:
-        return 'A';
+      case CardValue.TWO:return '2';
+      case CardValue.THREE:return '3';
+      case CardValue.FOUR:return '4';
+      case CardValue.FIVE:return '5';
+      case CardValue.SIX:return '6';
+      case CardValue.SEVEN:return '7';
+      case CardValue.EIGHT:return '8';
+      case CardValue.NINE:return '9';
+      case CardValue.TEN:return '10';
+      case CardValue.JACK:return 'J';
+      case CardValue.QUEEN:return 'Q';
+      case CardValue.KING:return 'K';
+      case CardValue.ACE:return 'A';
     }
   }
 
   get isFaceCard(): boolean {
-    return (
-      [CardValue.KING, CardValue.QUEEN, CardValue.JACK].indexOf(this.value) > -1
-    );
+    return ([CardValue.KING, CardValue.QUEEN, CardValue.JACK].indexOf(this.value) > -1);
   }
 
   get faceCardImagePath(): string {

@@ -79,6 +79,7 @@ export class NsoCli {
           ...accountChoices,
           { name: 'Register new account', value: 'register' },
           { name: 'Options', value: 'options' },
+          { name: 'Upgrade NSO', value: 'upgradeNso' },
           { name: 'Exit', value: 'exit' }
         ]
       });
@@ -90,6 +91,8 @@ export class NsoCli {
           await account.gamePicker();
         } else if (chosenAccount === 'options') {
           await this.options();
+        } else if (chosenAccount === 'upgradeNso') {
+          await this.upgradeNso();
         } else {
           continueApp = false;
         }
@@ -128,6 +131,11 @@ export class NsoCli {
       return !options.find((option: any) => typeof option === 'object' && option.optionType === 'shownGame' && option.abbr === game.abbr);
     }).map((game: NsoGame) => game.abbr);
     if (this.config.hiddenGames.length === 0) { this.config.hiddenGames = undefined; }
+    await this.stream.wrapSpinner(this.config.save(), 'Saving to configuration file');
+  }
+
+  async upgradeNso() {
+    await this.nsoApp.getVersion(true);
     await this.stream.wrapSpinner(this.config.save(), 'Saving to configuration file');
   }
 }

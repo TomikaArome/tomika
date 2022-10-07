@@ -84,8 +84,8 @@ export class NsoApp {
     }
   }
 
-  async getVersion(): Promise<string> {
-    if (this._version && (this.lastCheckedVersion === -1 || +new Date() < this.lastCheckedVersion + this.versionCheckInterval)) {
+  async getVersion(forceFetch = false): Promise<string> {
+    if (!forceFetch && this._version && (this.lastCheckedVersion === -1 || +new Date() < this.lastCheckedVersion + this.versionCheckInterval)) {
       return this._version;
     }
     const operation = new NsoOperation(

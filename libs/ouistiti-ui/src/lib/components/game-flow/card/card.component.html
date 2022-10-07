@@ -30,11 +30,12 @@
     <ng-container *ngIf="!miniature; else miniatureCardTemplate">
       <use
         stroke="hsl(0, 0%, 100%)" stroke-width="30"
-        transform="translate(-12,-12)"
+        [attr.transform]="'translate(-' + (pos.large ? 24 : 12) + ',-' + (pos.large ? 24 : 12) + ') scale(' + (pos.large ? 2 : 1) + ')'"
+        transform-origin="center"
         *ngFor="let pos of symbolPositions"
         [attr.href]="'#card-' + id + (pos.inv ? '-inv-symbol' : '-symbol')"
         [attr.x]="pos.x" [attr.y]="pos.y"
-        [ngClass]="{ inv: pos.inv, large: pos.large }" />
+        [ngClass]="{ large: pos.large }" />
       <use [attr.href]="'#card-' + id + '-number'" />
       <use [attr.href]="'#card-' + id + '-number'" transform="scale(-1,-1)" transform-origin="center" />
       <ng-container *ngIf="isFaceCard">

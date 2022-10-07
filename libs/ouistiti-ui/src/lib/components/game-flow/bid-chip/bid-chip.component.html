@@ -5,13 +5,13 @@
   viewBox="0 0 50 50"
   [ngClass]="chipClass"
 >
-  <rect class="square" *ngIf="square; else chipTemplate"></rect>
+  <rect class="square" *ngIf="square; else chipTemplate" rx="8"></rect>
   <ng-template #chipTemplate>
-    <circle class="circle" r="25" />
+    <circle class="circle" r="25" cx="25" cy="25" />
     <svg class="notches" viewBox="-1 -1 2 2" *ngIf="!dotted">
       <path [attr.d]="notchesPath" />
     </svg>
-    <circle class="notches-inner-outline" r="18.75" />
+    <circle class="notches-inner-outline" r="18.75" cx="25" cy="25" />
   </ng-template>
 
   <svg
@@ -21,8 +21,7 @@
     [attr.width]="symbolSize"
     [attr.height]="symbolSize"
     x="25"
-    y="25"
-  >
+    y="25">
     <path [attr.d]="symbolPath" />
   </svg>
 </svg>

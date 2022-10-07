@@ -24,11 +24,6 @@
       stroke-width: 1;
     }
 
-    .large {
-      transform: scale(2);
-      transform-origin: center;
-    }
-
     &.card-colour-black {
       fill: hsl(0, 0%, 0%);
     }

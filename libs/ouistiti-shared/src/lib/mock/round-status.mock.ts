@@ -8,7 +8,7 @@ const cards: CardInfo[] = [
   {
     id: 'Bbcd9Mzix4',
     ownerId: 'AXP9aX7pRu',
-    value: CardValue.TEN,
+    value: CardValue.QUEEN,
     suit: CardSuit.DIAMOND,
   },
   {

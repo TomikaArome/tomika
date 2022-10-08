@@ -72,9 +72,6 @@ export class SocketService {
     });
 
     this.emitEvent('listLobbies');
-
-    // Test
-    // this.emitEvent('createLobby', { host: { nickname: 'Thomas' } });
   }
 
   disconnect() {

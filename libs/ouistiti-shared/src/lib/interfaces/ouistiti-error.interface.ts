@@ -66,6 +66,15 @@ interface PlayerDoesntHaveCardDetail {
   };
 }
 
+interface IncorrectNumberOfPlayersDetail {
+  type: OuistitiErrorType.INCORRECT_NUMBER_OF_PLAYERS,
+  detail: {
+    current: number;
+    minimum: number;
+    maximum: number;
+  }
+}
+
 type CombinedErrorType =
   | NoDetail
   | InvalidActionDetail
@@ -74,7 +83,8 @@ type CombinedErrorType =
   | InvalidIdDetail
   | ElementInArrayTakenDetail
   | OrderArrayIncompleteDetail
-  | PlayerDoesntHaveCardDetail;
+  | PlayerDoesntHaveCardDetail
+  | IncorrectNumberOfPlayersDetail;
 
 export type OuistitiError = CombinedErrorType & {
   param?: string;

@@ -57,7 +57,7 @@
       <hr />
 
       <div class="buttons-row">
-        <button class="button-colour-green" (click)="startGame()">
+        <button class="button-colour-green" [disabled]="!canStartGame(playerList$ | async)" (click)="startGame()">
           <fa-icon [icon]="faPlay"></fa-icon>Start game
         </button>
       </div>

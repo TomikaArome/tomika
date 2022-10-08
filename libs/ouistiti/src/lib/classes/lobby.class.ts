@@ -1,25 +1,11 @@
 import { Player } from './player.class';
 import { Game } from './game.class';
-import {
-  GameCreateParams,
-  GameStatus,
-  LobbyCreateParams,
-  LobbyInfo,
-  LobbyJoinParams,
-  MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
-  MIN_NUMBER_OF_PLAYERS_PER_LOBBY,
-  OuistitiErrorType,
-  PlayerColour,
-} from '@TomikaArome/ouistiti-shared';
+import { GameCreateParams, GameStatus, LobbyCreateParams, LobbyInfo, LobbyJoinParams, MAX_NUMBER_OF_PLAYERS_PER_LOBBY, MIN_NUMBER_OF_PLAYERS_PER_LOBBY, OuistitiErrorType, OuistitiInvalidActionReason, PlayerColour } from '@TomikaArome/ouistiti-shared';
 import { nanoid } from 'nanoid';
 import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  LobbyChangedHostObserved,
-  LobbyJoinObserved,
-  LobbyLeftObserved,
-} from '../interfaces/lobby-oberserved.interface';
+import { LobbyChangedHostObserved, LobbyJoinObserved, LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
 
 export class Lobby {
   id = nanoid(10);
@@ -291,12 +277,28 @@ export class Lobby {
   }
 
   startGame(params: GameCreateParams) {
-    if (this.gameStatus === GameStatus.INIT) {
-      this.game = Game.createNewGame({
-        playerOrder: this.playerOrder,
-        ...params,
+    if (this.players.length < MIN_NUMBER_OF_PLAYERS_PER_LOBBY || this.players.length > this.maxNumberOfPlayers) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INCORRECT_NUMBER_OF_PLAYERS,
+        detail: {
+          current: this.players.length,
+          minimum: MIN_NUMBER_OF_PLAYERS_PER_LOBBY,
+          maximum: this.maxNumberOfPlayers
+        }
       });
-      this.gameStartedSource.next(this.game);
     }
+    if (this.gameStatus !== GameStatus.INIT) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.INVALID_ACTION,
+        detail: {
+          reason: OuistitiInvalidActionReason.GAME_ALREADY_STARTED
+        }
+      });
+    }
+    this.game = Game.createNewGame({
+      playerOrder: this.playerOrder,
+      ...params,
+    });
+    this.gameStartedSource.next(this.game);
   }
 }

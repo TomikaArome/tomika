@@ -2,11 +2,11 @@ import { Component, OnDestroy } from '@angular/core';
 import { SocketService } from '../../services/socket.service';
 import { map, takeUntil } from 'rxjs/operators';
 import {
-  LobbyStatus,
+  LobbyStatus, MAX_NUMBER_OF_PLAYERS_PER_LOBBY, MIN_NUMBER_OF_PLAYERS_PER_LOBBY,
   PlayerColour,
   PlayerInfo,
   PlayerUpdateParams,
-  RoundStatus,
+  RoundStatus
 } from '@TomikaArome/ouistiti-shared';
 import { PlayerService } from '../../services/player.service';
 import { LobbyService } from '../../services/lobby.service';
@@ -151,6 +151,10 @@ export class LobbyScreenComponent implements OnDestroy {
 
   startGame() {
     this.lobbyService.startGame();
+  }
+
+  canStartGame(playerList: PlayerInfo[]): boolean {
+    return playerList.length >= MIN_NUMBER_OF_PLAYERS_PER_LOBBY && playerList.length <= MAX_NUMBER_OF_PLAYERS_PER_LOBBY;
   }
 
   ngOnDestroy() {

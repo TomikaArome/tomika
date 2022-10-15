@@ -19,17 +19,14 @@ export class BreakPoint {
   readonly resolved$ = this.resolvedSource.asObservable();
   readonly cancelled$ = this.cancelledSource.asObservable();
   readonly ended$ = merge(this.resolved$, this.cancelled$);
-  readonly timerReset$ = this.timerResetSource
-    .asObservable()
-    .pipe(takeUntil(this.ended$));
-  readonly acknowledged$ = this.acknowledgedSource
-    .asObservable()
-    .pipe(takeUntil(this.ended$));
-  readonly acknowledgementCancelled$ = this.acknowledgementCancelledSource
-    .asObservable()
-    .pipe(takeUntil(this.ended$));
+  readonly timerReset$ = this.timerResetSource.asObservable().pipe(takeUntil(this.ended$));
+  readonly acknowledged$ = this.acknowledgedSource.asObservable().pipe(takeUntil(this.ended$));
+  readonly acknowledgementCancelled$ = this.acknowledgementCancelledSource.asObservable().pipe(takeUntil(this.ended$));
 
   private acknowledgements: { [key: string]: boolean } = {};
+  private bufferDuration = -1;
+  private buffer: BreakPoint = null;
+  private timeRemainingOnCancel = -1;
 
   private _timestamp: number;
   get timestamp(): number {
@@ -47,9 +44,6 @@ export class BreakPoint {
   get ended(): boolean {
     return this.resolved || this.cancelled;
   }
-
-  private bufferDuration = -1;
-  private buffer: BreakPoint = null;
 
   private get allAcknowledged(): boolean {
     const values = Object.values(this.acknowledgements);
@@ -190,8 +184,13 @@ export class BreakPoint {
 
   cancelTimer() {
     if (!this.resolved && !this.cancelled) {
+      this.timeRemainingOnCancel = this._timestamp - (+new Date());
       this._timestamp = -1;
       this.timerResetSource.next(this._timestamp);
     }
+  }
+
+  resumeTimer() {
+    this.setTimer(this.timeRemainingOnCancel);
   }
 }

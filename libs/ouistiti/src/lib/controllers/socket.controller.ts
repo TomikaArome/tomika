@@ -1,10 +1,10 @@
 import { Socket } from 'socket.io';
 import { Lobby } from '../classes/lobby.class';
 import { Player } from '../classes/player.class';
-import { LobbyStatus } from '@TomikaArome/ouistiti-shared';
 import { MonoTypeOperatorFunction, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SocketLobbyController } from './socket-lobby.controller';
+import { GameStatus } from '@TomikaArome/ouistiti-shared';
 
 export class SocketController {
   player: Player = null;
@@ -43,7 +43,11 @@ export class SocketController {
     this.stop$.complete();
 
     if (this.inLobby) {
-      this.player.lobby.removePlayer(this.player);
+      if (this.player.lobby.gameStatus === GameStatus.INIT) {
+        this.player.lobby.removePlayer(this.player);
+      } else {
+        this.player.changeVacancy(true);
+      }
     }
   }
 

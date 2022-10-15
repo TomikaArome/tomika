@@ -1,12 +1,5 @@
 import { nanoid } from 'nanoid';
-import {
-  NICKNAME_MAX_LENGTH,
-  OuistitiErrorType,
-  PlayerColour,
-  PlayerCreateParams,
-  PlayerInfo,
-  PlayerSymbol,
-} from '@TomikaArome/ouistiti-shared';
+import { GameStatus, NICKNAME_MAX_LENGTH, OuistitiErrorType, PlayerColour, PlayerCreateParams, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
 import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
 import { Lobby } from './lobby.class';
@@ -17,11 +10,7 @@ export class Player {
   colour: PlayerColour;
   symbol: PlayerSymbol;
   lobby: Lobby;
-
-  get isVacant(): boolean {
-    // TODO
-    return false;
-  }
+  isVacant = false;
 
   get info(): PlayerInfo {
     return {
@@ -36,10 +25,12 @@ export class Player {
   private nicknameChangedSource = new Subject<string>();
   private colourChangedSource = new Subject<PlayerColour>();
   private symbolChangedSource = new Subject<PlayerSymbol>();
+  private vacancyChangedSource = new Subject<boolean>();
 
   nicknameChanged$ = this.nicknameChangedSource.asObservable();
   colourChanged$ = this.colourChangedSource.asObservable();
   symbolChanged$ = this.symbolChangedSource.asObservable();
+  vacancyChanged$ = this.vacancyChangedSource.asObservable();
 
   static createNewPlayer(lobby: Lobby, params: PlayerCreateParams): Player {
     OuistitiException.checkRequiredParams(params, ['nickname']);
@@ -102,5 +93,15 @@ export class Player {
   changeSymbol(symbol: PlayerSymbol) {
     this.symbol = symbol;
     this.symbolChangedSource.next(symbol);
+  }
+
+  changeVacancy(isVacant: boolean) {
+    if (isVacant !== this.isVacant) {
+      this.isVacant = isVacant;
+      if (isVacant && this.lobby?.gameStatus === GameStatus.IN_PROGRESS) {
+        this.lobby.game.changeStatus(GameStatus.SUSPENDED);
+      }
+      this.vacancyChangedSource.next(isVacant);
+    }
   }
 }

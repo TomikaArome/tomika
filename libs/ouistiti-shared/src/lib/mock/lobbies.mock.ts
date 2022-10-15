@@ -7,7 +7,7 @@ export const lobby1Mock: LobbyInfo = {
   id: 'ZqgqKiD3vU',
   passwordProtected: true,
   maxNumberOfPlayers: 4,
-  gameStatus: GameStatus.IN_PROGRESS,
+  gameStatus: GameStatus.SUSPENDED,
   players: [
     {
       id: 'AXP9aX7pRu',

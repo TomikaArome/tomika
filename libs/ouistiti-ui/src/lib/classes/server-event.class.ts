@@ -2,7 +2,6 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Socket } from 'socket.io-client';
 import {
   lobbyStatusPlayerIsHostMock,
-  RoundStatus,
   roundStatusMock,
 } from '@TomikaArome/ouistiti-shared';
 

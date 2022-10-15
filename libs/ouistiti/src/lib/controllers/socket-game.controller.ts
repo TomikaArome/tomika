@@ -48,9 +48,17 @@ export class SocketGameController {
     }
   }
 
+  emitLobbyInfo() {
+    if (!this.controller.inLobby) {
+      this.lobbyController.emitLobbyUpdated();
+    } else if (this.lobbyController.lobby === this.controller.player.lobby) {
+      this.lobbyController.emitLobbyStatus();
+    }
+  }
+
   subscribeStatusChanged() {
-    this.game.statusChanged$.pipe(this.stop).subscribe((status: GameStatus) => {
-      console.log('Game status changed', status);
+    this.game.statusChanged$.pipe(this.stop).subscribe(() => {
+      this.emitLobbyInfo();
     });
   }
 

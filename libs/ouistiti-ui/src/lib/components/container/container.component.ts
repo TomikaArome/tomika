@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { SocketService } from '../../services/socket.service';
 import { PlayerService } from '../../services/player.service';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { LobbyService } from '../../services/lobby.service';
 import { GameStatus, LobbyInfo } from '@TomikaArome/ouistiti-shared';
-import { RoundService } from '../../services/round.service';
 
 @Component({
   selector: 'tmk-ouistiti-container',
@@ -17,14 +16,13 @@ export class ContainerComponent {
   );
 
   showLobbyScreen$ = this.lobbyService.currentLobby$.pipe(
-    map((lobby: LobbyInfo) => lobby.gameStatus === GameStatus.INIT)
+    map((lobby: LobbyInfo) => lobby?.gameStatus === GameStatus.INIT)
   );
 
   constructor(
     private socketService: SocketService,
     private playerService: PlayerService,
-    private lobbyService: LobbyService,
-    private roundService: RoundService
+    private lobbyService: LobbyService
   ) {
     this.socketService.connect();
   }

@@ -52,12 +52,8 @@ export class Game {
   private statusChangedSource = new Subject<GameStatus>();
   private roundStartedSource = new Subject<Round>();
 
-  statusChanged$ = this.statusChangedSource
-    .asObservable()
-    .pipe(takeUntil(this.completed$));
-  roundStarted$ = this.roundStartedSource
-    .asObservable()
-    .pipe(takeUntil(this.completed$));
+  statusChanged$ = this.statusChangedSource.asObservable().pipe(takeUntil(this.completed$));
+  roundStarted$ = this.roundStartedSource.asObservable().pipe(takeUntil(this.completed$));
 
   static createNewGame(settings: GameCreateSettings): Game {
     const newGame = new Game();

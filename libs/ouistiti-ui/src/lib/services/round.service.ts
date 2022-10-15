@@ -10,7 +10,7 @@ import {
   PlayCardParams,
   RoundInfo,
   RoundStatus,
-  RoundStatusChanged,
+  RoundStatusChanged, roundStatusMock
 } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
@@ -18,6 +18,7 @@ export class RoundService {
   private currentRoundInfo: RoundInfo = SocketService.roundStatusInitialValue;
 
   private currentRoundInfoSource = new BehaviorSubject<RoundInfo>(
+    //roundStatusMock
     SocketService.roundStatusInitialValue
   );
   currentRoundInfo$ = this.currentRoundInfoSource.asObservable();

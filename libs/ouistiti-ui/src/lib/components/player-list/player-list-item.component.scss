@@ -49,11 +49,20 @@
         margin-left: 6px;
         color: hsl(50, 50%, 50%);
       }
+
+      .disconnect-indicator {
+        font-size: 0.6em;
+        margin-left: 6px;
+
+        & > :nth-child(2) {
+          color: hsl(0, 50%, 60%);
+        }
+      }
     }
   }
 
   &:not(.tmk-player-list-item-dragging) .player-list-item-row {
-    fa-icon:hover {
+    :not(.nickname):not(.disconnect-indicator) fa-icon:hover {
       cursor: pointer;
       background-color: hsla(0, 0%, 100%, 0.1);
     }
@@ -62,5 +71,13 @@
   & > * {
     position: relative;
     z-index: 1;
+  }
+
+  &.vacant {
+    background-color: hsla(0, 0%, 10%, 0.3);
+
+    & > .player-list-item-row > :not(.nickname) {
+      opacity: 0.3;
+    }
   }
 }

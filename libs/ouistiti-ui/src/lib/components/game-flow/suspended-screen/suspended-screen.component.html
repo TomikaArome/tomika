@@ -1,0 +1,22 @@
+<h1>Game suspended</h1>
+
+<tmk-ouistiti-player-list-item
+  *ngFor="let player of players"
+  [player]="player"
+  [isHost]="isPlayerHost(player)"
+  [isVacant]="player.vacant">
+</tmk-ouistiti-player-list-item>
+
+<div class="info-buttons form-grid">
+  <div class="info-message">
+    <ng-container *ngIf="!noVacantPlayers">The game cannot continue as some players are not connected</ng-container>
+  </div>
+
+  <button
+    class="button-colour-green"
+    *ngIf="isSelfHost"
+    [disabled]="!noVacantPlayers"
+    (click)="clickResumeGameButton()">
+    Resume game
+  </button>
+</div>

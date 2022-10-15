@@ -1,6 +1,6 @@
 import { SocketController } from './socket.controller';
 import { Lobby } from '../classes/lobby.class';
-import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, takeUntil, tap } from 'rxjs/operators';
 import {
   LobbyJoinObserved,
   LobbyLeftObserved,
@@ -14,6 +14,7 @@ import {
 import { SocketPlayerController } from './socket-player.controller';
 import { SocketGameController } from './socket-game.controller';
 import { Game } from '../classes/game.class';
+import { Player } from '../classes/player.class';
 
 export class SocketLobbyController {
   stopIncludingLobbyClosed$ = merge(this.stop$, this.lobby.lobbyClosed$);
@@ -48,12 +49,9 @@ export class SocketLobbyController {
   }
 
   init() {
-    new SocketPlayerController(
-      this.controller,
-      this.lobby.host,
-      this.stop$,
-      this
-    );
+    this.lobby.players.forEach((player: Player) => {
+      new SocketPlayerController(this.controller, player, this.stop$, this);
+    });
     if (!this.controller.inLobby) {
       this.emitLobbyUpdated();
     } else if (this.isOwnLobby) {
@@ -77,20 +75,17 @@ export class SocketLobbyController {
   }
 
   subscribePlayerJoined() {
-    this.lobby.playerJoined$
+    merge(
+      this.lobby.playerJoined$.pipe(map(({ player }: LobbyJoinObserved) => player)),
+      this.lobby.vacancyFilled$
+    )
       .pipe(this.stop)
-      .subscribe(({ player }: LobbyJoinObserved) => {
+      .subscribe((player: Player) => {
+        // A SocketPlayerController is created for every player that join a lobby for EVERY socket that is connected
+        // This is regardless of whether that socket is in the same lobby or in a lobby at all
         new SocketPlayerController(this.controller, player, this.stop$, this);
-        if (
-          player === this.controller.player &&
-          player.lobby.gameStatus !== GameStatus.INIT
-        ) {
-          new SocketGameController(
-            this.controller,
-            this.lobby.game,
-            this.stopIncludingSelfLeft$,
-            this
-          );
+        if (player === this.controller.player && player.lobby.gameStatus !== GameStatus.INIT) {
+          new SocketGameController(this.controller, this.lobby.game, this.stopIncludingSelfLeft$, this);
         }
       });
   }
@@ -109,7 +104,8 @@ export class SocketLobbyController {
       playerLeftWithSideEffect$,
       this.lobby.hostChanged$,
       this.lobby.playerOrderChanged$,
-      this.lobby.maximumNumberOfPlayersChanged$
+      this.lobby.maximumNumberOfPlayersChanged$,
+      this.lobby.vacancyFilled$
     )
       .pipe(this.stop, debounceTime(SocketController.debounceTime))
       .subscribe(() => {

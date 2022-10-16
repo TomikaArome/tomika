@@ -184,10 +184,7 @@ export class Round {
   }
 
   getCardsOwnedBy(playerId: string, onlyNotPlayed = false): Card[] {
-    return this.cards.filter(
-      (card: Card) =>
-        card.ownerId === playerId && !(onlyNotPlayed && card.played)
-    );
+    return this.cards.filter((card: Card) => card.ownerId === playerId && !(onlyNotPlayed && card.played));
   }
 
   getCardsOnTurn(turnNumber: number): Card[] {
@@ -307,7 +304,19 @@ export class Round {
       });
     }
 
-    // TODO Check card can be played
+    const leadingCard = this.cards.find((c: Card) =>
+      c.playedOnTurn === this.currentTurnNumber && c.playedOrderPosition === 1);
+    if (leadingCard && card.suit !== leadingCard.suit &&
+      this.getCardsOwnedBy(playerId, true).findIndex((c: Card) => c.suit === leadingCard.suit) > -1) {
+      throw new OuistitiException({
+        type: OuistitiErrorType.CARD_DOESNT_FOLLOW_SUIT,
+        detail: {
+          playedCard: card.info,
+          leadingCard: leadingCard.info,
+          playerHand: this.getCardsOwnedBy(playerId, true).map((c: Card) => c.info)
+        }
+      })
+    }
 
     const cardsPlayedThisTurn = this.getCardsOnTurn(this.currentTurnNumber);
     card.playedOnTurn = this.currentTurnNumber;

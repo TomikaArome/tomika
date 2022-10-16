@@ -2,6 +2,7 @@ import {
   OuistitiErrorType,
   OuistitiInvalidActionReason,
 } from '../enum/ouistiti-error-type.enum';
+import { KnownCardInfo } from './card.interface';
 
 interface NoDetail {
   type:
@@ -75,6 +76,15 @@ interface IncorrectNumberOfPlayersDetail {
   }
 }
 
+interface CardDoesntFollowSuit {
+  type: OuistitiErrorType.CARD_DOESNT_FOLLOW_SUIT,
+  detail: {
+    playedCard: KnownCardInfo;
+    leadingCard: KnownCardInfo;
+    playerHand: KnownCardInfo[];
+  }
+}
+
 type CombinedErrorType =
   | NoDetail
   | InvalidActionDetail
@@ -84,7 +94,8 @@ type CombinedErrorType =
   | ElementInArrayTakenDetail
   | OrderArrayIncompleteDetail
   | PlayerDoesntHaveCardDetail
-  | IncorrectNumberOfPlayersDetail;
+  | IncorrectNumberOfPlayersDetail
+  | CardDoesntFollowSuit;
 
 export type OuistitiError = CombinedErrorType & {
   param?: string;

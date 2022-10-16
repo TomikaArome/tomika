@@ -177,20 +177,26 @@ export class BreakPoint {
             }
           });
       } else {
-        this.cancelTimer();
+        this.pauseTimer();
       }
     }
   }
 
-  cancelTimer() {
+  pauseTimer() {
     if (!this.resolved && !this.cancelled) {
-      this.timeRemainingOnCancel = this._timestamp - (+new Date());
-      this._timestamp = -1;
-      this.timerResetSource.next(this._timestamp);
+      if (this.timeRemainingOnCancel === -1 && this._timestamp !== -1) {
+        this.timeRemainingOnCancel = this._timestamp - (+new Date());
+        this._timestamp = -1;
+        this.timerResetSource.next(this._timestamp);
+      }
+      this.buffer?.pauseTimer();
     }
   }
 
   resumeTimer() {
-    this.setTimer(this.timeRemainingOnCancel);
+    if (this._timestamp === -1 && this.timeRemainingOnCancel !== -1) {
+      this.setTimer(this.timeRemainingOnCancel);
+    }
+    this.buffer?.resumeTimer();
   }
 }

@@ -1,10 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Round } from './round.class';
-import {
-  GameCreateParams,
-  GameStatus,
-  RoundScores,
-} from '@TomikaArome/ouistiti-shared';
+import { GameCreateParams, GameStatus, RoundScores } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -74,8 +70,15 @@ export class Game {
   }
 
   changeStatus(status: GameStatus) {
-    this.status = status;
-    this.statusChangedSource.next(status);
+    if (status !== this.status) {
+      if (status === GameStatus.SUSPENDED) {
+        this.currentRound?.breakPoint?.pauseTimer();
+      } else if (this.status === GameStatus.SUSPENDED) {
+        this.currentRound?.breakPoint?.resumeTimer();
+      }
+      this.status = status;
+      this.statusChangedSource.next(status);
+    }
   }
 
   newRound() {

@@ -32,6 +32,7 @@ export class SocketRoundController {
     this.subscribeEmitBidsChanged();
     this.subscribeCardPlayed();
     this.subscribeBreakPointAcknowledged();
+    this.subscribeGameSuspendedOrResumed();
 
     this.emitInitialRoundStatus();
   }
@@ -115,6 +116,15 @@ export class SocketRoundController {
     this.round.breakPointAcknowledged$.pipe(this.stop).subscribe(() => {
       const payload: BreakPointInfo = this.round.breakPoint.info;
       this.controller.emit('breakPointChanged', payload);
+    });
+  }
+
+  subscribeGameSuspendedOrResumed() {
+    this.gameController.game.statusChanged$.pipe(this.stop).subscribe(() => {
+      if (this.round.breakPoint) {
+        const payload: BreakPointInfo = this.round.breakPoint.info;
+        this.controller.emit('breakPointChanged', payload);
+      }
     });
   }
 }

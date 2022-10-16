@@ -169,7 +169,7 @@ export class Round {
 
   initBiddingBreakPoint() {
     const biddingBreakPoint = new BreakPoint({
-      duration: 10000,
+      duration: 20000,
       acknowledgements: this.playerIds,
       bufferDuration: 5000,
     });

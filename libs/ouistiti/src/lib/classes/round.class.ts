@@ -315,7 +315,7 @@ export class Round {
           leadingCard: leadingCard.info,
           playerHand: this.getCardsOwnedBy(playerId, true).map((c: Card) => c.info)
         }
-      })
+      });
     }
 
     const cardsPlayedThisTurn = this.getCardsOnTurn(this.currentTurnNumber);

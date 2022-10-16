@@ -38,3 +38,7 @@
   [selfId]="selfId$ | async"
   (resumeGame)="resumeGame()">
 </tmk-ouistiti-suspended-screen>
+
+<button class="suspend-game-button" (click)="suspendGame()" *ngIf="(hostId$ | async) === (selfId$ | async)">
+  <fa-icon [icon]="faPause"></fa-icon>
+</button>

@@ -6,6 +6,7 @@ import { pluck } from 'rxjs/operators';
 import { GameService } from '../../../services/game.service';
 import { LobbyService } from '../../../services/lobby.service';
 import { Observable } from 'rxjs';
+import { faPause } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'tmk-ouistiti-game-container',
@@ -20,6 +21,8 @@ export class OuistitiGameContainerComponent {
   currentGameScores$: Observable<RoundScores[]> = this.gameService.currentGameScores$;
   gameStatus$: Observable<GameStatus> = this.lobbyService.currentLobby$.pipe(pluck('gameStatus'));
   hostId$: Observable<string> = this.lobbyService.currentLobby$.pipe(pluck('hostId'));
+
+  faPause = faPause;
 
   constructor(
     private roundService: RoundService,
@@ -62,5 +65,9 @@ export class OuistitiGameContainerComponent {
 
   resumeGame() {
     this.lobbyService.resumeGame();
+  }
+
+  suspendGame() {
+    this.lobbyService.suspendGame();
   }
 }

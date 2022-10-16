@@ -138,7 +138,7 @@ export class OuistitiGateway {
     OuistitiException.checkIfHost(controller);
     OuistitiException.checkGameStarted(controller.player.lobby);
 
-    // TODO
+    controller.player.lobby.game.changeStatus(GameStatus.SUSPENDED);
   }
 
   @UseFilters(new OuistitiExceptionFilter('resumeGame'))

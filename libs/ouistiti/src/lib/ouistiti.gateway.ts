@@ -193,4 +193,13 @@ export class OuistitiGateway {
 
     controller.player.lobby.game.currentRound.acknowledgeBreakPoint(controller.player.id);
   }
+
+  @UseFilters(new OuistitiExceptionFilter('getScores'))
+  @SubscribeMessage('getScores')
+  getScores(controller: SocketController) {
+    OuistitiException.checkIfInLobby(controller);
+    OuistitiException.checkGameStarted(controller.player.lobby);
+
+    controller.emit('scores', controller.player.lobby.game.scores);
+  }
 }

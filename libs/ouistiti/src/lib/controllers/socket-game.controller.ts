@@ -30,6 +30,7 @@ export class SocketGameController {
     this.subscribeRoundStarted();
 
     this.createControllerForLatestRound();
+    this.emitScores();
   }
 
   createControllerForLatestRound() {
@@ -54,6 +55,10 @@ export class SocketGameController {
     } else if (this.lobbyController.lobby === this.controller.player.lobby) {
       this.lobbyController.emitLobbyStatus();
     }
+  }
+
+  emitScores() {
+    this.controller.emit('scores', this.game.scores);
   }
 
   subscribeStatusChanged() {

@@ -22,8 +22,6 @@ export class BiddingPopupComponent {
   @Input()
   selfId: string;
   @Input()
-  biddingEndsTimestamp = 150000;
-  @Input()
   proceedingToPlayTimestamp = 5000;
 
   @Output()

@@ -1,12 +1,6 @@
 import { SocketController } from './socket.controller';
 import { Round } from '../classes/round.class';
-import {
-  BidsChanged,
-  BreakPointInfo,
-  CardPlayed,
-  RoundStatus,
-  RoundStatusChanged,
-} from '@TomikaArome/ouistiti-shared';
+import { BidsChanged, BreakPointInfo, CardPlayed, RoundStatus, RoundStatusChanged, } from '@TomikaArome/ouistiti-shared';
 import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SocketGameController } from './socket-game.controller';
@@ -22,12 +16,10 @@ export class SocketRoundController {
     return takeUntil(this.stopIncludingRoundCompleted$);
   }
 
-  constructor(
-    readonly controller: SocketController,
-    readonly round: Round,
-    readonly stop$: Observable<unknown>,
-    private gameController: SocketGameController
-  ) {
+  constructor(readonly controller: SocketController,
+              readonly round: Round,
+              readonly stop$: Observable<unknown>,
+              private gameController: SocketGameController) {
     this.subscribeStatusChanged();
     this.subscribeEmitBidsChanged();
     this.subscribeCardPlayed();
@@ -113,10 +105,12 @@ export class SocketRoundController {
   }
 
   subscribeBreakPointAcknowledged() {
-    this.round.breakPointAcknowledged$.pipe(this.stop).subscribe(() => {
-      const payload: BreakPointInfo = this.round.breakPoint.info;
-      this.controller.emit('breakPointChanged', payload);
-    });
+    this.round.breakPointAcknowledged$
+      .pipe(takeUntil(this.stop$))
+      .subscribe(() => {
+        const payload: BreakPointInfo = this.round.breakPoint.info;
+        this.controller.emit('breakPointChanged', payload);
+      });
   }
 
   subscribeGameSuspendedOrResumed() {

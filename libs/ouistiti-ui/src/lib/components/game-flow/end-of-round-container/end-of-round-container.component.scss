@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 20px;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -21,8 +21,7 @@ tmk-ouistiti-scoreboard {
   align-items: center;
   gap: 32px;
 
-  .proceeding-in,
-  .waiting-for {
+  .proceeding-in, .waiting-for {
     display: flex;
     flex-direction: column;
     align-items: center;

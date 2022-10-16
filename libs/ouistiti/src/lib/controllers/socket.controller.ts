@@ -62,9 +62,6 @@ export class SocketController {
   }
 
   emitLobbyList() {
-    this.emit(
-      'lobbyList',
-      Lobby.getLobbyList().map((lobby) => lobby.info)
-    );
+    this.emit('lobbyList', Lobby.getLobbyList().map((lobby) => lobby.info));
   }
 }

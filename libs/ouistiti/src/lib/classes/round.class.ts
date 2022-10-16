@@ -1,7 +1,7 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
 import { BidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
-import { Subject } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { BidPlacedObserved } from '../interfaces/round-observed.interface';
 import { BreakPoint } from './break-point.class';
@@ -169,9 +169,9 @@ export class Round {
 
   initBiddingBreakPoint() {
     const biddingBreakPoint = new BreakPoint({
-      duration: 20000,
+      //duration: 10000,
       acknowledgements: this.playerIds,
-      bufferDuration: 5000,
+      bufferDuration: 5000
     });
     biddingBreakPoint.resolved$.subscribe(() => {
       this.finaliseBids();
@@ -330,13 +330,11 @@ export class Round {
 
       const endOfTurnBreakPoint = new BreakPoint({
         duration: 5000,
-        acknowledgements: this.playerIds,
+        //acknowledgements: this.playerIds
       });
-      endOfTurnBreakPoint.acknowledged$.subscribe(
-        (acknowledgedPlayerId: string) => {
-          this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
-        }
-      );
+      endOfTurnBreakPoint.acknowledged$.subscribe((acknowledgedPlayerId: string) => {
+        this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
+      });
       endOfTurnBreakPoint.resolved$.subscribe(() => {
         this.manualBreakPointInProgress = false;
         this.completeTurn();
@@ -371,16 +369,15 @@ export class Round {
 
   endOfRound() {
     const endOfRoundBreakPoint = new BreakPoint({
-      duration: 5000,
-      acknowledgements: this.playerIds,
+      //duration: 5000,
+      acknowledgements: this.playerIds
     });
-    endOfRoundBreakPoint.acknowledged$.subscribe(
-      (acknowledgedPlayerId: string) => {
-        this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
-      }
-    );
+    endOfRoundBreakPoint.acknowledged$.subscribe((acknowledgedPlayerId: string) => {
+      this.breakPointAcknowledgedSource.next(acknowledgedPlayerId);
+    });
     endOfRoundBreakPoint.resolved$.subscribe(() => {
       this.manualBreakPointInProgress = false;
+      this.breakPointAcknowledgedSource.complete();
     });
     this.breakPoint = endOfRoundBreakPoint;
     this.manualBreakPointInProgress = true;

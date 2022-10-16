@@ -11,7 +11,7 @@ import {
   RoundStatus,
   RoundStatusChanged,
   BidsChanged,
-  BreakPointInfo,
+  BreakPointInfo, RoundScores
 } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
 
@@ -43,6 +43,8 @@ export class SocketService {
     new ServerEvent<LobbyInfo[]>('lobbyList', []),
     new ServerEvent<LobbyInfo>('lobbyUpdated'),
     new ServerEvent<LobbyClosed>('lobbyClosed'),
+
+    new ServerEvent<RoundScores[]>('scores'),
 
     new ServerEvent<RoundInfo>('roundInfo'),
     new ServerEvent<BidsChanged>('bidsChanged'),

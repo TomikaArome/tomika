@@ -29,5 +29,16 @@ export class GameService {
           console.log(payload.scores);
         }
       });
+
+    this.socketService
+      .getEvent<RoundScores[]>('scores')
+      .subscribe((payload: RoundScores[]) => {
+        this.currentGameScoresSource.next(payload);
+        console.log(payload);
+      });
+  }
+
+  getScores() {
+    this.socketService.emitEvent('getScores');
   }
 }

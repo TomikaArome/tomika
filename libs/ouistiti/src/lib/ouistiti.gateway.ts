@@ -131,6 +131,16 @@ export class OuistitiGateway {
     });
   }
 
+  @UseFilters(new OuistitiExceptionFilter('endGame'))
+  @SubscribeMessage('endGame')
+  endGame(controller: SocketController) {
+    OuistitiException.checkIfInLobby(controller);
+    OuistitiException.checkIfHost(controller);
+    OuistitiException.checkGameStarted(controller.player.lobby);
+
+    controller.player.lobby.endGame();
+  }
+
   @UseFilters(new OuistitiExceptionFilter('suspendGame'))
   @SubscribeMessage('suspendGame')
   suspendGame(controller: SocketController) {

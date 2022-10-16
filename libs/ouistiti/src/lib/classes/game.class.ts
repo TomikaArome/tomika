@@ -44,12 +44,12 @@ export class Game {
     });
   }
 
-  private completed$ = new Subject<void>();
+  private ended$ = new Subject<void>();
   private statusChangedSource = new Subject<GameStatus>();
   private roundStartedSource = new Subject<Round>();
 
-  statusChanged$ = this.statusChangedSource.asObservable().pipe(takeUntil(this.completed$));
-  roundStarted$ = this.roundStartedSource.asObservable().pipe(takeUntil(this.completed$));
+  statusChanged$ = this.statusChangedSource.asObservable().pipe(takeUntil(this.ended$));
+  roundStarted$ = this.roundStartedSource.asObservable().pipe(takeUntil(this.ended$));
 
   static createNewGame(settings: GameCreateSettings): Game {
     const newGame = new Game();
@@ -78,14 +78,18 @@ export class Game {
       }
       this.status = status;
       this.statusChangedSource.next(status);
+      if (status === GameStatus.CANCELLED) {
+        this.ended$.next();
+        this.ended$.complete();
+      }
     }
   }
 
   newRound() {
     if (this.currentRound?.roundNumber === this.totalRoundCount) {
       this.changeStatus(GameStatus.COMPLETED);
-      this.completed$.next();
-      this.completed$.complete();
+      this.ended$.next();
+      this.ended$.complete();
     } else {
       const newRoundNumber = this.rounds.length + 1;
       this.rounds.push(

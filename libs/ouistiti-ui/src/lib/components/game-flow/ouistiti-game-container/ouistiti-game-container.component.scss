@@ -38,7 +38,7 @@ tmk-ouistiti-suspended-screen {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 3;
 }
 
 tmk-ouistiti-player-turn {
@@ -51,7 +51,7 @@ tmk-ouistiti-player-turn {
 
 .suspend-game-button {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   top: 0;
   right: 0;
   display: flex;

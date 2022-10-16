@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PlayerInfo } from '@TomikaArome/ouistiti-shared';
+import { faPlay, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'tmk-ouistiti-suspended-screen',
@@ -16,6 +17,13 @@ export class SuspendedScreenComponent {
 
   @Output()
   resumeGame = new EventEmitter<void>();
+  @Output()
+  endGame = new EventEmitter<void>();
+
+  confirmEndGame = false;
+
+  faPlay = faPlay;
+  faXmark = faXmark;
 
   get noVacantPlayers(): boolean {
     return this.players.reduce((acc, curr) => acc && !curr.vacant, true);
@@ -32,6 +40,12 @@ export class SuspendedScreenComponent {
   clickResumeGameButton() {
     if (this.noVacantPlayers && this.isSelfHost) {
       this.resumeGame.emit();
+    }
+  }
+
+  clickEndGameButton() {
+    if (this.isSelfHost) {
+      this.endGame.emit();
     }
   }
 }

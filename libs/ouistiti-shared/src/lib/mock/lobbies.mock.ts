@@ -21,7 +21,7 @@ export const lobby1Mock: LobbyInfo = {
       nickname: 'Steve',
       colour: PlayerColour.RED,
       symbol: PlayerSymbol.CLUB,
-      vacant: false,
+      vacant: true,
     },
     {
       id: '5x89SitQIG',

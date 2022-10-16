@@ -55,6 +55,7 @@ export class Lobby {
   private maximumNumberOfPlayersChangedSource = new Subject<number>();
   private gameStartedSource = new Subject<Game>();
   private vacancyFilledSource = new Subject<Player>();
+  private gameEndedSource = new Subject<void>();
 
   lobbyClosed$ = this.lobbyClosedSource.asObservable();
   playerJoined$ = this.playerJoinedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
@@ -64,6 +65,7 @@ export class Lobby {
   maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
   gameStarted$ = this.gameStartedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
   vacancyFilled$ = this.vacancyFilledSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  gameEnded$ = this.gameEndedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
 
   private static lobbies: Lobby[] = [];
 
@@ -308,6 +310,16 @@ export class Lobby {
       playerAssignFn(player);
       player.changeVacancy(false);
       this.vacancyFilledSource.next(player);
+    }
+  }
+
+  endGame() {
+    if (this.game) {
+      if (this.game.status !== GameStatus.COMPLETED) {
+        this.game.changeStatus(GameStatus.CANCELLED);
+      }
+      delete this.game;
+      this.gameEndedSource.next();
     }
   }
 }

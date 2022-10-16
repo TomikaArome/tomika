@@ -36,7 +36,8 @@
   [players]="currentLobbyPlayers$ | async"
   [hostId]="hostId$ | async"
   [selfId]="selfId$ | async"
-  (resumeGame)="resumeGame()">
+  (resumeGame)="resumeGame()"
+  (endGame)="endGame()">
 </tmk-ouistiti-suspended-screen>
 
 <tmk-ouistiti-player-turn

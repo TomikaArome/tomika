@@ -77,4 +77,8 @@ export class OuistitiGameContainerComponent {
   suspendGame() {
     this.lobbyService.suspendGame();
   }
+
+  endGame() {
+    this.lobbyService.endGame();
+  }
 }

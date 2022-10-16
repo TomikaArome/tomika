@@ -16,14 +16,13 @@
     margin-bottom: 20px;
   }
 
-  .info-buttons {
+  .form-grid {
     width: 400px;
-    min-height: 36px;
     margin-top: 20px;
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    align-items: flex-start;
+
+    .resume-game-button-row {
+      min-height: 36px;
+    }
 
     .info-message {
       font-style: italic;
@@ -32,7 +31,7 @@
       padding: 0 8px;
       flex: 1;
 
-      &:nth-last-child(1) {
+      &:nth-child(1) {
         text-align: center;
       }
     }

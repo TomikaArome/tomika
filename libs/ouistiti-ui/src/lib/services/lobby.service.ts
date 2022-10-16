@@ -149,4 +149,8 @@ export class LobbyService {
   fillVacancy(params: LobbyFillVacancyParams) {
     this.socketService.emitEvent('fillVacancy', params);
   }
+
+  endGame() {
+    this.socketService.emitEvent('endGame');
+  }
 }

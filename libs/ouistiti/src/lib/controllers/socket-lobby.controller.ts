@@ -44,6 +44,7 @@ export class SocketLobbyController {
     this.subscribeUpdateLobby();
     this.subscribeLobbyClosed();
     this.subscribeGameStarted();
+    this.subscribeGameEnded();
 
     this.init();
   }
@@ -139,6 +140,12 @@ export class SocketLobbyController {
         this.stopIncludingSelfLeft$,
         this
       );
+    });
+  }
+
+  subscribeGameEnded() {
+    this.lobby.gameEnded$.pipe(this.stop).subscribe(() => {
+      this.emitLobbyStatus();
     });
   }
 }

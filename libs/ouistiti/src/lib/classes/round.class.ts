@@ -1,13 +1,6 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
-import {
-  BidInfo,
-  OuistitiErrorType,
-  OuistitiInvalidActionReason,
-  RoundInfo,
-  RoundScores,
-  RoundStatus,
-} from '@TomikaArome/ouistiti-shared';
+import { BidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { BidPlacedObserved } from '../interfaces/round-observed.interface';
@@ -42,21 +35,11 @@ export class Round {
   private breakPointAcknowledgedSource = new Subject<string>();
 
   statusChanged$ = this.statusChangedSource.asObservable();
-  bidsFinalised$ = this.statusChanged$.pipe(
-    filter((status: RoundStatus) => status === RoundStatus.PLAY)
-  );
-  completed$ = this.statusChanged$.pipe(
-    filter((status: RoundStatus) => status === RoundStatus.COMPLETED)
-  );
-  bidPlaced$ = this.bidPlacedSource
-    .asObservable()
-    .pipe(takeUntil(this.bidsFinalised$));
-  bidCancelled$ = this.bidCancelledSource
-    .asObservable()
-    .pipe(takeUntil(this.bidsFinalised$));
-  cardPlayed$ = this.cardPlayedSource
-    .asObservable()
-    .pipe(takeUntil(this.completed$));
+  bidsFinalised$ = this.statusChanged$.pipe(filter((status: RoundStatus) => status === RoundStatus.PLAY));
+  completed$ = this.statusChanged$.pipe(filter((status: RoundStatus) => status === RoundStatus.COMPLETED));
+  bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
+  bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
+  cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.completed$));
   breakPointAcknowledged$ = this.breakPointAcknowledgedSource.asObservable();
 
   get isLastTurn(): boolean {
@@ -68,23 +51,19 @@ export class Round {
   }
 
   get info(): RoundInfo {
-    const info: RoundInfo = {
+    return {
       number: this.roundNumber,
       status: this.status,
-      breakPoint:
-        this.breakPoint && !this.breakPoint.ended ? this.breakPoint.info : null,
+      breakPoint: this.breakPoint && !this.breakPoint.ended ? this.breakPoint.info : null,
       currentPlayerId: this.currentPlayerId,
       currentTurnNumber: this.currentTurnNumber,
       playerOrder: this.playerIds,
       cards: this.cards.map((card: Card) => {
-        if (card === this.trumpCard) {
-          return { ...card.info, isTrumpCard: true };
-        }
+        if (card === this.trumpCard) { return { ...card.info, isTrumpCard: true }; }
         return card.info;
       }),
       bids: this.bids,
     };
-    return info;
   }
 
   get scores(): RoundScores {
@@ -161,15 +140,12 @@ export class Round {
   }
 
   bidsKnownToPlayer(playerId: string): BidInfo {
-    return Object.keys(this.bids).reduce(
-      (acc: BidInfo, currPlayerId: string) => {
-        if (this.status !== RoundStatus.BIDDING || currPlayerId === playerId) {
-          acc[playerId] = this.bids[playerId];
-        }
-        return acc;
-      },
-      {}
-    );
+    return Object.keys(this.bids).reduce((acc: BidInfo, currPlayerId: string) => {
+      if (this.status !== RoundStatus.BIDDING || currPlayerId === playerId) {
+        acc[currPlayerId] = this.bids[currPlayerId];
+      }
+      return acc;
+    }, {});
   }
 
   generateCards() {
@@ -193,7 +169,7 @@ export class Round {
 
   initBiddingBreakPoint() {
     const biddingBreakPoint = new BreakPoint({
-      duration: 120000,
+      duration: 10000,
       acknowledgements: this.playerIds,
       bufferDuration: 5000,
     });

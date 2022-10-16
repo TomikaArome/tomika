@@ -31,6 +31,7 @@ export class RoundService {
     this.socketService
       .getEvent<RoundInfo>('roundInfo')
       .subscribe((payload: RoundInfo) => {
+        console.log('roundInfo', payload);
         this.currentRoundInfo = payload;
         this.currentRoundInfoSource.next(this.currentRoundInfo);
       });

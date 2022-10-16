@@ -24,7 +24,6 @@ export class GameService {
     this.socketService
       .getEvent<RoundStatusChanged>('roundStatusChanged')
       .subscribe((payload: RoundStatusChanged) => {
-        console.log('ROUND STATUS CHANGED (game.sevice)', payload);
         if (payload.status === RoundStatus.COMPLETED) {
           this.currentGameScoresSource.next(payload.scores);
           console.log(payload.scores);

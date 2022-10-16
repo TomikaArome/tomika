@@ -39,6 +39,12 @@
   (resumeGame)="resumeGame()">
 </tmk-ouistiti-suspended-screen>
 
+<tmk-ouistiti-player-turn
+  *ngIf="showPlayerTurn(roundStatus$ | async)"
+  [currentPlayer]="currentPlayer$ | async"
+  [selfId]="selfId$ | async">
+</tmk-ouistiti-player-turn>
+
 <button class="suspend-game-button" (click)="suspendGame()" *ngIf="(hostId$ | async) === (selfId$ | async)">
   <fa-icon [icon]="faPause"></fa-icon>
 </button>

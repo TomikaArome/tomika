@@ -77,7 +77,6 @@ export class RoundService {
     this.socketService
       .getEvent<BreakPointInfo>('breakPointChanged')
       .subscribe((payload: BreakPointInfo) => {
-        console.log(payload);
         this.currentRoundInfo.breakPoint = payload;
         this.currentRoundInfoSource.next(this.currentRoundInfo);
       });

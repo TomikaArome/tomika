@@ -41,6 +41,14 @@ tmk-ouistiti-suspended-screen {
   z-index: 2;
 }
 
+tmk-ouistiti-player-turn {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .suspend-game-button {
   position: absolute;
   z-index: 1;

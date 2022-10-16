@@ -54,8 +54,6 @@
     </tmk-ouistiti-player-list>
 
     <div class="form-grid" *ngIf="isHost">
-      <hr />
-
       <div class="buttons-row">
         <button class="button-colour-green" [disabled]="!canStartGame(playerList$ | async)" (click)="startGame()">
           <fa-icon [icon]="faPlay"></fa-icon>Start game

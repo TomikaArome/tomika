@@ -29,6 +29,7 @@ import { PlayerListComponent } from './components/player-list/player-list.compon
 import { PlayerListItemComponent } from './components/player-list/player-list-item.component';
 import { PlayerRoundDetailsComponent } from './components/game-flow/player-round-details/player-round-details.component';
 import { PlayerSettingsComponent } from './components/game-setup/player-settings/player-settings.component';
+import { PlayerTurnComponent } from './components/game-flow/player-turn/player-turn.component';
 import { ScoreboardComponent } from './components/analysis/scoreboard.component';
 import { SuspendedScreenComponent } from './components/game-flow/suspended-screen/suspended-screen.component';
 import { SymbolSelectorComponent } from './components/game-setup/symbol-selector/symbol-selector.component';
@@ -68,6 +69,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     PlayerListItemComponent,
     PlayerRoundDetailsComponent,
     PlayerSettingsComponent,
+    PlayerTurnComponent,
     ScoreboardComponent,
     SuspendedScreenComponent,
     SymbolSelectorComponent,

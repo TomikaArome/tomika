@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { RoundService } from '../../../services/round.service';
 import { PlayerService } from '../../../services/player.service';
 import { GameStatus, PlayerInfo, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
-import { pluck } from 'rxjs/operators';
+import { map, pluck } from 'rxjs/operators';
 import { GameService } from '../../../services/game.service';
 import { LobbyService } from '../../../services/lobby.service';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { faPause } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -21,6 +21,9 @@ export class OuistitiGameContainerComponent {
   currentGameScores$: Observable<RoundScores[]> = this.gameService.currentGameScores$;
   gameStatus$: Observable<GameStatus> = this.lobbyService.currentLobby$.pipe(pluck('gameStatus'));
   hostId$: Observable<string> = this.lobbyService.currentLobby$.pipe(pluck('hostId'));
+  currentPlayer$: Observable<PlayerInfo> = combineLatest(this.currentLobbyPlayers$, this.roundInfo$).pipe(
+    map(([players, roundInfo]: [PlayerInfo[], RoundInfo]) => players.find((p: PlayerInfo) => p.id === roundInfo.currentPlayerId))
+  );
 
   faPause = faPause;
 
@@ -45,6 +48,10 @@ export class OuistitiGameContainerComponent {
 
   showSuspendedScreen(status: GameStatus): boolean {
     return status === GameStatus.SUSPENDED;
+  }
+
+  showPlayerTurn(status: RoundStatus): boolean {
+    return status === RoundStatus.PLAY;
   }
 
   placeBid(bid: number) {

@@ -4,6 +4,7 @@ import { PlayerService } from '../../services/player.service';
 import { map } from 'rxjs/operators';
 import { LobbyService } from '../../services/lobby.service';
 import { GameStatus, LobbyInfo } from '@TomikaArome/ouistiti-shared';
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'tmk-ouistiti-container',
@@ -19,11 +20,15 @@ export class ContainerComponent {
     map((lobby: LobbyInfo) => lobby?.gameStatus === GameStatus.INIT)
   );
 
-  constructor(
-    private socketService: SocketService,
-    private playerService: PlayerService,
-    private lobbyService: LobbyService
-  ) {
+  faTriangleExclamation = faTriangleExclamation;
+
+  get isConnected(): boolean {
+    return this.socketService.isConnected;
+  }
+
+  constructor(private socketService: SocketService,
+              private playerService: PlayerService,
+              private lobbyService: LobbyService) {
     this.socketService.connect();
   }
 }

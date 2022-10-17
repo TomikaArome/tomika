@@ -55,6 +55,10 @@ export class SocketService {
 
   private socketDisconnected$: BehaviorSubject<boolean>;
 
+  get isConnected(): boolean {
+    return !!this.socket?.connected;
+  }
+
   constructor() {
     this.getEvent<OuistitiError>('error').subscribe((error) => {
       console.log(error);

@@ -1,7 +1,24 @@
 :host {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100vw;
   height: 100vh;
   background-color: hsl(0, 0%, 5%);
   color: hsl(0, 0%, 100%);
+
+  .not-connected {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    line-height: 1.5em;
+    font-style: italic;
+    color: hsl(0,0%,90%);
+
+    fa-icon {
+      font-size: 96px;
+      margin-bottom: 8px;
+    }
+  }
 }

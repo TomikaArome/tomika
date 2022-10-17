@@ -59,12 +59,6 @@ export class SocketService {
     return !!this.socket?.connected;
   }
 
-  constructor() {
-    this.getEvent<OuistitiError>('error').subscribe((error) => {
-      console.log(error);
-    });
-  }
-
   connect() {
     console.log('Connect');
     this.socket = io('http://localhost:3333/ouistiti');

@@ -1,0 +1,37 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background-color: hsl(0,50%,30%);
+  color: hsl(0,0%,100%);
+  border-radius: 6px;
+  box-shadow: 0 6px 4px hsla(0, 0%, 0%, 0.5);
+  padding: 8px 16px;
+  font-size: 12px;
+  pointer-events: initial;
+  animation: showErrorNotificationAnimation 200ms, hideErrorNotificationAnimation 200ms var(--hide-animation-delay, 400ms);
+
+  &.hideErrorNotification {
+    opacity: 0;
+  }
+
+  b {
+    font-weight: bold;
+  }
+
+  i {
+    font-style: italic;
+    font-size: 0.8em;
+    color: hsl(0,0%,90%);
+  }
+
+  @keyframes showErrorNotificationAnimation {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes hideErrorNotificationAnimation {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+}

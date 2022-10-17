@@ -16,6 +16,8 @@ import { ContainerComponent } from './components/container/container.component';
 import { ColourSelectorComponent } from './components/game-setup/colour-selector/colour-selector.component';
 import { EndOfRoundContainerComponent } from './components/game-flow/end-of-round-container/end-of-round-container.component';
 import { EndOfTurnPopupComponent } from './components/game-flow/end-of-turn-popup/end-of-turn-popup.component';
+import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
+import { ErrorNotificationStackComponent } from './components/error-notification/error-notification-stack.component';
 import { LandingScreenComponent } from './components/landing-screen/landing-screen.component';
 import { LobbyCreateComponent } from './components/lobby-create/lobby-create.component';
 import { LobbyJoinComponent } from './components/lobby-join/lobby-join.component';
@@ -56,6 +58,8 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     ColourSelectorComponent,
     EndOfRoundContainerComponent,
     EndOfTurnPopupComponent,
+    ErrorNotificationComponent,
+    ErrorNotificationStackComponent,
     LandingScreenComponent,
     LobbyCreateComponent,
     LobbyJoinComponent,

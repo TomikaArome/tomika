@@ -1,4 +1,5 @@
 <tmk-ouistiti-card-container
+  *ngIf="roundInfo$ | async"
   [roundInfo]="roundInfo$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"

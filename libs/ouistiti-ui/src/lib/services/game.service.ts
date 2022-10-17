@@ -3,17 +3,14 @@ import { SocketService } from './socket.service';
 import {
   RoundScores,
   RoundStatus,
-  RoundStatusChanged,
-  roundStatusMock,
+  RoundStatusChanged
 } from '@TomikaArome/ouistiti-shared';
 import { BehaviorSubject } from 'rxjs';
-import { getGameScoresMock } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
   private currentGameScoresSource = new BehaviorSubject<RoundScores[]>(
-    [] /*getGameScoresMock(roundStatusMock.playerOrder)*/
-  );
+    this.socketService.getServerEvent<RoundScores[]>('scores').latestValue);
   currentGameScores$ = this.currentGameScoresSource.asObservable();
 
   constructor(private socketService: SocketService) {
@@ -26,7 +23,6 @@ export class GameService {
       .subscribe((payload: RoundStatusChanged) => {
         if (payload.status === RoundStatus.COMPLETED) {
           this.currentGameScoresSource.next(payload.scores);
-          console.log(payload.scores);
         }
       });
 
@@ -34,7 +30,6 @@ export class GameService {
       .getEvent<RoundScores[]>('scores')
       .subscribe((payload: RoundScores[]) => {
         this.currentGameScoresSource.next(payload);
-        console.log(payload);
       });
   }
 

@@ -92,11 +92,7 @@ export class CardContainerComponent implements OnInit {
   }
 
   get hasTrumps(): boolean {
-    return (
-      this.roundInfo.cards.findIndex(
-        (c: CardInfo) => (c as TrumpCardInfo).isTrumpCard
-      ) > -1
-    );
+    return this.roundInfo.cards.findIndex((c: CardInfo) => (c as TrumpCardInfo).isTrumpCard) > -1;
   }
 
   private static toRadians(degrees: number): number {

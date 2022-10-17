@@ -11,42 +11,55 @@ import {
   RoundStatus,
   RoundStatusChanged,
   BidsChanged,
-  BreakPointInfo, RoundScores
+  BreakPointInfo, RoundScores, roundStatusMock, lobbyStatusPlayerIsHostMock, lobbyListMock, getGameScoresMock
 } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
-  static readonly lobbyStatusInitialValue: LobbyStatus = {
-    inLobby: false,
-  };
+  private mock = false;
+  private componentInit = +(new Date());
 
-  static readonly roundStatusInitialValue: RoundInfo = {
-    number: 1,
-    status: RoundStatus.BIDDING,
-    breakPoint: null,
-    currentPlayerId: '',
-    currentTurnNumber: 1,
-    playerOrder: [],
-    cards: [],
-    bids: {},
-  };
+  private get lobbyListInitialValue(): LobbyInfo[] {
+    return this.mock ? lobbyListMock : [];
+  }
+
+  private get lobbyStatusInitialValue(): LobbyStatus {
+    return this.mock ? lobbyStatusPlayerIsHostMock : {
+      inLobby: false,
+    };
+  }
+
+  private get roundStatusInitialValue(): RoundInfo {
+    return this.mock ? roundStatusMock : {
+      number: 1,
+      status: RoundStatus.BIDDING,
+      breakPoint: null,
+      currentPlayerId: '',
+      currentTurnNumber: 1,
+      playerOrder: [],
+      cards: [],
+      bids: {},
+    };
+  }
+
+  private get gameScoresInitialValue(): RoundScores[] {
+    return this.mock ? getGameScoresMock(roundStatusMock.playerOrder) : [];
+  }
 
   private socket: Socket;
   private events: ServerEvent<unknown>[] = [
     new ServerEvent<OuistitiError>('error'),
 
-    new ServerEvent<LobbyStatus>(
-      'lobbyStatus',
-      SocketService.lobbyStatusInitialValue
-    ),
-    new ServerEvent<LobbyInfo[]>('lobbyList', []),
+    new ServerEvent<LobbyStatus>('lobbyStatus', this.lobbyStatusInitialValue),
+    new ServerEvent<LobbyInfo[]>('lobbyList', this.lobbyListInitialValue),
     new ServerEvent<LobbyInfo>('lobbyUpdated'),
     new ServerEvent<LobbyClosed>('lobbyClosed'),
 
-    new ServerEvent<RoundScores[]>('scores'),
+    new ServerEvent<RoundScores[]>('scores', this.gameScoresInitialValue),
 
-    new ServerEvent<RoundInfo>('roundInfo'),
+    new ServerEvent<RoundInfo>('roundInfo', this.roundStatusInitialValue),
     new ServerEvent<BidsChanged>('bidsChanged'),
     new ServerEvent<CardPlayed>('cardPlayed'),
     new ServerEvent<RoundStatusChanged>('roundStatusChanged'),
@@ -56,12 +69,12 @@ export class SocketService {
   private socketDisconnected$: BehaviorSubject<boolean>;
 
   get isConnected(): boolean {
-    return !!this.socket?.connected;
+    return this.mock || !!this.socket?.connected || +(new Date()) < this.componentInit + 500;
   }
 
   connect() {
     console.log('Connect');
-    this.socket = io('http://localhost:3333/ouistiti');
+    this.socket = io(environment.ouistitiBackend);
     this.socketDisconnected$ = new BehaviorSubject<boolean>(false);
     this.socket.on('disconnect', () => {
       this.disconnect();
@@ -83,14 +96,14 @@ export class SocketService {
     }
   }
 
+  getServerEvent<T>(eventName: string): ServerEvent<T> {
+    const serverEvent = this.events.find((serverEvent: ServerEvent<unknown>) => serverEvent.name === eventName);
+    if (!serverEvent) { throw `Event doesn't exist`; }
+    return serverEvent as ServerEvent<T>;
+  }
+
   getEvent<T>(eventName: string): Observable<T> {
-    const serverEvent = this.events.find(
-      (serverEvent: ServerEvent<unknown>) => serverEvent.name === eventName
-    );
-    if (!serverEvent) {
-      throw `Event doesn't exist`;
-    }
-    return serverEvent.event$ as Observable<T>;
+    return this.getServerEvent<T>(eventName).event$ as Observable<T>;
   }
 
   emitEvent(eventType: string, payload?: unknown) {

@@ -47,7 +47,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     MatIconModule,
     MatRippleModule,
     ReactiveFormsModule,
-    UtilityModule,
+    UtilityModule
   ],
   declarations: [
     BidChipComponent,
@@ -80,7 +80,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     TimerComponent,
     TrumpCardWrapperComponent,
 
-    PlayerListItemContentDirective,
-  ],
+    PlayerListItemContentDirective
+  ]
 })
 export class OuistitiUiModule {}

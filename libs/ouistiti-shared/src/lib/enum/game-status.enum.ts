@@ -1,7 +1,0 @@
-export enum GameStatus {
-  INIT = 'INIT',
-  IN_PROGRESS = 'IN_PROGRESS',
-  SUSPENDED = 'SUSPENDED',
-  CANCELLED = 'CANCELLED',
-  COMPLETED = 'COMPLETED',
-}

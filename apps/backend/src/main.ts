@@ -14,12 +14,14 @@ import * as fs from 'fs'
 
 async function bootstrap() {
   const httpsOptions = environment.production ? {
-    key: fs.readFileSync('./secrets/private-key.pem'),
-    cert: fs.readFileSync('./secrets/public-certificate.pem')
+    httpsOptions: {
+      key: fs.readFileSync('./secrets/private-key.pem'),
+      cert: fs.readFileSync('./secrets/public-certificate.pem')
+    }
   } : {};
 
   dotenvConfig();
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  const app = await NestFactory.create(AppModule, { ...httpsOptions });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3333;

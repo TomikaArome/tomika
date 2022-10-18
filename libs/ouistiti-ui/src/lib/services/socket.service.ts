@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
@@ -14,7 +14,6 @@ import {
   BreakPointInfo, RoundScores, roundStatusMock, lobbyStatusPlayerIsHostMock, lobbyListMock, getGameScoresMock
 } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
-import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
@@ -72,9 +71,13 @@ export class SocketService {
     return this.mock || !!this.socket?.connected || +(new Date()) < this.componentInit + 500;
   }
 
+  constructor(@Inject('environment') private environment) {
+    console.log(this.environment.ouistitiBackend);
+  }
+
   connect() {
-    console.log('Connect');
-    this.socket = io(environment.ouistitiBackend);
+    console.log(`Connecting to ${this.environment.ouistitiBackend}`);
+    this.socket = io(this.environment.ouistitiBackend);
     this.socketDisconnected$ = new BehaviorSubject<boolean>(false);
     this.socket.on('disconnect', () => {
       this.disconnect();

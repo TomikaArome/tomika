@@ -12,9 +12,9 @@ import { SocketControllerPipe } from './socket-controller-pipe.service';
 @WebSocketGateway({
   namespace: 'ouistiti',
   cors: {
-    origin: ['http://localhost:4200'],
+    origin: ['http://localhost:4200', 'https://tomika.ink'],
     methods: ['GET', 'POST'],
-    credentials: true,
+    credentials: true
   },
 })
 export class OuistitiGateway {

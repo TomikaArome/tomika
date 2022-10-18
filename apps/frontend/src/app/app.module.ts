@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 
+import { environment } from '../environments/environment';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AdminPanelModule } from '../admin/admin-panel.module';
@@ -20,5 +22,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FontAwesomeModule,
   ],
   bootstrap: [AppComponent],
+  providers: [{
+    provide: 'environment',
+    useValue: environment
+  }]
 })
 export class AppModule {}

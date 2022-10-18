@@ -1,5 +1,5 @@
-import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { merge, MonoTypeOperatorFunction, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { SocketController } from './socket.controller';
 import { Game } from '../classes/game.class';
 import { GameStatus } from '@TomikaArome/ouistiti-shared';
@@ -8,13 +8,8 @@ import { SocketRoundController } from './socket-round.controller';
 import { SocketLobbyController } from './socket-lobby.controller';
 
 export class SocketGameController {
-  gameCompleted$: Observable<unknown> = this.game.statusChanged$.pipe(
-    filter(
-      (status: GameStatus) =>
-        status === GameStatus.COMPLETED || status === GameStatus.CANCELLED
-    )
-  );
-  stopIncludingGameCompleted$ = merge(this.stop$, this.gameCompleted$);
+  private gameEnded$ = new Subject<void>();
+  stopIncludingGameCompleted$ = merge(this.stop$, this.gameEnded$);
 
   private get stop(): MonoTypeOperatorFunction<unknown> {
     return takeUntil(this.stopIncludingGameCompleted$);
@@ -62,7 +57,10 @@ export class SocketGameController {
   }
 
   subscribeStatusChanged() {
-    this.game.statusChanged$.pipe(this.stop).subscribe(() => {
+    this.game.statusChanged$.pipe(this.stop).subscribe((status: GameStatus) => {
+      if (status === GameStatus.COMPLETED || status === GameStatus.CANCELLED) {
+        this.gameEnded$.next();
+      }
       this.emitLobbyInfo();
     });
   }

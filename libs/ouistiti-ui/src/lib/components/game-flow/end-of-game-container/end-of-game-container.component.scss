@@ -1,0 +1,22 @@
+@import '../../../ouistiti-theme';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: hsl(0, 0%, 5%);
+  padding: 20px;
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  tmk-ouistiti-scoreboard {
+    width: 100%;
+  }
+}

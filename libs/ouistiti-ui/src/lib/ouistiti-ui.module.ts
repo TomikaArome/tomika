@@ -14,6 +14,7 @@ import { CardComponent } from './components/game-flow/card/card.component';
 import { CardContainerComponent } from './components/game-flow/card-container/card-container.component';
 import { ContainerComponent } from './components/container/container.component';
 import { ColourSelectorComponent } from './components/game-setup/colour-selector/colour-selector.component';
+import { EndOfGameContainerComponent } from './components/game-flow/end-of-game-container/end-of-game-container.component';
 import { EndOfRoundContainerComponent } from './components/game-flow/end-of-round-container/end-of-round-container.component';
 import { EndOfTurnPopupComponent } from './components/game-flow/end-of-turn-popup/end-of-turn-popup.component';
 import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
@@ -56,6 +57,7 @@ import { PlayerListItemContentDirective } from './directives/player-list-item-co
     CardContainerComponent,
     ContainerComponent,
     ColourSelectorComponent,
+    EndOfGameContainerComponent,
     EndOfRoundContainerComponent,
     EndOfTurnPopupComponent,
     ErrorNotificationComponent,

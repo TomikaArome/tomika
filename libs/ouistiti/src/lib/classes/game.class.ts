@@ -20,6 +20,7 @@ export class Game {
   }
 
   get totalRoundCount(): number {
+    return 2;
     return (this.maxCardsPerPlayer - 1) * 2 + this.playerOrder.length;
   }
 
@@ -72,6 +73,7 @@ export class Game {
   changeStatus(status: GameStatus) {
     if (status !== this.status) {
       if (status === GameStatus.SUSPENDED) {
+        if (this.status !== GameStatus.IN_PROGRESS) { return; }
         this.currentRound?.breakPoint?.pauseTimer();
       } else if (this.status === GameStatus.SUSPENDED) {
         this.currentRound?.breakPoint?.resumeTimer();
@@ -86,18 +88,14 @@ export class Game {
   }
 
   newRound() {
-    if (this.currentRound?.roundNumber === this.totalRoundCount) {
-      this.changeStatus(GameStatus.COMPLETED);
-      this.ended$.next();
-      this.ended$.complete();
-    } else {
+    if (!this.currentRound || this.currentRound?.roundNumber < this.totalRoundCount) {
       const newRoundNumber = this.rounds.length + 1;
       this.rounds.push(
         Round.createNewRound({
           roundNumber: newRoundNumber,
           playerIds: this.playerOrder,
           maxCardsPerPlayer: this.maxCardsPerPlayer,
-          numberOfCardsPerPlayer: this.numberOfCardsOnRound(newRoundNumber),
+          numberOfCardsPerPlayer: this.numberOfCardsOnRound(newRoundNumber)
         })
       );
       this.roundStartedSource.next(this.currentRound);
@@ -105,11 +103,16 @@ export class Game {
       this.currentRound.completed$.subscribe(() => {
         this.currentRound.breakPoint.resolved$.subscribe(() => {
           if (this.currentRound.roundNumber === this.totalRoundCount) {
-            console.log('Game complete');
+            this.changeStatus(GameStatus.COMPLETED);
+            this.ended$.next();
+            this.ended$.complete();
           } else {
             this.newRound();
           }
         });
+        if (this.currentRound.roundNumber === this.totalRoundCount) {
+          this.currentRound.breakPoint.bypass();
+        }
       });
     }
   }

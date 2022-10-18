@@ -32,6 +32,14 @@
   (nextButtonClicked)="acknowledgeBreakPoint()">
 </tmk-ouistiti-end-of-round-container>
 
+<tmk-ouistiti-end-of-game-container
+  *ngIf="showEndOfGameContainer(gameStatus$ | async)"
+  [scores]="currentGameScores$ | async"
+  [lobbyInfo]="lobbyInfo$ | async"
+  [isHost]="(hostId$ | async) === (selfId$ | async)"
+  (endGame)="endGame()">
+</tmk-ouistiti-end-of-game-container>
+
 <tmk-ouistiti-suspended-screen
   *ngIf="showSuspendedScreen(gameStatus$ | async)"
   [players]="currentLobbyPlayers$ | async"
@@ -47,6 +55,9 @@
   [selfId]="selfId$ | async">
 </tmk-ouistiti-player-turn>
 
-<button class="suspend-game-button" (click)="suspendGame()" *ngIf="(hostId$ | async) === (selfId$ | async)">
+<button
+  class="suspend-game-button"
+  (click)="suspendGame()"
+  *ngIf="(hostId$ | async) === (selfId$ | async) && !showEndOfGameContainer(gameStatus$ | async)">
   <fa-icon [icon]="faPause"></fa-icon>
 </button>

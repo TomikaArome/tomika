@@ -1,7 +1,7 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
 import { BidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
-import { finalize, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { BidPlacedObserved } from '../interfaces/round-observed.interface';
 import { BreakPoint } from './break-point.class';

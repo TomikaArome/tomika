@@ -318,6 +318,11 @@ export class Lobby {
       if (this.game.status !== GameStatus.COMPLETED) {
         this.game.changeStatus(GameStatus.CANCELLED);
       }
+      this.players.forEach((player: Player) => {
+        if (player.isVacant) {
+          this.removePlayer(player);
+        }
+      });
       delete this.game;
       this.gameEndedSource.next();
     }

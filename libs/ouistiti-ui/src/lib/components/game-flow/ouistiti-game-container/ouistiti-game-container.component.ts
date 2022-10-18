@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RoundService } from '../../../services/round.service';
 import { PlayerService } from '../../../services/player.service';
-import { GameStatus, PlayerInfo, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
+import { GameStatus, LobbyInfo, PlayerInfo, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
 import { map, pluck } from 'rxjs/operators';
 import { GameService } from '../../../services/game.service';
 import { LobbyService } from '../../../services/lobby.service';
@@ -15,6 +15,7 @@ import { faPause } from '@fortawesome/free-solid-svg-icons';
 })
 export class OuistitiGameContainerComponent {
   roundInfo$: Observable<RoundInfo> = this.roundService.currentRoundInfo$;
+  lobbyInfo$: Observable<LobbyInfo> = this.lobbyService.currentLobby$;
   selfId$: Observable<string> = this.playerService.selfId$;
   currentLobbyPlayers$: Observable<PlayerInfo[]> = this.playerService.currentLobbyPlayers$;
   roundStatus$: Observable<RoundStatus> = this.roundInfo$.pipe(pluck('status'));
@@ -44,6 +45,10 @@ export class OuistitiGameContainerComponent {
 
   showEndOfRoundContainer(status: RoundStatus): boolean {
     return status === RoundStatus.COMPLETED;
+  }
+
+  showEndOfGameContainer(status: GameStatus): boolean {
+    return status === GameStatus.COMPLETED || status === GameStatus.CANCELLED;
   }
 
   showSuspendedScreen(status: GameStatus): boolean {

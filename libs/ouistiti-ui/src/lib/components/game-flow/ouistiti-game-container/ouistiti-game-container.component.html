@@ -1,9 +1,9 @@
 <tmk-ouistiti-card-container
+  *ngIf="roundInfo$ | async"
   [roundInfo]="roundInfo$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
-  (cardPlayed)="playCard($event)"
->
+  (cardPlayed)="playCard($event)">
 </tmk-ouistiti-card-container>
 
 <tmk-ouistiti-bidding-popup
@@ -12,8 +12,7 @@
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
   (bidPlaced)="placeBid($event)"
-  (bidCancelled)="cancelBid()"
->
+  (bidCancelled)="cancelBid()">
 </tmk-ouistiti-bidding-popup>
 
 <tmk-ouistiti-end-of-turn-popup
@@ -21,8 +20,7 @@
   [roundInfo]="roundInfo$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
-  (nextButtonClicked)="acknowledgeBreakPoint()"
->
+  (nextButtonClicked)="acknowledgeBreakPoint()">
 </tmk-ouistiti-end-of-turn-popup>
 
 <tmk-ouistiti-end-of-round-container
@@ -31,6 +29,35 @@
   [roundInfo]="roundInfo$ | async"
   [players]="currentLobbyPlayers$ | async"
   [selfId]="selfId$ | async"
-  (nextButtonClicked)="acknowledgeBreakPoint()"
->
+  (nextButtonClicked)="acknowledgeBreakPoint()">
 </tmk-ouistiti-end-of-round-container>
+
+<tmk-ouistiti-end-of-game-container
+  *ngIf="showEndOfGameContainer(gameStatus$ | async)"
+  [scores]="currentGameScores$ | async"
+  [lobbyInfo]="lobbyInfo$ | async"
+  [isHost]="(hostId$ | async) === (selfId$ | async)"
+  (endGame)="endGame()">
+</tmk-ouistiti-end-of-game-container>
+
+<tmk-ouistiti-suspended-screen
+  *ngIf="showSuspendedScreen(gameStatus$ | async)"
+  [players]="currentLobbyPlayers$ | async"
+  [hostId]="hostId$ | async"
+  [selfId]="selfId$ | async"
+  (resumeGame)="resumeGame()"
+  (endGame)="endGame()">
+</tmk-ouistiti-suspended-screen>
+
+<tmk-ouistiti-player-turn
+  *ngIf="showPlayerTurn(roundStatus$ | async)"
+  [currentPlayer]="currentPlayer$ | async"
+  [selfId]="selfId$ | async">
+</tmk-ouistiti-player-turn>
+
+<button
+  class="suspend-game-button"
+  (click)="suspendGame()"
+  *ngIf="(hostId$ | async) === (selfId$ | async) && !showEndOfGameContainer(gameStatus$ | async)">
+  <fa-icon [icon]="faPause"></fa-icon>
+</button>

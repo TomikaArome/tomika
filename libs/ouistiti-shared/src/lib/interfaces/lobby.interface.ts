@@ -44,3 +44,9 @@ export interface LobbyUpdateParams {
   hostId?: string;
   playerOrder?: string[];
 }
+
+export interface LobbyFillVacancyParams {
+  lobbyId: string;
+  playerId: string;
+  password?: string;
+}

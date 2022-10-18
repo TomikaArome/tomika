@@ -21,6 +21,7 @@ import {
   faQuestion,
 } from '@fortawesome/free-solid-svg-icons';
 import { PlayerService } from '../../services/player.service';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'tmk-ouistiti-scoreboard',
@@ -72,23 +73,7 @@ export class ScoreboardComponent implements AfterViewInit {
   }
 
   getCumulativeScore(playerId: string, roundNumber: number): number {
-    return this.scores.reduce(
-      (cumulativeScore: number, roundScores: RoundScores) => {
-        if (
-          !roundScores.playerScores ||
-          roundScores.roundNumber > roundNumber
-        ) {
-          return cumulativeScore;
-        }
-        return (
-          cumulativeScore +
-          (roundScores.playerScores.find(
-            (playerScore) => playerScore.playerId === playerId
-          ).pointDifference ?? 0)
-        );
-      },
-      0
-    );
+    return GameService.getCumulativeScores(this.scores, roundNumber)[playerId];
   }
 
   isScoreHigherThanLast(playerId: string, roundNumber: number): boolean {

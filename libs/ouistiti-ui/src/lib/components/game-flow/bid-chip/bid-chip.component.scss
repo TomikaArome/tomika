@@ -12,11 +12,6 @@
     height: 100%;
     overflow: visible;
 
-    circle {
-      cx: 25;
-      cy: 25;
-    }
-
     .circle {
       fill: hsl(var(--player-colour-hue), 50%, 40%);
       stroke: hsl(var(--player-colour-hue), 50%, 30%);
@@ -37,8 +32,6 @@
       fill: hsl(var(--player-colour-hue), 50%, 80%);
       stroke: hsl(var(--player-colour-hue), 50%, 30%);
       stroke-width: 48;
-      x: 50%;
-      y: 50%;
 
       &.dotted {
         fill: none;
@@ -51,7 +44,6 @@
       width: 50px;
       height: 50px;
       fill: hsl(var(--player-colour-hue), 50%, 50%);
-      rx: 8px;
     }
 
     &.dotted {

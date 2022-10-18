@@ -92,11 +92,7 @@ export class CardContainerComponent implements OnInit {
   }
 
   get hasTrumps(): boolean {
-    return (
-      this.roundInfo.cards.findIndex(
-        (c: CardInfo) => (c as TrumpCardInfo).isTrumpCard
-      ) > -1
-    );
+    return this.roundInfo.cards.findIndex((c: CardInfo) => (c as TrumpCardInfo).isTrumpCard) > -1;
   }
 
   private static toRadians(degrees: number): number {
@@ -232,29 +228,14 @@ export class CardContainerComponent implements OnInit {
     );
   }
 
-  isCardPlayable(
-    card: OwnedAndKnownCardInfo,
-    cardsInHand: OwnedAndKnownCardInfo[]
-  ): boolean {
-    if (
-      this.roundInfo.status !== RoundStatus.PLAY ||
-      this.roundInfo.currentPlayerId !== card.ownerId
-    ) {
+  isCardPlayable(card: OwnedAndKnownCardInfo, cardsInHand: OwnedAndKnownCardInfo[]): boolean {
+    if (this.roundInfo.status !== RoundStatus.PLAY || this.roundInfo.currentPlayerId !== card.ownerId) {
       return false;
     }
-    const leadingCard = this.roundInfo.cards.find(
-      (c: PlayedCardInfo) =>
-        c.playedOnTurn === this.roundInfo.currentTurnNumber &&
-        c.playedOrderPosition === 1
-    ) as PlayedCardInfo;
-    if (!leadingCard || card.suit === leadingCard.suit) {
-      return true;
-    }
-    return (
-      cardsInHand.findIndex(
-        (c: OwnedAndKnownCardInfo) => c.suit === leadingCard.suit
-      ) === -1
-    );
+    const leadingCard = this.roundInfo.cards.find((c: PlayedCardInfo) =>
+        c.playedOnTurn === this.roundInfo.currentTurnNumber && c.playedOrderPosition === 1) as PlayedCardInfo;
+    if (!leadingCard || card.suit === leadingCard.suit) { return true; }
+    return (cardsInHand.findIndex((c: OwnedAndKnownCardInfo) => c.suit === leadingCard.suit) === -1);
   }
 
   getCardPositionInOwnHand(card: OwnedAndKnownCardInfo): CardPosition {

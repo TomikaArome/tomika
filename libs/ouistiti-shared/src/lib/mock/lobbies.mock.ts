@@ -7,7 +7,7 @@ export const lobby1Mock: LobbyInfo = {
   id: 'ZqgqKiD3vU',
   passwordProtected: true,
   maxNumberOfPlayers: 4,
-  gameStatus: GameStatus.IN_PROGRESS,
+  gameStatus: GameStatus.COMPLETED,
   players: [
     {
       id: 'AXP9aX7pRu',
@@ -21,7 +21,7 @@ export const lobby1Mock: LobbyInfo = {
       nickname: 'Steve',
       colour: PlayerColour.RED,
       symbol: PlayerSymbol.CLUB,
-      vacant: false,
+      vacant: true,
     },
     {
       id: '5x89SitQIG',

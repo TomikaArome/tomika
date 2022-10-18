@@ -3,13 +3,13 @@ import { SocketService } from './socket.service';
 import {
   GameStatus,
   LobbyClosed,
-  LobbyCreateParams,
+  LobbyCreateParams, LobbyFillVacancyParams,
   LobbyInfo,
   LobbyJoinParams,
-  LobbyStatus,
-  PlayerKickParams,
+  LobbyStatus, PlayerInfo,
+  PlayerKickParams
 } from '@TomikaArome/ouistiti-shared';
-import { BehaviorSubject, merge, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
@@ -24,11 +24,12 @@ export class LobbyService {
   lobbyList$ = this.lobbyListSource.asObservable();
 
   static isLobbyJoinable(lobbyInfo: LobbyInfo): boolean {
-    return (
-      (lobbyInfo.gameStatus === GameStatus.INIT ||
-        lobbyInfo.gameStatus === GameStatus.SUSPENDED) &&
-      lobbyInfo.players.length < lobbyInfo.maxNumberOfPlayers
-    );
+    return (lobbyInfo.gameStatus === GameStatus.INIT && lobbyInfo.players.length < lobbyInfo.maxNumberOfPlayers) ||
+      (lobbyInfo.gameStatus === GameStatus.SUSPENDED && LobbyService.lobbyHasVacancies(lobbyInfo));
+  }
+
+  static lobbyHasVacancies(lobbyInfo: LobbyInfo): boolean {
+    return lobbyInfo.players.reduce((acc: boolean, player: PlayerInfo) => acc || player.vacant, false);
   }
 
   private static lobbySortingFunction(
@@ -135,5 +136,21 @@ export class LobbyService {
 
   startGame() {
     this.socketService.emitEvent('startGame');
+  }
+
+  suspendGame() {
+    this.socketService.emitEvent('suspendGame');
+  }
+
+  resumeGame() {
+    this.socketService.emitEvent('resumeGame');
+  }
+
+  fillVacancy(params: LobbyFillVacancyParams) {
+    this.socketService.emitEvent('fillVacancy', params);
+  }
+
+  endGame() {
+    this.socketService.emitEvent('endGame');
   }
 }

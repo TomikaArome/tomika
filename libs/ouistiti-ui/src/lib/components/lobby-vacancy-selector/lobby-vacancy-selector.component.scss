@@ -1,0 +1,13 @@
+@import '../../ouistiti-theme';
+
+:host {
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  tmk-ouistiti-player-list-item {
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+}

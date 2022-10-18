@@ -7,8 +7,7 @@
         [square]="true"
         [diameter]="20"
         [colour]="startingPlayerColour"
-        [symbol]="startingPlayerSymbol"
-      >
+        [symbol]="startingPlayerSymbol">
       </tmk-ouistiti-bid-chip>
       <div>
         <span class="nickname">{{ startingPlayerNickname }}</span>
@@ -31,13 +30,11 @@
         </tmk-ouistiti-bid-chip>
       </div>
 
-      <div class="bidding-ends-timer" *ngIf="biddingEndsTimestamp > -1">
-        Bidding ends in:
-
-        <tmk-ouistiti-timer
-          [timestamp]="roundInfo.breakPoint?.timerExpires"
-        ></tmk-ouistiti-timer>
-
+      <div class="bidding-ends-timer">
+        <ng-container *ngIf="roundInfo.breakPoint?.timerExpires">
+          Bidding ends in:
+          <tmk-ouistiti-timer [timestamp]="roundInfo.breakPoint?.timerExpires"></tmk-ouistiti-timer>
+        </ng-container>
         <div class="proceeding-in-timer" *ngIf="roundInfo.breakPoint?.buffer">
           Proceeding in:
           <tmk-ouistiti-timer

@@ -1,107 +1,60 @@
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="125"
-  height="175"
-  viewBox="0 0 125 175"
-  [ngClass]="svgClasses"
->
+<svg xmlns="http://www.w3.org/2000/svg" width="125" height="175" viewBox="0 0 125 175" [ngClass]="svgClasses">
   <defs>
-    <svg
-      [id]="'card-' + id + '-symbol'"
-      width="25"
-      height="25"
-      viewBox="256 256 512 512"
-    >
+    <svg [id]="'card-' + id + '-symbol'" width="25" height="25" viewBox="0 0 512 512">
       <path [id]="'card-' + id + '-symbol-path'" [attr.d]="symbolPath" />
     </svg>
-    <svg
-      [id]="'card-' + id + '-inv-symbol'"
-      width="25"
-      height="25"
-      viewBox="256 256 512 512"
-    >
-      <use
-        [attr.href]="'#card-' + id + '-symbol-path'"
-        transform="scale(1,-1)"
-        transform-origin="center"
-      />
+    <svg [id]="'card-' + id + '-inv-symbol'" width="25" height="25" viewBox="0 0 512 512">
+      <use [attr.href]="'#card-' + id + '-symbol-path'" transform="scale(1,-1)" transform-origin="center" />
     </svg>
     <svg [id]="'card-' + id + '-number'">
-      <text
-        class="card-text"
-        textLength="11px"
-        lengthAdjust="spacingAndGlyphs"
-        letter-spacing="-4"
-      >
+      <style>
+        .card-text {
+          font-weight: bold;
+          font-size: 24px;
+        }
+      </style>
+      <text class="card-text" textLength="11px" lengthAdjust="spacingAndGlyphs" letter-spacing="-2" x="2" y="22">
         {{ numberValue }}
       </text>
       <use
+        stroke="hsl(0, 0%, 100%)" stroke-width="30"
+        transform="translate(-6,-6)"
         [attr.href]="'#card-' + id + '-symbol'"
-        x="7.5"
-        y="12"
-        width="15"
-        height="15"
-      />
+        x="7.5" y="32" width="15" height="15" />
     </svg>
   </defs>
 
-  <rect class="card-background" />
+  <rect class="card-background" rx="5" />
 
   <ng-container *ngIf="isFaceUp; else cardBackTemplate">
     <ng-container *ngIf="!miniature; else miniatureCardTemplate">
       <use
+        stroke="hsl(0, 0%, 100%)" stroke-width="30"
+        [attr.transform]="'translate(-' + (pos.large ? 24 : 12) + ',-' + (pos.large ? 24 : 12) + ') scale(' + (pos.large ? 2 : 1) + ')'"
+        transform-origin="center"
         *ngFor="let pos of symbolPositions"
         [attr.href]="'#card-' + id + (pos.inv ? '-inv-symbol' : '-symbol')"
-        [attr.x]="pos.x"
-        [attr.y]="pos.y"
-        [ngClass]="{ inv: pos.inv, large: pos.large }"
-      />
-
-      <use [attr.href]="'#card-' + id + '-number'" x="2" y="22" />
-
-      <use
-        [attr.href]="'#card-' + id + '-number'"
-        x="2"
-        y="22"
-        transform="scale(-1,-1)"
-        transform-origin="center"
-      />
-
+        [attr.x]="pos.x" [attr.y]="pos.y"
+        [ngClass]="{ large: pos.large }" />
+      <use [attr.href]="'#card-' + id + '-number'" />
+      <use [attr.href]="'#card-' + id + '-number'" transform="scale(-1,-1)" transform-origin="center" />
       <ng-container *ngIf="isFaceCard">
-        <image class="face" [attr.href]="faceCardImagePath" />
-        <rect class="face-outline" />
+        <image class="face" [attr.href]="faceCardImagePath" [attr.x]="cardFaceX" [attr.y]="cardFaceY" />
+        <rect class="face-outline" [attr.x]="cardFaceX" [attr.y]="cardFaceY" rx="3" />
       </ng-container>
     </ng-container>
 
     <ng-template #miniatureCardTemplate>
-      <use
-        [attr.href]="'#card-' + id + '-number'"
-        x="8"
-        y="21"
-        transform="scale(4)"
-      />
+      <use [attr.href]="'#card-' + id + '-number'" x="8" y="21" transform="scale(4)" />
     </ng-template>
   </ng-container>
 
   <ng-template #cardBackTemplate>
-    <image
-      class="back"
-      preserveAspectRatio="none"
-      [attr.href]="cardBackPath"
-      *ngIf="!miniature; else miniatureCardTemplate"
-    />
+    <image class="back" preserveAspectRatio="none" [attr.href]="cardBackPath" *ngIf="!miniature; else miniatureCardTemplate" x="1" y="2" />
 
     <ng-template #miniatureCardTemplate>
-      <rect class="miniature-back"></rect>
-      <svg
-        *ngIf="dotted"
-        class="dotted-symbol"
-        width="62.5"
-        height="62.5"
-        x="62.5"
-        y="87.5"
-        viewBox="256 256 512 512"
-      >
+      <rect class="miniature-back" x="6" y="6" rx="4"></rect>
+      <svg *ngIf="dotted" class="dotted-symbol" width="62.5" height="62.5" x="62.5" y="87.5" viewBox="256 256 512 512">
         <path [attr.d]="symbolPath" />
       </svg>
     </ng-template>

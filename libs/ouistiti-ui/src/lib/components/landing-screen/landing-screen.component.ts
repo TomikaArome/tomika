@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { LobbyService } from '../../services/lobby.service';
-import { LobbyInfo } from '@TomikaArome/ouistiti-shared';
+import { GameStatus, LobbyFillVacancyParams, LobbyInfo } from '@TomikaArome/ouistiti-shared';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -37,5 +37,13 @@ export class LandingScreenComponent {
 
   showLobbyJoin(): boolean {
     return !this.createMode && !!this.selectedLobbyId;
+  }
+
+  lobbyGameStatusInit(lobby: LobbyInfo): boolean {
+    return lobby.gameStatus === GameStatus.INIT;
+  }
+
+  fillVacancy(params: LobbyFillVacancyParams) {
+    this.lobbyService.fillVacancy(params);
   }
 }

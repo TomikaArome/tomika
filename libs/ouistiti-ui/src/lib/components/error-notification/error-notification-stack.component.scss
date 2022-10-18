@@ -1,0 +1,13 @@
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+  width: 300px;
+  pointer-events: none;
+
+  tmk-ouistiti-error-notification {
+    width: 100%;
+  }
+}

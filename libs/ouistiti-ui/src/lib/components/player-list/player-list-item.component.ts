@@ -1,30 +1,23 @@
-import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnDestroy,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnDestroy, Output } from '@angular/core';
 import { PlayerInfo } from '@TomikaArome/ouistiti-shared';
 import { SortableListComponent } from '../../utility/sortable-list.component';
 import { Subject } from 'rxjs';
-import {
-  faCrown,
-  faGripVertical,
-  faUserCog,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCrown, faGripVertical, faSignal, faUserCog } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'tmk-ouistiti-player-list-item',
   templateUrl: './player-list-item.component.html',
   styleUrls: ['./player-list-item.component.scss'],
+  providers: [SortableListComponent]
 })
 export class PlayerListItemComponent implements OnDestroy {
   @Input()
   player: PlayerInfo;
   @Input()
   isHost = false;
+  @Input()
+  @HostBinding('class.vacant')
+  isVacant = false;
   @Input()
   grabbable = false;
   @Input()
@@ -47,9 +40,11 @@ export class PlayerListItemComponent implements OnDestroy {
 
   private onDestroy$ = new Subject<void>();
 
+  faBan = faBan;
   faCrown = faCrown;
-  faUserCog = faUserCog;
   faGripVertical = faGripVertical;
+  faSignal = faSignal;
+  faUserCog = faUserCog;
 
   constructor(private sortableList: SortableListComponent<PlayerInfo>) {
     this.sortableList.draggingStateChanged.subscribe((player: PlayerInfo) => {

@@ -7,8 +7,14 @@
   --cell-hover-bg: hsl(0, 0%, 20%);
 
   display: grid;
-  grid-template-rows: [first-row-top] 80px [first-row-bottom] repeat(var(--playersCount, 1), 50px) [last-row-bottom];
-  grid-template-columns: [first-column-left] minmax(150px, 1fr) [first-column-right] repeat(var(--roundsCount, 1), minmax(80px, 1fr)) [last-column-right];
+  grid-template-rows: [first-row-top] 80px [first-row-bottom] repeat(
+      var(--playersCount, 1),
+      50px
+    ) [last-row-bottom];
+  grid-template-columns: [first-column-left] minmax(150px, 1fr) [first-column-right] repeat(
+      var(--roundsCount, 1),
+      minmax(80px, 1fr)
+    ) [last-column-right];
   user-select: none;
   font-size: 16px;
   gap: 1px;

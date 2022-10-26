@@ -1,0 +1,17 @@
+{
+  "projectType": "library",
+  "sourceRoot": "libs/ouistiti-shared/src",
+  "prefix": "TomikaArome",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/ouistiti-shared/src/**/*.ts",
+          "libs/ouistiti-shared/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

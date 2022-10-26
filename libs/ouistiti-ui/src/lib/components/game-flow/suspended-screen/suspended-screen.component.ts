@@ -5,7 +5,7 @@ import { faPlay, faXmark } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'tmk-ouistiti-suspended-screen',
   templateUrl: './suspended-screen.component.html',
-  styleUrls: ['./suspended-screen.component.scss']
+  styleUrls: ['./suspended-screen.component.scss'],
 })
 export class SuspendedScreenComponent {
   @Input()

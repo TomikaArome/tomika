@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
 import { RoundService } from '../../../services/round.service';
 import { PlayerService } from '../../../services/player.service';
-import { GameStatus, LobbyInfo, PlayerInfo, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
+import {
+  GameStatus,
+  LobbyInfo,
+  PlayerInfo,
+  RoundInfo,
+  RoundScores,
+  RoundStatus,
+} from '@TomikaArome/ouistiti-shared';
 import { map, pluck } from 'rxjs/operators';
 import { GameService } from '../../../services/game.service';
 import { LobbyService } from '../../../services/lobby.service';
@@ -17,13 +24,24 @@ export class OuistitiGameContainerComponent {
   roundInfo$: Observable<RoundInfo> = this.roundService.currentRoundInfo$;
   lobbyInfo$: Observable<LobbyInfo> = this.lobbyService.currentLobby$;
   selfId$: Observable<string> = this.playerService.selfId$;
-  currentLobbyPlayers$: Observable<PlayerInfo[]> = this.playerService.currentLobbyPlayers$;
+  currentLobbyPlayers$: Observable<PlayerInfo[]> =
+    this.playerService.currentLobbyPlayers$;
   roundStatus$: Observable<RoundStatus> = this.roundInfo$.pipe(pluck('status'));
-  currentGameScores$: Observable<RoundScores[]> = this.gameService.currentGameScores$;
-  gameStatus$: Observable<GameStatus> = this.lobbyService.currentLobby$.pipe(pluck('gameStatus'));
-  hostId$: Observable<string> = this.lobbyService.currentLobby$.pipe(pluck('hostId'));
-  currentPlayer$: Observable<PlayerInfo> = combineLatest(this.currentLobbyPlayers$, this.roundInfo$).pipe(
-    map(([players, roundInfo]: [PlayerInfo[], RoundInfo]) => players.find((p: PlayerInfo) => p.id === roundInfo.currentPlayerId))
+  currentGameScores$: Observable<RoundScores[]> =
+    this.gameService.currentGameScores$;
+  gameStatus$: Observable<GameStatus> = this.lobbyService.currentLobby$.pipe(
+    pluck('gameStatus')
+  );
+  hostId$: Observable<string> = this.lobbyService.currentLobby$.pipe(
+    pluck('hostId')
+  );
+  currentPlayer$: Observable<PlayerInfo> = combineLatest(
+    this.currentLobbyPlayers$,
+    this.roundInfo$
+  ).pipe(
+    map(([players, roundInfo]: [PlayerInfo[], RoundInfo]) =>
+      players.find((p: PlayerInfo) => p.id === roundInfo.currentPlayerId)
+    )
   );
 
   faPause = faPause;

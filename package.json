@@ -25,7 +25,8 @@
     "update": "nx migrate latest",
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "help": "nx help",
+    "generate-config": "ts-node ./scripts/generate-config.ts"
   },
   "private": true,
   "dependencies": {
@@ -50,7 +51,7 @@
     "@nestjs/platform-socket.io": "9.0.0",
     "@nestjs/websockets": "^9.0.11",
     "@nrwl/angular": "14.5.10",
-    "dotenv": "10.0.0",
+    "angular-cli-ghpages": "^1.0.3",
     "inquirer": "^9.1.1",
     "nanoid": "^3.1.30",
     "node-fetch": "^2.6.7",
@@ -93,6 +94,7 @@
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "cypress": "^6.0.1",
+    "dotenv": "10.0.0",
     "eslint": "8.23.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-cypress": "^2.12.1",

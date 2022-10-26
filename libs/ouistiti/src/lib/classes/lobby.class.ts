@@ -1,11 +1,27 @@
 import { Player } from './player.class';
 import { Game } from './game.class';
-import { GameCreateParams, GameStatus, LobbyCreateParams, LobbyFillVacancyParams, LobbyInfo, LobbyJoinParams, MAX_NUMBER_OF_PLAYERS_PER_LOBBY, MIN_NUMBER_OF_PLAYERS_PER_LOBBY, OuistitiErrorType, OuistitiInvalidActionReason, PlayerColour } from '@TomikaArome/ouistiti-shared';
+import {
+  GameCreateParams,
+  GameStatus,
+  LobbyCreateParams,
+  LobbyFillVacancyParams,
+  LobbyInfo,
+  LobbyJoinParams,
+  MAX_NUMBER_OF_PLAYERS_PER_LOBBY,
+  MIN_NUMBER_OF_PLAYERS_PER_LOBBY,
+  OuistitiErrorType,
+  OuistitiInvalidActionReason,
+  PlayerColour,
+} from '@TomikaArome/ouistiti-shared';
 import { nanoid } from 'nanoid';
 import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LobbyChangedHostObserved, LobbyJoinObserved, LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
+import {
+  LobbyChangedHostObserved,
+  LobbyJoinObserved,
+  LobbyLeftObserved,
+} from '../interfaces/lobby-oberserved.interface';
 
 export class Lobby {
   id = nanoid(10);
@@ -44,7 +60,10 @@ export class Lobby {
   }
 
   get hasVacancies(): boolean {
-    return this.players.reduce((acc: boolean, player: Player) => acc || player.isVacant, false);
+    return this.players.reduce(
+      (acc: boolean, player: Player) => acc || player.isVacant,
+      false
+    );
   }
 
   private lobbyClosedSource = new Subject<void>();
@@ -58,14 +77,30 @@ export class Lobby {
   private gameEndedSource = new Subject<void>();
 
   lobbyClosed$ = this.lobbyClosedSource.asObservable();
-  playerJoined$ = this.playerJoinedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-  playerLeft$ = this.playerLeftSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-  hostChanged$ = this.hostChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-  playerOrderChanged$ = this.playerOrderChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-  maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-  gameStarted$ = this.gameStartedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-  vacancyFilled$ = this.vacancyFilledSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
-  gameEnded$ = this.gameEndedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  playerJoined$ = this.playerJoinedSource
+    .asObservable()
+    .pipe(takeUntil(this.lobbyClosed$));
+  playerLeft$ = this.playerLeftSource
+    .asObservable()
+    .pipe(takeUntil(this.lobbyClosed$));
+  hostChanged$ = this.hostChangedSource
+    .asObservable()
+    .pipe(takeUntil(this.lobbyClosed$));
+  playerOrderChanged$ = this.playerOrderChangedSource
+    .asObservable()
+    .pipe(takeUntil(this.lobbyClosed$));
+  maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource
+    .asObservable()
+    .pipe(takeUntil(this.lobbyClosed$));
+  gameStarted$ = this.gameStartedSource
+    .asObservable()
+    .pipe(takeUntil(this.lobbyClosed$));
+  vacancyFilled$ = this.vacancyFilledSource
+    .asObservable()
+    .pipe(takeUntil(this.lobbyClosed$));
+  gameEnded$ = this.gameEndedSource
+    .asObservable()
+    .pipe(takeUntil(this.lobbyClosed$));
 
   private static lobbies: Lobby[] = [];
 
@@ -138,7 +173,10 @@ export class Lobby {
     );
   }
 
-  addPlayer(params: LobbyJoinParams, playerAssignFn: (player: Player) => void = () => undefined): Player {
+  addPlayer(
+    params: LobbyJoinParams,
+    playerAssignFn: (player: Player) => void = () => undefined
+  ): Player {
     if (this.password) {
       if (params.password !== this.password) {
         throw new OuistitiException({
@@ -270,22 +308,25 @@ export class Lobby {
   }
 
   startGame(params: GameCreateParams) {
-    if (this.players.length < MIN_NUMBER_OF_PLAYERS_PER_LOBBY || this.players.length > this.maxNumberOfPlayers) {
+    if (
+      this.players.length < MIN_NUMBER_OF_PLAYERS_PER_LOBBY ||
+      this.players.length > this.maxNumberOfPlayers
+    ) {
       throw new OuistitiException({
         type: OuistitiErrorType.INCORRECT_NUMBER_OF_PLAYERS,
         detail: {
           current: this.players.length,
           minimum: MIN_NUMBER_OF_PLAYERS_PER_LOBBY,
-          maximum: this.maxNumberOfPlayers
-        }
+          maximum: this.maxNumberOfPlayers,
+        },
       });
     }
     if (this.gameStatus !== GameStatus.INIT) {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
         detail: {
-          reason: OuistitiInvalidActionReason.GAME_ALREADY_STARTED
-        }
+          reason: OuistitiInvalidActionReason.GAME_ALREADY_STARTED,
+        },
       });
     }
     this.game = Game.createNewGame({
@@ -295,7 +336,10 @@ export class Lobby {
     this.gameStartedSource.next(this.game);
   }
 
-  fillVacancy(params: LobbyFillVacancyParams, playerAssignFn: (player: Player) => void = () => undefined) {
+  fillVacancy(
+    params: LobbyFillVacancyParams,
+    playerAssignFn: (player: Player) => void = () => undefined
+  ) {
     if (this.password) {
       if (params.password !== this.password) {
         throw new OuistitiException({

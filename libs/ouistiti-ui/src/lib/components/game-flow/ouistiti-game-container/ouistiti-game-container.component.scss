@@ -34,7 +34,8 @@ tmk-ouistiti-end-of-turn-popup {
   border-radius: 8px 8px 0 0;
 }
 
-tmk-ouistiti-end-of-round-container, tmk-ouistiti-end-of-game-container {
+tmk-ouistiti-end-of-round-container,
+tmk-ouistiti-end-of-game-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -72,7 +73,7 @@ tmk-ouistiti-player-turn {
   border-bottom-left-radius: 20px;
   cursor: pointer;
   font-size: 20px;
-  color: hsl(0,0%,100%);
+  color: hsl(0, 0%, 100%);
   border: none;
   padding: 0 0 4px 4px;
 }

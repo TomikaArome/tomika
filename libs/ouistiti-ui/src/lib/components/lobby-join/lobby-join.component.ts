@@ -1,6 +1,17 @@
 import { Component, Input } from '@angular/core';
-import { LobbyInfo, LobbyJoinParams, PlayerColour, PlayerInfo } from '@TomikaArome/ouistiti-shared';
-import { AbstractControl, FormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
+import {
+  LobbyInfo,
+  LobbyJoinParams,
+  PlayerColour,
+  PlayerInfo,
+} from '@TomikaArome/ouistiti-shared';
+import {
+  AbstractControl,
+  FormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { LobbyService } from '../../services/lobby.service';
 
 @Component({

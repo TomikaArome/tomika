@@ -1,6 +1,10 @@
 import { nanoid } from 'nanoid';
 import { Round } from './round.class';
-import { GameCreateParams, GameStatus, RoundScores } from '@TomikaArome/ouistiti-shared';
+import {
+  GameCreateParams,
+  GameStatus,
+  RoundScores,
+} from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -20,7 +24,6 @@ export class Game {
   }
 
   get totalRoundCount(): number {
-    return 2;
     return (this.maxCardsPerPlayer - 1) * 2 + this.playerOrder.length;
   }
 
@@ -49,8 +52,12 @@ export class Game {
   private statusChangedSource = new Subject<GameStatus>();
   private roundStartedSource = new Subject<Round>();
 
-  statusChanged$ = this.statusChangedSource.asObservable().pipe(takeUntil(this.ended$));
-  roundStarted$ = this.roundStartedSource.asObservable().pipe(takeUntil(this.ended$));
+  statusChanged$ = this.statusChangedSource
+    .asObservable()
+    .pipe(takeUntil(this.ended$));
+  roundStarted$ = this.roundStartedSource
+    .asObservable()
+    .pipe(takeUntil(this.ended$));
 
   static createNewGame(settings: GameCreateSettings): Game {
     const newGame = new Game();
@@ -73,7 +80,9 @@ export class Game {
   changeStatus(status: GameStatus) {
     if (status !== this.status) {
       if (status === GameStatus.SUSPENDED) {
-        if (this.status !== GameStatus.IN_PROGRESS) { return; }
+        if (this.status !== GameStatus.IN_PROGRESS) {
+          return;
+        }
         this.currentRound?.breakPoint?.pauseTimer();
       } else if (this.status === GameStatus.SUSPENDED) {
         this.currentRound?.breakPoint?.resumeTimer();
@@ -88,14 +97,17 @@ export class Game {
   }
 
   newRound() {
-    if (!this.currentRound || this.currentRound?.roundNumber < this.totalRoundCount) {
+    if (
+      !this.currentRound ||
+      this.currentRound?.roundNumber < this.totalRoundCount
+    ) {
       const newRoundNumber = this.rounds.length + 1;
       this.rounds.push(
         Round.createNewRound({
           roundNumber: newRoundNumber,
           playerIds: this.playerOrder,
           maxCardsPerPlayer: this.maxCardsPerPlayer,
-          numberOfCardsPerPlayer: this.numberOfCardsOnRound(newRoundNumber)
+          numberOfCardsPerPlayer: this.numberOfCardsOnRound(newRoundNumber),
         })
       );
       this.roundStartedSource.next(this.currentRound);

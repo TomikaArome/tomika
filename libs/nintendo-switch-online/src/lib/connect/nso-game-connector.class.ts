@@ -73,7 +73,10 @@ export class NsoGameConnector {
   private constructor(readonly game: NsoGame) {}
 
   async getAccessToken(): Promise<AccessToken> {
-    if (this.accessToken && +new Date() < this.accessToken.expires - TIME_DIFF_BEFORE_REGEN) {
+    if (
+      this.accessToken &&
+      +new Date() < this.accessToken.expires - TIME_DIFF_BEFORE_REGEN
+    ) {
       return this.accessToken;
     }
     const nsoAppVersion = await NsoApp.get().getVersion();
@@ -85,15 +88,15 @@ export class NsoGameConnector {
     );
     NsoApp.get().currentOperation$.next(operation);
     const headers = {
-      'Host':            'api-lp1.znc.srv.nintendo.net',
-      'User-Agent':      `com.nintendo.znca/${nsoAppVersion} (Android/7.1.2)`,
-      'Accept':          'application/json',
+      Host: 'api-lp1.znc.srv.nintendo.net',
+      'User-Agent': `com.nintendo.znca/${nsoAppVersion} (Android/7.1.2)`,
+      Accept: 'application/json',
       'X-ProductVersion': nsoAppVersion,
-      'Content-Type':    'application/json; charset=utf-8',
-      'Connection':      'Keep-Alive',
-      'Authorization':   `Bearer ${webApiAccessToken.accessToken}`,
-      'Content-Length':  '37',
-      'X-Platform':      'Android',
+      'Content-Type': 'application/json; charset=utf-8',
+      Connection: 'Keep-Alive',
+      Authorization: `Bearer ${webApiAccessToken.accessToken}`,
+      'Content-Length': '37',
+      'X-Platform': 'Android',
       'Accept-Encoding': 'gzip',
     };
     const body = {
@@ -156,17 +159,18 @@ export class NsoGameConnector {
     );
     NsoApp.get().currentOperation$.next(operation);
     const headers = {
-      'Host':                    this.game.host,
+      Host: this.game.host,
       'X-IsAppAnalyticsOptedIn': 'false',
-      'Accept':                  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Accept-Encoding':         'gzip,deflate',
-      'X-GameWebToken':          accessToken,
-      'Accept-Language':         this.nsoConnector.language,
-      'X-IsAnalyticsOptedIn':    'false',
-      'Connection':              'keep-alive',
-      'DNT':                     '0',
-      'User-Agent':              'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Mobile Safari/537.36',
-      'X-Requested-With':        'com.nintendo.znca',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Encoding': 'gzip,deflate',
+      'X-GameWebToken': accessToken,
+      'Accept-Language': this.nsoConnector.language,
+      'X-IsAnalyticsOptedIn': 'false',
+      Connection: 'keep-alive',
+      DNT: '0',
+      'User-Agent':
+        'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Mobile Safari/537.36',
+      'X-Requested-With': 'com.nintendo.znca',
     };
     let response;
     try {
@@ -182,7 +186,10 @@ export class NsoGameConnector {
         { headers, error }
       );
     }
-    const cookie = NsoGameConnector.parseCookieHeader(response.headers.get('Set-Cookie'), this.game.cookieName);
+    const cookie = NsoGameConnector.parseCookieHeader(
+      response.headers.get('Set-Cookie'),
+      this.game.cookieName
+    );
     if (!cookie) {
       operation.fail();
       throw new NsoError(

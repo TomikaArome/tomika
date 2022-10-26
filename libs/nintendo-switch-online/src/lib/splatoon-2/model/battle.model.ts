@@ -29,7 +29,7 @@ export interface Splatoon2BattleResult {
 }
 
 export interface Splatoon2Brand {
-  frequent_skill: Splatoon2Skill,
+  frequent_skill: Splatoon2Skill;
   id: string;
   image: string;
   name: string;

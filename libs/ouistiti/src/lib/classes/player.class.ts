@@ -1,5 +1,13 @@
 import { nanoid } from 'nanoid';
-import { GameStatus, NICKNAME_MAX_LENGTH, OuistitiErrorType, PlayerColour, PlayerCreateParams, PlayerInfo, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
+import {
+  GameStatus,
+  NICKNAME_MAX_LENGTH,
+  OuistitiErrorType,
+  PlayerColour,
+  PlayerCreateParams,
+  PlayerInfo,
+  PlayerSymbol,
+} from '@TomikaArome/ouistiti-shared';
 import { OuistitiException } from './ouistiti-exception.class';
 import { Subject } from 'rxjs';
 import { Lobby } from './lobby.class';

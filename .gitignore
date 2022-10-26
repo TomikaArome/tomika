@@ -41,6 +41,9 @@ Thumbs.db
 
 # Config
 .env
+tomika.config.json
+apps/backend/src/environments
+apps/frontend/src/environments
 
 # Certificate
 /secrets

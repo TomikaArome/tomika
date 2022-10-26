@@ -11,8 +11,13 @@ export class ServerEvent<T> {
   }
 
   constructor(readonly name: string, initialValue?: T) {
-    if (initialValue) { this._latestValue = initialValue; }
-    this.eventSource = initialValue === undefined ? new Subject<T>() : new BehaviorSubject<T>(initialValue);
+    if (initialValue) {
+      this._latestValue = initialValue;
+    }
+    this.eventSource =
+      initialValue === undefined
+        ? new Subject<T>()
+        : new BehaviorSubject<T>(initialValue);
     this.event$ = this.eventSource.asObservable();
   }
 

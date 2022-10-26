@@ -18,29 +18,29 @@ export class NsoApp {
       host: 'api.lp1.av5ja.srv.nintendo.net',
       name: 'Splatoon 3',
       cookieName: '_gtoken',
-      abbr: 'splat3'
+      abbr: 'splat3',
     },
     {
       id: 5741031244955648,
       host: 'app.splatoon2.nintendo.net',
       name: 'Splatoon 2',
       cookieName: 'iksm_session',
-      abbr: 'splat2'
+      abbr: 'splat2',
     },
     {
       id: 5598642853249024,
       host: 'app.smashbros.nintendo.net',
       name: 'Super Smash Bros. Ultimate',
       cookieName: 'super_smash_session',
-      abbr: 'ssbu'
+      abbr: 'ssbu',
     },
     {
       id: 4953919198265344,
       host: 'web.sd.lp1.acbaa.srv.nintendo.net',
       name: 'Animal Crossing: New Horizons',
       cookieName: '_gtoken',
-      abbr: 'acnh'
-    }
+      abbr: 'acnh',
+    },
   ];
 
   private lastCheckedVersion = 0;
@@ -85,7 +85,12 @@ export class NsoApp {
   }
 
   async getVersion(forceFetch = false): Promise<string> {
-    if (!forceFetch && this._version && (this.lastCheckedVersion === -1 || +new Date() < this.lastCheckedVersion + this.versionCheckInterval)) {
+    if (
+      !forceFetch &&
+      this._version &&
+      (this.lastCheckedVersion === -1 ||
+        +new Date() < this.lastCheckedVersion + this.versionCheckInterval)
+    ) {
       return this._version;
     }
     const operation = new NsoOperation(

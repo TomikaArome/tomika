@@ -1,6 +1,12 @@
 import { SocketController } from './socket.controller';
 import { Player } from '../classes/player.class';
-import { merge, MonoTypeOperatorFunction, Observable, Subject, tap } from 'rxjs';
+import {
+  merge,
+  MonoTypeOperatorFunction,
+  Observable,
+  Subject,
+  tap,
+} from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 import { LobbyLeftObserved } from '../interfaces/lobby-oberserved.interface';
 import { SocketLobbyController } from './socket-lobby.controller';
@@ -18,10 +24,12 @@ export class SocketPlayerController {
     return takeUntil(this.stop$);
   }
 
-  constructor(readonly controller: SocketController,
-              readonly player: Player,
-              readonly stop$: Observable<unknown>,
-              readonly lobbyController: SocketLobbyController) {
+  constructor(
+    readonly controller: SocketController,
+    readonly player: Player,
+    readonly stop$: Observable<unknown>,
+    readonly lobbyController: SocketLobbyController
+  ) {
     this.stop$ = merge(this.stop$, this.controlledPlayerSocketTerminated$);
 
     this.subscribeInfoChanged();

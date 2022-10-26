@@ -22,9 +22,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FontAwesomeModule,
   ],
   bootstrap: [AppComponent],
-  providers: [{
-    provide: 'environment',
-    useValue: environment
-  }]
+  providers: [
+    {
+      provide: 'environment',
+      useValue: environment,
+    },
+  ],
 })
 export class AppModule {}

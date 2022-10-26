@@ -1,10 +1,14 @@
 import { NsoCliConfig } from './nso-cli-config.class';
 import { NsoCliSteam } from './nso-cli-stream.class';
 import { NsoCliAccount } from './nso-cli-account.class';
-import { NsoApp, NsoGame, NsoOperation } from '@TomikaArome/nintendo-switch-online';
+import {
+  NsoApp,
+  NsoGame,
+  NsoOperation,
+} from '@TomikaArome/nintendo-switch-online';
 
 export class NsoCli {
-  static readonly VERSION = '1.0.0'
+  static readonly VERSION = '1.0.0';
   static readonly USER_AGENT = `tomika-nintendo-switch-online-cli/${NsoCli.VERSION}`;
 
   private static instance: NsoCli;
@@ -42,9 +46,15 @@ export class NsoCli {
       this.stream.handleNsoError(error);
       process.exit();
     });
-    this.config = await NsoCli.instance.stream.wrapSpinner(configPromise, 'Loading configuration');
+    this.config = await NsoCli.instance.stream.wrapSpinner(
+      configPromise,
+      'Loading configuration'
+    );
     if (this.config.checkVersionOnlyOnce && this.config.nsoAppVersionPrevious) {
-      this.nsoApp = NsoApp.init({ userAgent: NsoCli.USER_AGENT, version: this.config.nsoAppVersionPrevious });
+      this.nsoApp = NsoApp.init({
+        userAgent: NsoCli.USER_AGENT,
+        version: this.config.nsoAppVersionPrevious,
+      });
     } else {
       this.nsoApp = NsoApp.init({ userAgent: NsoCli.USER_AGENT });
     }
@@ -62,12 +72,14 @@ export class NsoCli {
   async accountPicker() {
     let continueApp = true;
     while (continueApp) {
-      const accountChoices: unknown[] = this.config.accounts.map((account: NsoCliAccount) => {
-        return {
-          name: `${account.nickname} \u001b[90m${account.id}\u001b[0m`,
-          value: account
-        };
-      });
+      const accountChoices: unknown[] = this.config.accounts.map(
+        (account: NsoCliAccount) => {
+          return {
+            name: `${account.nickname} \u001b[90m${account.id}\u001b[0m`,
+            value: account,
+          };
+        }
+      );
       if (accountChoices.length > 0) {
         accountChoices.push(this.stream.separator);
       }
@@ -80,8 +92,8 @@ export class NsoCli {
           { name: 'Register new account', value: 'register' },
           { name: 'Options', value: 'options' },
           { name: 'Upgrade NSO', value: 'upgradeNso' },
-          { name: 'Exit', value: 'exit' }
-        ]
+          { name: 'Exit', value: 'exit' },
+        ],
       });
       try {
         if (chosenAccount instanceof NsoCliAccount) {
@@ -99,7 +111,9 @@ export class NsoCli {
       } catch (error) {
         this.stream.handleNsoError(error);
       }
-      if (continueApp) { this.stream.emptyLine(); }
+      if (continueApp) {
+        this.stream.emptyLine();
+      }
     }
   }
 
@@ -110,32 +124,58 @@ export class NsoCli {
       name: 'options',
       choices: [
         { type: 'separator', line: 'General:' },
-        { name: 'Show more advanced account details', value: 'moreDetail', checked: !!this.config.moreDetail },
-        { name: 'Check the NSO app version on every script run', value: 'checkVersionMultipleTimes', checked: !this.config.checkVersionOnlyOnce },
+        {
+          name: 'Show more advanced account details',
+          value: 'moreDetail',
+          checked: !!this.config.moreDetail,
+        },
+        {
+          name: 'Check the NSO app version on every script run',
+          value: 'checkVersionMultipleTimes',
+          checked: !this.config.checkVersionOnlyOnce,
+        },
         { type: 'separator', line: 'Show only the following games:' },
         ...NsoApp.games.map((game: NsoGame) => {
           return {
             name: game.name,
             value: {
               optionType: 'shownGame',
-              abbr: game.abbr
+              abbr: game.abbr,
             },
-            checked: !(this.config.hiddenGames || []).find((abbr: string) => abbr === game.abbr)
+            checked: !(this.config.hiddenGames || []).find(
+              (abbr: string) => abbr === game.abbr
+            ),
           };
-        })
-      ]
+        }),
+      ],
     })) as Array<unknown>;
     this.config.moreDetail = options.includes('moreDetail') || undefined;
-    this.config.checkVersionOnlyOnce = !options.includes('checkVersionMultipleTimes') || undefined;
-    this.config.hiddenGames = NsoApp.games.filter((game: NsoGame) => {
-      return !options.find((option: any) => typeof option === 'object' && option.optionType === 'shownGame' && option.abbr === game.abbr);
-    }).map((game: NsoGame) => game.abbr);
-    if (this.config.hiddenGames.length === 0) { this.config.hiddenGames = undefined; }
-    await this.stream.wrapSpinner(this.config.save(), 'Saving to configuration file');
+    this.config.checkVersionOnlyOnce =
+      !options.includes('checkVersionMultipleTimes') || undefined;
+    this.config.hiddenGames = NsoApp.games
+      .filter((game: NsoGame) => {
+        return !options.find(
+          (option: any) =>
+            typeof option === 'object' &&
+            option.optionType === 'shownGame' &&
+            option.abbr === game.abbr
+        );
+      })
+      .map((game: NsoGame) => game.abbr);
+    if (this.config.hiddenGames.length === 0) {
+      this.config.hiddenGames = undefined;
+    }
+    await this.stream.wrapSpinner(
+      this.config.save(),
+      'Saving to configuration file'
+    );
   }
 
   async upgradeNso() {
     await this.nsoApp.getVersion(true);
-    await this.stream.wrapSpinner(this.config.save(), 'Saving to configuration file');
+    await this.stream.wrapSpinner(
+      this.config.save(),
+      'Saving to configuration file'
+    );
   }
 }

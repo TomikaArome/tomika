@@ -9,17 +9,23 @@ export class NsoCliSteam {
     if (NsoCliSteam._prompt !== null) {
       return NsoCliSteam._prompt;
     }
-    const module = await (eval(`import('inquirer')`) as Promise<typeof import('inquirer')>);
+    const module = await (eval(`import('inquirer')`) as Promise<
+      typeof import('inquirer')
+    >);
     NsoCliSteam._prompt = module.createPromptModule();
     return NsoCliSteam._prompt;
   }
 
   private static _ora: (options?: string | OraOptions) => Ora = null;
-  private static async getOraPromise(): Promise<(options?: string | OraOptions) => Ora> {
+  private static async getOraPromise(): Promise<
+    (options?: string | OraOptions) => Ora
+  > {
     if (NsoCliSteam._ora !== null) {
       return NsoCliSteam._ora;
     }
-    const module = await (eval(`import('ora')`) as Promise<typeof import('ora')>);
+    const module = await (eval(`import('ora')`) as Promise<
+      typeof import('ora')
+    >);
     NsoCliSteam._ora = module.default;
     return NsoCliSteam._ora;
   }
@@ -50,12 +56,23 @@ export class NsoCliSteam {
       text: `${message} \u001b[0;90m0s\u001b[0m`,
       spinner: {
         interval: 80,
-        frames: ['\u2846', '\u2807', '\u280B', '\u2819', '\u2838', '\u28B0', '\u28E0', '\u28C4']
-      }
+        frames: [
+          '\u2846',
+          '\u2807',
+          '\u280B',
+          '\u2819',
+          '\u2838',
+          '\u28B0',
+          '\u28E0',
+          '\u28C4',
+        ],
+      },
     }).start();
     const updateTimer = () => {
       const currentTimestamp = +new Date();
-      const secondsDiff = Math.floor((currentTimestamp - startTimestamp) / 1000);
+      const secondsDiff = Math.floor(
+        (currentTimestamp - startTimestamp) / 1000
+      );
       spinner.text = `${message} \u001b[0;90m${secondsDiff}s\u001b[0m`;
     };
     const intervalId = setInterval(updateTimer, 1000);

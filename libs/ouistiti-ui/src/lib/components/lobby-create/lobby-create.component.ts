@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
-import { FormControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
+import {
+  FormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+} from '@angular/forms';
 import { LobbyService } from '../../services/lobby.service';
 import { LobbyCreateParams } from '@TomikaArome/ouistiti-shared';
 

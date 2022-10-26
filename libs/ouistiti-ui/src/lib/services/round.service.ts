@@ -10,13 +10,16 @@ import {
   PlayCardParams,
   RoundInfo,
   RoundStatus,
-  RoundStatusChanged
+  RoundStatusChanged,
 } from '@TomikaArome/ouistiti-shared';
 
 @Injectable({ providedIn: 'root' })
 export class RoundService {
-  private currentRoundInfo: RoundInfo = this.socketService.getServerEvent<RoundInfo>('roundInfo').latestValue;
-  private currentRoundInfoSource = new BehaviorSubject<RoundInfo>(this.currentRoundInfo);
+  private currentRoundInfo: RoundInfo =
+    this.socketService.getServerEvent<RoundInfo>('roundInfo').latestValue;
+  private currentRoundInfoSource = new BehaviorSubject<RoundInfo>(
+    this.currentRoundInfo
+  );
   currentRoundInfo$ = this.currentRoundInfoSource.asObservable();
 
   constructor(private socketService: SocketService) {

@@ -6,11 +6,13 @@
       [selfId]="selfId"
       [maxNumberOfPlayers]="maxNumberOfPlayers$ | async"
       [sortable]="isHost"
-      (orderChanged)="onOrderChange($event)">
+      (orderChanged)="onOrderChange($event)"
+    >
       <ng-container *tmkOuistitiPlayerListItemContent="let player">
         <div
           class="update-player-settings"
-          *ngIf="isHost || selfId === player.id">
+          *ngIf="isHost || selfId === player.id"
+        >
           <tmk-ouistiti-player-settings
             [takenColours]="
               omitColourFromTakenColours(player.colour, takenColours$ | async)
@@ -19,7 +21,8 @@
             [nicknameUpdateButtonVisible]="true"
             [value]="onlyColourAndSymbol(player)"
             (valueChanged)="onPlayerSettingsChanged(player, $event)"
-            (nicknameUpdateButtonClicked)="onNicknameUpdate(player, $event)">
+            (nicknameUpdateButtonClicked)="onNicknameUpdate(player, $event)"
+          >
           </tmk-ouistiti-player-settings>
 
           <div class="form-grid">
@@ -28,8 +31,11 @@
             <div class="buttons-row">
               <button
                 class="button-colour-red"
-                (click)="leaveLobbyOrKickPlayer(player.id)">
-                <fa-icon [icon]="isHost && selfId !== player.id ? faBan : faDoorOpen"></fa-icon>
+                (click)="leaveLobbyOrKickPlayer(player.id)"
+              >
+                <fa-icon
+                  [icon]="isHost && selfId !== player.id ? faBan : faDoorOpen"
+                ></fa-icon>
                 {{ isHost && selfId !== player.id ? 'Kick' : 'Leave lobby' }}
               </button>
 
@@ -37,7 +43,8 @@
                 class="button-colour-gold"
                 *ngIf="isHost"
                 [disabled]="selfId === player.id"
-                (click)="changeHost(player.id)">
+                (click)="changeHost(player.id)"
+              >
                 <fa-icon [icon]="faCrown"></fa-icon>Make host
               </button>
             </div>
@@ -48,7 +55,11 @@
 
     <div class="form-grid" *ngIf="isHost">
       <div class="buttons-row">
-        <button class="button-colour-green" [disabled]="!canStartGame(playerList$ | async)" (click)="startGame()">
+        <button
+          class="button-colour-green"
+          [disabled]="!canStartGame(playerList$ | async)"
+          (click)="startGame()"
+        >
           <fa-icon [icon]="faPlay"></fa-icon>Start game
         </button>
       </div>

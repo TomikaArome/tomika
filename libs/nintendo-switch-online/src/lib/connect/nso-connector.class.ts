@@ -336,16 +336,16 @@ export class NsoConnector {
     );
     NsoApp.get().currentOperation$.next(operation);
     const headers = {
-      'Host':             'api-lp1.znc.srv.nintendo.net',
-      'Accept-Language':  this.language,
-      'User-Agent':       `com.nintendo.znca/${nsoAppVersion} (Android/7.1.2)`,
-      'Accept':           'application/json',
+      Host: 'api-lp1.znc.srv.nintendo.net',
+      'Accept-Language': this.language,
+      'User-Agent': `com.nintendo.znca/${nsoAppVersion} (Android/7.1.2)`,
+      Accept: 'application/json',
       'X-ProductVersion': nsoAppVersion,
-      'Content-Type':     'application/json; charset=utf-8',
-      'Connection':       'Keep-Alive',
-      'Authorization':    'Bearer',
-      'X-Platform':       'Android',
-      'Accept-Encoding':  'gzip',
+      'Content-Type': 'application/json; charset=utf-8',
+      Connection: 'Keep-Alive',
+      Authorization: 'Bearer',
+      'X-Platform': 'Android',
+      'Accept-Encoding': 'gzip',
     };
     const body = {
       parameter: {

@@ -1,14 +1,27 @@
-import { Component, EventEmitter, HostBinding, Input, OnDestroy, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { PlayerInfo } from '@TomikaArome/ouistiti-shared';
 import { SortableListComponent } from '../../utility/sortable-list.component';
 import { Subject } from 'rxjs';
-import { faBan, faCrown, faGripVertical, faSignal, faUserCog } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBan,
+  faCrown,
+  faGripVertical,
+  faSignal,
+  faUserCog,
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'tmk-ouistiti-player-list-item',
   templateUrl: './player-list-item.component.html',
   styleUrls: ['./player-list-item.component.scss'],
-  providers: [SortableListComponent]
+  providers: [SortableListComponent],
 })
 export class PlayerListItemComponent implements OnDestroy {
   @Input()

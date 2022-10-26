@@ -8,7 +8,10 @@ const defaultPlayerIds = [
   'C_r83VNGVt',
 ];
 
-export const getGameScoresMock = (playerIds: string[] = [], upUntilRoundNumber = 18): RoundScores[] => {
+export const getGameScoresMock = (
+  playerIds: string[] = [],
+  upUntilRoundNumber = 18
+): RoundScores[] => {
   if (!playerIds[0]) {
     playerIds[0] = defaultPlayerIds[0];
   }

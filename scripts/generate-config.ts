@@ -1,76 +1,35 @@
 import { existsSync, mkdirSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
-import * as dotenv from 'dotenv';
-
-// const DOT_ENV_FILE_LOCATION = `${__dirname}/../.env`;
-//
-// (async () => {
-//   if (!existsSync(DOT_ENV_FILE_LOCATION)) {
-//     await writeFile(
-//       DOT_ENV_FILE_LOCATION,
-//       `TMK_FE_URL="tomika.ink"
-// TMK_BE_URL="be.tomika.ink"
-// TMK_BE_IP="example.com"
-// TMK_BE_IDENTITY_FILE="~/.ssh/tmk-be.pem"
-// PORT="443"
-// `
-//     );
-//   }
-//
-//   const configuration = dotenv.config({
-//     path: DOT_ENV_FILE_LOCATION,
-//   });
-//
-//   if (configuration.error) {
-//     throw 'Malformed .env file';
-//   }
-//
-//   const parseConfig = configuration.parsed;
-//
-//
-// })();
 
 interface TomikaConfig {
-  backend: EnvironmentConfigs<BackendConfig>;
-  frontend: EnvironmentConfigs<FrontendConfig>;
+  [key: string]: ProjectConfig | RepositoryConfig;
 }
 const isTomikaConfig = (obj: any): obj is TomikaConfig =>
   typeof obj === 'object' &&
-  isEnvironmentConfigs(obj.backend) && isBackendConfig(obj.backend.development) && isBackendConfig(obj.backend.production) &&
-  isEnvironmentConfigs(obj.frontend) && isFrontendConfig(obj.frontend.development) && isFrontendConfig(obj.frontend.production);
+  Object.entries(obj as Object).reduce((acc, [currKey, currValue]) => acc && ((currKey === 'repository' && isRepositoryConfig(currValue)) || isProjectConfig(currValue)), true);
 
-interface EnvironmentConfigs<T> {
-  development: T;
-  production: T;
+interface RepositoryConfig {
+  backendIp?: string;
+  backendIdentityFile?: string;
 }
-const isEnvironmentConfigs = <T>(obj: any): obj is EnvironmentConfigs<T> =>
-  typeof obj === 'object' && typeof obj.development === 'object' && typeof obj.production === 'object';
+const isRepositoryConfig = (obj: any): obj is RepositoryConfig =>
+  typeof obj === 'object' &&
+  (obj.backendIp === undefined || typeof obj.backendIp === 'string') &&
+  (obj.backendIdentityFile === undefined || typeof obj.backendIdentityFile === 'string');
 
-interface ExtendableConfig {
+interface ProjectConfig {
+  [key: string]: EnvironmentConfig;
+}
+const isProjectConfig = (obj: any): obj is ProjectConfig =>
+  typeof obj === 'object' && Object.values(obj as Object).reduce((acc, curr) => acc && isEnvironmentConfig(curr), true);
+
+interface EnvironmentConfig {
   extends?: string;
   [key: string]: unknown;
 }
-const isExtendableConfig = (obj: any): obj is ExtendableConfig =>
+const isEnvironmentConfig = (obj: any): obj is EnvironmentConfig =>
   typeof obj === 'object' &&
   (obj.extends === undefined || typeof obj.extends === 'string');
-
-interface BackendConfig extends ExtendableConfig {
-  frontendUris: string[];
-  port: number;
-}
-const isBackendConfig = (obj: any): obj is BackendConfig =>
-  isExtendableConfig(obj) &&
-  (obj.frontendUris === undefined || obj.frontendUris instanceof Array && obj.frontendUris.reduce((acc, curr) => acc && typeof curr === 'string', true)) &&
-  (obj.port === undefined || typeof obj.port === 'number');
-
-interface FrontendConfig extends ExtendableConfig {
-  backendUri: string;
-  port: number;
-}
-const isFrontendConfig = (obj: any): obj is FrontendConfig =>
-  isExtendableConfig(obj) &&
-  (obj.backendUri === undefined || typeof obj.backendUri === 'string') &&
-  (obj.port === undefined || typeof obj.port === 'number');
 
 const CONFIG_FILE_LOCATION = `${__dirname}/../tomika.config.json`;
 
@@ -96,18 +55,26 @@ const run = async () => {
           port: 3333
         },
         production: {
+          extends: "backend:development",
           frontendUris: ['https://tomika.ink'],
           port: 443
         }
       },
       frontend: {
         development: {
-          backendUri: 'http://localhost:3333',
-          port: 4200
+          backendUri: 'http://localhost:3333'
         },
         production: {
-          backendUri: 'https://be.tomika.ink',
-          port: 443
+          extends: "frontend:development",
+          backendUri: 'https://be.tomika.ink'
+        }
+      },
+      ouistiti: {
+        development: {
+          extends: "backend:development"
+        },
+        production: {
+          extends: "backend:production"
         }
       }
     };
@@ -117,20 +84,66 @@ const run = async () => {
     } catch { throw 'Error writing to tomika.config.json'; }
   }
 
-  const projects = ['backend', 'frontend'];
-  for (const project of projects) {
-    const environmentsFolderLocation = `${__dirname}/../apps/${project}/src/environments`;
-    if (!existsSync(environmentsFolderLocation)) {
-      mkdirSync(environmentsFolderLocation);
+  // Define function which will extend an environment config based on the "extends" property
+  const extendConfig = (configToExtend: EnvironmentConfig, dontExtend: string[] = []): EnvironmentConfig => {
+    // No more "extends"
+    if (configToExtend.extends === undefined) { return configToExtend; }
+    // "extends" exists, but we already extended (avoid loops)
+    if (dontExtend.indexOf(configToExtend.extends) > -1) {
+      const configToExtendCopy: EnvironmentConfig = { ...configToExtend };
+      delete configToExtendCopy.extends;
+      return configToExtendCopy;
     }
-    for (const env in config[project as keyof TomikaConfig]) {
-      const fileLocation = `${environmentsFolderLocation}/environment${env === 'development' ? '' : `.${env}`}.ts`;
-      const configToWrite = config[project as keyof TomikaConfig][env as keyof EnvironmentConfigs<unknown>];
-      try {
-        await writeFile(fileLocation, `export const environment = ${JSON.stringify(configToWrite, null, 2)} as any;\n`);
-      } catch { throw `Error writing to ${fileLocation}`; }
+    // "extends" exists, and wasn't already extended
+    const [projectNameToExtend, envNameToExtend] = configToExtend.extends.split(':');
+    const projectToExtend = config[projectNameToExtend as keyof TomikaConfig];
+    if (isProjectConfig(projectToExtend) && Object.keys(projectToExtend).indexOf(envNameToExtend) > -1) {
+      const configToExtendCopy = {
+        ...extendConfig(projectToExtend[envNameToExtend as keyof ProjectConfig] as EnvironmentConfig, [...dontExtend, configToExtend.extends]),
+        ...configToExtend
+      } as EnvironmentConfig;
+      delete configToExtendCopy.extends;
+      return configToExtendCopy;
+    }
+    return configToExtend;
+  };
+
+  // Generate project specific configurations based on environment
+  for (const [projectName, project] of Object.entries(config)) {
+    if (isProjectConfig(project)) {
+      const isLib = existsSync(`${__dirname}/../libs/${projectName}`);
+      const environmentsFolderLocation = `${__dirname}/../${isLib ? 'libs' : 'apps'}/${projectName}/src/environments`;
+      if (!existsSync(environmentsFolderLocation)) {
+        mkdirSync(environmentsFolderLocation);
+      }
+      for (const [environmentName, environment] of Object.entries(project)) {
+        const fileLocation = `${environmentsFolderLocation}/environment${environmentName === 'development' ? '' : `.${environmentName}`}.ts`;
+
+        const configToWrite = {
+          ...extendConfig(environment, [`${projectName}:${environmentName}`]),
+          environment: environmentName
+        };
+        delete configToWrite.extends;
+        try {
+          await writeFile(fileLocation, `export const environment = ${JSON.stringify(configToWrite, null, 2)} as any;\n`, { encoding: 'utf-8' });
+        } catch { throw `Error writing to ${fileLocation}`; }
+      }
     }
   }
+
+  // Generate .env file for use in shell scripts
+  const dotEnvFileLocation = `${__dirname}/../.env`;
+  let dotEnvContents = '';
+  if (config.repository) {
+    for (let key in config.repository) {
+      const snakeCaseKey = 'TMK_' + key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`).toUpperCase();
+      const value = config.repository[key as keyof RepositoryConfig];
+      dotEnvContents += `${snakeCaseKey}="${value}"\n`;
+    }
+  }
+  try {
+    await writeFile(dotEnvFileLocation, dotEnvContents, { encoding: 'utf-8' });
+  } catch { throw 'Error writing to .env'; }
 };
 
 run().catch((error) => {

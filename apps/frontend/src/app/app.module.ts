@@ -26,7 +26,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     {
       provide: 'environment',
       useValue: environment,
-    },
-  ],
+    }
+  ]
 })
 export class AppModule {}

@@ -1,11 +1,5 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { config as dotenvConfig } from 'dotenv';
 
 import { AppModule } from './app/app.module';
 
@@ -13,7 +7,7 @@ import { environment } from './environments/environment';
 import * as fs from 'fs';
 
 async function bootstrap() {
-  const httpsOptions = environment.production
+  const httpsOptions = environment.environment === 'production'
     ? {
         httpsOptions: {
           key: fs.readFileSync('./secrets/private-key.pem'),
@@ -22,11 +16,10 @@ async function bootstrap() {
       }
     : {};
 
-  dotenvConfig();
   const app = await NestFactory.create(AppModule, { ...httpsOptions });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 443;
+  const port = environment.port || 3333;
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
   });

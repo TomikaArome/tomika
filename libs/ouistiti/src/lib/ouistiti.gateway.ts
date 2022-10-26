@@ -18,15 +18,16 @@ import { Lobby } from './classes/lobby.class';
 import { Player } from './classes/player.class';
 import { SocketControllerPipe } from './socket-controller-pipe.service';
 import { Socket } from 'socket.io';
+import { environment } from '../environments/environment';
 
 @UsePipes(new SocketControllerPipe())
 @WebSocketGateway({
   namespace: 'ouistiti',
   cors: {
-    origin: ['http://localhost:4200', 'https://tomika.ink'],
+    origin: environment.frontendUris || ['http://localhost:4200'],
     methods: ['GET', 'POST'],
-    credentials: true,
-  },
+    credentials: true
+  }
 })
 export class OuistitiGateway {
   @UseFilters(new OuistitiExceptionFilter('listLobbies'))

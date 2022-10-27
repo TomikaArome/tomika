@@ -104,4 +104,8 @@ export class OuistitiGameContainerComponent {
   endGame() {
     this.lobbyService.endGame();
   }
+
+  skipToRound(skipToRound: number) {
+    this.gameService.skipToRound(skipToRound);
+  }
 }

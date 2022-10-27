@@ -1,13 +1,6 @@
 import { Card } from './card.class';
 import { OuistitiException } from './ouistiti-exception.class';
-import {
-  BidInfo,
-  OuistitiErrorType,
-  OuistitiInvalidActionReason,
-  RoundInfo,
-  RoundScores,
-  RoundStatus,
-} from '@TomikaArome/ouistiti-shared';
+import { BidInfo, OuistitiErrorType, OuistitiInvalidActionReason, RoundInfo, RoundScores, RoundStatus } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { BidPlacedObserved } from '../interfaces/round-observed.interface';
@@ -31,6 +24,7 @@ export class Round {
   bids: BidInfo = {};
   breakPoint: BreakPoint;
   manualBreakPointInProgress = false;
+  skipped = false;
 
   readonly playerIds: string[];
   readonly maxCardsPerPlayer: number;
@@ -42,21 +36,11 @@ export class Round {
   private breakPointAcknowledgedSource = new Subject<string>();
 
   statusChanged$ = this.statusChangedSource.asObservable();
-  bidsFinalised$ = this.statusChanged$.pipe(
-    filter((status: RoundStatus) => status === RoundStatus.PLAY)
-  );
-  completed$ = this.statusChanged$.pipe(
-    filter((status: RoundStatus) => status === RoundStatus.COMPLETED)
-  );
-  bidPlaced$ = this.bidPlacedSource
-    .asObservable()
-    .pipe(takeUntil(this.bidsFinalised$));
-  bidCancelled$ = this.bidCancelledSource
-    .asObservable()
-    .pipe(takeUntil(this.bidsFinalised$));
-  cardPlayed$ = this.cardPlayedSource
-    .asObservable()
-    .pipe(takeUntil(this.completed$));
+  bidsFinalised$ = this.statusChanged$.pipe(filter((status: RoundStatus) => status === RoundStatus.PLAY));
+  completed$ = this.statusChanged$.pipe(filter((status: RoundStatus) => status === RoundStatus.COMPLETED));
+  bidPlaced$ = this.bidPlacedSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
+  bidCancelled$ = this.bidCancelledSource.asObservable().pipe(takeUntil(this.bidsFinalised$));
+  cardPlayed$ = this.cardPlayedSource.asObservable().pipe(takeUntil(this.completed$));
   breakPointAcknowledged$ = this.breakPointAcknowledgedSource.asObservable();
 
   get isLastTurn(): boolean {
@@ -71,8 +55,7 @@ export class Round {
     return {
       number: this.roundNumber,
       status: this.status,
-      breakPoint:
-        this.breakPoint && !this.breakPoint.ended ? this.breakPoint.info : null,
+      breakPoint: this.breakPoint && !this.breakPoint.ended ? this.breakPoint.info : null,
       currentPlayerId: this.currentPlayerId,
       currentTurnNumber: this.currentTurnNumber,
       playerOrder: this.playerIds,
@@ -433,5 +416,15 @@ export class Round {
     this.status = RoundStatus.COMPLETED;
     this.statusChangedSource.next(this.status);
     this.statusChangedSource.complete();
+  }
+
+  skipRound() {
+    this.skipped = true;
+    this.status = RoundStatus.COMPLETED;
+    this.playerIds.forEach((playerId: string) => {
+      this.bids[playerId] = 0;
+    });
+    this.currentTurnNumber = this.numberOfCardsPerPlayer;
+    this.endOfRound();
   }
 }

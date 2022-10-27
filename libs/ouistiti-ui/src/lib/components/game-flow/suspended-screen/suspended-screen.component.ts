@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PlayerInfo } from '@TomikaArome/ouistiti-shared';
-import { faPlay, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faForward, faPlay, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'tmk-ouistiti-suspended-screen',
@@ -19,11 +19,15 @@ export class SuspendedScreenComponent {
   resumeGame = new EventEmitter<void>();
   @Output()
   endGame = new EventEmitter<void>();
+  @Output()
+  skipToRound = new EventEmitter<number>();
 
   confirmEndGame = false;
+  skipToRoundButtonDisabled = true;
 
   faPlay = faPlay;
   faXmark = faXmark;
+  faForward = faForward;
 
   get noVacantPlayers(): boolean {
     return this.players.reduce((acc, curr) => acc && !curr.vacant, true);
@@ -47,5 +51,15 @@ export class SuspendedScreenComponent {
     if (this.isSelfHost) {
       this.endGame.emit();
     }
+  }
+
+  clickSkipToRoundButton(skipToRound: string) {
+    if (/^[0-9]+$/.test(skipToRound) && this.isSelfHost) {
+      this.skipToRound.emit(parseInt(skipToRound));
+    }
+  }
+
+  skipToRoundInputChanged(event: KeyboardEvent) {
+    this.skipToRoundButtonDisabled = !/^[0-9]+$/.test((event.target as HTMLInputElement).value);
   }
 }

@@ -1,10 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Round } from './round.class';
-import {
-  GameCreateParams,
-  GameStatus,
-  RoundScores,
-} from '@TomikaArome/ouistiti-shared';
+import { GameCreateParams, GameStatus, RoundScores } from '@TomikaArome/ouistiti-shared';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -97,10 +93,7 @@ export class Game {
   }
 
   newRound() {
-    if (
-      !this.currentRound ||
-      this.currentRound?.roundNumber < this.totalRoundCount
-    ) {
+    if (!this.currentRound || this.currentRound?.roundNumber < this.totalRoundCount) {
       const newRoundNumber = this.rounds.length + 1;
       this.rounds.push(
         Round.createNewRound({
@@ -126,6 +119,16 @@ export class Game {
           this.currentRound.breakPoint.bypass();
         }
       });
+    }
+  }
+
+  skipToRound(skipToRound: number) {
+    while (this.currentRound.roundNumber < skipToRound && !this.currentRound.skipped) {
+      this.currentRound.skipRound();
+      this.newRound();
+    }
+    if (this.status === GameStatus.SUSPENDED) {
+      this.changeStatus(GameStatus.IN_PROGRESS);
     }
   }
 }

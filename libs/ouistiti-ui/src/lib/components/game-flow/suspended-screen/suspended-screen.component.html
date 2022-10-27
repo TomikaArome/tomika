@@ -34,8 +34,7 @@
       <button
         class="button-colour-red"
         *ngIf="!confirmEndGame; else endGameConfirmation"
-        (click)="confirmEndGame = true"
-      >
+        (click)="confirmEndGame = true">
         <fa-icon [icon]="faXmark"></fa-icon> End game
       </button>
 
@@ -48,6 +47,17 @@
         </button>
         <div class="info-message">Are you sure you want to end the game?</div>
       </ng-template>
+    </div>
+
+    <hr />
+
+    <div class="buttons-row">
+      <button
+        (click)="clickSkipToRoundButton(skipToRoundInput.value)"
+        [disabled]="!noVacantPlayers || skipToRoundButtonDisabled">
+        <fa-icon [icon]="faForward"></fa-icon> Skip to round
+      </button>
+      <input class="skip-to-round-input" type="text" (keyup)="skipToRoundInputChanged($event)" #skipToRoundInput>
     </div>
   </ng-container>
 </div>

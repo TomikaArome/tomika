@@ -2,7 +2,8 @@
   [square]="true"
   [diameter]="20"
   [colour]="currentPlayer?.colour"
-  [symbol]="currentPlayer?.symbol">
+  [symbol]="currentPlayer?.symbol"
+>
 </tmk-ouistiti-bid-chip>
 
 <div *ngIf="selfId === currentPlayer.id; else otherPlayer">
@@ -10,6 +11,7 @@
 </div>
 <ng-template #otherPlayer>
   <div>
-    <span class="nickname">{{ currentPlayer?.nickname }}</span>'s turn to play!
+    <span class="nickname">{{ currentPlayer?.nickname }}</span
+    >'s turn to play!
   </div>
 </ng-template>

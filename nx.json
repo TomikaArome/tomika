@@ -18,9 +18,7 @@
       }
     }
   },
-  "cli": {
-    "schematicCollections": ["@nrwl/angular"]
-  },
+  "cli": {},
   "generators": {
     "@nrwl/angular": {
       "application": {

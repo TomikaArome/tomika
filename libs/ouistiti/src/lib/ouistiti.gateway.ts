@@ -1,78 +1,92 @@
 import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { GameStatus, LobbyCreateParams, LobbyFillVacancyParams, LobbyJoinParams, LobbyUpdateParams, OuistitiErrorType, PlaceBidParams, PlayCardParams, PlayerKickParams, PlayerUpdateParams } from '@TomikaArome/ouistiti-shared';
+import {
+  GameStatus,
+  LobbyCreateParams,
+  LobbyFillVacancyParams,
+  LobbyJoinParams,
+  LobbyUpdateParams,
+  OuistitiErrorType,
+  PlaceBidParams,
+  PlayCardParams,
+  PlayerKickParams,
+  PlayerUpdateParams,
+} from '@TomikaArome/ouistiti-shared';
 import { UseFilters, UsePipes } from '@nestjs/common';
 import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
-import { SocketController } from './controllers/socket.controller';
 import { OuistitiException } from './classes/ouistiti-exception.class';
 import { Lobby } from './classes/lobby.class';
 import { Player } from './classes/player.class';
 import { SocketControllerPipe } from './socket-controller-pipe.service';
+import { Socket } from 'socket.io';
+import { environment } from '../environments/environment';
 
 @UsePipes(new SocketControllerPipe())
 @WebSocketGateway({
   namespace: 'ouistiti',
   cors: {
-    origin: ['http://localhost:4200'],
+    origin: environment.frontendUris || ['http://localhost:4200'],
     methods: ['GET', 'POST'],
-    credentials: true,
-  },
+    credentials: true
+  }
 })
 export class OuistitiGateway {
   @UseFilters(new OuistitiExceptionFilter('listLobbies'))
   @SubscribeMessage('listLobbies')
-  listLobbies(controller: SocketController) {
-    controller.emitLobbyList();
+  listLobbies(socket: Socket) {
+    socket.data.controller.emitLobbyList();
   }
 
   @UseFilters(new OuistitiExceptionFilter('createLobby'))
   @SubscribeMessage('createLobby')
-  createLobby(controller: SocketController, params: LobbyCreateParams) {
+  createLobby(socket: Socket, params: LobbyCreateParams) {
     OuistitiException.checkRequiredParams(params, ['host.nickname']);
     new Lobby(params, (player: Player) => {
-      controller.player = player;
+      socket.data.controller.player = player;
     });
   }
 
   @UseFilters(new OuistitiExceptionFilter('joinLobby'))
   @SubscribeMessage('joinLobby')
-  joinLobby(controller: SocketController, params: LobbyJoinParams) {
+  joinLobby(socket: Socket, params: LobbyJoinParams) {
     OuistitiException.checkRequiredParams(params, ['id', 'player.nickname']);
     Lobby.getLobbyById(params.id).addPlayer(params, (player: Player) => {
-      controller.player = player;
+      socket.data.controller.player = player;
     });
   }
 
   @UseFilters(new OuistitiExceptionFilter('leaveLobby'))
   @SubscribeMessage('leaveLobby')
-  leaveLobby(controller: SocketController) {
-    if (controller.inLobby) {
-      controller.player.lobby.removePlayer(controller.player);
+  leaveLobby(socket: Socket) {
+    if (socket.data.controller.inLobby) {
+      socket.data.controller.player.lobby.removePlayer(
+        socket.data.controller.player
+      );
     }
   }
 
   @UseFilters(new OuistitiExceptionFilter('fillVacancy'))
   @SubscribeMessage('fillVacancy')
-  fillVacancy(controller: SocketController, params: LobbyFillVacancyParams) {
+  fillVacancy(socket: Socket, params: LobbyFillVacancyParams) {
     OuistitiException.checkRequiredParams(params, ['lobbyId', 'playerId']);
     Lobby.getLobbyById(params.lobbyId).fillVacancy(params, (player: Player) => {
-      controller.player = player;
+      socket.data.controller.player = player;
     });
   }
 
   @UseFilters(new OuistitiExceptionFilter('updateLobby'))
   @SubscribeMessage('updateLobby')
-  updateLobby(controller: SocketController, params: LobbyUpdateParams) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkIfHost(controller);
+  updateLobby(socket: Socket, params: LobbyUpdateParams) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkIfHost(socket.data.controller);
 
     if (params.hostId) {
-      controller.player.lobby.changeHost(params.hostId);
+      socket.data.controller.player.lobby.changeHost(params.hostId);
     }
     if (params.playerOrder) {
-      controller.player.lobby.changeOrder(params.playerOrder);
+      socket.data.controller.player.lobby.changeOrder(params.playerOrder);
     }
     if (params.maxNumberOfPlayers !== undefined) {
-      controller.player.lobby.changeMaxNumberOfPlayers(
+      socket.data.controller.player.lobby.changeMaxNumberOfPlayers(
         params.maxNumberOfPlayers
       );
     }
@@ -80,23 +94,30 @@ export class OuistitiGateway {
 
   @UseFilters(new OuistitiExceptionFilter('updatePlayer'))
   @SubscribeMessage('updatePlayer')
-  updatePlayer(controller: SocketController, params: PlayerUpdateParams) {
-    OuistitiException.checkIfInLobby(controller);
+  updatePlayer(socket: Socket, params: PlayerUpdateParams) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
     if (!params.id) {
-      params.id = controller.player.id;
+      params.id = socket.data.controller.player.id;
     }
-    if (params.id !== controller.player.id) {
-      OuistitiException.checkIfHost(controller);
+    if (params.id !== socket.data.controller.player.id) {
+      OuistitiException.checkIfHost(socket.data.controller);
     }
 
-    const player = controller.player.lobby.getPlayerByIdAndThrowIfNotFound(
-      params.id
-    );
+    const player =
+      socket.data.controller.player.lobby.getPlayerByIdAndThrowIfNotFound(
+        params.id
+      );
     if (params.nickname) {
-      controller.player.lobby.changePlayerNickname(player, params.nickname);
+      socket.data.controller.player.lobby.changePlayerNickname(
+        player,
+        params.nickname
+      );
     }
     if (params.colour) {
-      controller.player.lobby.changePlayerColour(player, params.colour);
+      socket.data.controller.player.lobby.changePlayerColour(
+        player,
+        params.colour
+      );
     }
     if (params.symbol) {
       player.changeSymbol(params.symbol);
@@ -105,111 +126,127 @@ export class OuistitiGateway {
 
   @UseFilters(new OuistitiExceptionFilter('kickPlayer'))
   @SubscribeMessage('kickPlayer')
-  kickPlayer(controller: SocketController, params: PlayerKickParams) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkIfHost(controller);
-    if (params.id === controller.player.id) {
+  kickPlayer(socket: Socket, params: PlayerKickParams) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkIfHost(socket.data.controller);
+    if (params.id === socket.data.controller.player.id) {
       throw new OuistitiException({
         type: OuistitiErrorType.HOST_CANNOT_KICK_SELF,
       });
     }
 
-    const player = controller.player.lobby.getPlayerByIdAndThrowIfNotFound(
-      params.id
-    );
-    controller.player.lobby.removePlayer(player);
+    const player =
+      socket.data.controller.player.lobby.getPlayerByIdAndThrowIfNotFound(
+        params.id
+      );
+    socket.data.controller.player.lobby.removePlayer(player);
   }
 
   @UseFilters(new OuistitiExceptionFilter('startGame'))
   @SubscribeMessage('startGame')
-  startGame(controller: SocketController) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkIfHost(controller);
+  startGame(socket: Socket) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkIfHost(socket.data.controller);
 
-    controller.player.lobby.startGame({
+    socket.data.controller.player.lobby.startGame({
       maxCardsPerPlayer: 8,
     });
   }
 
   @UseFilters(new OuistitiExceptionFilter('endGame'))
   @SubscribeMessage('endGame')
-  endGame(controller: SocketController) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkIfHost(controller);
-    OuistitiException.checkGameStarted(controller.player.lobby);
+  endGame(socket: Socket) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkIfHost(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
 
-    controller.player.lobby.endGame();
+    socket.data.controller.player.lobby.endGame();
   }
 
   @UseFilters(new OuistitiExceptionFilter('suspendGame'))
   @SubscribeMessage('suspendGame')
-  suspendGame(controller: SocketController) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkIfHost(controller);
-    OuistitiException.checkGameStarted(controller.player.lobby);
+  suspendGame(socket: Socket) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkIfHost(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
 
-    controller.player.lobby.game.changeStatus(GameStatus.SUSPENDED);
+    socket.data.controller.player.lobby.game.changeStatus(GameStatus.SUSPENDED);
   }
 
   @UseFilters(new OuistitiExceptionFilter('resumeGame'))
   @SubscribeMessage('resumeGame')
-  resumeGame(controller: SocketController) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkIfHost(controller);
-    OuistitiException.checkGameStarted(controller.player.lobby);
-    OuistitiException.checkIfNoVacancies(controller.player.lobby);
+  resumeGame(socket: Socket) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkIfHost(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
+    OuistitiException.checkIfNoVacancies(socket.data.controller.player.lobby);
 
-    controller.player.lobby.game.changeStatus(GameStatus.IN_PROGRESS);
+    socket.data.controller.player.lobby.game.changeStatus(
+      GameStatus.IN_PROGRESS
+    );
   }
 
   @UseFilters(new OuistitiExceptionFilter('placeBid'))
   @SubscribeMessage('placeBid')
-  placeBid(controller: SocketController, params: PlaceBidParams) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkGameStarted(controller.player.lobby);
-    OuistitiException.checkIfNoVacancies(controller.player.lobby);
+  placeBid(socket: Socket, params: PlaceBidParams) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
+    OuistitiException.checkIfNoVacancies(socket.data.controller.player.lobby);
     OuistitiException.checkRequiredParams(params, ['bid']);
 
-    controller.player.lobby.game.currentRound.placeBid(controller.player.id, params.bid);
+    socket.data.controller.player.lobby.game.currentRound.placeBid(
+      socket.data.controller.player.id,
+      params.bid
+    );
   }
 
   @UseFilters(new OuistitiExceptionFilter('cancelBid'))
   @SubscribeMessage('cancelBid')
-  cancelBid(controller: SocketController) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkGameStarted(controller.player.lobby);
-    OuistitiException.checkIfNoVacancies(controller.player.lobby);
+  cancelBid(socket: Socket) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
+    OuistitiException.checkIfNoVacancies(socket.data.controller.player.lobby);
 
-    controller.player.lobby.game.currentRound.cancelBid(controller.player.id);
+    socket.data.controller.player.lobby.game.currentRound.cancelBid(
+      socket.data.controller.player.id
+    );
   }
 
   @UseFilters(new OuistitiExceptionFilter('playCard'))
   @SubscribeMessage('playCard')
-  playCard(controller: SocketController, params: PlayCardParams) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkGameStarted(controller.player.lobby);
+  playCard(socket: Socket, params: PlayCardParams) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
     OuistitiException.checkRequiredParams(params, ['id']);
-    OuistitiException.checkIfNoVacancies(controller.player.lobby);
+    OuistitiException.checkIfNoVacancies(socket.data.controller.player.lobby);
 
-    controller.player.lobby.game.currentRound.playCard(controller.player.id, params.id);
+    socket.data.controller.player.lobby.game.currentRound.playCard(
+      socket.data.controller.player.id,
+      params.id
+    );
   }
 
   @UseFilters(new OuistitiExceptionFilter('acknowledgeBreakPoint'))
   @SubscribeMessage('acknowledgeBreakPoint')
-  acknowledgeBreakPoint(controller: SocketController) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkGameStarted(controller.player.lobby);
-    OuistitiException.checkIfNoVacancies(controller.player.lobby);
+  acknowledgeBreakPoint(socket: Socket) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
+    OuistitiException.checkIfNoVacancies(socket.data.controller.player.lobby);
 
-    controller.player.lobby.game.currentRound.acknowledgeBreakPoint(controller.player.id);
+    socket.data.controller.player.lobby.game.currentRound.acknowledgeBreakPoint(
+      socket.data.controller.player.id
+    );
   }
 
   @UseFilters(new OuistitiExceptionFilter('getScores'))
   @SubscribeMessage('getScores')
-  getScores(controller: SocketController) {
-    OuistitiException.checkIfInLobby(controller);
-    OuistitiException.checkGameStarted(controller.player.lobby);
+  getScores(socket: Socket) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
 
-    controller.emit('scores', controller.player.lobby.game.scores);
+    socket.data.controller.emit(
+      'scores',
+      socket.data.controller.player.lobby.game.scores
+    );
   }
 }

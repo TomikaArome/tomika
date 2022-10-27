@@ -26,9 +26,11 @@ export class ContainerComponent {
     return this.socketService.isConnected;
   }
 
-  constructor(private socketService: SocketService,
-              private playerService: PlayerService,
-              private lobbyService: LobbyService) {
+  constructor(
+    private socketService: SocketService,
+    private playerService: PlayerService,
+    private lobbyService: LobbyService
+  ) {
     this.socketService.connect();
   }
 }

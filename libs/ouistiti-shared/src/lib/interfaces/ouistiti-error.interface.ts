@@ -68,21 +68,21 @@ interface PlayerDoesntHaveCardDetail {
 }
 
 interface IncorrectNumberOfPlayersDetail {
-  type: OuistitiErrorType.INCORRECT_NUMBER_OF_PLAYERS,
+  type: OuistitiErrorType.INCORRECT_NUMBER_OF_PLAYERS;
   detail: {
     current: number;
     minimum: number;
     maximum: number;
-  }
+  };
 }
 
 interface CardDoesntFollowSuit {
-  type: OuistitiErrorType.CARD_DOESNT_FOLLOW_SUIT,
+  type: OuistitiErrorType.CARD_DOESNT_FOLLOW_SUIT;
   detail: {
     playedCard: KnownCardInfo;
     leadingCard: KnownCardInfo;
     playerHand: KnownCardInfo[];
-  }
+  };
 }
 
 type CombinedErrorType =

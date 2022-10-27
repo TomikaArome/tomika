@@ -77,7 +77,9 @@ export class SocketLobbyController {
 
   subscribePlayerJoined() {
     merge(
-      this.lobby.playerJoined$.pipe(map(({ player }: LobbyJoinObserved) => player)),
+      this.lobby.playerJoined$.pipe(
+        map(({ player }: LobbyJoinObserved) => player)
+      ),
       this.lobby.vacancyFilled$
     )
       .pipe(this.stop)
@@ -85,8 +87,16 @@ export class SocketLobbyController {
         // A SocketPlayerController is created for every player that join a lobby for EVERY socket that is connected
         // This is regardless of whether that socket is in the same lobby or in a lobby at all
         new SocketPlayerController(this.controller, player, this.stop$, this);
-        if (player === this.controller.player && player.lobby.gameStatus !== GameStatus.INIT) {
-          new SocketGameController(this.controller, this.lobby.game, this.stopIncludingSelfLeft$, this);
+        if (
+          player === this.controller.player &&
+          player.lobby.gameStatus !== GameStatus.INIT
+        ) {
+          new SocketGameController(
+            this.controller,
+            this.lobby.game,
+            this.stopIncludingSelfLeft$,
+            this
+          );
         }
       });
   }

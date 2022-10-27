@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
@@ -11,37 +11,45 @@ import {
   RoundStatus,
   RoundStatusChanged,
   BidsChanged,
-  BreakPointInfo, RoundScores, roundStatusMock, lobbyStatusPlayerIsHostMock, lobbyListMock, getGameScoresMock
+  BreakPointInfo,
+  RoundScores,
+  roundStatusMock,
+  lobbyStatusPlayerIsHostMock,
+  lobbyListMock,
+  getGameScoresMock,
 } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
-import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
   private mock = false;
-  private componentInit = +(new Date());
+  private componentInit = +new Date();
 
   private get lobbyListInitialValue(): LobbyInfo[] {
     return this.mock ? lobbyListMock : [];
   }
 
   private get lobbyStatusInitialValue(): LobbyStatus {
-    return this.mock ? lobbyStatusPlayerIsHostMock : {
-      inLobby: false,
-    };
+    return this.mock
+      ? lobbyStatusPlayerIsHostMock
+      : {
+          inLobby: false,
+        };
   }
 
   private get roundStatusInitialValue(): RoundInfo {
-    return this.mock ? roundStatusMock : {
-      number: 1,
-      status: RoundStatus.BIDDING,
-      breakPoint: null,
-      currentPlayerId: '',
-      currentTurnNumber: 1,
-      playerOrder: [],
-      cards: [],
-      bids: {},
-    };
+    return this.mock
+      ? roundStatusMock
+      : {
+          number: 1,
+          status: RoundStatus.BIDDING,
+          breakPoint: null,
+          currentPlayerId: '',
+          currentTurnNumber: 1,
+          playerOrder: [],
+          cards: [],
+          bids: {},
+        };
   }
 
   private get gameScoresInitialValue(): RoundScores[] {
@@ -69,12 +77,18 @@ export class SocketService {
   private socketDisconnected$: BehaviorSubject<boolean>;
 
   get isConnected(): boolean {
-    return this.mock || !!this.socket?.connected || +(new Date()) < this.componentInit + 500;
+    return (
+      this.mock ||
+      !!this.socket?.connected ||
+      +new Date() < this.componentInit + 500
+    );
   }
 
+  constructor(@Inject('environment') private environment) {}
+
   connect() {
-    console.log('Connect');
-    this.socket = io(environment.ouistitiBackend);
+    console.log(`Connecting to ${this.environment.backendUri}/ouistiti`);
+    this.socket = io(`${this.environment.backendUri}/ouistiti`);
     this.socketDisconnected$ = new BehaviorSubject<boolean>(false);
     this.socket.on('disconnect', () => {
       this.disconnect();
@@ -97,8 +111,12 @@ export class SocketService {
   }
 
   getServerEvent<T>(eventName: string): ServerEvent<T> {
-    const serverEvent = this.events.find((serverEvent: ServerEvent<unknown>) => serverEvent.name === eventName);
-    if (!serverEvent) { throw `Event doesn't exist`; }
+    const serverEvent = this.events.find(
+      (serverEvent: ServerEvent<unknown>) => serverEvent.name === eventName
+    );
+    if (!serverEvent) {
+      throw `Event doesn't exist`;
+    }
     return serverEvent as ServerEvent<T>;
   }
 

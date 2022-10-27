@@ -3,11 +3,13 @@ import { SocketService } from './socket.service';
 import {
   GameStatus,
   LobbyClosed,
-  LobbyCreateParams, LobbyFillVacancyParams,
+  LobbyCreateParams,
+  LobbyFillVacancyParams,
   LobbyInfo,
   LobbyJoinParams,
-  LobbyStatus, PlayerInfo,
-  PlayerKickParams
+  LobbyStatus,
+  PlayerInfo,
+  PlayerKickParams,
 } from '@TomikaArome/ouistiti-shared';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -24,12 +26,19 @@ export class LobbyService {
   lobbyList$ = this.lobbyListSource.asObservable();
 
   static isLobbyJoinable(lobbyInfo: LobbyInfo): boolean {
-    return (lobbyInfo.gameStatus === GameStatus.INIT && lobbyInfo.players.length < lobbyInfo.maxNumberOfPlayers) ||
-      (lobbyInfo.gameStatus === GameStatus.SUSPENDED && LobbyService.lobbyHasVacancies(lobbyInfo));
+    return (
+      (lobbyInfo.gameStatus === GameStatus.INIT &&
+        lobbyInfo.players.length < lobbyInfo.maxNumberOfPlayers) ||
+      (lobbyInfo.gameStatus === GameStatus.SUSPENDED &&
+        LobbyService.lobbyHasVacancies(lobbyInfo))
+    );
   }
 
   static lobbyHasVacancies(lobbyInfo: LobbyInfo): boolean {
-    return lobbyInfo.players.reduce((acc: boolean, player: PlayerInfo) => acc || player.vacant, false);
+    return lobbyInfo.players.reduce(
+      (acc: boolean, player: PlayerInfo) => acc || player.vacant,
+      false
+    );
   }
 
   private static lobbySortingFunction(

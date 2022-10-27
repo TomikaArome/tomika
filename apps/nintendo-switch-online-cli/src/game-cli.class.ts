@@ -5,7 +5,10 @@ export class GameCli {
   constructor(protected gameConnector: NsoGameConnector) {}
 
   readonly showCookieInfo: boolean = true;
-  readonly gameSpecificCommands: { name: string, value: () => Promise<unknown> }[] = [];
+  readonly gameSpecificCommands: {
+    name: string;
+    value: () => Promise<unknown>;
+  }[] = [];
 
   async commandPicker() {
     const nsoCli = NsoCli.get();
@@ -23,9 +26,9 @@ export class GameCli {
             nsoCli.stream.separator,
             {
               name: 'Back',
-              value: 'back'
-            }
-          ]
+              value: 'back',
+            },
+          ],
         });
         try {
           if (typeof chosenCommand === 'function') {
@@ -36,24 +39,32 @@ export class GameCli {
         } catch (error) {
           nsoCli.stream.handleNsoError(error);
         }
-        if (continuePicker) { nsoCli.stream.emptyLine(); }
+        if (continuePicker) {
+          nsoCli.stream.emptyLine();
+        }
       }
     }
   }
 
   async getGameInfo(): Promise<string> {
     const game = this.gameConnector.game;
-    let accessTokenDetail = '', cookieDetail = '', moreDetailSpacing = '';
+    let accessTokenDetail = '',
+      cookieDetail = '',
+      moreDetailSpacing = '';
     if (NsoCli.get().config.moreDetail) {
       const accessToken = await this.gameConnector.getAccessToken();
       accessTokenDetail = `
-${game.name} access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
+${game.name} access token: \u001b[90mexpires ${String(
+        new Date(accessToken.expires)
+      )}
     \u001b[36m${accessToken.accessToken}\u001b[0m`;
       moreDetailSpacing = '     ';
     }
     if (this.showCookieInfo) {
       const cookie = await this.gameConnector.getCookie();
-      const cookieExpires = cookie.expires ? `expires ${String(new Date(cookie.expires))}` : `expiry not available`;
+      const cookieExpires = cookie.expires
+        ? `expires ${String(new Date(cookie.expires))}`
+        : `expiry not available`;
       cookieDetail = `
 ${game.name} ${game.cookieName} cookie: \u001b[90m${cookieExpires}
     \u001b[36m${cookie.value}\u001b[0m`;

@@ -1,0 +1,21 @@
+{
+  "sourceRoot": "libs/nintendo-switch-online/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/nintendo-switch-online/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/nintendo-switch-online"],
+      "options": {
+        "jestConfig": "libs/nintendo-switch-online/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

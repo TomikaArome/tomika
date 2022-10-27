@@ -1,4 +1,9 @@
-import { GameStatus, OuistitiError, OuistitiErrorType, OuistitiInvalidActionReason } from '@TomikaArome/ouistiti-shared';
+import {
+  GameStatus,
+  OuistitiError,
+  OuistitiErrorType,
+  OuistitiInvalidActionReason,
+} from '@TomikaArome/ouistiti-shared';
 import { WsException } from '@nestjs/websockets';
 import { SocketController } from '../controllers/socket.controller';
 import { Lobby } from './lobby.class';
@@ -64,8 +69,8 @@ export class OuistitiException extends WsException {
       throw new OuistitiException({
         type: OuistitiErrorType.INVALID_ACTION,
         detail: {
-          reason: OuistitiInvalidActionReason.PLAYER_IS_VACANT
-        }
+          reason: OuistitiInvalidActionReason.PLAYER_IS_VACANT,
+        },
       });
     }
   }

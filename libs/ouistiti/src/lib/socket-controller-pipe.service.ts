@@ -22,10 +22,14 @@ export class SocketControllerPipe implements PipeTransform {
   }
 
   transform(value: unknown): unknown {
-    if (value instanceof Socket) {
-      value =
-        SocketControllerPipe.socketControllers[value.id] ??
-        SocketControllerPipe.registerController(value);
+    if (
+      value instanceof Socket ||
+      (value && Object.getPrototypeOf(value)?.constructor?.name === 'Socket')
+    ) {
+      const socket = value as Socket;
+      socket.data.controller =
+        SocketControllerPipe.socketControllers[socket.id] ??
+        SocketControllerPipe.registerController(socket);
     }
     return value;
   }

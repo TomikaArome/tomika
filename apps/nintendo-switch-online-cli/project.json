@@ -1,0 +1,57 @@
+{
+  "sourceRoot": "apps/nintendo-switch-online-cli/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/nintendo-switch-online-cli",
+        "main": "apps/nintendo-switch-online-cli/src/main.ts",
+        "tsConfig": "apps/nintendo-switch-online-cli/tsconfig.app.json",
+        "assets": ["apps/nintendo-switch-online-cli/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/nintendo-switch-online-cli/src/environments/environment.ts",
+              "with": "apps/nintendo-switch-online-cli/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "run": {
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "nintendo-switch-online-cli:build",
+        "watch": false
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "nintendo-switch-online-cli:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/nintendo-switch-online-cli/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/nintendo-switch-online-cli"],
+      "options": {
+        "jestConfig": "apps/nintendo-switch-online-cli/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

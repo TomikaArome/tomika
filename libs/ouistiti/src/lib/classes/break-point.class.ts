@@ -19,9 +19,15 @@ export class BreakPoint {
   readonly resolved$ = this.resolvedSource.asObservable();
   readonly cancelled$ = this.cancelledSource.asObservable();
   readonly ended$ = merge(this.resolved$, this.cancelled$);
-  readonly timerReset$ = this.timerResetSource.asObservable().pipe(takeUntil(this.ended$));
-  readonly acknowledged$ = this.acknowledgedSource.asObservable().pipe(takeUntil(this.ended$));
-  readonly acknowledgementCancelled$ = this.acknowledgementCancelledSource.asObservable().pipe(takeUntil(this.ended$));
+  readonly timerReset$ = this.timerResetSource
+    .asObservable()
+    .pipe(takeUntil(this.ended$));
+  readonly acknowledged$ = this.acknowledgedSource
+    .asObservable()
+    .pipe(takeUntil(this.ended$));
+  readonly acknowledgementCancelled$ = this.acknowledgementCancelledSource
+    .asObservable()
+    .pipe(takeUntil(this.ended$));
 
   private acknowledgements: { [key: string]: boolean } = {};
   private bufferDuration = -1;
@@ -185,7 +191,7 @@ export class BreakPoint {
   pauseTimer() {
     if (!this.resolved && !this.cancelled) {
       if (this.timeRemainingOnCancel === -1 && this._timestamp !== -1) {
-        this.timeRemainingOnCancel = this._timestamp - (+new Date());
+        this.timeRemainingOnCancel = this._timestamp - +new Date();
         this._timestamp = -1;
         this.timerResetSource.next(this._timestamp);
       }

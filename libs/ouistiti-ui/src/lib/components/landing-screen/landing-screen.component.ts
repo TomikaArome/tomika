@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { LobbyService } from '../../services/lobby.service';
-import { GameStatus, LobbyFillVacancyParams, LobbyInfo } from '@TomikaArome/ouistiti-shared';
+import {
+  GameStatus,
+  LobbyFillVacancyParams,
+  LobbyInfo,
+} from '@TomikaArome/ouistiti-shared';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 

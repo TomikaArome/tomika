@@ -1,4 +1,10 @@
-import { isNsoGame, NsoApp, NsoConnector, NsoGame, NsoGameConnector } from '@TomikaArome/nintendo-switch-online';
+import {
+  isNsoGame,
+  NsoApp,
+  NsoConnector,
+  NsoGame,
+  NsoGameConnector,
+} from '@TomikaArome/nintendo-switch-online';
 import { NsoCliSerialisedAccount } from './model/nso-cli-config.model';
 import { NsoCli } from './nso-cli.class';
 import { Splatoon3Cli } from './splatoon-3/splatoon-3-cli.class';
@@ -34,22 +40,35 @@ Right click on \u001b[35mSelect this person\u001b[0m, click on \u001b[35mCopy li
 
       nsoConnector = await NsoConnector.get({
         sessionTokenCode: NsoConnector.extractSessionTokenCode(redirectUri),
-        authCodeVerifier
+        authCodeVerifier,
       });
     } else {
       nsoConnector = await NsoConnector.get({ sessionToken });
     }
 
     await nsoConnector.getAccessToken();
-    const nsoCliAccount = new NsoCliAccount(nsoConnector, nsoConnector.nintendoAccountId, nsoConnector.nickname);
-    const existingNsoCliAccountIndex = nsoCli.config.accounts.findIndex((account: NsoCliAccount) => account.id === nsoCliAccount.id);
+    const nsoCliAccount = new NsoCliAccount(
+      nsoConnector,
+      nsoConnector.nintendoAccountId,
+      nsoConnector.nickname
+    );
+    const existingNsoCliAccountIndex = nsoCli.config.accounts.findIndex(
+      (account: NsoCliAccount) => account.id === nsoCliAccount.id
+    );
     if (existingNsoCliAccountIndex > -1) {
       console.log('Account already saved in configuration, over-writing...');
-      nsoCli.config.accounts.splice(existingNsoCliAccountIndex, 1, nsoCliAccount);
+      nsoCli.config.accounts.splice(
+        existingNsoCliAccountIndex,
+        1,
+        nsoCliAccount
+      );
     } else {
       nsoCli.config.accounts.push(nsoCliAccount);
     }
-    await nsoCli.stream.wrapSpinner(nsoCli.config.save(), 'Saving to configuration file');
+    await nsoCli.stream.wrapSpinner(
+      nsoCli.config.save(),
+      'Saving to configuration file'
+    );
     return nsoCliAccount;
   }
 
@@ -72,16 +91,20 @@ Right click on \u001b[35mSelect this person\u001b[0m, click on \u001b[35mCopy li
     splat3: null,
     splat2: null,
     ssbu: null,
-    acnh: null
+    acnh: null,
   };
 
-  constructor(private _nsoConnector: NsoConnector, private loadedId: string, private loadedNickname: string) {}
+  constructor(
+    private _nsoConnector: NsoConnector,
+    private loadedId: string,
+    private loadedNickname: string
+  ) {}
 
   serialise(): NsoCliSerialisedAccount {
     return {
       id: this.id,
       nickname: this.nickname,
-      sessionToken: this.nsoConnector.sessionToken
+      sessionToken: this.nsoConnector.sessionToken,
     };
   }
 
@@ -111,14 +134,16 @@ Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
     nsoCli.stream.emptyLine();
     let continuePicker = true;
     while (continuePicker) {
-      const gameChoices = NsoApp.games.filter((game: NsoGame) => {
-        return !(nsoCli.config.hiddenGames ?? []).includes(game.abbr);
-      }).map((game: NsoGame) => {
-        return {
-          name: game.name,
-          value: game
-        };
-      });
+      const gameChoices = NsoApp.games
+        .filter((game: NsoGame) => {
+          return !(nsoCli.config.hiddenGames ?? []).includes(game.abbr);
+        })
+        .map((game: NsoGame) => {
+          return {
+            name: game.name,
+            value: game,
+          };
+        });
       const chosenGame = await nsoCli.stream.prompt({
         type: 'list',
         name: 'game',
@@ -128,31 +153,44 @@ Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
           nsoCli.stream.separator,
           {
             name: 'Unregister account',
-            value: 'unregister'
+            value: 'unregister',
           },
           {
             name: 'Back',
-            value: 'back'
-          }
-        ]
+            value: 'back',
+          },
+        ],
       });
       try {
         if (isNsoGame(chosenGame)) {
           if (!this.gameClis[chosenGame.abbr]) {
             let classObj;
             switch (chosenGame.abbr) {
-              case 'splat3': classObj = Splatoon3Cli; break;
-              case 'splat2': classObj = Splatoon2Cli; break;
-              case 'ssbu': classObj = SmashUltimateCli; break;
-              case 'acnh': classObj = AcnhCliClass; break;
+              case 'splat3':
+                classObj = Splatoon3Cli;
+                break;
+              case 'splat2':
+                classObj = Splatoon2Cli;
+                break;
+              case 'ssbu':
+                classObj = SmashUltimateCli;
+                break;
+              case 'acnh':
+                classObj = AcnhCliClass;
+                break;
             }
-            this.gameClis[chosenGame.abbr] = new classObj(this.getGameConnector(chosenGame));
+            this.gameClis[chosenGame.abbr] = new classObj(
+              this.getGameConnector(chosenGame)
+            );
           }
           await this.gameClis[chosenGame.abbr].commandPicker();
         } else if (chosenGame === 'unregister') {
           const accountIndex = nsoCli.config.accounts.indexOf(this);
           nsoCli.config.accounts.splice(accountIndex, 1);
-          await nsoCli.stream.wrapSpinner(nsoCli.config.save(), 'Removing account from configuration');
+          await nsoCli.stream.wrapSpinner(
+            nsoCli.config.save(),
+            'Removing account from configuration'
+          );
           continuePicker = false;
         } else {
           continuePicker = false;
@@ -160,14 +198,23 @@ Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
       } catch (error) {
         nsoCli.stream.handleNsoError(error);
       }
-      if (continuePicker) { nsoCli.stream.emptyLine(); }
+      if (continuePicker) {
+        nsoCli.stream.emptyLine();
+      }
     }
   }
 
   getGameConnector(game: NsoGame): NsoGameConnector {
-    const existingGameConnector = this.gameConnectors.find((gameConnector: NsoGameConnector) => gameConnector.game === game);
-    if (existingGameConnector) { return existingGameConnector; }
-    const newGameConnector = NsoGameConnector.get({ nsoConnector: this.nsoConnector, game });
+    const existingGameConnector = this.gameConnectors.find(
+      (gameConnector: NsoGameConnector) => gameConnector.game === game
+    );
+    if (existingGameConnector) {
+      return existingGameConnector;
+    }
+    const newGameConnector = NsoGameConnector.get({
+      nsoConnector: this.nsoConnector,
+      game,
+    });
     this.gameConnectors.push(newGameConnector);
     return newGameConnector;
   }
@@ -175,12 +222,18 @@ Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
   async showGameInfo(game: NsoGame) {
     const gameConnector = this.getGameConnector(game);
     const cookie = await gameConnector.getCookie();
-    const cookieExpires = cookie.expires ? `expires ${String(new Date(cookie.expires))}` : `expiry not available`;
-    let moreDetail1 = '', moreDetail2 = '', moreDetailSpacing = '';
+    const cookieExpires = cookie.expires
+      ? `expires ${String(new Date(cookie.expires))}`
+      : `expiry not available`;
+    let moreDetail1 = '',
+      moreDetail2 = '',
+      moreDetailSpacing = '';
     if (NsoCli.get().config.moreDetail) {
       const accessToken = await gameConnector.getAccessToken();
       moreDetail1 = `
-${game.name} access token: \u001b[90mexpires ${String(new Date(accessToken.expires))}
+${game.name} access token: \u001b[90mexpires ${String(
+        new Date(accessToken.expires)
+      )}
     \u001b[36m${accessToken.accessToken}\u001b[0m`;
       moreDetail2 = `
 Full cookie header:

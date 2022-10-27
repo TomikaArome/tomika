@@ -65,4 +65,8 @@ export class GameService {
   getScores() {
     this.socketService.emitEvent('getScores');
   }
+
+  skipToRound(skipToRound: number) {
+    this.socketService.emitEvent('skipRounds', { skipToRound });
+  }
 }

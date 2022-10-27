@@ -9,7 +9,7 @@ import {
   PlaceBidParams,
   PlayCardParams,
   PlayerKickParams,
-  PlayerUpdateParams,
+  PlayerUpdateParams, SkipRoundsParams
 } from '@TomikaArome/ouistiti-shared';
 import { UseFilters, UsePipes } from '@nestjs/common';
 import { OuistitiExceptionFilter } from './ouistiti-exception.filter';
@@ -248,5 +248,17 @@ export class OuistitiGateway {
       'scores',
       socket.data.controller.player.lobby.game.scores
     );
+  }
+
+  @UseFilters(new OuistitiExceptionFilter('skipRounds'))
+  @SubscribeMessage('skipRounds')
+  skipRounds(socket: Socket, params: SkipRoundsParams) {
+    OuistitiException.checkRequiredParams(params, ['skipToRound']);
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkIfHost(socket.data.controller);
+    OuistitiException.checkGameStarted(socket.data.controller.player.lobby);
+    OuistitiException.checkIfNoVacancies(socket.data.controller.player.lobby);
+
+    socket.data.controller.player.lobby.game.skipToRound(params.skipToRound);
   }
 }

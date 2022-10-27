@@ -57,6 +57,7 @@ Example:
 |-----------------------|---------------------|----------|------------------------------------------------|
 | `backendIp`           | `x.x.x.x`           | `string` | IP for the location of the hosted server.      |
 | `backendIdentityFile` | `~/.ssh/tmk-be.pem` | `string` | Location of the identity file for configuring. |
+| `frontendCname`       | `example.com`       | `string` | Hostname used to access the frontend server.   |
 
 ### Project configuration
 #### Backend
@@ -64,7 +65,7 @@ Example:
 | Key            | Example value                                      | Type       | Description                                                                     |
 |----------------|----------------------------------------------------|------------|---------------------------------------------------------------------------------|
 | `frontendUris` | `['http://localhost:4200', 'https://example.com']` | `string[]` | URIs of the frontend servers allowed to connect using websocket. Used for CORS. |
-| `port`         | 3333                                               | `number`   | Port number on which the backend server shall run. Defaults to 443.             |
+| `port`         | `3333`                                             | `number`   | Port number on which the backend server shall run. Defaults to 443.             |
 
 #### Frontend
 

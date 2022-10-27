@@ -26,7 +26,8 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "generate-config": "ts-node ./scripts/generate-config.ts"
+    "generate-config": "ts-node ./scripts/generate-config.ts",
+    "deploy": "bash ./scripts/deploy.sh"
   },
   "private": true,
   "dependencies": {

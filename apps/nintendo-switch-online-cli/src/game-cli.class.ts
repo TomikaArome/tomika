@@ -1,14 +1,15 @@
 import { NsoGameConnector } from '@TomikaArome/nintendo-switch-online';
 import { NsoCli } from './nso-cli.class';
+import { SeparatorOptions } from 'inquirer';
 
 export class GameCli {
   constructor(protected gameConnector: NsoGameConnector) {}
 
   readonly showCookieInfo: boolean = true;
-  readonly gameSpecificCommands: {
+  readonly gameSpecificCommands: ({
     name: string;
     value: () => Promise<unknown>;
-  }[] = [];
+  } | SeparatorOptions)[] = [];
 
   async commandPicker() {
     const nsoCli = NsoCli.get();

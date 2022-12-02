@@ -92,6 +92,7 @@ export class NsoCli {
           { name: 'Register new account', value: 'register' },
           { name: 'Options', value: 'options' },
           { name: 'Upgrade NSO', value: 'upgradeNso' },
+          this.stream.separator,
           { name: 'Exit', value: 'exit' },
         ],
       });

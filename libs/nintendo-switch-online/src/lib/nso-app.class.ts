@@ -104,7 +104,7 @@ export class NsoApp {
         method: 'GET',
         headers: {
           Accept: 'text/html,application/xhtml+xml,application/xml',
-        },
+        }
       });
     } catch (error) {
       operation.fail();

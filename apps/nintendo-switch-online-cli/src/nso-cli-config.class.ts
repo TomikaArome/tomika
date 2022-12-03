@@ -35,12 +35,20 @@ export class NsoCliConfig {
   private constructor(private configPath: string) {}
 
   async serialise(): Promise<NsoCliSerialisedConfig> {
+    let nsoAppVersion;
+    try {
+      nsoAppVersion = await NsoApp.get().getVersion();
+    } catch {
+      nsoAppVersion = null;
+    }
     const serialised: NsoCliSerialisedConfig = {
       accounts: this.accounts.map((account: NsoCliAccount) =>
         account.serialise()
-      ),
-      nsoAppVersion: await NsoApp.get().getVersion(),
+      )
     };
+    if (nsoAppVersion) {
+      serialised.nsoAppVersion = nsoAppVersion;
+    }
     if (this.checkVersionOnlyOnce !== undefined) {
       serialised.checkVersionOnlyOnce = this.checkVersionOnlyOnce;
     }

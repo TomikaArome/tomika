@@ -114,13 +114,11 @@ export class NsoApp {
         { error }
       );
     }
-    const versionRegex = /^(.*)Version ([0-9]+\.[0-9]+\.[0-9]+)(.*)/;
-    const htmlLines = (await htmlResult.text()).split(/(\r\n|\r|\n)/g);
-    const lineWithVersion = htmlLines.find((htmlLine: string) =>
-      /whats-new__latest__version/.test(htmlLine)
-    );
-    if (lineWithVersion && versionRegex.test(lineWithVersion)) {
-      this._version = lineWithVersion.replace(versionRegex, '$2');
+    const html = await htmlResult.text();
+    const versionRegex = /Version\s*([0-9]+\.[0-9]+\.[0-9]+)/;
+    const versionMatch = html.match(versionRegex);
+    if (versionMatch?.length === 2) {
+      this._version = versionMatch[1];
       this.lastCheckedVersion = +new Date();
       operation.complete();
       return this._version;
@@ -128,7 +126,8 @@ export class NsoApp {
       operation.fail();
       throw new NsoError(
         'Version number not found in Apple Store NSO app page',
-        NsoErrorCode.NSO_APP_VERSION_FETCH_FAILED
+        NsoErrorCode.NSO_APP_VERSION_FETCH_FAILED,
+        { html: html.length > 10000 ? 'Not shown due to being too long' : html }
       );
     }
   }

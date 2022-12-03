@@ -3,31 +3,31 @@ import { Options as OraOptions, Ora } from 'ora';
 import { NsoError } from '@TomikaArome/nintendo-switch-online';
 import { NsoCliError } from './nso-cli-error.class';
 
-export class NsoCliSteam {
+export class NsoCliStream {
   private static _prompt: PromptModule = null;
   private static async getPrompt(): Promise<PromptModule> {
-    if (NsoCliSteam._prompt !== null) {
-      return NsoCliSteam._prompt;
+    if (NsoCliStream._prompt !== null) {
+      return NsoCliStream._prompt;
     }
     const module = await (eval(`import('inquirer')`) as Promise<
       typeof import('inquirer')
     >);
-    NsoCliSteam._prompt = module.createPromptModule();
-    return NsoCliSteam._prompt;
+    NsoCliStream._prompt = module.createPromptModule();
+    return NsoCliStream._prompt;
   }
 
   private static _ora: (options?: string | OraOptions) => Ora = null;
   private static async getOraPromise(): Promise<
     (options?: string | OraOptions) => Ora
   > {
-    if (NsoCliSteam._ora !== null) {
-      return NsoCliSteam._ora;
+    if (NsoCliStream._ora !== null) {
+      return NsoCliStream._ora;
     }
     const module = await (eval(`import('ora')`) as Promise<
       typeof import('ora')
     >);
-    NsoCliSteam._ora = module.default;
-    return NsoCliSteam._ora;
+    NsoCliStream._ora = module.default;
+    return NsoCliStream._ora;
   }
 
   readonly separator = { type: 'separator' } as SeparatorOptions;
@@ -52,7 +52,7 @@ export class NsoCliSteam {
 
   async wrapSpinner<T>(promise: Promise<T>, message = ''): Promise<T> {
     const startTimestamp = +new Date();
-    const spinner = (await NsoCliSteam.getOraPromise())({
+    const spinner = (await NsoCliStream.getOraPromise())({
       text: `${message} \u001b[0;90m0s\u001b[0m`,
       spinner: {
         interval: 80,
@@ -90,7 +90,7 @@ export class NsoCliSteam {
   }
 
   async prompt(question: DistinctQuestion) {
-    const promptModule = await NsoCliSteam.getPrompt();
+    const promptModule = await NsoCliStream.getPrompt();
     const answers = await promptModule([question]);
     return answers[question.name];
   }

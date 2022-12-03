@@ -1,5 +1,5 @@
 import { NsoCliConfig } from './nso-cli-config.class';
-import { NsoCliSteam } from './nso-cli-stream.class';
+import { NsoCliStream } from './nso-cli-stream.class';
 import { NsoCliAccount } from './nso-cli-account.class';
 import {
   NsoApp,
@@ -25,13 +25,13 @@ export class NsoCli {
   }
 
   config: NsoCliConfig;
-  stream: NsoCliSteam;
+  stream: NsoCliStream;
   nsoApp: NsoApp;
 
   private constructor() {}
 
   async init() {
-    this.stream = new NsoCliSteam();
+    this.stream = new NsoCliStream();
 
     console.log(`\u001b[0;90m
 ┌──────────────────────────────┐

@@ -21,7 +21,7 @@ export class Splatoon3Cli extends GameCli {
     {
       name: 'Save last 50 salmon run shifts',
       value: this.saveLatestSalmonRunShifts,
-    },
+    }
   ];
 
   async getGameInfo(): Promise<string> {

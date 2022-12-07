@@ -16,7 +16,7 @@ export interface NsoCliSerialisedConfig {
   checkVersionOnlyOnce?: boolean;
   hiddenGames?: string[];
   moreDetail?: boolean;
-  nsoAppVersion: string;
+  nsoAppVersion?: string;
 }
 export const isNsoCliSerialisedConfig = (obj): obj is NsoCliSerialisedConfig =>
   typeof obj === 'object' &&

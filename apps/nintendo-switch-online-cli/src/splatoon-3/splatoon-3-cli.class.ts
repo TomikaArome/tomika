@@ -4,7 +4,6 @@ import {
 } from '@TomikaArome/nintendo-switch-online';
 import { GameCli } from '../game-cli.class';
 import { NsoCli } from '../nso-cli.class';
-import { SeparatorOptions } from 'inquirer';
 
 export class Splatoon3Cli extends GameCli {
   private controller: Splatoon3Controller;
@@ -22,11 +21,6 @@ export class Splatoon3Cli extends GameCli {
     {
       name: 'Save last 50 salmon run shifts',
       value: this.saveLatestSalmonRunShifts,
-    },
-    { type: 'separator' } as SeparatorOptions,
-    {
-      name: 'Update Splatnet 3 version',
-      value: this.updateSplatnetVersion
     }
   ];
 
@@ -110,9 +104,5 @@ Bullet token: \u001b[90mexpires ${String(new Date(bulletToken.expires))}
     console.log(
       `\u001b[1;32m${filenames.length + newShifts}\u001b[0m total shifts saved`
     );
-  }
-
-  async updateSplatnetVersion() {
-    await this.controller.forceSplatnetVersionUpdate();
   }
 }

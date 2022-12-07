@@ -4,14 +4,33 @@ import { NsoOperation, NsoOperationType } from '../nso-operation.class';
 import { Splatoon3Controller } from './splatoon-3-controller.class';
 import fetch from 'node-fetch';
 
+interface GraphQlHash {
+  name: string;
+  hash: string;
+  type: 'mutation' | 'query';
+}
+
+type GraphQlHashCollection = { [name: string]: GraphQlHash };
+
 export class Splatoon3VersionManager {
   private version: string = null;
+  private graphQlHashes: GraphQlHashCollection = null;
 
   async getVersion(): Promise<string> {
     if (!this.version) {
       await this.fetch();
     }
     return this.version;
+  }
+
+  async getGraphQlHash(name: string): Promise<GraphQlHash> {
+    if (this.graphQlHashes === null) {
+      await this.fetch();
+    }
+    if (!this.graphQlHashes[name]) {
+      throw new NsoError('Splatnet 3 graphql hash not found', NsoErrorCode.SPLATOON_3_GRAPH_QL_HASH_NOT_FOUND, { provided: name, hashesAvailable: this.graphQlHashes });
+    }
+    return this.graphQlHashes[name];
   }
 
   async fetch() {
@@ -21,8 +40,9 @@ export class Splatoon3VersionManager {
     );
     NsoApp.get().currentOperation$.next(operation);
     try {
-      const mainJsPath = await this.fetchMainJsPath();
-      this.version = await this.fetchVersion(mainJsPath);
+      const mainJs = await this.fetchMainJs();
+      this.version = this.parseMainJsForVersion(mainJs);
+      this.graphQlHashes = this.parseMainJsForGraphQlHashes(mainJs);
     } catch (nsoErrorDetails) {
       operation.fail();
       throw new NsoError('Could not fetch Splatnet 3 version', NsoErrorCode.SPLATOON_3_SPLATNET_VERSION_FETCH_FAILED, nsoErrorDetails);
@@ -58,12 +78,8 @@ export class Splatoon3VersionManager {
     return match[1];
   }
 
-  private async fetchVersion(mainJsPath): Promise<string> {
-    const mainJs = await this.fetchMainJs(mainJsPath);
-    return this.parseMainJsForVersion(mainJs);
-  }
-
-  private async fetchMainJs(mainJsPath): Promise<string> {
+  private async fetchMainJs(): Promise<string> {
+    const mainJsPath = await this.fetchMainJsPath();
     try {
       const jsResult = await fetch(Splatoon3Controller.SPLATNET_3_URI + mainJsPath, {
         method: 'GET',
@@ -96,5 +112,18 @@ export class Splatoon3VersionManager {
       };
     }
     return versionMatch[1] + hashMatch[2].substring(0, 8);
+  }
+
+  private parseMainJsForGraphQlHashes(mainJs: string): GraphQlHashCollection {
+    const regex = /id:\s*['"]([0-9a-f]+)['"]\s*,\s*metadata\s*:\s*{\s*}\s*,\s*name\s*:\s*['"]([a-zA-Z0-9_-]+)['"]\s*,\s*operationKind\s*:\s*['"]([a-zA-Z]+)['"]/gm;
+    const matches = Array.from(mainJs.matchAll(regex));
+    return matches.reduce((accumulator: GraphQlHashCollection, match: RegExpMatchArray) => {
+      accumulator[match[2]] = {
+        name: match[2],
+        hash: match[1],
+        type: match[3] as ('mutation' | 'query')
+      };
+      return accumulator;
+    }, {});
   }
 }

@@ -90,7 +90,7 @@ export class Splatoon3Controller {
       'Content-Type': 'application/json',
       Dnt: '1',
       Origin: 'https://api.lp1.av5ja.srv.nintendo.net',
-      Referer: 'https://api.lp1.av5ja.srv.nintendo.net/',
+      Referer: 'https://api.lp1.av5ja.srv.nintendo.net',
       'sec-ch-ua':
         '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
       'sec-ch-ua-mobile': '?0',
@@ -189,7 +189,7 @@ export class Splatoon3Controller {
       'Content-Type': 'application/json',
       DNT: '1',
       Origin: 'https://api.lp1.av5ja.srv.nintendo.net',
-      Referer: 'https://api.lp1.av5ja.srv.nintendo.net/history/latest',
+      Referer: 'https://api.lp1.av5ja.srv.nintendo.net',
       'User-Agent':
         'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36',
       'X-Web-View-Ver': splatnetVersion,
@@ -250,8 +250,9 @@ export class Splatoon3Controller {
   }
 
   async fetchLatestBattles(): Promise<Splatoon3LatestBattlesHistoriesRaw> {
+    const hash = await this.versionManager.getGraphQlHash('LatestBattleHistoriesQuery');
     return await this.graphql({
-      sha256Hash: '7d8b560e31617e981cf7c8aa1ca13a00',
+      sha256Hash: hash.hash,
       typeGuardFn: isSplatoon3LatestBattleHistoriesRaw,
       fetchErrorMessage: 'Error trying to fetch the latest Splatoon 3 battles',
       fetchErrorCode: NsoErrorCode.SPLATOON_3_LATEST_BATTLES_FETCH_FAILED,
@@ -264,8 +265,9 @@ export class Splatoon3Controller {
   }
 
   async fetchBattle(battleId: string): Promise<Splatoon3VsHistoryDetailRaw> {
+    const hash = await this.versionManager.getGraphQlHash('VsHistoryDetailQuery');
     return await this.graphql({
-      sha256Hash: '2b085984f729cd51938fc069ceef784a',
+      sha256Hash: hash.hash,
       variables: { vsResultId: battleId },
       typeGuardFn: isSplatoon3VsHistoryDetailRaw,
       fetchErrorMessage: 'Error trying to fetch a Splatoon 3 battle',
@@ -278,8 +280,9 @@ export class Splatoon3Controller {
   }
 
   async fetchLatestSalmonRunShifts(): Promise<Splatoon3LatestSalmonRunShiftsRaw> {
+    const hash = await this.versionManager.getGraphQlHash('CoopHistoryQuery');
     return await this.graphql({
-      sha256Hash: '817618ce39bcf5570f52a97d73301b30',
+      sha256Hash: hash.hash,
       typeGuardFn: isSplatoon3LatestSalmonRunShiftsRaw,
       fetchErrorMessage:
         'Error trying to fetch the latest Splatoon 3 salmon run shifts',
@@ -294,8 +297,9 @@ export class Splatoon3Controller {
   }
 
   async fetchSalmonRunShift(shiftId: string): Promise<Splatoon3CoopHistoryDetailRaw> {
+    const hash = await this.versionManager.getGraphQlHash('CoopHistoryDetailQuery');
     return await this.graphql({
-      sha256Hash: '3cc5f826a6646b85f3ae45db51bd0707',
+      sha256Hash: hash.hash,
       variables: { coopHistoryDetailId: shiftId },
       typeGuardFn: isSplatoon3CoopHistoryDetailRaw,
       fetchErrorMessage: 'Error trying to fetch a Splatoon 3 salmon run shift',

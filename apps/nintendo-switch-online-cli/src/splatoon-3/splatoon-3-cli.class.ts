@@ -121,8 +121,8 @@ Bullet token: \u001b[90mexpires ${String(new Date(bulletToken.expires))}
       choices: [
         { name: 'Main weapon', value: 'main' },
         { name: 'Most recently used', value: 'recent' },
-        { name: 'Highest freshness', value: 'high-freshness' },
-        { name: 'Lowest freshness', value: 'low-freshness' }
+        { name: 'Highest freshness', value: 'freshness-desc' },
+        { name: 'Lowest freshness', value: 'freshness-asc' }
       ]
     });
     const numberOfRecords = sorting === 'main' ? Infinity : await nsoCli.stream.prompt({
@@ -134,12 +134,25 @@ Bullet token: \u001b[90mexpires ${String(new Date(bulletToken.expires))}
 
     const weaponsRecords = await this.controller.fetchWeaponRecords();
     const sortedAndSlicedWeaponRecords = weaponsRecords.data.weaponRecords.nodes
+      .map((record: Splatoon3WeaponRecord) => {
+        if (record.stats === null) {
+          record.stats = {
+            expToLevelUp: 10000,
+            lastUsedTime: 'Thu Jan 01 1970 01:00:00 GMT+0100 (Greenwich Mean Time)',
+            level: 0,
+            paint: 0,
+            vibes: 0,
+            win: 0
+          };
+        }
+        return record;
+      })
       .sort((a: Splatoon3WeaponRecord, b: Splatoon3WeaponRecord) => {
         switch (sorting) {
           case 'main': return a.weaponId - b.weaponId;
-          case 'recent': return +new Date(b.stats.lastUsedTime) - +new Date(a.stats.lastUsedTime);
-          case 'high-freshness': return b.stats.level === a.stats.level ? a.stats.expToLevelUp - b.stats.expToLevelUp : b.stats.level - a.stats.level;
-          case 'low-freshness': return a.stats.level === b.stats.level ? b.stats.expToLevelUp - a.stats.expToLevelUp : a.stats.level - b.stats.level;
+          case 'recent': return +new Date(b.stats.lastUsedTime) - +new Date(a.stats?.lastUsedTime);
+          case 'freshness-desc': return b.stats.level === a.stats.level ? a.stats.expToLevelUp - b.stats.expToLevelUp : b.stats.level - a.stats.level;
+          case 'freshness-asc': return a.stats.level === b.stats.level ? b.stats.expToLevelUp - a.stats.expToLevelUp : a.stats.level - b.stats.level;
         }
       })
     const firstWeaponIdOfEachClass = [0, 200, 300, 1000, 1100, 2000, 3000, 4000, 5000, 6000, 7010, 8000];

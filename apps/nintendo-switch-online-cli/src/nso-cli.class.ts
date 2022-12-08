@@ -102,6 +102,7 @@ export class NsoCli {
           this.stream.separator,
           { name: 'Exit', value: 'exit' },
         ],
+        pageSize: 20
       });
       try {
         if (chosenAccount instanceof NsoCliAccount) {

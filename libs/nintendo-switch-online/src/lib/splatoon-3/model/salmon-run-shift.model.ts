@@ -5,9 +5,5 @@ export interface Splatoon3CoopHistoryDetail {
     coopHistoryDetail: Splatoon3Battle;
   };
 }
-export const isSplatoon3CoopHistoryDetail = (
-  obj
-): obj is Splatoon3CoopHistoryDetail =>
-  typeof obj === 'object' &&
-  typeof obj.data === 'object' &&
-  isSplatoon3Battle(obj.data.coopHistoryDetail);
+export const isSplatoon3CoopHistoryDetail = (obj): obj is Splatoon3CoopHistoryDetail =>
+  obj && typeof obj === 'object' && typeof obj.data === 'object' && isSplatoon3Battle(obj.data.coopHistoryDetail);

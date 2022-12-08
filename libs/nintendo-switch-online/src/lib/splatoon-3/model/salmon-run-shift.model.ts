@@ -1,13 +1,9 @@
-import { isSplatoon3BattleRaw, Splatoon3BattleRaw } from './battle.model';
+import { isSplatoon3Battle, Splatoon3Battle } from './battle.model';
 
-export interface Splatoon3CoopHistoryDetailRaw {
+export interface Splatoon3CoopHistoryDetail {
   data: {
-    coopHistoryDetail: Splatoon3BattleRaw;
+    coopHistoryDetail: Splatoon3Battle;
   };
 }
-export const isSplatoon3CoopHistoryDetailRaw = (
-  obj
-): obj is Splatoon3CoopHistoryDetailRaw =>
-  typeof obj === 'object' &&
-  typeof obj.data === 'object' &&
-  isSplatoon3BattleRaw(obj.data.coopHistoryDetail);
+export const isSplatoon3CoopHistoryDetail = (obj): obj is Splatoon3CoopHistoryDetail =>
+  obj && typeof obj === 'object' && typeof obj.data === 'object' && isSplatoon3Battle(obj.data.coopHistoryDetail);

@@ -160,6 +160,7 @@ Nintendo account ID:   \u001b[36m${this.id}\u001b[0m${moreDetail}`);
             value: 'back',
           },
         ],
+        pageSize: 20
       });
       try {
         if (isNsoGame(chosenGame)) {

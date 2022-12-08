@@ -112,42 +112,93 @@ Bullet token: \u001b[90mexpires ${String(new Date(bulletToken.expires))}
   }
 
   async listWeaponFreshness() {
+    const nsoCli = NsoCli.get();
+
+    const sorting = await nsoCli.stream.prompt({
+      type: 'list',
+      name: 'sorting',
+      message: 'How should the list be sorted?',
+      choices: [
+        { name: 'Main weapon', value: 'main' },
+        { name: 'Most recently used', value: 'recent' },
+        { name: 'Highest freshness', value: 'high-freshness' },
+        { name: 'Lowest freshness', value: 'low-freshness' }
+      ]
+    });
+    const numberOfRecords = sorting === 'main' ? Infinity : await nsoCli.stream.prompt({
+      type: 'number',
+      name: 'numberOfRecords',
+      message: 'How many weapons should be shown?',
+      default: 10
+    });
+
     const weaponsRecords = await this.controller.fetchWeaponRecords();
     const sortedAndSlicedWeaponRecords = weaponsRecords.data.weaponRecords.nodes
-      .sort((a: Splatoon3WeaponRecord, b: Splatoon3WeaponRecord) => +new Date(b.stats.lastUsedTime) - +new Date(a.stats.lastUsedTime))
-      .slice(0, 10);
+      .sort((a: Splatoon3WeaponRecord, b: Splatoon3WeaponRecord) => {
+        switch (sorting) {
+          case 'main': return a.weaponId - b.weaponId;
+          case 'recent': return +new Date(b.stats.lastUsedTime) - +new Date(a.stats.lastUsedTime);
+          case 'high-freshness': return b.stats.level === a.stats.level ? a.stats.expToLevelUp - b.stats.expToLevelUp : b.stats.level - a.stats.level;
+          case 'low-freshness': return a.stats.level === b.stats.level ? b.stats.expToLevelUp - a.stats.expToLevelUp : a.stats.level - b.stats.level;
+        }
+      })
+    const firstWeaponIdOfEachClass = [0, 200, 300, 1000, 1100, 2000, 3000, 4000, 5000, 6000, 7010, 8000];
+    const classNames = ['Shooters', 'Blasters', 'Semi-automatics', 'Rollers', 'Brushes', 'Chargers', 'Sloshers', 'Splatlings', 'Dualies', 'Brellas', 'Stringers', 'Splatanas', 'GRAND TOTAL'];
     const freshnessNeededForLevel = [0, 10000, 25000, 60000, 160000, 1160000];
     const headerColour = '\u001b[36m';
-    const table = new Table({
-      head: [
-        `${headerColour}Name`,
-        `${headerColour}Freshness`,
-        `${headerColour}Next freshness`,
-        `${headerColour}Total freshness`,
-        `${headerColour}1 star`,
-        `${headerColour}2 star`,
-        `${headerColour}3 star`,
-        `${headerColour}4 star`,
-        `${headerColour}5 star`,
-      ],
-      rows: sortedAndSlicedWeaponRecords.map((record: Splatoon3WeaponRecord, index: number) => {
-        const rowColour = index % 2 === 0 ? '\u001b[37m' : '\u001b[97m';
-        const totalFreshness = record.stats.level >= 5
-          ? 1160000
-          : freshnessNeededForLevel[record.stats.level + 1] - record.stats.expToLevelUp;
-        const percentages = freshnessNeededForLevel.slice(1).map((freshnessNeeded: number) => {
-          const percentage = Math.floor(Math.min(totalFreshness, freshnessNeeded) / freshnessNeeded * 100);
-          const colour = percentage === 100 ? '\u001b[32m' : rowColour;
-          return colour + percentage + '%';
-        });
-        return [
+    const totalFreshnessPerClass = classNames.map(() => freshnessNeededForLevel.slice(1).map(() => 0));
+    const totalWeaponsPerClass = classNames.map(() => 0);
+    let classIndex = -1;
+    const rows = sortedAndSlicedWeaponRecords.reduce((acc, record: Splatoon3WeaponRecord, index: number) => {
+      if (firstWeaponIdOfEachClass.indexOf(record.weaponId) > -1) {
+        classIndex++;
+      }
+      const rowColour = index % 2 === 0 ? '\u001b[37m' : '\u001b[97m';
+      const totalFreshness = record.stats.level >= 5
+        ? 1160000
+        : freshnessNeededForLevel[record.stats.level + 1] - record.stats.expToLevelUp;
+      const percentages = freshnessNeededForLevel.slice(1).map((freshnessNeeded: number, freshnessIndex: number) => {
+        const minValue = Math.min(totalFreshness, freshnessNeeded);
+        if (sorting === 'main') {
+          totalFreshnessPerClass[classIndex][freshnessIndex] += minValue;
+        }
+        totalFreshnessPerClass[totalFreshnessPerClass.length - 1][freshnessIndex] += minValue;
+        const percentage = Math.floor(minValue / freshnessNeeded * 100);
+        const colour = percentage === 100 ? '\u001b[32m' : rowColour;
+        return colour + percentage + '%';
+      });
+      totalWeaponsPerClass[classIndex]++;
+      totalWeaponsPerClass[totalWeaponsPerClass.length - 1]++;
+      if (index < numberOfRecords) {
+        if (sorting === 'main' && firstWeaponIdOfEachClass.indexOf(record.weaponId) > -1) {
+          acc.push([`\u001b[90m--- ${classNames[classIndex]} ---`]);
+        }
+        acc.push([
           rowColour + record.name,
           rowColour + record.stats.level,
           rowColour + record.stats.expToLevelUp,
           rowColour + totalFreshness,
           ...percentages
-        ];
-      }),
+        ]);
+      }
+      return acc;
+    }, []);
+    if (sorting === 'main') {
+      rows.push([`\u001b[90m--- TOTALS ---`]);
+      rows.push(...totalFreshnessPerClass.map((freshnesses: number[], classIndex: number) => {
+        const rowColour = classIndex % 2 === 0 ? '\u001b[37m' : '\u001b[97m';
+        const percentages = freshnessNeededForLevel.slice(1).map((freshnessNeeded: number, freshnessIndex: number) => {
+          const percentage = Math.floor(freshnesses[freshnessIndex] / (freshnessNeeded * totalWeaponsPerClass[classIndex]) * 100);
+          const colour = percentage === 100 ? '\u001b[32m' : rowColour;
+          return colour + percentage + '%';
+        });
+        return [rowColour + classNames[classIndex], '', '', rowColour + freshnesses[freshnesses.length - 1], ...percentages];
+      }));
+    }
+    const headerNames = ['Name', 'Freshness', 'Next freshness', 'Total freshness', '1 star', '2 star', '3 star', '4 star', '5 star',];
+    const table = new Table({
+      head: headerNames.map((name: string) => headerColour + name),
+      rows,
       chars: { 'top': '', 'top-mid': '', 'top-left': '', 'top-right': '', 'bottom': '', 'bottom-mid': '', 'bottom-left': '', 'bottom-right': '', 'left': '', 'left-mid': '', 'mid': '', 'mid-mid': '', 'right': '', 'right-mid': '', 'middle': '  ' },
       style: { 'padding-left': 0, 'padding-right': 0 },
       colAligns: ['left', 'middle', 'right', 'right', 'right', 'right', 'right', 'right', 'right']

@@ -1,4 +1,5 @@
 {
+  "name": "ouistiti",
   "sourceRoot": "libs/ouistiti/src",
   "projectType": "library",
   "targets": {
@@ -10,7 +11,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/ouistiti"],
+      "outputs": ["{workspaceRoot}/coverage/libs/ouistiti"],
       "options": {
         "jestConfig": "libs/ouistiti/jest.config.js",
         "passWithNoTests": true

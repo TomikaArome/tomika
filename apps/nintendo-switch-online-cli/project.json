@@ -1,15 +1,18 @@
 {
+  "name": "nintendo-switch-online-cli",
   "sourceRoot": "apps/nintendo-switch-online-cli/src",
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/node:webpack",
+      "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/nintendo-switch-online-cli",
         "main": "apps/nintendo-switch-online-cli/src/main.ts",
         "tsConfig": "apps/nintendo-switch-online-cli/tsconfig.app.json",
-        "assets": ["apps/nintendo-switch-online-cli/src/assets"]
+        "assets": ["apps/nintendo-switch-online-cli/src/assets"],
+        "target": "node",
+        "compiler": "tsc"
       },
       "configurations": {
         "production": {
@@ -46,7 +49,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/nintendo-switch-online-cli"],
+      "outputs": ["{workspaceRoot}/coverage/apps/nintendo-switch-online-cli"],
       "options": {
         "jestConfig": "apps/nintendo-switch-online-cli/jest.config.ts",
         "passWithNoTests": true

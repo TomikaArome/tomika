@@ -6,11 +6,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { AdminPanelComponent } from './panel/admin-panel.component';
 import { PermissionTreeComponent } from './permission-tree/permission-tree.component';
 import { MatTreeModule } from '@angular/material/tree';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({

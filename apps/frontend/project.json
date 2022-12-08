@@ -1,4 +1,5 @@
 {
+  "name": "frontend",
   "projectType": "application",
   "sourceRoot": "apps/frontend/src",
   "prefix": "tmk",
@@ -92,7 +93,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/frontend"],
+      "outputs": ["{workspaceRoot}/coverage/apps/frontend"],
       "options": {
         "jestConfig": "apps/frontend/jest.config.js",
         "passWithNoTests": true

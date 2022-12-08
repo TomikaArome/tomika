@@ -6,6 +6,7 @@ import {
   NsoGame,
   NsoOperation,
 } from '@TomikaArome/nintendo-switch-online';
+import * as Table from 'cli-table';
 
 export class NsoCli {
   static readonly VERSION = '1.0.0';
@@ -33,13 +34,19 @@ export class NsoCli {
   async init() {
     this.stream = new NsoCliStream();
 
-    console.log(`\u001b[0;90m
-┌──────────────────────────────┐
-│         \u001b[0;96m@TomikaArome         \u001b[0;90m│
-│  \u001b[0;1;91mnintendo-switch-online-cli  \u001b[0;90m│
-│            \u001b[0mv${NsoCli.VERSION}            \u001b[0;90m│
-└──────────────────────────────┘\u001b[0m
-`);
+    const openerMessageTable = new Table({
+      rows: [
+        [`\u001b[96m@TomikaArome`],
+        [`\u001b[0;1;91mnintendo-switch-online-cli`],
+        [`\u001b[0mv${NsoCli.VERSION}`]
+      ],
+      colAligns: ['middle'],
+      chars: {'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''},
+      style: { 'padding-left': 2, 'padding-right': 2 }
+    });
+    console.log('');
+    console.log(openerMessageTable.toString());
+    console.log('');
 
     const configPromise = NsoCliConfig.load();
     configPromise.catch((error) => {

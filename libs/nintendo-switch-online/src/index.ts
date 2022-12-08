@@ -13,3 +13,4 @@ export * from './lib/connect/nso-connector.class';
 export * from './lib/connect/nso-game-connector.class';
 
 export * from './lib/splatoon-3/splatoon-3-controller.class';
+export * from './lib/splatoon-3/model/index';

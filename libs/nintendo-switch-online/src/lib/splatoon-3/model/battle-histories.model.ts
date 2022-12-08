@@ -1,62 +1,62 @@
-import { isSplatoon3BattleRaw, Splatoon3BattleRaw } from './battle.model';
+import { isSplatoon3Battle, Splatoon3Battle } from './battle.model';
 
-interface Splatoon3HistoryDetailsNodesRaw {
-  nodes: Splatoon3BattleRaw[];
+interface Splatoon3HistoryDetailsNodes {
+  nodes: Splatoon3Battle[];
 }
-const isSplatoon3HistoryDetailsNodesRaw = (
+const isSplatoon3HistoryDetailsNodes = (
   obj
-): obj is Splatoon3HistoryDetailsNodesRaw =>
+): obj is Splatoon3HistoryDetailsNodes =>
   typeof obj === 'object' &&
   obj.nodes instanceof Array &&
-  obj.nodes.reduce((acc, curr) => acc && isSplatoon3BattleRaw(curr), true);
+  obj.nodes.reduce((acc, curr) => acc && isSplatoon3Battle(curr), true);
 
-interface Splatoon3HistoryDetailsRaw {
-  historyDetails: Splatoon3HistoryDetailsNodesRaw;
+interface Splatoon3HistoryDetails {
+  historyDetails: Splatoon3HistoryDetailsNodes;
 }
-const isSplatoon3HistoryDetailsRaw = (obj): obj is Splatoon3HistoryDetailsRaw =>
+const isSplatoon3HistoryDetails = (obj): obj is Splatoon3HistoryDetails =>
   typeof obj === 'object' &&
-  isSplatoon3HistoryDetailsNodesRaw(obj.historyDetails);
+  isSplatoon3HistoryDetailsNodes(obj.historyDetails);
 
-interface Splatoon3HistoryGroupsNodesRaw {
-  nodes: Splatoon3HistoryDetailsRaw[];
+interface Splatoon3HistoryGroupsNodes {
+  nodes: Splatoon3HistoryDetails[];
 }
-const isSplatoon3HistoryGroupsNodesRaw = (
+const isSplatoon3HistoryGroupsNodes = (
   obj
-): obj is Splatoon3HistoryGroupsNodesRaw =>
+): obj is Splatoon3HistoryGroupsNodes =>
   typeof obj === 'object' &&
   obj.nodes instanceof Array &&
   obj.nodes.reduce(
-    (acc, curr) => acc && isSplatoon3HistoryDetailsRaw(curr),
+    (acc, curr) => acc && isSplatoon3HistoryDetails(curr),
     true
   );
 
-interface Splatoon3HistoryGroupsRaw {
-  historyGroups: Splatoon3HistoryGroupsNodesRaw;
+interface Splatoon3HistoryGroups {
+  historyGroups: Splatoon3HistoryGroupsNodes;
 }
-const isSplatoon3HistoryGroupsRaw = (obj): obj is Splatoon3HistoryGroupsRaw =>
+const isSplatoon3HistoryGroups = (obj): obj is Splatoon3HistoryGroups =>
   typeof obj === 'object' &&
-  isSplatoon3HistoryGroupsNodesRaw(obj.historyGroups);
+  isSplatoon3HistoryGroupsNodes(obj.historyGroups);
 
-export interface Splatoon3LatestBattlesHistoriesRaw {
+export interface Splatoon3LatestBattlesHistories {
   data: {
-    latestBattleHistories: Splatoon3HistoryGroupsRaw;
+    latestBattleHistories: Splatoon3HistoryGroups;
   };
 }
-export const isSplatoon3LatestBattleHistoriesRaw = (
+export const isSplatoon3LatestBattleHistories = (
   obj
-): obj is Splatoon3LatestBattlesHistoriesRaw =>
+): obj is Splatoon3LatestBattlesHistories =>
   typeof obj === 'object' &&
   typeof obj.data === 'object' &&
-  isSplatoon3HistoryGroupsRaw(obj.data.latestBattleHistories);
+  isSplatoon3HistoryGroups(obj.data.latestBattleHistories);
 
-export interface Splatoon3LatestSalmonRunShiftsRaw {
+export interface Splatoon3LatestSalmonRunShifts {
   data: {
-    coopResult: Splatoon3HistoryGroupsRaw;
+    coopResult: Splatoon3HistoryGroups;
   };
 }
-export const isSplatoon3LatestSalmonRunShiftsRaw = (
+export const isSplatoon3LatestSalmonRunShifts = (
   obj
-): obj is Splatoon3LatestSalmonRunShiftsRaw =>
+): obj is Splatoon3LatestSalmonRunShifts =>
   typeof obj === 'object' &&
   typeof obj.data === 'object' &&
-  isSplatoon3HistoryGroupsRaw(obj.data.coopResult);
+  isSplatoon3HistoryGroups(obj.data.coopResult);

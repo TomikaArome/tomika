@@ -1,18 +1,18 @@
-export interface Splatoon3VsHistoryDetailRaw {
+export interface Splatoon3VsHistoryDetail {
   data: {
-    vsHistoryDetail: Splatoon3BattleRaw;
+    vsHistoryDetail: Splatoon3Battle;
   };
 }
-export const isSplatoon3VsHistoryDetailRaw = (
+export const isSplatoon3VsHistoryDetail = (
   obj
-): obj is Splatoon3VsHistoryDetailRaw =>
+): obj is Splatoon3VsHistoryDetail =>
   typeof obj === 'object' &&
   typeof obj.data === 'object' &&
-  isSplatoon3BattleRaw(obj.data.vsHistoryDetail);
+  isSplatoon3Battle(obj.data.vsHistoryDetail);
 
 // TODO - split up based on latest battles or current battle
-export interface Splatoon3BattleRaw {
+export interface Splatoon3Battle {
   id: string;
 }
-export const isSplatoon3BattleRaw = (obj): obj is Splatoon3BattleRaw =>
+export const isSplatoon3Battle = (obj): obj is Splatoon3Battle =>
   typeof obj === 'object' && typeof obj.id === 'string';

@@ -47,3 +47,5 @@ libs/*/src/environments
 
 # Certificate
 /secrets
+
+.angular

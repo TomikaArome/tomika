@@ -17,6 +17,7 @@
     "resolveJsonModule": true,
     "paths": {
       "@TomikaArome/common": ["libs/common/src/index.ts"],
+      "@TomikaArome/common-ui": ["libs/common-ui/src/index.ts"],
       "@TomikaArome/nintendo-switch-online": [
         "libs/nintendo-switch-online/src/index.ts"
       ],

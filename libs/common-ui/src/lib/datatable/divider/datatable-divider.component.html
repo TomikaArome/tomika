@@ -1,0 +1,6 @@
+<div class="tmk-datatable-divider__line"></div>
+
+<div *ngIf="isResizable" class="tmk-datatable-divider__carets">
+  <fa-icon [icon]="isHorizontal ? faCaretUp : faCaretLeft"></fa-icon>
+  <fa-icon [icon]="isHorizontal ? faCaretDown : faCaretRight"></fa-icon>
+</div>

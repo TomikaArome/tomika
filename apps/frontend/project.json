@@ -23,7 +23,8 @@
         ],
         "styles": [
           "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-          "apps/frontend/src/styles.scss"
+          "apps/frontend/src/styles.scss",
+          "libs/common-ui/src/global.scss"
         ],
         "scripts": [],
         "vendorChunk": true,

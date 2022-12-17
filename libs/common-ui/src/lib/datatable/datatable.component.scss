@@ -1,0 +1,6 @@
+.tmk-datatable {
+  display: grid;
+  grid-template-rows: var(--datatable-grid-template-records);
+  grid-template-columns: var(--datatable-grid-template-headers);
+  overflow: hidden;
+}

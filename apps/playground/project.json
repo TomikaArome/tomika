@@ -19,7 +19,10 @@
           "apps/playground/src/favicon.ico",
           "apps/playground/src/assets"
         ],
-        "styles": ["apps/playground/src/styles.scss"],
+        "styles": [
+          "apps/playground/src/styles.scss",
+          "libs/common-ui/src/global.scss"
+        ],
         "scripts": []
       },
       "configurations": {

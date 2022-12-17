@@ -1,0 +1,8 @@
+.tmk-datatable-header-container {
+  display: block;
+  grid-column: calc(var(--datatable-header-container-x-pos, 0) + 1) / calc(var(--datatable-header-container-x-pos, 0) + 2);
+  grid-row: calc(var(--datatable-header-container-y-pos, 0) + 1) / calc(var(--datatable-header-container-y-pos, 0) + 2);
+  font-weight: bold;
+  padding: 4px 8px;
+  overflow: hidden;
+}

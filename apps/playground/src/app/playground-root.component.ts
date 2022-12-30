@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DatatableHeader, DatatableService } from '@TomikaArome/common-ui';
+import { DatatableHeader, DatatableService, GripDraggedEvent } from '@TomikaArome/common-ui';
 
 @Component({
   selector: 'tmk-playground-root',
@@ -65,8 +65,17 @@ export class PlaygroundRootComponent {
     }
   ];
 
+  xPos = 0;
+  yPos = 0;
+  draggable = true;
+
   datatableInit(service: DatatableService) {
     service.setHeaders(this.headers);
     service.setRecords(this.data);
+  }
+
+  move(event: GripDraggedEvent) {
+    this.xPos += event.changeSinceLastStep.x;
+    this.yPos += event.changeSinceLastStep.y;
   }
 }

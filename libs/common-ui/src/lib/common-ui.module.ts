@@ -6,17 +6,20 @@ import { DatatableCellContainerComponent } from './datatable/cell-container/data
 import { DatatableComponent } from './datatable/datatable.component';
 import { DatatableDividerComponent } from './datatable/divider/datatable-divider.component';
 import { DatatableHeaderContainerComponent } from './datatable/header-container/datatable-header-container.component';
+import { GripDirective } from "./directives/grip.directive";
 
 @NgModule({
   imports: [CommonModule, FontAwesomeModule],
   exports: [
-    DatatableComponent
+    DatatableComponent,
+    GripDirective
   ],
   declarations: [
     DatatableCellContainerComponent,
     DatatableComponent,
     DatatableDividerComponent,
-    DatatableHeaderContainerComponent
+    DatatableHeaderContainerComponent,
+    GripDirective
   ]
 })
 export class CommonUiModule {}

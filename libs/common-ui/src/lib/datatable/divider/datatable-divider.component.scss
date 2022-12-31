@@ -16,25 +16,25 @@
     padding: 0 var(--divider-padding);
     left: calc(var(--divider-padding) + var(--divider-line-width) / 2);
 
-    &.resizable:hover {
-      cursor: col-resize;
-    }
+    //&.resizable:hover {
+    //  cursor: col-resize;
+    //}
   }
 
-  &.horizontal {
-    width: 100%;
-    height: calc(2 * var(--divider-padding) + var(--divider-line-width));
-    padding: var(--divider-padding) 0;
-    top: calc(var(--divider-padding) + var(--divider-line-width) / 2);
-
-    &.resizable:hover {
-      cursor: row-resize;
-    }
-
-    .tmk-datatable-divider__carets {
-      flex-direction: column;
-    }
-  }
+  //&.horizontal {
+  //  width: 100%;
+  //  height: calc(2 * var(--divider-padding) + var(--divider-line-width));
+  //  padding: var(--divider-padding) 0;
+  //  top: calc(var(--divider-padding) + var(--divider-line-width) / 2);
+  //
+  //  &.resizable:hover {
+  //    cursor: row-resize;
+  //  }
+  //
+  //  .tmk-datatable-divider__carets {
+  //    flex-direction: column;
+  //  }
+  //}
 
   &.hovered {
     background-color: var(--divider-resize-hover-colour);

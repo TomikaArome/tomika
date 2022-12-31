@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostBinding, HostListener, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output, ViewEncapsulation } from '@angular/core';
 import { faCaretDown, faCaretLeft, faCaretRight, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -29,33 +29,21 @@ export class DatatableDividerComponent {
   @Input() contentBefore: unknown;
   @Input() contentAfter: unknown;
 
-  @Output() held = new EventEmitter<boolean>();
+  @Output() hovered = new EventEmitter<boolean>();
+  @Output() gripped = new EventEmitter<boolean>();
   @Output() dragged = new EventEmitter<number>();
 
   get isContentEqual(): boolean {
     return this.contentBefore === this.contentAfter && this.contentBefore !== undefined;
   }
 
-  @HostListener('mousedown')
-  onMouseDown() {
-    if (this.isResizable) {
-      this.isHeld = true;
-      this.held.emit(this.isHeld);
-      document.body.classList.add('no-select');
-    }
+  onHovered(isHovered: boolean) {
+    this.hovered.emit(isHovered);
   }
-
-  @HostListener('window:mouseup')
-  onMouseUp() {
-    this.isHeld = false;
-    this.held.emit(this.isHeld);
-    document.body.classList.remove('no-select');
+  onGripped(isGripped: boolean) {
+    this.gripped.emit(isGripped);
   }
-
-  @HostListener('window:mousemove', ['$event.movementX'])
-  onMouseMove(movementX: number) {
-    if (this.isHeld) {
-      this.dragged.emit(movementX);
-    }
+  onDragged(movementX: number) {
+    this.dragged.emit(movementX);
   }
 }

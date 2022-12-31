@@ -10,10 +10,9 @@
     [xPos]="getCellHorizontalPos(header.key)"
     [isHovered]="hoveredHeaderDivider === header.key"
     [isResizable]="isHeaderResizable(header)"
-    (mouseenter)="setHoveredDivider(header)"
-    (mouseleave)="setHoveredDivider()"
+    (hovered)="setHoveredDivider($event ? header : undefined)"
     (dragged)="setHeaderSizeRelative(header, $event)"
-    (held)="onDividerHeld($event)">
+    (gripped)="onDividerHeld($event)">
   </tmk-datatable-divider>
   <tmk-datatable-divider
     *ngIf="!hasNoVisibleRecords"

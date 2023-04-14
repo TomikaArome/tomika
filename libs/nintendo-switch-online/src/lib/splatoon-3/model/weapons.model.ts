@@ -54,15 +54,15 @@ export const isSplatoon3SubWeapon = (obj): obj is Splatoon3SubWeapon =>
 
 export interface Splatoon3WeaponStats {
   expToLevelUp: number;
-  lastUsedTime: string;
+  lastUsedTime: string | null;
   level: number;
   paint: number;
   vibes: number;
   win: number;
 }
 export const isSplatoon3WeaponStats = (obj): obj is Splatoon3WeaponStats =>
-  obj && typeof obj === 'object' && typeof obj.expToLevelUp === 'number' && typeof obj.lastUsedTime === 'string' && typeof obj.level === 'number'
-  && typeof obj.paint === 'number' && typeof obj.vibes === 'number' && typeof obj.win === 'number';
+  obj && typeof obj === 'object' && typeof obj.expToLevelUp === 'number' && (typeof obj.lastUsedTime === 'string' || obj.lastUsedTime === null)
+  && typeof obj.level === 'number' && typeof obj.paint === 'number' && typeof obj.vibes === 'number' && typeof obj.win === 'number';
 
 export interface Splatoon3WeaponCategory {
   id: string;

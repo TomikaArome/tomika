@@ -1,0 +1,13 @@
+.tmk-focus-outline {
+  svg {
+    overflow: visible;
+    //fill: hsla(200,80%,70%,1);
+    fill: url(#outline-gradient);
+  }
+
+  .tmk-focus-outline-conical-gradient {
+    width: 100px;
+    height: 100px;
+    background: conic-gradient(darkorange, hotpink, mediumaquamarine, darkorange);
+  }
+}

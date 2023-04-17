@@ -1,0 +1,10 @@
+<svg viewBox="0 0 100 100" fill-rule="evenodd" preserveAspectRatio="xMidYMin">
+  <defs>
+    <linearGradient id="outline-gradient" [attr.gradientTransform]="'rotate(' + currentGradientAngle + ' 0.5 0.5)'">
+      <ng-container *ngFor="let colour of colours; index as i">
+        <stop [attr.offset]="(i / (colours.length - 1) * 100) + '%'" [attr.stop-color]="colour" />
+      </ng-container>
+    </linearGradient>
+  </defs>
+  <path [attr.d]="path" />
+</svg>

@@ -1,0 +1,15 @@
+<div class="tmk-datatable-divider__line"></div>
+
+<div
+  *ngIf="isResizable"
+  class="tmk-datatable-divider__carets"
+  tmkGrip
+  tmkGripCursor="col-resize"
+  (tmkGripHovered)="onHovered($event)"
+  (tmkGripGripped)="onGripped($event)"
+  (tmkGripDragged)="onDragged($event.changeSinceLastStep.x)">
+
+  <fa-icon [icon]="isHorizontal ? faCaretUp : faCaretLeft"></fa-icon>
+  <fa-icon [icon]="isHorizontal ? faCaretDown : faCaretRight"></fa-icon>
+
+</div>

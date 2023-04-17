@@ -1,0 +1,70 @@
+.tmk-datatable-divider {
+  --divider-padding: 2px;
+  --divider-line-width: 1px;
+  --divider-colour: hsla(0,0%,0%,0.2);
+  --divider-resize-hover-colour: hsla(0,0%,0%,0.1);
+
+  position: relative;
+  display: block;
+  place-self: end end;
+  grid-column: calc(var(--datatable-divider-x-pos, 0) + 1) / calc(var(--datatable-divider-x-pos, 0) + 2);
+  grid-row: calc(var(--datatable-divider-y-pos, 0) + 1) / calc(var(--datatable-divider-y-pos, 0) + 2);
+
+  &:not(.horizontal) {
+    width: calc(2 * var(--divider-padding) + var(--divider-line-width));
+    height: 100%;
+    padding: 0 var(--divider-padding);
+    left: calc(var(--divider-padding) + var(--divider-line-width) / 2);
+
+    //&.resizable:hover {
+    //  cursor: col-resize;
+    //}
+  }
+
+  //&.horizontal {
+  //  width: 100%;
+  //  height: calc(2 * var(--divider-padding) + var(--divider-line-width));
+  //  padding: var(--divider-padding) 0;
+  //  top: calc(var(--divider-padding) + var(--divider-line-width) / 2);
+  //
+  //  &.resizable:hover {
+  //    cursor: row-resize;
+  //  }
+  //
+  //  .tmk-datatable-divider__carets {
+  //    flex-direction: column;
+  //  }
+  //}
+
+  &.hovered {
+    background-color: var(--divider-resize-hover-colour);
+  }
+
+  &__line {
+    background-color: var(--divider-colour);
+    width: 100%;
+    height: 100%;
+  }
+
+  &__carets {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2em;
+    height: 2em;
+    display: flex;
+    place-items: center;
+    place-content: center;
+    gap: calc(var(--divider-line-width) + 2px);
+    color: var(--divider-colour);
+
+    fa-icon {
+      width: 9px;
+      height: 9px;
+      display: flex;
+      place-items: center;
+      place-content: center;
+    }
+  }
+}

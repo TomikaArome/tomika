@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  --tmk-drag-cursor: default;
+  margin: 0;
+  padding: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  height: 100%;
+  position: relative;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+}
+
+// Used in the ouistiti app (sortable-list), should eventually be replaced by draggable directive
+body.grabbing * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+// Used in the datatable, should eventually be replaced by draggable directive
+body.no-select * {
+  user-select: none;
+}
+
+body.tmk-dragging, body.tmk-dragging * {
+  user-select: none;
+  cursor: var(--tmk-drag-cursor) !important;
+  touch-action: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+a {
+  text-decoration: inherit;
+}

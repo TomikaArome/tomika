@@ -1,0 +1,43 @@
+<ng-container *ngFor="let header of service.headers; last as isLastHeader;">
+  <tmk-datatable-header-container
+    [header]="header"
+    [xPos]="getCellHorizontalPos(header.key)"
+    [yPos]="getCellVerticalPos(header.key)">
+  </tmk-datatable-header-container>
+
+  <tmk-datatable-divider
+    *ngIf="!isLastHeader"
+    [xPos]="getCellHorizontalPos(header.key)"
+    [isHovered]="hoveredHeaderDivider === header.key"
+    [isResizable]="isHeaderResizable(header)"
+    (hovered)="setHoveredDivider($event ? header : undefined)"
+    (dragged)="setHeaderSizeRelative(header, $event)"
+    (gripped)="onDividerHeld($event)">
+  </tmk-datatable-divider>
+  <tmk-datatable-divider
+    *ngIf="!hasNoVisibleRecords"
+    [isHorizontal]="true"
+    [xPos]="getCellHorizontalPos(header.key)">
+  </tmk-datatable-divider>
+
+  <ng-container *ngFor="let record of service.records; last as isLastRecord">
+    <tmk-datatable-cell-container
+      [xPos]="getCellHorizontalPos(header.key)"
+      [yPos]="getCellVerticalPos(record.id)">
+      {{ record[header.key] }}
+    </tmk-datatable-cell-container>
+
+    <tmk-datatable-divider
+      *ngIf="!isLastHeader"
+      [xPos]="getCellHorizontalPos(header.key)"
+      [yPos]="getCellVerticalPos(record.id)"
+      [isHovered]="hoveredHeaderDivider === header.key">
+    </tmk-datatable-divider>
+    <tmk-datatable-divider
+      *ngIf="!isLastRecord"
+      [isHorizontal]="true"
+      [xPos]="getCellHorizontalPos(header.key)"
+      [yPos]="getCellVerticalPos(record.id)">
+    </tmk-datatable-divider>
+  </ng-container>
+</ng-container>

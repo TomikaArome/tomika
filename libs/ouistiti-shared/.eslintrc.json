@@ -5,24 +5,34 @@
     {
       "files": ["*.ts"],
       "extends": [
-        "plugin:@nrwl/nx/angular",
+        "plugin:@nx/angular",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
-      "parserOptions": { "project": ["libs/ouistiti-shared/tsconfig.*?.json"] },
+      "parserOptions": {
+        "project": ["libs/ouistiti-shared/tsconfig.*?.json"]
+      },
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
-          { "type": "attribute", "prefix": "tomikaArome", "style": "camelCase" }
+          {
+            "type": "attribute",
+            "prefix": "tomikaArome",
+            "style": "camelCase"
+          }
         ],
         "@angular-eslint/component-selector": [
           "error",
-          { "type": "element", "prefix": "tomika-arome", "style": "kebab-case" }
+          {
+            "type": "element",
+            "prefix": "tomika-arome",
+            "style": "kebab-case"
+          }
         ]
       }
     },
     {
       "files": ["*.html"],
-      "extends": ["plugin:@nrwl/nx/angular-template"],
+      "extends": ["plugin:@nx/angular-template"],
       "rules": {}
     }
   ]

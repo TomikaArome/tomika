@@ -1,5 +1,6 @@
 {
   "name": "frontend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/frontend/src",
   "prefix": "tmk",
@@ -84,7 +85,7 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
           "apps/frontend/src/**/*.ts",
@@ -93,7 +94,7 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/frontend"],
       "options": {
         "jestConfig": "apps/frontend/jest.config.js",

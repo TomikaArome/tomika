@@ -9,7 +9,7 @@
   <div class="proceeding-in" *ngIf="breakPointHasTimer">
     Proceeding in:
     <tmk-ouistiti-timer
-      [timestamp]="roundInfo.breakPoint.timerExpires"
+      [breakpoint]="roundInfo.breakPoint"
       [large]="true"
     >
     </tmk-ouistiti-timer>

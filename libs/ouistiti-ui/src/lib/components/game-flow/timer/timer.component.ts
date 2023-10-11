@@ -1,6 +1,7 @@
 import { Component, HostBinding, Input, OnDestroy } from '@angular/core';
 import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { BreakPointInfo } from '@TomikaArome/ouistiti-shared';
 
 @Component({
   selector: 'tmk-ouistiti-timer',
@@ -15,6 +16,13 @@ export class TimerComponent implements OnDestroy {
   @Input()
   set timestamp(timestamp: number) {
     this.setInterval(timestamp);
+  }
+  @Input()
+  set breakpoint(breakpoint: BreakPointInfo) {
+    if (breakpoint.timerExpires) {
+      const serverDelay = Date.now() - breakpoint.serverTimestamp;
+      this.setInterval(breakpoint.timerExpires + serverDelay);
+    }
   }
   @HostBinding('class.large')
   @Input()
@@ -34,7 +42,7 @@ export class TimerComponent implements OnDestroy {
   private setInterval(timestamp: number) {
     this.endTimer$.next();
     this.updateTimeLeft(timestamp);
-    interval(1000)
+    interval(10)
       .pipe(takeUntil(this.endTimer$))
       .subscribe(() => {
         this.updateTimeLeft(timestamp);

@@ -61,9 +61,7 @@ export class PlayerListComponent {
     return this.expandedPlayerId === player.id;
   }
   setExpandedPlayer(player: PlayerInfo, isExpanded: boolean) {
-    if (isExpanded) {
-      this.expandedPlayerId = player.id;
-    }
+    this.expandedPlayerId = isExpanded ? player.id : null;
   }
 
   sortableListOrderChanged(order: PlayerInfo[]) {

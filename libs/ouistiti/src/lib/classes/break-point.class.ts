@@ -60,7 +60,9 @@ export class BreakPoint {
   }
 
   get info(): BreakPointInfo {
-    const info: BreakPointInfo = {};
+    const info: BreakPointInfo = {
+      serverTimestamp: Date.now()
+    };
     if (this.timestamp > -1) {
       info.timerExpires = this.timestamp;
     }

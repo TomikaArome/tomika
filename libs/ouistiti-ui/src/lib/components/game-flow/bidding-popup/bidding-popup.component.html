@@ -35,13 +35,13 @@
         <ng-container *ngIf="roundInfo.breakPoint?.timerExpires">
           Bidding ends in:
           <tmk-ouistiti-timer
-            [timestamp]="roundInfo.breakPoint?.timerExpires"
+            [breakpoint]="roundInfo.breakPoint"
           ></tmk-ouistiti-timer>
         </ng-container>
         <div class="proceeding-in-timer" *ngIf="roundInfo.breakPoint?.buffer">
           Proceeding in:
           <tmk-ouistiti-timer
-            [timestamp]="roundInfo.breakPoint.buffer?.timerExpires"
+            [breakpoint]="roundInfo.breakPoint.buffer"
             [large]="true"
           ></tmk-ouistiti-timer>
         </div>

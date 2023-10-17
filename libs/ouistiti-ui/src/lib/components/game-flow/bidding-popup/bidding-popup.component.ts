@@ -21,8 +21,6 @@ export class BiddingPopupComponent {
   players: PlayerInfo[];
   @Input()
   selfId: string;
-  @Input()
-  proceedingToPlayTimestamp = 5000;
 
   @Output()
   bidPlaced = new EventEmitter<number>();

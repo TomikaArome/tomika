@@ -33,7 +33,7 @@ export class SocketService {
     return this.mock
       ? lobbyStatusPlayerIsHostMock
       : {
-          inLobby: false,
+          inLobby: false
         };
   }
 

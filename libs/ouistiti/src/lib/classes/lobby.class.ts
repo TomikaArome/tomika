@@ -71,36 +71,22 @@ export class Lobby {
   private playerLeftSource = new Subject<LobbyLeftObserved>();
   private hostChangedSource = new Subject<LobbyChangedHostObserved>();
   private playerOrderChangedSource = new Subject<string[]>();
+  private playerOrderRandomisedSource = new Subject<string[]>();
   private maximumNumberOfPlayersChangedSource = new Subject<number>();
   private gameStartedSource = new Subject<Game>();
   private vacancyFilledSource = new Subject<Player>();
   private gameEndedSource = new Subject<void>();
 
   lobbyClosed$ = this.lobbyClosedSource.asObservable();
-  playerJoined$ = this.playerJoinedSource
-    .asObservable()
-    .pipe(takeUntil(this.lobbyClosed$));
-  playerLeft$ = this.playerLeftSource
-    .asObservable()
-    .pipe(takeUntil(this.lobbyClosed$));
-  hostChanged$ = this.hostChangedSource
-    .asObservable()
-    .pipe(takeUntil(this.lobbyClosed$));
-  playerOrderChanged$ = this.playerOrderChangedSource
-    .asObservable()
-    .pipe(takeUntil(this.lobbyClosed$));
-  maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource
-    .asObservable()
-    .pipe(takeUntil(this.lobbyClosed$));
-  gameStarted$ = this.gameStartedSource
-    .asObservable()
-    .pipe(takeUntil(this.lobbyClosed$));
-  vacancyFilled$ = this.vacancyFilledSource
-    .asObservable()
-    .pipe(takeUntil(this.lobbyClosed$));
-  gameEnded$ = this.gameEndedSource
-    .asObservable()
-    .pipe(takeUntil(this.lobbyClosed$));
+  playerJoined$ = this.playerJoinedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  playerLeft$ = this.playerLeftSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  hostChanged$ = this.hostChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  playerOrderChanged$ = this.playerOrderChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  playerOrderRandomised$ = this.playerOrderRandomisedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  maximumNumberOfPlayersChanged$ = this.maximumNumberOfPlayersChangedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  gameStarted$ = this.gameStartedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  vacancyFilled$ = this.vacancyFilledSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
+  gameEnded$ = this.gameEndedSource.asObservable().pipe(takeUntil(this.lobbyClosed$));
 
   private static lobbies: Lobby[] = [];
 
@@ -234,31 +220,46 @@ export class Lobby {
     this.hostChangedSource.next({ previousHost, newHost });
   }
 
-  changeOrder(newOrder: string[]) {
-    const missingPlayers: string[] = this.players.reduce(
-      (missing: string[], currentPlayer: Player) => {
-        if (newOrder.indexOf(currentPlayer.id) === -1) {
-          missing.push(currentPlayer.id);
-        }
-        return missing;
-      },
-      []
-    );
-    if (missingPlayers.length > 0) {
-      throw new OuistitiException({
-        type: OuistitiErrorType.ORDER_ARRAY_INCOMPLETE,
-        detail: {
-          provided: newOrder,
-          missing: missingPlayers,
-        },
-        param: 'order',
-      });
-    }
+  /**
+   * @param newOrder An array of player IDs to update, or null to randomise the order
+   */
+  changeOrder(newOrder: string[] = null) {
+    if (newOrder === null) {
 
-    this.playerOrder = newOrder.filter(
-      (playerId: string) => !!this.getPlayerById(playerId)
-    );
-    this.playerOrderChangedSource.next(this.playerOrder);
+      for (let i = this.playerOrder.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this.playerOrder[i], this.playerOrder[j]] = [this.playerOrder[j], this.playerOrder[i]];
+      }
+      this.playerOrderRandomisedSource.next(this.playerOrder);
+
+    } else {
+
+      const missingPlayers: string[] = this.players.reduce(
+        (missing: string[], currentPlayer: Player) => {
+          if (newOrder.indexOf(currentPlayer.id) === -1) {
+            missing.push(currentPlayer.id);
+          }
+          return missing;
+        },
+        []
+      );
+      if (missingPlayers.length > 0) {
+        throw new OuistitiException({
+          type: OuistitiErrorType.ORDER_ARRAY_INCOMPLETE,
+          detail: {
+            provided: newOrder,
+            missing: missingPlayers,
+          },
+          param: 'order',
+        });
+      }
+
+      this.playerOrder = newOrder.filter(
+        (playerId: string) => !!this.getPlayerById(playerId)
+      );
+      this.playerOrderChangedSource.next(this.playerOrder);
+
+    }
   }
 
   changeMaxNumberOfPlayers(newMax: number) {

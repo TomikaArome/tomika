@@ -12,14 +12,8 @@ import {
 } from '@TomikaArome/ouistiti-shared';
 import { PlayerService } from '../../services/player.service';
 import { LobbyService } from '../../services/lobby.service';
-import {
-  faBan,
-  faCrown,
-  faDoorOpen,
-  faPlay,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCrown, faDoorOpen, faPlay, faRandom } from '@fortawesome/free-solid-svg-icons';
 import { Subject } from 'rxjs';
-import { RoundService } from '../../services/round.service';
 
 @Component({
   selector: 'tmk-ouistiti-lobby-screen',
@@ -68,12 +62,16 @@ export class LobbyScreenComponent implements OnDestroy {
   faBan = faBan;
   faDoorOpen = faDoorOpen;
   faPlay = faPlay;
+  faRandom = faRandom;
+
+  get isPlayerOrderRandomising(): boolean {
+    return this.lobbyService.isPlayerOrderRandomising;
+  }
 
   constructor(
     private socketService: SocketService,
     private playerService: PlayerService,
-    private lobbyService: LobbyService,
-    private roundService: RoundService
+    private lobbyService: LobbyService
   ) {
     this.playerService.isHost$
       .pipe(takeUntil(this.onDestroy$))
@@ -155,11 +153,25 @@ export class LobbyScreenComponent implements OnDestroy {
     this.lobbyService.startGame();
   }
 
+  randomisePlayerOrder() {
+    this.lobbyService.randomisePlayerOrder();
+  }
+
   canStartGame(playerList: PlayerInfo[]): boolean {
     return (
       playerList.length >= MIN_NUMBER_OF_PLAYERS_PER_LOBBY &&
       playerList.length <= MAX_NUMBER_OF_PLAYERS_PER_LOBBY
     );
+  }
+
+  canRandomisePlayerOrder(playerList: PlayerInfo[]): boolean {
+    return playerList.length > 2 && !this.lobbyService.isPlayerOrderRandomising;
+  }
+
+  playersInList(actualPlayerOrder: PlayerInfo[]): PlayerInfo[] {
+    return this.isPlayerOrderRandomising ? this.lobbyService.fakePlayerOrderWhileRandomising.map((playerId: string) => {
+      return actualPlayerOrder.find((player: PlayerInfo) => player.id === playerId);
+    }) : actualPlayerOrder;
   }
 
   ngOnDestroy() {

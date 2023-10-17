@@ -1,7 +1,7 @@
 <div class="section">
-  <div class="inner-section">
+  <div class="inner-section" [class.randomising-player-order]="isPlayerOrderRandomising">
     <tmk-ouistiti-player-list
-      [players]="playerList$ | async"
+      [players]="playersInList(playerList$ | async)"
       [hostId]="hostId$ | async"
       [selfId]="selfId"
       [maxNumberOfPlayers]="maxNumberOfPlayers$ | async"
@@ -61,6 +61,13 @@
           (click)="startGame()"
         >
           <fa-icon [icon]="faPlay"></fa-icon>Start game
+        </button>
+        <button
+          class="button-colour-blue"
+          [disabled]="!canRandomisePlayerOrder(playerList$ | async)"
+          (click)="randomisePlayerOrder()"
+        >
+          <fa-icon [icon]="faRandom"></fa-icon>Randomise players
         </button>
       </div>
     </div>

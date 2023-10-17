@@ -9,10 +9,10 @@ import {
   LobbyJoinParams,
   LobbyStatus,
   PlayerInfo,
-  PlayerKickParams,
+  PlayerKickParams
 } from '@TomikaArome/ouistiti-shared';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class LobbyService {
@@ -24,6 +24,12 @@ export class LobbyService {
 
   private lobbyListSource = new BehaviorSubject<LobbyInfo[]>([]);
   lobbyList$ = this.lobbyListSource.asObservable();
+
+  // Used for creating a small randomising animation
+  private _fakePlayerOrderWhileRandomising: string[] = null;
+  get fakePlayerOrderWhileRandomising(): string[] { return [...this._fakePlayerOrderWhileRandomising]; }
+  get isPlayerOrderRandomising(): boolean { return this._fakePlayerOrderWhileRandomising !== null; }
+  private playerOrderRandomisingStop$ = new Subject();
 
   static isLobbyJoinable(lobbyInfo: LobbyInfo): boolean {
     return (
@@ -96,8 +102,25 @@ export class LobbyService {
           (lobby: LobbyInfo) => lobby.id === id
         );
         this.lobbyList.splice(index, 1);
+        this.lobbyListSource.next(this.lobbyList);
       });
-    this.lobbyListSource.next(this.lobbyList);
+
+    this.socketService
+      .getEvent<LobbyInfo>('playerOrderRandomised')
+      .subscribe((lobbyInfo: LobbyInfo) => {
+        this.playerOrderRandomisingStop$.next(true);
+        timer(0,50).pipe(takeUntil(this.playerOrderRandomisingStop$)).subscribe(() => {
+          this._fakePlayerOrderWhileRandomising = [...lobbyInfo.playerOrder];
+          for (let i = this._fakePlayerOrderWhileRandomising.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this._fakePlayerOrderWhileRandomising[i], this._fakePlayerOrderWhileRandomising[j]] = [this._fakePlayerOrderWhileRandomising[j], this._fakePlayerOrderWhileRandomising[i]];
+          }
+        });
+        timer(1000).pipe(takeUntil(this.playerOrderRandomisingStop$)).subscribe(() => {
+          this.playerOrderRandomisingStop$.next(true);
+          this._fakePlayerOrderWhileRandomising = null;
+        });
+      });
   }
 
   private updateLobby(lobbyInfo: LobbyInfo) {
@@ -161,5 +184,9 @@ export class LobbyService {
 
   endGame() {
     this.socketService.emitEvent('endGame');
+  }
+
+  randomisePlayerOrder() {
+    this.socketService.emitEvent('randomisePlayerOrder');
   }
 }

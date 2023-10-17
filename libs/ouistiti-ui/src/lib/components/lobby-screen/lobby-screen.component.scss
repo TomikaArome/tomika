@@ -25,6 +25,10 @@
       .buttons-row {
         margin-top: 20px;
       }
+
+      &.randomising-player-order tmk-ouistiti-player-list {
+        pointer-events: none;
+      }
     }
   }
 }

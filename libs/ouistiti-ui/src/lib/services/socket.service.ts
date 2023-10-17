@@ -16,7 +16,7 @@ import {
   roundStatusMock,
   lobbyStatusPlayerIsHostMock,
   lobbyListMock,
-  getGameScoresMock,
+  getGameScoresMock
 } from '@TomikaArome/ouistiti-shared';
 import { ServerEvent } from '../classes/server-event.class';
 
@@ -64,6 +64,7 @@ export class SocketService {
     new ServerEvent<LobbyInfo[]>('lobbyList', this.lobbyListInitialValue),
     new ServerEvent<LobbyInfo>('lobbyUpdated'),
     new ServerEvent<LobbyClosed>('lobbyClosed'),
+    new ServerEvent<LobbyInfo>('playerOrderRandomised'),
 
     new ServerEvent<RoundScores[]>('scores', this.gameScoresInitialValue),
 

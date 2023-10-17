@@ -1,16 +1,9 @@
 import { SocketController } from './socket.controller';
 import { Lobby } from '../classes/lobby.class';
 import { debounceTime, filter, map, takeUntil, tap } from 'rxjs/operators';
-import {
-  LobbyJoinObserved,
-  LobbyLeftObserved,
-} from '../interfaces/lobby-oberserved.interface';
+import { LobbyJoinObserved, LobbyLeftObserved, } from '../interfaces/lobby-oberserved.interface';
 import { merge, MonoTypeOperatorFunction, Observable } from 'rxjs';
-import {
-  GameStatus,
-  LobbyClosed,
-  LobbyStatus,
-} from '@TomikaArome/ouistiti-shared';
+import { GameStatus, LobbyClosed, LobbyStatus } from '@TomikaArome/ouistiti-shared';
 import { SocketPlayerController } from './socket-player.controller';
 import { SocketGameController } from './socket-game.controller';
 import { Game } from '../classes/game.class';
@@ -45,6 +38,7 @@ export class SocketLobbyController {
     this.subscribeLobbyClosed();
     this.subscribeGameStarted();
     this.subscribeGameEnded();
+    this.subscribePlayerOrderRandomised();
 
     this.init();
   }
@@ -116,7 +110,8 @@ export class SocketLobbyController {
       this.lobby.hostChanged$,
       this.lobby.playerOrderChanged$,
       this.lobby.maximumNumberOfPlayersChanged$,
-      this.lobby.vacancyFilled$
+      this.lobby.vacancyFilled$,
+      this.lobby.playerOrderRandomised$
     )
       .pipe(this.stop, debounceTime(SocketController.debounceTime))
       .subscribe(() => {
@@ -156,6 +151,12 @@ export class SocketLobbyController {
   subscribeGameEnded() {
     this.lobby.gameEnded$.pipe(this.stop).subscribe(() => {
       this.emitLobbyStatus();
+    });
+  }
+
+  subscribePlayerOrderRandomised() {
+    this.lobby.playerOrderRandomised$.pipe(this.stop).subscribe(() => {
+      this.controller.emit('playerOrderRandomised', this.lobby.info);
     });
   }
 }

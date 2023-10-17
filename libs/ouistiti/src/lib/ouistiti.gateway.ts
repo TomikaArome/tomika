@@ -124,6 +124,15 @@ export class OuistitiGateway {
     }
   }
 
+  @UseFilters(new OuistitiExceptionFilter('randomisePlayerOrder'))
+  @SubscribeMessage('randomisePlayerOrder')
+  randomisePlayerOrder(socket: Socket) {
+    OuistitiException.checkIfInLobby(socket.data.controller);
+    OuistitiException.checkIfHost(socket.data.controller);
+
+    socket.data.controller.player.lobby.changeOrder();
+  }
+
   @UseFilters(new OuistitiExceptionFilter('kickPlayer'))
   @SubscribeMessage('kickPlayer')
   kickPlayer(socket: Socket, params: PlayerKickParams) {

@@ -31,7 +31,7 @@ export class EndOfGameContainerComponent {
       reversedScores.find(
         (roundScore: RoundScores) =>
           typeof roundScore?.playerScores[0]?.pointDifference === 'number'
-      ).roundNumber ?? 1
+      )?.roundNumber ?? 1
     );
   }
 

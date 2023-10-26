@@ -62,10 +62,12 @@ Example:
 ### Project configuration
 #### Backend
 
-| Key            | Example value                                      | Type       | Description                                                                     |
-|----------------|----------------------------------------------------|------------|---------------------------------------------------------------------------------|
-| `frontendUris` | `['http://localhost:4200', 'https://example.com']` | `string[]` | URIs of the frontend servers allowed to connect using websocket. Used for CORS. |
-| `port`         | `3333`                                             | `number`   | Port number on which the backend server shall run. Defaults to 443.             |
+| Key                       | Example value                                                             | Type       | Description                                                                                                                |
+|---------------------------|---------------------------------------------------------------------------|------------|----------------------------------------------------------------------------------------------------------------------------|
+| `frontendUris`            | `['http://localhost:4200', 'https://example.com']`                        | `string[]` | URIs of the frontend servers allowed to connect using websocket. Used for CORS.                                            |
+| `mongodbConnectionString` | `'mongodb+srv://example-user:password@example-cluster.abcde.mongodb.net'` | `string[]` | [Connection string](https://www.mongodb.com/docs/drivers/node/current/quick-start/create-a-connection-string/) for mongodb |
+| `mongodbDatabase`         | `example-database`                                                        | `string[]` | Database to use                                                                                                            |
+| `port`                    | `3333`                                                                    | `number`   | Port number on which the backend server shall run. Defaults to 443.                                                        |
 
 #### Frontend
 

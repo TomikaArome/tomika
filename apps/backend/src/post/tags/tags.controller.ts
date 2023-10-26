@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
 import { TagsService } from './tags.service';
-import { ITagCreate } from '@TomikaArome/common';
+import { ITagCreate, ITagUpdate, TmkErrNotFound } from '@TomikaArome/common';
 
 @Controller('tags')
 export class TagsController {
@@ -13,12 +13,17 @@ export class TagsController {
 
   @Get(':id')
   async getById(@Param('id') id: string) {
-    return await this.tagsService.getById(id);
+    return TmkErrNotFound.throwOnNotFound(await this.tagsService.getById(id), { collection: 'tags', propertyName: '_id', value: id });
   }
 
   @Post()
   async create(@Body() body: ITagCreate) {
     return await this.tagsService.create(body);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: ITagUpdate) {
+    return await this.tagsService.update(id, body);
   }
 
   @Delete(':id')

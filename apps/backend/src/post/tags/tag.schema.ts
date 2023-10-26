@@ -9,7 +9,8 @@ export class Tag implements ITag {
   @Prop({
     minlength: TAG_LABEL_MIN_LENGTH,
     maxlength: TAG_LABEL_MAX_LENGTH,
-    match: TAG_LABEL_REGEX
+    match: TAG_LABEL_REGEX,
+    unique: true
   })
   label: string;
 }

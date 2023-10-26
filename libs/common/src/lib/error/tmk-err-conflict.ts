@@ -7,6 +7,16 @@ export interface TmkErrConflictDetails extends TmkErrDetails {
 }
 
 export class TmkErrConflict extends TmkErr {
+  /**
+   * Throws a TmkErrConflict if something evaluates to true
+   */
+  static throwOnConflict(something: unknown, details: TmkErrConflictDetails): unknown {
+    if (!!something) {
+      throw new TmkErrConflict(details);
+    }
+    return something;
+  }
+
   details: TmkErrConflictDetails;
 
   constructor(details: TmkErrConflictDetails, ...params: any[]) {

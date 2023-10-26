@@ -7,5 +7,9 @@ export interface ITag {
   label: string;
 }
 
-// Same as ITag
-export type ITagCreate = ITag;
+export interface ITagCreate {
+  label: string;
+}
+
+// Same as ITagCreate
+export type ITagUpdate = ITagCreate;

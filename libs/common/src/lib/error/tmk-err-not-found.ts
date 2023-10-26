@@ -7,6 +7,16 @@ export interface TmkErrNotFoundDetails extends TmkErrDetails {
 }
 
 export class TmkErrNotFound extends TmkErr {
+  /**
+   * Throws a TmkErrNotFound if something evaluates to false
+   */
+  static throwOnNotFound(something: unknown, details: TmkErrNotFoundDetails): unknown {
+    if (!something) {
+      throw new TmkErrNotFound(details);
+    }
+    return something;
+  }
+
   details: TmkErrNotFoundDetails;
 
   constructor(details: TmkErrNotFoundDetails, ...params: any[]) {

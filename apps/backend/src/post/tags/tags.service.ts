@@ -15,7 +15,7 @@ export class TagsService {
   async getById(id: string): Promise<TagDocument> {
     const tag = await this.tagModel.findById(id);
     if (!tag) {
-      throw new TmkErrNotFound({ collection: 'tags', propertyName: '_id', value: id });
+      throw new TmkErrNotFound({ collection: 'tags', path: '_id', value: id });
     }
     return tag;
   }
@@ -23,7 +23,7 @@ export class TagsService {
   async getByLabel(label: string): Promise<TagDocument> {
     const tag = await this.tagModel.findOne({ label });
     if (!tag) {
-      throw new TmkErrNotFound({ collection: 'tags', propertyName: 'label', value: label });
+      throw new TmkErrNotFound({ collection: 'tags', path: 'label', value: label });
     }
     return tag;
   }

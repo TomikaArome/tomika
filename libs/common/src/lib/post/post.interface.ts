@@ -1,4 +1,4 @@
-import { ITag } from './tag.interface';
+import { ITag, ITagCreate } from './tag.interface';
 
 export interface IPost {
   _id?: string;
@@ -15,5 +15,5 @@ export interface IPostRevision {
 export interface IPostCreate {
   title: string;
   content: string;
-  tags: ITag[];
+  tags: (string | ITagCreate)[];
 }

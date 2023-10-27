@@ -13,7 +13,7 @@ export class TagsController {
 
   @Get(':id')
   async getById(@Param('id') id: string) {
-    return TmkErrNotFound.throwOnNotFound(await this.tagsService.getById(id), { collection: 'tags', propertyName: '_id', value: id });
+    return await this.tagsService.getById(id);
   }
 
   @Post()

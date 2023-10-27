@@ -40,7 +40,7 @@ export class TagsService {
   }
 
   async delete(id: string): Promise<void> {
-    await this.getById(id);
-    await this.tagModel.findByIdAndDelete(id);
+    const tag = await this.getById(id);
+    await tag.deleteOne();
   }
 }

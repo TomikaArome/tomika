@@ -1,43 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Tag } from './tag.schema';
+import { Tag, TagDocument } from './tag.schema';
 import { Model } from 'mongoose';
 import { ITagCreate, ITagUpdate, TmkErrNotFound } from '@TomikaArome/common';
-import { TmkErrConflict } from '@TomikaArome/common';
 
 @Injectable()
 export class TagsService {
   constructor(@InjectModel(Tag.name) private tagModel: Model<Tag>) {}
 
-  async list(): Promise<Tag[]> {
+  async list(): Promise<TagDocument[]> {
     return this.tagModel.find();
   }
 
-  async getById(id: string): Promise<Tag> {
-    return this.tagModel.findById(id);
+  async getById(id: string): Promise<TagDocument> {
+    const tag = await this.tagModel.findById(id);
+    if (!tag) {
+      throw new TmkErrNotFound({ collection: 'tags', propertyName: '_id', value: id });
+    }
+    return tag;
   }
 
-  async getByLabel(label: string, throwOnNotFound = true): Promise<Tag> {
-    return this.tagModel.findOne({ label });
+  async getByLabel(label: string): Promise<TagDocument> {
+    const tag = await this.tagModel.findOne({ label });
+    if (!tag) {
+      throw new TmkErrNotFound({ collection: 'tags', propertyName: 'label', value: label });
+    }
+    return tag;
   }
 
-  async create(data: ITagCreate): Promise<Tag> {
-    TmkErrConflict.throwOnConflict(await this.getByLabel(data.label), { collection: 'tags', propertyName: 'label', value: data.label });
+  async create(data: ITagCreate): Promise<TagDocument> {
     const newTag = new this.tagModel(data);
     return newTag.save();
   }
 
-  async update(id: string, data: ITagUpdate): Promise<Tag> {
-    if (data.label) {
-      TmkErrConflict.throwOnConflict(await this.getByLabel(data.label), { collection: 'tags', propertyName: 'label', value: data.label });
-    }
-    const query = await this.tagModel.findByIdAndUpdate(id, { label: data.label });
-    TmkErrNotFound.throwOnNotFound(query, { collection: 'tags', propertyName: '_id', value: id });
-    return this.getById(id);
+  async update(id: string, data: ITagUpdate): Promise<TagDocument> {
+    const tag = await this.getById(id);
+    if (data.label) { tag.label = data.label; }
+    return tag.save();
   }
 
   async delete(id: string): Promise<void> {
-    const query = await this.tagModel.findByIdAndDelete(id);
-    TmkErrNotFound.throwOnNotFound(query, { collection: 'tags', propertyName: '_id', value: id });
+    await this.getById(id);
+    await this.tagModel.findByIdAndDelete(id);
   }
 }

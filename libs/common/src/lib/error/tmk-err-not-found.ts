@@ -10,7 +10,7 @@ export class TmkErrNotFound extends TmkErr {
   /**
    * Throws a TmkErrNotFound if something evaluates to false
    */
-  static throwOnNotFound(something: unknown, details: TmkErrNotFoundDetails): unknown {
+  static throwOnNotFound<T>(something: T, details: TmkErrNotFoundDetails): T {
     if (!something) {
       throw new TmkErrNotFound(details);
     }

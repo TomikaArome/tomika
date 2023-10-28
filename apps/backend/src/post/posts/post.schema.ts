@@ -8,6 +8,8 @@ export interface PostVirtuals {
   get currentRevision(): PostRevision;
   get title(): string;
   get content(): string;
+  get lastModifiedAt(): Date;
+  get submittedAt(): Date;
 }
 export type PostModel = Model<Post, {}, PostVirtuals>;
 export type PostRevisionModel = Model<PostRevision>;
@@ -57,4 +59,14 @@ postSchema.virtual('title').get(function() {
 
 postSchema.virtual('content').get(function() {
   return (this.get('currentRevision') as PostRevisionDocument).content;
+});
+
+postSchema.virtual('lastModifiedAt').get(function() {
+  return (this.get('currentRevision') as PostRevisionDocument).submittedAt;
+});
+
+postSchema.virtual('submittedAt').get(function() {
+  return (this.revisions.reduce((acc: PostRevision, curr: PostRevision) => {
+    return acc === null ? curr : (+acc.submittedAt > +curr.submittedAt ? acc : curr);
+  }, null)).submittedAt;
 });

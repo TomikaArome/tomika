@@ -20,3 +20,8 @@ export interface IPostCreate {
 
 // Same as IPostCreate, but all paths are optional to update
 export type IPostUpdate = Partial<IPostCreate>;
+
+export interface IPostRevisionCreate {
+  title: string;
+  content: string;
+}

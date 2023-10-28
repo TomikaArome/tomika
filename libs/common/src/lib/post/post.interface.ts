@@ -17,3 +17,6 @@ export interface IPostCreate {
   content: string;
   tags: (string | ITagCreate)[];
 }
+
+// Same as IPostCreate, but all paths are optional to update
+export type IPostUpdate = Partial<IPostCreate>;

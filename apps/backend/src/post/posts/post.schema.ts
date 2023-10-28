@@ -1,11 +1,18 @@
-import { HydratedDocument } from 'mongoose';
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, Model } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { IPost, IPostRevision } from '@TomikaArome/common';
 import { Tag } from '../tags/tag.schema';
 
+export interface PostVirtuals {
+  get currentRevision(): PostRevision;
+  get title(): string;
+  get content(): string;
+}
+export type PostModel = Model<Post, {}, PostVirtuals>;
+export type PostRevisionModel = Model<PostRevision>;
 export type PostRevisionDocument = HydratedDocument<PostRevision>;
-export type PostDocument = HydratedDocument<Post>;
+export type PostDocument = HydratedDocument<Post, PostVirtuals>;
 
 @Schema({ _id: false })
 export class PostRevision implements IPostRevision {
@@ -25,6 +32,8 @@ export class PostRevision implements IPostRevision {
   submittedAt: Date;
 }
 
+export const postRevisionSchema = SchemaFactory.createForClass(PostRevision);
+
 @Schema()
 export class Post implements IPost {
   @Prop([PostRevision])
@@ -34,5 +43,18 @@ export class Post implements IPost {
   tags: Tag[];
 }
 
-export const postRevisionSchema = SchemaFactory.createForClass(PostRevision);
 export const postSchema = SchemaFactory.createForClass(Post);
+
+postSchema.virtual('currentRevision').get(function() {
+  return this.revisions.reduce((acc: PostRevision, curr: PostRevision) => {
+    return acc === null ? curr : (+acc.submittedAt > +curr.submittedAt ? acc : curr);
+  }, null);
+});
+
+postSchema.virtual('title').get(function() {
+  return (this.get('currentRevision') as PostRevisionDocument).title;
+});
+
+postSchema.virtual('content').get(function() {
+  return (this.get('currentRevision') as PostRevisionDocument).content;
+});

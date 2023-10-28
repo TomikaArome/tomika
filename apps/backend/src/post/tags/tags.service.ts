@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Tag, TagDocument } from './tag.schema';
-import { Model } from 'mongoose';
+import { Tag, TagDocument, TagModel } from './tag.schema';
 import { ITagCreate, ITagUpdate, TmkErrNotFound } from '@TomikaArome/common';
 
 @Injectable()
 export class TagsService {
-  constructor(@InjectModel(Tag.name) private tagModel: Model<Tag>) {}
+  constructor(@InjectModel(Tag.name) private tagModel: TagModel) {}
 
   async list(): Promise<TagDocument[]> {
     return this.tagModel.find();
@@ -42,5 +41,14 @@ export class TagsService {
   async delete(id: string): Promise<void> {
     const tag = await this.getById(id);
     await tag.deleteOne();
+  }
+
+  async createOrGetTags(arr: (string | ITagCreate)[]): Promise<TagDocument[]> {
+    const tags: TagDocument[] = [];
+    for (const el of arr) {
+      const tag: TagDocument = (typeof el === 'string') ? (await this.getById(el)) : (await this.create(el));
+      tags.push(tag);
+    }
+    return tags;
   }
 }

@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post as HttpPost } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post as HttpPost, Put } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { IPostCreate } from '@TomikaArome/common';
+import { IPostCreate, IPostUpdate } from '@TomikaArome/common';
 
 @Controller('posts')
 export class PostsController {
@@ -21,8 +21,13 @@ export class PostsController {
     return await this.postsService.create(body);
   }
 
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() body: IPostUpdate) {
+    return await this.postsService.update(id, body);
+  }
+
   @Delete(':id')
-  async update(@Param('id') id: string) {
+  async delete(@Param('id') id: string) {
     await this.postsService.delete(id);
   }
 }

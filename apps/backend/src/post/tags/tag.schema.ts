@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Model } from 'mongoose';
 import { ITag, TAG_LABEL_MAX_LENGTH, TAG_LABEL_MIN_LENGTH, TAG_LABEL_REGEX } from '@TomikaArome/common';
 
+export type TagModel = Model<Tag>;
 export type TagDocument = HydratedDocument<Tag>;
 
 @Schema()

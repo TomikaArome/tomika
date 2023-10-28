@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument, PostRevision } from './post.schema';
-import { Model } from 'mongoose';
-import { IPostCreate, ITagCreate, TmkErrNotFound } from '@TomikaArome/common';
+import { Post, PostDocument, PostModel, PostRevision, PostRevisionModel } from './post.schema';
+import { IPostCreate, IPostUpdate, ITagCreate, TmkErrNotFound } from '@TomikaArome/common';
 import { TagsService } from '../tags/tags.service';
-import { Tag, TagDocument } from '../tags/tag.schema';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectModel(Post.name) private postModel: Model<Post>,
-    @InjectModel(PostRevision.name) private postRevisionModel: Model<PostRevision>,
+    @InjectModel(Post.name) private postModel: PostModel,
+    @InjectModel(PostRevision.name) private postRevisionModel: PostRevisionModel,
     private tagsService: TagsService
   ) {}
 
@@ -35,12 +33,24 @@ export class PostsService {
       revisions: [newPostRevision]
     });
     if (data.tags) {
-      for (const el of data.tags) {
-        const tag: TagDocument = (typeof el === 'string') ? (await this.tagsService.getById(el)) : (await this.tagsService.create(el));
-        newPost.tags.push(tag);
-      }
+      newPost.tags = await this.tagsService.createOrGetTags(data.tags);
     }
     return newPost.save();
+  }
+
+  async update(id: string, data: IPostUpdate): Promise<PostDocument> {
+    const post = await this.getById(id);
+    if ((data.title || data.content) && (data.title !== post.title || data.content !== post.content)) {
+      const newPostRevision = new this.postRevisionModel({
+        title: data.title || post.title,
+        content: data.content || post.content
+      });
+      post.revisions.push(newPostRevision);
+    }
+    if (data.tags) {
+      post.tags = await this.tagsService.createOrGetTags(data.tags);
+    }
+    return post.save();
   }
 
   async delete(id: string): Promise<void> {

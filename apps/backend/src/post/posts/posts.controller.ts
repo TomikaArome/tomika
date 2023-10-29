@@ -1,16 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post as HttpPost, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post as HttpPost, Put, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { IPostCreate, IPostRevisionCreate, IPostUpdate } from '@TomikaArome/common';
+import { IPostCreate, IPostLatestRevision, IPostRevisionCreate, IPostUpdate } from '@TomikaArome/common';
 import { PostDocument } from './post.schema';
 
 @Controller('posts')
 export class PostsController {
   constructor(private postsService: PostsService) {}
 
-  private formatPost(post: PostDocument) {
-    post.depopulate('tags');
+  private async formatPost(post: PostDocument, populate = ''): Promise<IPostLatestRevision> {
+    const populateTags = populate?.split(',').includes('tags') ?? false;
+    populateTags ? await post.populate('tags') : post.depopulate('tags');
     return {
-      _id: post._id,
+      _id: post._id.toString(),
       title: post.title,
       content: post.content,
       submittedAt: post.submittedAt,
@@ -20,24 +21,25 @@ export class PostsController {
   }
 
   @Get()
-  async list() {
-    return (await this.postsService.list()).map((post: PostDocument) => this.formatPost(post));
+  async list(@Query('populate') populate: string) {
+    return await Promise.all((await this.postsService.list())
+      .map((post: PostDocument) => this.formatPost(post, populate)));
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string) {
+  async getById(@Param('id') id: string, @Query('populate') populate: string) {
     const post = await this.postsService.getById(id);
-    return this.formatPost(post);
+    return await this.formatPost(post, populate);
   }
 
   @HttpPost()
-  async create(@Body() body: IPostCreate) {
-    return await this.postsService.create(body);
+  async create(@Body() body: IPostCreate, @Query('populate') populate: string) {
+    return await this.formatPost(await this.postsService.create(body), populate);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() body: IPostUpdate) {
-    return await this.postsService.update(id, body);
+  async update(@Param('id') id: string, @Body() body: IPostUpdate, @Query('populate') populate: string) {
+    return await this.formatPost(await this.postsService.update(id, body), populate);
   }
 
   @Delete(':id')

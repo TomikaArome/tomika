@@ -6,6 +6,15 @@ export interface IPost {
   tags: ITag[];
 }
 
+export interface IPostLatestRevision {
+  _id?: string;
+  title: string;
+  content: string;
+  submittedAt: Date;
+  lastModifiedAt: Date;
+  tags: (string | ITag)[];
+}
+
 export interface IPostRevision {
   title: string;
   content: string;

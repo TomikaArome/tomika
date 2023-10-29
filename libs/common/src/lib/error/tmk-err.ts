@@ -26,9 +26,6 @@ export class TmkErr extends Error {
   constructor(details: TmkErrDetails = {}, ...params) {
     super(...params);
     this.name = this.constructor.name;
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, TmkErr);
-    }
     this.thrownAt = new Date();
     this.details = details;
   }

@@ -49,3 +49,5 @@ libs/*/src/environments
 /secrets
 
 .angular
+
+.nx/cache

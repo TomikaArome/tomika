@@ -2,17 +2,6 @@
   "affected": {
     "defaultBase": "master"
   },
-  "npmScope": "TomikaArome",
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx-cloud",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "accessToken": "NmMzYzIxNzktOTJiZS00YzVkLTgwNzQtNjhiM2IwMmE1NTNifHJlYWQtd3JpdGU="
-      }
-    }
-  },
-  "cli": {},
   "generators": {
     "@nx/angular:application": {
       "style": "scss",
@@ -55,16 +44,21 @@
   },
   "targetDefaults": {
     "build": {
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "cache": true
     },
     "e2e": {
-      "inputs": ["default", "^production"]
+      "inputs": ["default", "^production"],
+      "cache": true
     },
     "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "cache": true
     },
     "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     }
-  }
+  },
+  "nxCloudAccessToken": "NmMzYzIxNzktOTJiZS00YzVkLTgwNzQtNjhiM2IwMmE1NTNifHJlYWQtd3JpdGU="
 }

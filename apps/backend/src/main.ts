@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+// import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
@@ -19,13 +19,16 @@ async function bootstrap() {
       }
     : {};
 
-  const app = await NestFactory.create(AppModule, { ...httpsOptions });
+  const app = await NestFactory.create(AppModule, {
+    ...httpsOptions,
+    logger: ['fatal', 'error', 'warn', 'debug']
+  });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalFilters(new MongoErrorFilter(), new ValidationErrorFilter(), new TmkErrFilter());
   const port = environment.port || 3333;
   await app.listen(port, () => {
-    Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
+    console.log('Listening at http://localhost:' + port + '/' + globalPrefix);
   });
 }
 

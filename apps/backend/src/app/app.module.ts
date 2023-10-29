@@ -4,8 +4,7 @@ import { Connection as MongooseConnection } from 'mongoose';
 
 import { MongooseModule } from '@nestjs/mongoose';
 import { OuistitiModule } from '@TomikaArome/ouistiti';
-import { TagsModule } from '../post/tags/tags.module';
-import { PostsModule } from '../post/posts/posts.module';
+import { PostsModule, TagsModule } from '@TomikaArome/common-backend';
 
 import { AppController } from './app.controller';
 

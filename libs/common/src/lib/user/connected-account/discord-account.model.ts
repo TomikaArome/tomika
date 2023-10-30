@@ -4,26 +4,26 @@ import {
   ConnectedAccountAvatarOptions,
 } from './connected-account.model';
 
-type DiscordAccountAvatarValidExtensions =
-  | 'png'
-  | 'jpg'
-  | 'jpeg'
-  | 'webp'
-  | 'gif';
-type DiscordAccountAvatarValidSizes =
-  | 16
-  | 32
-  | 64
-  | 128
-  | 256
-  | 512
-  | 1024
-  | 2048
-  | 4096;
-interface DiscordAccountAvatarOptions extends ConnectedAccountAvatarOptions {
-  size?: DiscordAccountAvatarValidSizes;
-  extension?: DiscordAccountAvatarValidExtensions;
-}
+// type DiscordAccountAvatarValidExtensions =
+//   | 'png'
+//   | 'jpg'
+//   | 'jpeg'
+//   | 'webp'
+//   | 'gif';
+// type DiscordAccountAvatarValidSizes =
+//   | 16
+//   | 32
+//   | 64
+//   | 128
+//   | 256
+//   | 512
+//   | 1024
+//   | 2048
+//   | 4096;
+// interface DiscordAccountAvatarOptions extends ConnectedAccountAvatarOptions {
+//   size?: DiscordAccountAvatarValidSizes;
+//   extension?: DiscordAccountAvatarValidExtensions;
+// }
 
 export interface DiscordAccountModel extends ConnectedAccountModel {
   readonly accountType: 'discord';
@@ -33,7 +33,7 @@ export interface DiscordAccountModel extends ConnectedAccountModel {
 }
 
 export class DiscordAccount implements DiscordAccountModel, ConnectedAccount {
-  readonly accountType: 'discord';
+  readonly accountType = 'discord';
   id: string;
   name: string;
   discriminator: string;
@@ -43,14 +43,14 @@ export class DiscordAccount implements DiscordAccountModel, ConnectedAccount {
     this.id = model.id;
     this.name = model.name;
     this.discriminator = model.discriminator;
-    this.avatarHash = model.avatarHash ?? null;
+    this.avatarHash = model.avatarHash ?? '';
   }
 
   isAvatarAnimated(): boolean {
     return /^a_/.test(this.avatarHash);
   }
 
-  getAvatarUrl(options: DiscordAccountAvatarOptions = {}): string {
+  getAvatarUrl(options: ConnectedAccountAvatarOptions = {}): string {
     let url = 'https://cdn.discordapp.com/';
     if (this.avatarHash) {
       url += `avatars/${this.id}/${this.avatarHash}.${this.getAvatarExtension(
@@ -64,7 +64,7 @@ export class DiscordAccount implements DiscordAccountModel, ConnectedAccount {
   }
 
   private getAvatarExtension(
-    extension: DiscordAccountAvatarValidExtensions = 'png',
+    extension: string = 'png',
     animated = true
   ): string {
     if (animated && this.isAvatarAnimated()) {

@@ -7,13 +7,13 @@ export interface TmkErrNotFoundDetails extends TmkErrDetails {
 }
 
 export class TmkErrNotFound extends TmkErr {
-  details: TmkErrNotFoundDetails;
+  override details!: TmkErrNotFoundDetails;
 
   constructor(details: TmkErrNotFoundDetails, ...params: any[]) {
     super(details, ...params);
   }
 
-  getMessage(): string {
+  override getMessage(): string {
     if (this.message) { return this.message; }
     const collectionPart = (!!this.details.collection) ? ` in the "${this.details.collection}" collection` : '';
     const valuePart = (!!this.details.value) ? ` with the value "${this.details.value}"` : ' with the provided value';

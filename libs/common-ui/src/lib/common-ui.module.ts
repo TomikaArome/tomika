@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TagsModule } from './tags/tags.module';
 
 import { DatatableCellContainerComponent } from './datatable/cell-container/datatable-cell-container.component';
 import { DatatableComponent } from './datatable/datatable.component';
@@ -11,12 +12,16 @@ import { FocusOutlineComponent } from './focus-outline/focus-outline.component';
 import { GripDirective } from "./directives/grip.directive";
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [
+    CommonModule,
+    FontAwesomeModule
+  ],
   exports: [
     DatatableComponent,
     GripDirective,
     FocusableDirective,
-    FocusOutlineComponent
+    FocusOutlineComponent,
+    TagsModule
   ],
   declarations: [
     DatatableCellContainerComponent,

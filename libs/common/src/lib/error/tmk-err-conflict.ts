@@ -7,13 +7,13 @@ export interface TmkErrConflictDetails extends TmkErrDetails {
 }
 
 export class TmkErrConflict extends TmkErr {
-  details: TmkErrConflictDetails;
+  override details!: TmkErrConflictDetails;
 
   constructor(details: TmkErrConflictDetails, ...params: any[]) {
     super(details, ...params);
   }
 
-  getMessage(): string {
+  override getMessage(): string {
     if (this.message) { return this.message; }
     const collectionPart = (!!this.details.collection) ? ` in the "${this.details.collection}" collection` : '';
     const valuePart = (!!this.details.value) ? ` with the value "${this.details.value}"` : ' with the provided value';

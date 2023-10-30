@@ -9,10 +9,10 @@ interface PermissionArray {
 }
 
 export class PermissionHelper {
-  private _rootPermission: Permission = null;
+  private _rootPermission: Permission | null = null;
   private savedPermissions: PermissionArray = {};
 
-  get rootPermission(): Permission {
+  get rootPermission(): Permission | null {
     return this._rootPermission;
   }
   set rootPermission(rootPermission: Permission) {
@@ -37,14 +37,14 @@ export class PermissionHelper {
   getFullLabel(permission: Permission): string {
     return Object.entries(this.savedPermissions).find(
       (entry) => entry[1] === permission
-    )[0];
+    )?.[0] ?? '';
   }
 
   getPermission(fullLabel: string): Permission {
     return this.savedPermissions[fullLabel] ?? null;
   }
 
-  getParentPermission(permission: Permission): Permission {
+  getParentPermission(permission: Permission): Permission | null {
     return permission === this.rootPermission
       ? null
       : this.getPermission(
@@ -79,7 +79,7 @@ export class PermissionHelper {
   }
 
   static simplifyFullLabelsArray(permissionsArray: string[]): string[] {
-    return permissionsArray.sort().reduce((savedLabels, fullLabel) => {
+    return permissionsArray.sort().reduce((savedLabels: string[], fullLabel: string) => {
       if (!PermissionHelper.containsAncestor(savedLabels, fullLabel)) {
         savedLabels.push(fullLabel);
       }

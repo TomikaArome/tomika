@@ -13,7 +13,7 @@ export class TmkErr extends Error {
   static buildFromObject(errorObj: TmkErrObj, classes: (typeof TmkErr)[]): TmkErr {
     const tmkErrClass = classes.find(className => {
       return className.name === errorObj.error.type;
-    });
+    }) ?? TmkErr;
     const tmkErr = new tmkErrClass(errorObj.error.details);
     tmkErr.message = errorObj.error.message;
     tmkErr.thrownAt = errorObj.error.thrownAt;

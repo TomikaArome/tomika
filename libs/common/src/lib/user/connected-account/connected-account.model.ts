@@ -20,5 +20,5 @@ export function createConnectedAccountInstance(
   model: ConnectedAccountModel
 ): ConnectedAccount {
   // More account types would involve a switch case on the accountType here
-  return new DiscordAccount(model as DiscordAccountModel);
+  return new DiscordAccount(model as DiscordAccountModel) as ConnectedAccount;
 }

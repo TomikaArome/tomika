@@ -9,9 +9,9 @@ export interface GroupModel {
 export class Group implements GroupModel {
   private static groups: { [index: number]: Group } = {};
 
-  id: number;
-  name: string;
-  permissions: string[];
+  id!: number;
+  name!: string;
+  permissions!: string[];
 
   constructor(model: GroupModel) {
     if (Group.groups[model.id]) {

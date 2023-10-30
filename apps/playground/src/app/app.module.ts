@@ -5,15 +5,19 @@ import { PlaygroundRootComponent } from './playground-root.component';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { CommonUiModule } from '@TomikaArome/common-ui';
+import { TagsAndPostsComponent } from './tags-and-posts.component';
 
 @NgModule({
-  declarations: [PlaygroundRootComponent],
+  declarations: [
+    PlaygroundRootComponent,
+    TagsAndPostsComponent
+  ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
     CommonUiModule
   ],
   providers: [],
-  bootstrap: [PlaygroundRootComponent],
+  bootstrap: [PlaygroundRootComponent]
 })
 export class AppModule {}

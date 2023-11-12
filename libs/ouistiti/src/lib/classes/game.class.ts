@@ -59,6 +59,7 @@ export class Game {
     const newGame = new Game();
     newGame.playerOrder = settings.playerOrder;
     newGame.maxCardsPerPlayer = settings.maxCardsPerPlayer;
+    if (newGame.playerOrder.length > 6) { newGame.maxCardsPerPlayer = 6; }
     newGame.newRound();
     return newGame;
   }

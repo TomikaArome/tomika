@@ -1,0 +1,12 @@
+:host {
+  --tag-background-colour: hsl(0,0%,95%);
+  --tag-border-color: hsl(0,0%,75%);
+
+  display: inline-flex;
+  align-items: stretch;
+  padding: 0.25em 0.5em;
+  font-variant: small-caps;
+  background-color: var(--tag-background-colour);
+  border: 1px solid var(--tag-border-color);
+  border-radius: 0.5em;
+}

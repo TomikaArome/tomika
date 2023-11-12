@@ -123,6 +123,10 @@ export class Round {
     this.playerIds = settings.playerIds;
     this.maxCardsPerPlayer = settings.maxCardsPerPlayer;
     this.numberOfCardsPerPlayer = settings.numberOfCardsPerPlayer;
+    if (this.playerIds.length > 6) {
+      this.maxCardsPerPlayer = 6;
+      this.numberOfCardsPerPlayer = 6;
+    }
     this.currentPlayerId = this.startingPlayerId;
   }
 

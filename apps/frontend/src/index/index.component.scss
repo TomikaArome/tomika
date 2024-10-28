@@ -1,3 +1,32 @@
 :host {
-  font-style: italic;
+  --bg-colour-1: hsl(200,50%,20%);
+  --bg-colour-2: hsl(240,50%,20%);
+  --bg-colour: linear-gradient(162.5deg, var(--bg-colour-1) 0%, var(--bg-colour-2) 100%);
+
+  --bg-shine-1: hsla(220,0%,90%,0);
+  --bg-shine-2: hsla(220,0%,90%,0.2);
+  --bg-shine: linear-gradient(162.5deg, var(--bg-shine-1) 0%, var(--bg-shine-1) 10%, var(--bg-shine-2) 30%, var(--bg-shine-2) 35%,
+    var(--bg-shine-1) 50%, var(--bg-shine-1) 55%, var(--bg-shine-2) 70%, var(--bg-shine-2) 75%, var(--bg-shine-1) 100%);
+
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  place-content: center;
+  width: 100%;
+  height: 100%;
+  background-image: var(--bg-shine), var(--bg-colour);
+  color: hsl(0,0%,90%);
+  font-size: 20px;
+
+  h1 {
+    font-weight: normal;
+    font-size: 48px;
+  }
+
+  #signature-logo {
+    width: 400px;
+    fill: hsla(0,0%,100%, 0.5);
+    stroke: hsla(0,0%,100%,0.8);
+    stroke-width: 0.5px;
+  }
 }

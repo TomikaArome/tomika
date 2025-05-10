@@ -1,0 +1,2367 @@
+{
+  "version": "6.0",
+  "nxVersion": "19.8.9",
+  "deps": {
+    "@angular/animations": "18.2.9",
+    "@angular/cdk": "18.2.9",
+    "@angular/common": "18.2.9",
+    "@angular/compiler": "18.2.9",
+    "@angular/core": "18.2.9",
+    "@angular/forms": "18.2.9",
+    "@angular/material": "18.2.9",
+    "@angular/platform-browser": "18.2.9",
+    "@angular/platform-browser-dynamic": "18.2.9",
+    "@angular/router": "18.2.9",
+    "@fortawesome/angular-fontawesome": "0.15.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-brands-svg-icons": "^6.4.2",
+    "@fortawesome/free-regular-svg-icons": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@nestjs/common": "10.2.6",
+    "@nestjs/core": "10.2.6",
+    "@nestjs/mongoose": "^10.0.1",
+    "@nestjs/platform-express": "10.2.6",
+    "@nestjs/platform-socket.io": "10.2.6",
+    "@nestjs/websockets": "^10.2.6",
+    "@nx/angular": "19.8.9",
+    "angular-cli-ghpages": "^2.0.3",
+    "cli-table": "^0.3.11",
+    "inquirer": "^9.1.1",
+    "mongoose": "^7.6.3",
+    "nanoid": "^3.1.30",
+    "node-fetch": "^2.6.7",
+    "nx": "19.8.9",
+    "ora": "^6.1.2",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "7.8.1",
+    "set-cookie-parser": "^2.5.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
+    "tslib": "^2.3.0",
+    "uuid": "^8.3.2",
+    "zone.js": "^0.14.8",
+    "@angular-devkit/architect": "0.1802.9",
+    "@angular-devkit/build-angular": "18.2.9",
+    "@angular-devkit/core": "18.2.9",
+    "@angular-devkit/schematics": "18.2.9",
+    "@angular-eslint/eslint-plugin": "18.4.3",
+    "@angular-eslint/eslint-plugin-template": "18.4.3",
+    "@angular-eslint/template-parser": "18.4.3",
+    "@angular/cli": "~17.3.0",
+    "@angular/compiler-cli": "18.2.9",
+    "@angular/language-service": "18.2.9",
+    "@nestjs/schematics": "10.0.2",
+    "@nestjs/testing": "10.2.6",
+    "@nx/cypress": "19.8.9",
+    "@nx/eslint": "19.8.9",
+    "@nx/eslint-plugin": "19.8.9",
+    "@nx/jest": "19.8.9",
+    "@nx/js": "19.8.9",
+    "@nx/nest": "19.8.9",
+    "@nx/node": "19.8.9",
+    "@nx/workspace": "19.8.9",
+    "@schematics/angular": "18.2.9",
+    "@types/inquirer": "^9.0.1",
+    "@types/jest": "29.5.14",
+    "@types/node": "^18.16.9",
+    "@types/node-fetch": "^2.6.2",
+    "@types/set-cookie-parser": "^2.4.2",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "cypress": "13.17.0",
+    "eslint": "8.57.1",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-cypress": "2.15.1",
+    "eslint-plugin-jest": "^27.4.0",
+    "jest": "29.7.0",
+    "jest-environment-jsdom": "29.7.0",
+    "jest-environment-node": "^29.4.1",
+    "jest-preset-angular": "14.1.1",
+    "prettier": "2.7.1",
+    "ts-jest": "29.1.1",
+    "ts-node": "10.9.1",
+    "typescript": "5.5.4"
+  },
+  "pathMappings": {
+    "@TomikaArome/common": [
+      "libs/common/src/index.ts"
+    ],
+    "@TomikaArome/common-backend": [
+      "libs/common-backend/src/index.ts"
+    ],
+    "@TomikaArome/common-ui": [
+      "libs/common-ui/src/index.ts"
+    ],
+    "@TomikaArome/nintendo-switch-online": [
+      "libs/nintendo-switch-online/src/index.ts"
+    ],
+    "@TomikaArome/ouistiti": [
+      "libs/ouistiti/src/index.ts"
+    ],
+    "@TomikaArome/ouistiti-shared": [
+      "libs/ouistiti-shared/src/index.ts"
+    ],
+    "@TomikaArome/ouistiti-ui": [
+      "libs/ouistiti-ui/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {
+      "backend": [
+        {
+          "file": "apps/backend/.eslintrc.json",
+          "hash": "3595092817234927786"
+        },
+        {
+          "file": "apps/backend/jest.config.js",
+          "hash": "14764775137118483703"
+        },
+        {
+          "file": "apps/backend/project.json",
+          "hash": "15221804645048294287"
+        },
+        {
+          "file": "apps/backend/src/app/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/backend/src/app/app.controller.spec.ts",
+          "hash": "15859953346642325947",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.controller.ts",
+          "hash": "14826100206856882122",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.module.ts",
+          "hash": "17216028606856043288",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongoose",
+            "npm:@nestjs/mongoose",
+            "ouistiti",
+            "common-backend"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.service.spec.ts",
+          "hash": "6332748756781370420",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.service.ts",
+          "hash": "8118291797590482303",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/backend/src/exception-filters/mongo-error.filter.ts",
+          "hash": "3800035830584098277",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongodb",
+            "npm:express",
+            "common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/exception-filters/tmk-err.filter.ts",
+          "hash": "9017349135365497739",
+          "deps": [
+            "npm:@nestjs/common",
+            "common",
+            "npm:express"
+          ]
+        },
+        {
+          "file": "apps/backend/src/exception-filters/validation-error.filter.ts",
+          "hash": "17746435385480309414",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongoose",
+            "npm:express",
+            "common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/main.ts",
+          "hash": "9733319491141615790",
+          "deps": [
+            "npm:@nestjs/core"
+          ]
+        },
+        {
+          "file": "apps/backend/tsconfig.app.json",
+          "hash": "6873790451466084242"
+        },
+        {
+          "file": "apps/backend/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "apps/backend/tsconfig.spec.json",
+          "hash": "14923180086576996015"
+        }
+      ],
+      "playground-e2e": [
+        {
+          "file": "apps/playground-e2e/.eslintrc.json",
+          "hash": "15523834149352881398"
+        },
+        {
+          "file": "apps/playground-e2e/cypress.json",
+          "hash": "8406182963944600463"
+        },
+        {
+          "file": "apps/playground-e2e/project.json",
+          "hash": "16565898093689141292"
+        },
+        {
+          "file": "apps/playground-e2e/src/fixtures/example.json",
+          "hash": "11614668686582597233"
+        },
+        {
+          "file": "apps/playground-e2e/src/integration/app.spec.ts",
+          "hash": "12770869333528919782"
+        },
+        {
+          "file": "apps/playground-e2e/src/plugins/index.js",
+          "hash": "1870053236038166983",
+          "deps": [
+            "npm:@nx/cypress"
+          ]
+        },
+        {
+          "file": "apps/playground-e2e/src/support/app.po.ts",
+          "hash": "11157016311132186162"
+        },
+        {
+          "file": "apps/playground-e2e/src/support/commands.ts",
+          "hash": "7314691991044890572"
+        },
+        {
+          "file": "apps/playground-e2e/src/support/index.ts",
+          "hash": "9968213533773113880"
+        },
+        {
+          "file": "apps/playground-e2e/tsconfig.json",
+          "hash": "17327834683392158647"
+        }
+      ],
+      "frontend-e2e": [
+        {
+          "file": "apps/frontend-e2e/.eslintrc.json",
+          "hash": "7570708808841137117"
+        },
+        {
+          "file": "apps/frontend-e2e/cypress.json",
+          "hash": "7929329345170060984"
+        },
+        {
+          "file": "apps/frontend-e2e/project.json",
+          "hash": "3962366637573927333"
+        },
+        {
+          "file": "apps/frontend-e2e/src/fixtures/example.json",
+          "hash": "11614668686582597233"
+        },
+        {
+          "file": "apps/frontend-e2e/src/integration/app.spec.ts",
+          "hash": "5870103527414819913"
+        },
+        {
+          "file": "apps/frontend-e2e/src/plugins/index.js",
+          "hash": "1870053236038166983",
+          "deps": [
+            "npm:@nx/cypress"
+          ]
+        },
+        {
+          "file": "apps/frontend-e2e/src/support/app.po.ts",
+          "hash": "11157016311132186162"
+        },
+        {
+          "file": "apps/frontend-e2e/src/support/commands.ts",
+          "hash": "7314691991044890572"
+        },
+        {
+          "file": "apps/frontend-e2e/src/support/index.ts",
+          "hash": "3666078656922506009"
+        },
+        {
+          "file": "apps/frontend-e2e/tsconfig.e2e.json",
+          "hash": "3552469080385459243"
+        },
+        {
+          "file": "apps/frontend-e2e/tsconfig.json",
+          "hash": "4500232260948002331"
+        }
+      ],
+      "common": [
+        {
+          "file": "libs/common/.babelrc",
+          "hash": "12678781556853150254"
+        },
+        {
+          "file": "libs/common/.eslintrc.json",
+          "hash": "2735913900879119837"
+        },
+        {
+          "file": "libs/common/README.md",
+          "hash": "17127957463758053849"
+        },
+        {
+          "file": "libs/common/docs/user/Users.md",
+          "hash": "10236328999341731018"
+        },
+        {
+          "file": "libs/common/jest.config.js",
+          "hash": "12955024269809785240"
+        },
+        {
+          "file": "libs/common/project.json",
+          "hash": "444138714147347221"
+        },
+        {
+          "file": "libs/common/src/index.ts",
+          "hash": "14803989726245966590"
+        },
+        {
+          "file": "libs/common/src/lib/error/module.ts",
+          "hash": "9801741534704110576"
+        },
+        {
+          "file": "libs/common/src/lib/error/tmk-err-conflict.ts",
+          "hash": "7622991339300160926"
+        },
+        {
+          "file": "libs/common/src/lib/error/tmk-err-not-found.ts",
+          "hash": "1178786774567662007"
+        },
+        {
+          "file": "libs/common/src/lib/error/tmk-err.ts",
+          "hash": "9762496873861107199"
+        },
+        {
+          "file": "libs/common/src/lib/module.ts",
+          "hash": "8329010450301054925"
+        },
+        {
+          "file": "libs/common/src/lib/posts/post.interface.ts",
+          "hash": "673021400845008984"
+        },
+        {
+          "file": "libs/common/src/lib/tags/tag.interface.ts",
+          "hash": "1819090311573477795"
+        },
+        {
+          "file": "libs/common/src/lib/user/connected-account/connected-account.model.ts",
+          "hash": "5282520426691794434"
+        },
+        {
+          "file": "libs/common/src/lib/user/connected-account/discord-account.model.spec.ts",
+          "hash": "2167588996804534281"
+        },
+        {
+          "file": "libs/common/src/lib/user/connected-account/discord-account.model.ts",
+          "hash": "6520912164039004382"
+        },
+        {
+          "file": "libs/common/src/lib/user/connected-account/module.ts",
+          "hash": "6444142431722784567"
+        },
+        {
+          "file": "libs/common/src/lib/user/group.model.spec.ts",
+          "hash": "17659864196006960354"
+        },
+        {
+          "file": "libs/common/src/lib/user/group.model.ts",
+          "hash": "1826732423030102536"
+        },
+        {
+          "file": "libs/common/src/lib/user/module.ts",
+          "hash": "6386330365751706987"
+        },
+        {
+          "file": "libs/common/src/lib/user/permission.model.spec.ts",
+          "hash": "8244799814891430612"
+        },
+        {
+          "file": "libs/common/src/lib/user/permission.model.ts",
+          "hash": "13624126159884904181"
+        },
+        {
+          "file": "libs/common/src/lib/user/permissions.json",
+          "hash": "10657442335406065627"
+        },
+        {
+          "file": "libs/common/src/lib/user/user.model.ts",
+          "hash": "3157449694492955185"
+        },
+        {
+          "file": "libs/common/src/mock/module.ts",
+          "hash": "3006571435048459332"
+        },
+        {
+          "file": "libs/common/src/mock/user/group.mock.ts",
+          "hash": "7923189888126293192"
+        },
+        {
+          "file": "libs/common/src/mock/user/module.ts",
+          "hash": "11074725764556396081"
+        },
+        {
+          "file": "libs/common/src/mock/user/permission.mock.ts",
+          "hash": "9724393355644376969"
+        },
+        {
+          "file": "libs/common/src/mock/user/user.mock.ts",
+          "hash": "1262358550666708656"
+        },
+        {
+          "file": "libs/common/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/common/tsconfig.lib.json",
+          "hash": "15448591875537424246"
+        },
+        {
+          "file": "libs/common/tsconfig.spec.json",
+          "hash": "13015927483173923663"
+        }
+      ],
+      "nintendo-switch-online": [
+        {
+          "file": "libs/nintendo-switch-online/.babelrc",
+          "hash": "12678781556853150254"
+        },
+        {
+          "file": "libs/nintendo-switch-online/.eslintrc.json",
+          "hash": "12983935809692621782"
+        },
+        {
+          "file": "libs/nintendo-switch-online/README.md",
+          "hash": "5790414047638894165"
+        },
+        {
+          "file": "libs/nintendo-switch-online/jest.config.js",
+          "hash": "12218049966735586309"
+        },
+        {
+          "file": "libs/nintendo-switch-online/project.json",
+          "hash": "8667148658568920854"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/index.ts",
+          "hash": "1139100853822116954"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connect-response.model.ts",
+          "hash": "15874664875505200364"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connect.model.ts",
+          "hash": "2317967203778673738"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connector-args.model.ts",
+          "hash": "12294189220408846431"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-game-connector-args.model.ts",
+          "hash": "8475270052309595986"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/nso-connector.class.ts",
+          "hash": "10224376113655578315",
+          "deps": [
+            "npm:node-fetch"
+          ]
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/nso-game-connector.class.ts",
+          "hash": "14073258013758404828",
+          "deps": [
+            "npm:node-fetch",
+            "npm:set-cookie-parser"
+          ]
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/model/language-code.model.ts",
+          "hash": "4120006401972498905"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/model/nso-app-args.model.ts",
+          "hash": "3462045788633223712"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/nso-app.class.ts",
+          "hash": "17361755573588727757",
+          "deps": [
+            "npm:node-fetch",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/nso-constants.ts",
+          "hash": "9451473584298862658"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/nso-error.class.ts",
+          "hash": "7208439460766619375"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/nso-operation.class.ts",
+          "hash": "8449967941217033089"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-2/model/battle.model.ts",
+          "hash": "11202861228130013341"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-2/splatoon-2-controller.class.ts",
+          "hash": "948509988985588917"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/battle-histories.model.ts",
+          "hash": "2962982857869173244"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/battle.model.ts",
+          "hash": "4285673114804781807"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/bullet-token.model.ts",
+          "hash": "16127587238662058334"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/index.ts",
+          "hash": "8192505406427481611"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/salmon-run-shift.model.ts",
+          "hash": "13326384404108511629"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/url-object.model.ts",
+          "hash": "7299449254909432574"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/weapons.model.ts",
+          "hash": "12449745699346319885"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/splatoon-3-controller.class.ts",
+          "hash": "13124454140390373112",
+          "deps": [
+            "npm:node-fetch"
+          ]
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/splatoon-3-version-manager.class.ts",
+          "hash": "14819647726416595692",
+          "deps": [
+            "npm:node-fetch"
+          ]
+        },
+        {
+          "file": "libs/nintendo-switch-online/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/nintendo-switch-online/tsconfig.lib.json",
+          "hash": "15448591875537424246"
+        },
+        {
+          "file": "libs/nintendo-switch-online/tsconfig.spec.json",
+          "hash": "13015927483173923663"
+        }
+      ],
+      "ouistiti-ui": [
+        {
+          "file": "libs/ouistiti-ui/.eslintrc.json",
+          "hash": "6261892502136070857"
+        },
+        {
+          "file": "libs/ouistiti-ui/README.md",
+          "hash": "17184544529659450716"
+        },
+        {
+          "file": "libs/ouistiti-ui/jest.config.js",
+          "hash": "7349640076670735092"
+        },
+        {
+          "file": "libs/ouistiti-ui/project.json",
+          "hash": "10638476549532105207"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/CARD_BACK.svg",
+          "hash": "17513821500816651909"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/JACK_CLUB.svg",
+          "hash": "14154906704199397746"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/JACK_DIAMOND.svg",
+          "hash": "9638557140361754617"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/JACK_HEART.svg",
+          "hash": "10656050224336199707"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/JACK_SPADE.svg",
+          "hash": "5389848389261688620"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/KING_CLUB.svg",
+          "hash": "9167291732083180395"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/KING_DIAMOND.svg",
+          "hash": "9082737522303942817"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/KING_HEART.svg",
+          "hash": "18409116843689867028"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/KING_SPADE.svg",
+          "hash": "17099469372841640072"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/QUEEN_CLUB.svg",
+          "hash": "6623338343505776330"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/QUEEN_DIAMOND.svg",
+          "hash": "12883919718239932953"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/QUEEN_HEART.svg",
+          "hash": "5481615299157537718"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/assets/images/QUEEN_SPADE.svg",
+          "hash": "3562287364409369173"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/index.ts",
+          "hash": "16928887394561697938"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/assets/icons.ts",
+          "hash": "7731243670422908875"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/classes/server-event.class.ts",
+          "hash": "15823859243359406099",
+          "deps": [
+            "npm:rxjs",
+            "npm:socket.io-client"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/analysis/scoreboard.component.html",
+          "hash": "4023959979632589999"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/analysis/scoreboard.component.scss",
+          "hash": "16553239163047611546"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/analysis/scoreboard.component.ts",
+          "hash": "8078543867758446009",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/container/container.component.html",
+          "hash": "3347933255445868471"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/container/container.component.scss",
+          "hash": "820901067064615769"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/container/container.component.ts",
+          "hash": "908322163191302215",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "ouistiti-shared",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/error-notification/error-notification-stack.component.scss",
+          "hash": "14556368322281453909"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/error-notification/error-notification-stack.component.ts",
+          "hash": "13928706458792747826",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/error-notification/error-notification.component.scss",
+          "hash": "12015206999135320181"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/error-notification/error-notification.component.ts",
+          "hash": "1061504191605977216",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/bid-chip/bid-chip.component.html",
+          "hash": "11304054592457334698"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/bid-chip/bid-chip.component.scss",
+          "hash": "16956344636189831720"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/bid-chip/bid-chip.component.ts",
+          "hash": "16930158868293447602",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/bidding-popup/bidding-popup.component.html",
+          "hash": "5658819420566655627"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/bidding-popup/bidding-popup.component.scss",
+          "hash": "2497211876509050714"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/bidding-popup/bidding-popup.component.ts",
+          "hash": "8018013058064976016",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/card-container/card-container.component.html",
+          "hash": "14649709258806310928"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/card-container/card-container.component.scss",
+          "hash": "747225611888899189"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/card-container/card-container.component.ts",
+          "hash": "4094916921343205000",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/card/card.component.html",
+          "hash": "193097374791005570"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/card/card.component.scss",
+          "hash": "11884694132131737290"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/card/card.component.ts",
+          "hash": "4552166196740034099",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-game-container/end-of-game-container.component.html",
+          "hash": "1497565598616966323"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-game-container/end-of-game-container.component.scss",
+          "hash": "17433577161638121493"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-game-container/end-of-game-container.component.ts",
+          "hash": "10729632986099521569",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-round-container/end-of-round-container.component.html",
+          "hash": "18334947365476019049"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-round-container/end-of-round-container.component.scss",
+          "hash": "15395644110172027443"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-round-container/end-of-round-container.component.ts",
+          "hash": "13554803515358279701",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-turn-popup/end-of-turn-popup.component.html",
+          "hash": "4771350057200862557"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-turn-popup/end-of-turn-popup.component.scss",
+          "hash": "11676109257656478665"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/end-of-turn-popup/end-of-turn-popup.component.ts",
+          "hash": "10026117140927782550",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/ouistiti-game-container/ouistiti-game-container.component.html",
+          "hash": "2249270070971647803"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/ouistiti-game-container/ouistiti-game-container.component.scss",
+          "hash": "9861029563269553220"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/ouistiti-game-container/ouistiti-game-container.component.ts",
+          "hash": "12278254203010588501",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:rxjs",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/player-round-details/player-round-details.component.html",
+          "hash": "6795922771704804507"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/player-round-details/player-round-details.component.scss",
+          "hash": "18090762138411182589"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/player-round-details/player-round-details.component.ts",
+          "hash": "1645942382921940090",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/player-turn/player-turn.component.html",
+          "hash": "17102667884673912167"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/player-turn/player-turn.component.scss",
+          "hash": "6395012063967402794"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/player-turn/player-turn.component.ts",
+          "hash": "17578732311241531688",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/suspended-screen/suspended-screen.component.html",
+          "hash": "12894825099346695627"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/suspended-screen/suspended-screen.component.scss",
+          "hash": "10351821963818576751"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/suspended-screen/suspended-screen.component.ts",
+          "hash": "1581515574814542169",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/timer/timer.component.html",
+          "hash": "4566000308783945633"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/timer/timer.component.scss",
+          "hash": "11204684374334318661"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/timer/timer.component.ts",
+          "hash": "13183471090490911300",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/trump-card-wrapper/trump-card-wrapper.component.html",
+          "hash": "12783101008044929414"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/trump-card-wrapper/trump-card-wrapper.component.scss",
+          "hash": "13716752240651914071"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-flow/trump-card-wrapper/trump-card-wrapper.component.ts",
+          "hash": "2230285335362833676",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/colour-selector/colour-selector.component.html",
+          "hash": "13302059711937354501"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/colour-selector/colour-selector.component.scss",
+          "hash": "517449071771042169"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/colour-selector/colour-selector.component.ts",
+          "hash": "4260913351686771748",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/lobby-settings/lobby-settings.component.html",
+          "hash": "4490573773039845754"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/lobby-settings/lobby-settings.component.ts",
+          "hash": "3112708573431222236",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/player-settings/player-settings.component.html",
+          "hash": "4509128503107781951"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/player-settings/player-settings.component.ts",
+          "hash": "13952364055492570087",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/symbol-selector/symbol-selector.component.html",
+          "hash": "3926866828732054550"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/symbol-selector/symbol-selector.component.scss",
+          "hash": "15021330238317102059"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/game-setup/symbol-selector/symbol-selector.component.ts",
+          "hash": "6579107342319356873",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/landing-screen/landing-screen.component.html",
+          "hash": "11306153926524874946"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/landing-screen/landing-screen.component.scss",
+          "hash": "1727537673107511005"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/landing-screen/landing-screen.component.ts",
+          "hash": "11811891174273560242",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-create/lobby-create.component.html",
+          "hash": "1145386524881150195"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-create/lobby-create.component.scss",
+          "hash": "6694846117223858849"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-create/lobby-create.component.ts",
+          "hash": "12558737651594219883",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-join/lobby-join.component.html",
+          "hash": "10890129674136390935"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-join/lobby-join.component.scss",
+          "hash": "3929970050093580384"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-join/lobby-join.component.ts",
+          "hash": "9313498106710711123",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-list/lobby-list-item.component.html",
+          "hash": "6337752396717399941"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-list/lobby-list-item.component.scss",
+          "hash": "7907173744033783724"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-list/lobby-list-item.component.ts",
+          "hash": "12950136193565016184",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-list/lobby-list.component.html",
+          "hash": "1316140341713376473"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-list/lobby-list.component.scss",
+          "hash": "7661754690824914009"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-list/lobby-list.component.ts",
+          "hash": "8956402939236629423",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-screen/lobby-screen.component.html",
+          "hash": "10446758035245780577"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-screen/lobby-screen.component.scss",
+          "hash": "4423404454628404989"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-screen/lobby-screen.component.ts",
+          "hash": "17371147284852990778",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "ouistiti-shared",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-vacancy-selector/lobby-vacancy-selector.component.html",
+          "hash": "17255842737311126140"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-vacancy-selector/lobby-vacancy-selector.component.scss",
+          "hash": "6950747280454563135"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/lobby-vacancy-selector/lobby-vacancy-selector.component.ts",
+          "hash": "11796787154466930805",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/player-list/player-list-item.component.html",
+          "hash": "1930696178774265461"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/player-list/player-list-item.component.scss",
+          "hash": "707466741490462481"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/player-list/player-list-item.component.ts",
+          "hash": "4813113596980677226",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:rxjs",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/player-list/player-list.component.html",
+          "hash": "1550799828008601524"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/player-list/player-list.component.scss",
+          "hash": "1022582550688278870"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/components/player-list/player-list.component.ts",
+          "hash": "11753303638095832814",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/directives/player-list-item-content.directive.ts",
+          "hash": "8592777177831860469",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/ouistiti-theme.scss",
+          "hash": "2117448470629090078"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/ouistiti-ui.module.ts",
+          "hash": "17190148505827404810",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@fortawesome/angular-fontawesome",
+            "npm:@angular/forms",
+            "npm:@angular/material"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/services/game.service.ts",
+          "hash": "1805653400996810640",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/services/lobby.service.ts",
+          "hash": "11152615402667063528",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/services/player.service.ts",
+          "hash": "9396227354157762353",
+          "deps": [
+            "npm:@angular/core",
+            "ouistiti-shared",
+            "npm:@angular/material",
+            "npm:@angular/platform-browser",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/services/round.service.ts",
+          "hash": "9172725566103052330",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/services/socket.service.ts",
+          "hash": "17204825616397821741",
+          "deps": [
+            "npm:@angular/core",
+            "npm:socket.io-client",
+            "npm:rxjs",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/utility/sortable-list-grip.directive.ts",
+          "hash": "9576890375170807495",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/utility/sortable-list-item.directive.ts",
+          "hash": "922462720265582261",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/utility/sortable-list.component.html",
+          "hash": "7874511745244186347"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/utility/sortable-list.component.scss",
+          "hash": "6486867781269014177"
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/utility/sortable-list.component.ts",
+          "hash": "1361878271351343130",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/lib/utility/utility.module.ts",
+          "hash": "12911301206069567101",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/src/test-setup.ts",
+          "hash": "16110123792168980195",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/ouistiti-ui/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/ouistiti-ui/tsconfig.lib.json",
+          "hash": "15132975698559543951"
+        },
+        {
+          "file": "libs/ouistiti-ui/tsconfig.spec.json",
+          "hash": "2368708604775059221"
+        }
+      ],
+      "nintendo-switch-online-cli": [
+        {
+          "file": "apps/nintendo-switch-online-cli/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/jest.config.ts",
+          "hash": "3569664977201859889"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/project.json",
+          "hash": "5250804638212648749"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/acnh/acnh-cli.class.ts",
+          "hash": "3180648124778913486"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/game-cli.class.ts",
+          "hash": "4795392842491796535",
+          "deps": [
+            "nintendo-switch-online",
+            "npm:inquirer"
+          ]
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/main.ts",
+          "hash": "498431257866595783"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/model/nso-cli-config.model.ts",
+          "hash": "14079145247814834058"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/nso-cli-account.class.ts",
+          "hash": "16748359451227378680",
+          "deps": [
+            "nintendo-switch-online"
+          ]
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/nso-cli-config.class.ts",
+          "hash": "1625963603281837975",
+          "deps": [
+            "nintendo-switch-online"
+          ]
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/nso-cli-error.class.ts",
+          "hash": "3746295625328122979"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/nso-cli-stream.class.ts",
+          "hash": "549043708697754097",
+          "deps": [
+            "npm:inquirer",
+            "npm:ora",
+            "nintendo-switch-online"
+          ]
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/nso-cli.class.ts",
+          "hash": "3949564732491228701",
+          "deps": [
+            "nintendo-switch-online",
+            "npm:cli-table"
+          ]
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/smash-ultimate/smash-ultimate-cli.class.ts",
+          "hash": "14286726371343442237"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/splatoon-2/splatoon-2-cli.class.ts",
+          "hash": "9806756050657039494"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/src/splatoon-3/splatoon-3-cli.class.ts",
+          "hash": "18097333582809807989",
+          "deps": [
+            "nintendo-switch-online",
+            "npm:cli-table"
+          ]
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/tsconfig.app.json",
+          "hash": "701691449558357218"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "apps/nintendo-switch-online-cli/tsconfig.spec.json",
+          "hash": "10595040461224341030"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "apps/frontend/.eslintrc.json",
+          "hash": "447771065579201379"
+        },
+        {
+          "file": "apps/frontend/jest.config.js",
+          "hash": "18353546863181136259"
+        },
+        {
+          "file": "apps/frontend/project.json",
+          "hash": "18268682475078116287"
+        },
+        {
+          "file": "apps/frontend/proxy.conf.json",
+          "hash": "7740023976500524898"
+        },
+        {
+          "file": "apps/frontend/src/admin/admin-panel-routing.module.ts",
+          "hash": "17048901625964952426",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/admin/admin-panel.module.ts",
+          "hash": "15192780074196591009",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/admin/panel/admin-panel.component.html",
+          "hash": "8202273554962421498"
+        },
+        {
+          "file": "apps/frontend/src/admin/panel/admin-panel.component.scss",
+          "hash": "10425030425912961067"
+        },
+        {
+          "file": "apps/frontend/src/admin/panel/admin-panel.component.ts",
+          "hash": "14377739769071806185",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.html",
+          "hash": "4493432999524057857"
+        },
+        {
+          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.scss",
+          "hash": "6924415856513855772"
+        },
+        {
+          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.ts",
+          "hash": "7614089120985358547",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/cdk",
+            "common",
+            "npm:@angular/material"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/app/app-routing.module.ts",
+          "hash": "4147903852107805792",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "ouistiti-ui"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/app/app.component.html",
+          "hash": "17816966185630879015"
+        },
+        {
+          "file": "apps/frontend/src/app/app.component.scss",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/app/app.component.spec.ts",
+          "hash": "14919087980981185590",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/app/app.component.ts",
+          "hash": "17166900340145608026",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/app/app.module.ts",
+          "hash": "14183334050680529070",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser",
+            "npm:@fortawesome/angular-fontawesome"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/assets/tomika.svg",
+          "hash": "3078790963171877968"
+        },
+        {
+          "file": "apps/frontend/src/cards-test/cards-test.component.html",
+          "hash": "2649416847022377322"
+        },
+        {
+          "file": "apps/frontend/src/cards-test/cards-test.component.scss",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/cards-test/cards-test.component.ts",
+          "hash": "13851159992608026714",
+          "deps": [
+            "npm:@angular/core",
+            "npm:socket.io-client"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/favicon.ico",
+          "hash": "9303420814833116677"
+        },
+        {
+          "file": "apps/frontend/src/index.html",
+          "hash": "12376973084632260505"
+        },
+        {
+          "file": "apps/frontend/src/index/index.component.html",
+          "hash": "4725246019342439418"
+        },
+        {
+          "file": "apps/frontend/src/index/index.component.scss",
+          "hash": "801240964504112946"
+        },
+        {
+          "file": "apps/frontend/src/index/index.component.ts",
+          "hash": "15862093764844608625",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/main.ts",
+          "hash": "14896519517424602606",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser-dynamic"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/polyfills.ts",
+          "hash": "2908177964561583612",
+          "deps": [
+            "npm:zone.js"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/services/permission.service.ts",
+          "hash": "26222103427352125",
+          "deps": [
+            "npm:@angular/core",
+            "common"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/styles.scss",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/test-setup.ts",
+          "hash": "16110123792168980195",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "apps/frontend/tsconfig.app.json",
+          "hash": "18340481176415527529"
+        },
+        {
+          "file": "apps/frontend/tsconfig.editor.json",
+          "hash": "6367495026318685054"
+        },
+        {
+          "file": "apps/frontend/tsconfig.json",
+          "hash": "9191379799926122967"
+        },
+        {
+          "file": "apps/frontend/tsconfig.spec.json",
+          "hash": "2368708604775059221"
+        }
+      ],
+      "playground": [
+        {
+          "file": "apps/playground/.eslintrc.json",
+          "hash": "7333243731265388849"
+        },
+        {
+          "file": "apps/playground/jest.config.ts",
+          "hash": "2746038918526022381"
+        },
+        {
+          "file": "apps/playground/project.json",
+          "hash": "3207048986729773512"
+        },
+        {
+          "file": "apps/playground/src/app/app.module.ts",
+          "hash": "757111143787273149",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser",
+            "npm:@angular/router",
+            "common-ui"
+          ]
+        },
+        {
+          "file": "apps/playground/src/app/app.routes.ts",
+          "hash": "6185150965714414910",
+          "deps": [
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/playground/src/app/playground-root.component.html",
+          "hash": "13817158308925849674"
+        },
+        {
+          "file": "apps/playground/src/app/playground-root.component.scss",
+          "hash": "15611290374171968164"
+        },
+        {
+          "file": "apps/playground/src/app/playground-root.component.spec.ts",
+          "hash": "9295037438251165994",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/playground/src/app/playground-root.component.ts",
+          "hash": "9626529091176690689",
+          "deps": [
+            "npm:@angular/core",
+            "common-ui"
+          ]
+        },
+        {
+          "file": "apps/playground/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/playground/src/favicon.ico",
+          "hash": "9303420814833116677"
+        },
+        {
+          "file": "apps/playground/src/index.html",
+          "hash": "10986334777727853597"
+        },
+        {
+          "file": "apps/playground/src/main.ts",
+          "hash": "3259059517603285449",
+          "deps": [
+            "npm:@angular/platform-browser-dynamic"
+          ]
+        },
+        {
+          "file": "apps/playground/src/styles.scss",
+          "hash": "5195668842064076916"
+        },
+        {
+          "file": "apps/playground/src/test-setup.ts",
+          "hash": "17711435995618823417",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "apps/playground/tsconfig.app.json",
+          "hash": "8365644956319658761"
+        },
+        {
+          "file": "apps/playground/tsconfig.editor.json",
+          "hash": "17511610827034788226"
+        },
+        {
+          "file": "apps/playground/tsconfig.json",
+          "hash": "9884653866960566465"
+        },
+        {
+          "file": "apps/playground/tsconfig.spec.json",
+          "hash": "7670846817526018622"
+        }
+      ],
+      "ouistiti-shared": [
+        {
+          "file": "libs/ouistiti-shared/.eslintrc.json",
+          "hash": "3478513956786065574"
+        },
+        {
+          "file": "libs/ouistiti-shared/README.md",
+          "hash": "14562623159469227851"
+        },
+        {
+          "file": "libs/ouistiti-shared/project.json",
+          "hash": "15944371372961722334"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/index.ts",
+          "hash": "4852828445172592618"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/constants.ts",
+          "hash": "10087241885342169946"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/enum/card-suit.enum.ts",
+          "hash": "726865783109531760"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/enum/card-value.enum.ts",
+          "hash": "16644901885212223964"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/enum/game-status.enum.ts",
+          "hash": "12704195219423034291"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/enum/ouistiti-error-type.enum.ts",
+          "hash": "2971666842007942046"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/enum/player-colour.enum.ts",
+          "hash": "17436905485700094151"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/enum/player-symbol.enum.ts",
+          "hash": "9521970215837519497"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/enum/round-status.enum.ts",
+          "hash": "15548483289327572832"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/interfaces/break-point.interface.ts",
+          "hash": "221514990445994390"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/interfaces/card.interface.ts",
+          "hash": "14805956727709517407"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/interfaces/game.interface.ts",
+          "hash": "10905361870008114327"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/interfaces/lobby.interface.ts",
+          "hash": "12284480891556662017"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/interfaces/ouistiti-error.interface.ts",
+          "hash": "3168427136050290319"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/interfaces/player.interface.ts",
+          "hash": "8280535483014071225"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/interfaces/round.interface.ts",
+          "hash": "854877793111884066"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/mock/game-scores.mock.ts",
+          "hash": "8975322093995719545"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/mock/lobbies.mock.ts",
+          "hash": "8136958076022992104"
+        },
+        {
+          "file": "libs/ouistiti-shared/src/lib/mock/round-status.mock.ts",
+          "hash": "340098213552793624"
+        },
+        {
+          "file": "libs/ouistiti-shared/tsconfig.json",
+          "hash": "15856989918287211863"
+        },
+        {
+          "file": "libs/ouistiti-shared/tsconfig.lib.json",
+          "hash": "629660272914713126"
+        }
+      ],
+      "common-backend": [
+        {
+          "file": "libs/common-backend/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/common-backend/README.md",
+          "hash": "6790164484026818890"
+        },
+        {
+          "file": "libs/common-backend/jest.config.ts",
+          "hash": "7830341389908868031"
+        },
+        {
+          "file": "libs/common-backend/project.json",
+          "hash": "3927688561417195456"
+        },
+        {
+          "file": "libs/common-backend/src/index.ts",
+          "hash": "1968798416459225306"
+        },
+        {
+          "file": "libs/common-backend/src/lib/posts/index.ts",
+          "hash": "12988106854182250745"
+        },
+        {
+          "file": "libs/common-backend/src/lib/posts/post.schema.ts",
+          "hash": "9386185975300617714",
+          "deps": [
+            "npm:mongoose",
+            "npm:@nestjs/mongoose",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/posts/posts.controller.ts",
+          "hash": "8956753732941599848",
+          "deps": [
+            "npm:@nestjs/common",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/posts/posts.module.ts",
+          "hash": "4084612168499942400",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/posts/posts.service.ts",
+          "hash": "5100631533459360572",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/tags/index.ts",
+          "hash": "3567899641295097498"
+        },
+        {
+          "file": "libs/common-backend/src/lib/tags/tag.schema.ts",
+          "hash": "8346121006565525896",
+          "deps": [
+            "npm:@nestjs/mongoose",
+            "npm:mongoose",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/tags/tags.controller.ts",
+          "hash": "15350423192305174379",
+          "deps": [
+            "npm:@nestjs/common",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/tags/tags.module.ts",
+          "hash": "12350622976959419199",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/tags/tags.service.ts",
+          "hash": "11974190104278429842",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/tsconfig.json",
+          "hash": "2840670722752396445"
+        },
+        {
+          "file": "libs/common-backend/tsconfig.lib.json",
+          "hash": "8188472110264778699"
+        },
+        {
+          "file": "libs/common-backend/tsconfig.spec.json",
+          "hash": "11550347367511341917"
+        }
+      ],
+      "common-ui": [
+        {
+          "file": "libs/common-ui/.eslintrc.json",
+          "hash": "12943342344525390221"
+        },
+        {
+          "file": "libs/common-ui/README.md",
+          "hash": "7754615602505382514"
+        },
+        {
+          "file": "libs/common-ui/jest.config.ts",
+          "hash": "12282006040124213536"
+        },
+        {
+          "file": "libs/common-ui/project.json",
+          "hash": "12652055196760146690"
+        },
+        {
+          "file": "libs/common-ui/src/global.scss",
+          "hash": "16230018524133975904"
+        },
+        {
+          "file": "libs/common-ui/src/index.ts",
+          "hash": "15497835509783042733"
+        },
+        {
+          "file": "libs/common-ui/src/lib/common-ui.module.ts",
+          "hash": "16261162741514646702",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@fortawesome/angular-fontawesome"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.html",
+          "hash": "9064666852551740009"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.scss",
+          "hash": "16175095069937206823"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.ts",
+          "hash": "11152316565891321716",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/datatable.component.html",
+          "hash": "1420378754005450742"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/datatable.component.scss",
+          "hash": "4574583685776649337"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/datatable.component.ts",
+          "hash": "429056610005564345",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/datatable.service.ts",
+          "hash": "2305983377521000350",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.html",
+          "hash": "548160717751285164"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.scss",
+          "hash": "12397116742648609691"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.ts",
+          "hash": "8326138746975588162",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.html",
+          "hash": "17283722117942303962"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.scss",
+          "hash": "6321894613771396004"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.ts",
+          "hash": "12396313833539050114",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/index.ts",
+          "hash": "16708893460843398016"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/model/datatable.model.ts",
+          "hash": "9235191029175083469"
+        },
+        {
+          "file": "libs/common-ui/src/lib/directives/grip.directive.ts",
+          "hash": "15200508899814997915",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.html",
+          "hash": "6668113240443625230"
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.scss",
+          "hash": "11100909136803685746"
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.ts",
+          "hash": "5423267179424440460",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.service.ts",
+          "hash": "6576208105437164291",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focusable.directive.ts",
+          "hash": "11632273276299908093",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/test-setup.ts",
+          "hash": "17711435995618823417",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/common-ui/tsconfig.json",
+          "hash": "15487755565970508470"
+        },
+        {
+          "file": "libs/common-ui/tsconfig.lib.json",
+          "hash": "16980941095143460879"
+        },
+        {
+          "file": "libs/common-ui/tsconfig.spec.json",
+          "hash": "7670846817526018622"
+        }
+      ],
+      "ouistiti": [
+        {
+          "file": "libs/ouistiti/.babelrc",
+          "hash": "12678781556853150254"
+        },
+        {
+          "file": "libs/ouistiti/.eslintrc.json",
+          "hash": "10837036714073921246"
+        },
+        {
+          "file": "libs/ouistiti/README.md",
+          "hash": "12998047128492129862"
+        },
+        {
+          "file": "libs/ouistiti/jest.config.js",
+          "hash": "12685919645977320308"
+        },
+        {
+          "file": "libs/ouistiti/project.json",
+          "hash": "531708027407004728"
+        },
+        {
+          "file": "libs/ouistiti/src/index.ts",
+          "hash": "6217359137714807327"
+        },
+        {
+          "file": "libs/ouistiti/src/lib/classes/break-point.class.ts",
+          "hash": "17960661976108556524",
+          "deps": [
+            "npm:rxjs",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/classes/card.class.ts",
+          "hash": "5335686243570649558",
+          "deps": [
+            "ouistiti-shared",
+            "npm:nanoid"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/classes/event.class.ts",
+          "hash": "14573988603306277929"
+        },
+        {
+          "file": "libs/ouistiti/src/lib/classes/game.class.ts",
+          "hash": "14928929557366312868",
+          "deps": [
+            "npm:nanoid",
+            "ouistiti-shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/classes/lobby.class.ts",
+          "hash": "11311186128336538294",
+          "deps": [
+            "ouistiti-shared",
+            "npm:nanoid",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/classes/ouistiti-exception.class.ts",
+          "hash": "77473315075550703",
+          "deps": [
+            "ouistiti-shared",
+            "npm:@nestjs/websockets"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/classes/player.class.ts",
+          "hash": "17886359855952498489",
+          "deps": [
+            "npm:nanoid",
+            "ouistiti-shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/classes/round.class.ts",
+          "hash": "7728464077971800841",
+          "deps": [
+            "ouistiti-shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/controllers/socket-game.controller.ts",
+          "hash": "15647474122921096915",
+          "deps": [
+            "npm:rxjs",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/controllers/socket-lobby.controller.ts",
+          "hash": "18239607132771188100",
+          "deps": [
+            "npm:rxjs",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/controllers/socket-player.controller.ts",
+          "hash": "2479520827103238222",
+          "deps": [
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/controllers/socket-round.controller.ts",
+          "hash": "2282778354412749135",
+          "deps": [
+            "ouistiti-shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/controllers/socket.controller.ts",
+          "hash": "15554031088871788496",
+          "deps": [
+            "npm:socket.io",
+            "npm:rxjs",
+            "ouistiti-shared"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/enums/break-point-method.enum.ts",
+          "hash": "747586823289926238"
+        },
+        {
+          "file": "libs/ouistiti/src/lib/interfaces/lobby-oberserved.interface.ts",
+          "hash": "15839860089643441050"
+        },
+        {
+          "file": "libs/ouistiti/src/lib/interfaces/round-observed.interface.ts",
+          "hash": "11067508487384712181"
+        },
+        {
+          "file": "libs/ouistiti/src/lib/ouistiti-exception.filter.ts",
+          "hash": "1167687332437941774",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:socket.io"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/ouistiti.gateway.ts",
+          "hash": "6409900443909413114",
+          "deps": [
+            "npm:@nestjs/websockets",
+            "ouistiti-shared",
+            "npm:@nestjs/common",
+            "npm:socket.io"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/ouistiti.module.ts",
+          "hash": "14907308565760946001",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/src/lib/socket-controller-pipe.service.ts",
+          "hash": "5419306897333147354",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:socket.io"
+          ]
+        },
+        {
+          "file": "libs/ouistiti/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/ouistiti/tsconfig.lib.json",
+          "hash": "466750047166262433"
+        },
+        {
+          "file": "libs/ouistiti/tsconfig.spec.json",
+          "hash": "13015927483173923663"
+        }
+      ]
+    },
+    "nonProjectFiles": [
+      {
+        "file": ".editorconfig",
+        "hash": "5443105041930014821"
+      },
+      {
+        "file": ".eslintignore",
+        "hash": "7663861978715868291"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "2202979497243687980"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "9747822052186374552"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "9175937087874081623"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "17918173840669689289"
+      },
+      {
+        "file": "README.md",
+        "hash": "6632321902371261984"
+      },
+      {
+        "file": "apps/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "docs/common-ui/grip.directive.md",
+        "hash": "10626054698699815212"
+      },
+      {
+        "file": "docs/ouistiti/ouistiti-client-events.md",
+        "hash": "6519828352180546114"
+      },
+      {
+        "file": "docs/ouistiti/ouistiti-server-events.md",
+        "hash": "5392813308456906269"
+      },
+      {
+        "file": "docs/ouistiti/ouistiti.md",
+        "hash": "13958043254410329480"
+      },
+      {
+        "file": "docs/repository-configuation.md",
+        "hash": "293478403253328651"
+      },
+      {
+        "file": "jest.config.js",
+        "hash": "777392666910927166"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "17265899729284452680"
+      },
+      {
+        "file": "libs/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "migrations.json",
+        "hash": "2492943374799685122"
+      },
+      {
+        "file": "nx.json",
+        "hash": "14159515455663497046"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "16116188280409288162"
+      },
+      {
+        "file": "package.json",
+        "hash": "4091771896387295184"
+      },
+      {
+        "file": "scripts/deploy.sh",
+        "hash": "8872526087647870758"
+      },
+      {
+        "file": "scripts/generate-config.ts",
+        "hash": "1469820809393309417"
+      },
+      {
+        "file": "tools/tsconfig.tools.json",
+        "hash": "16088922570277978783"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "12392672109836642058"
+      }
+    ]
+  }
+}

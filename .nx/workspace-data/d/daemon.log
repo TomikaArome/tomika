@@ -22,3 +22,38 @@
 [NX v21.0.3 Daemon Server] - 2025-05-10T23:34:10.570Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (sources)
 [NX v21.0.3 Daemon Server] - 2025-05-10T23:34:10.571Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (outputs)
 [NX v21.0.3 Daemon Server] - 2025-05-10T23:34:10.571Z - Server stopped because: "Request to shutdown"
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.521Z - Started listening on: /tmp/ff689cc768d76c982620/d.sock
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.528Z - [WATCHER]: Subscribed to changes within: /home/celia/repos/tomika (native)
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.530Z - Established a connection. Number of open connections: 1
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.531Z - Established a connection. Number of open connections: 2
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.532Z - Closed a connection. Number of open connections: 1
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.536Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.536Z - Done responding to the client Shutdown initiated
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.536Z - Handled FORCE_SHUTDOWN. Handling time: 1. Response time: 0.
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.537Z - Closed a connection. Number of open connections: 0
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.538Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (sources)
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.538Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (outputs)
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:38:48.539Z - Server stopped because: "Request to shutdown"
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.698Z - Started listening on: /tmp/ff689cc768d76c982620/d.sock
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.704Z - [WATCHER]: Subscribed to changes within: /home/celia/repos/tomika (native)
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.711Z - Established a connection. Number of open connections: 1
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.712Z - Established a connection. Number of open connections: 2
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.713Z - Closed a connection. Number of open connections: 1
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.716Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.716Z - Done responding to the client Shutdown initiated
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.716Z - Handled FORCE_SHUTDOWN. Handling time: 1. Response time: 0.
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.717Z - Closed a connection. Number of open connections: 0
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.718Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (sources)
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.718Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (outputs)
+[NX v21.0.3 Daemon Server] - 2025-05-10T23:41:12.718Z - Server stopped because: "Request to shutdown"
+[NX Daemon Server] - 2025-05-10T23:47:36.624Z - Started listening on: /tmp/ff689cc768d76c982620/d.sock
+[NX Daemon Server] - 2025-05-10T23:47:36.629Z - [WATCHER]: Subscribed to changes within: /home/celia/repos/tomika (native)
+[NX Daemon Server] - 2025-05-10T23:47:36.630Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2025-05-10T23:47:36.631Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2025-05-10T23:47:36.633Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2025-05-10T23:47:36.635Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX Daemon Server] - 2025-05-10T23:47:36.635Z - Done responding to the client Shutdown initiated
+[NX Daemon Server] - 2025-05-10T23:47:36.635Z - Handled FORCE_SHUTDOWN. Handling time: 1. Response time: 0.
+[NX Daemon Server] - 2025-05-10T23:47:36.637Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2025-05-10T23:47:36.637Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (sources)
+[NX Daemon Server] - 2025-05-10T23:47:36.637Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (outputs)

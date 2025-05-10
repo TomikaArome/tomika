@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/nintendo-switch-online-cli/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nrwl/webpack:webpack",
@@ -43,19 +44,14 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/nintendo-switch-online-cli/**/*.ts"]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/nintendo-switch-online-cli"],
       "options": {
-        "jestConfig": "apps/nintendo-switch-online-cli/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/nintendo-switch-online-cli/jest.config.ts"
       }
     }
-  },
-  "tags": []
+  }
 }

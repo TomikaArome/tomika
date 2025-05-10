@@ -4,24 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/ouistiti-ui/src",
   "prefix": "TomikaArome",
+  "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/ouistiti-ui/src/**/*.ts",
-          "libs/ouistiti-ui/src/**/*.html"
-        ]
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/ouistiti-ui"],
       "options": {
-        "jestConfig": "libs/ouistiti-ui/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/ouistiti-ui/jest.config.js"
       }
     }
-  },
-  "tags": []
+  }
 }

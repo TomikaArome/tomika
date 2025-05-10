@@ -3,21 +3,17 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/nintendo-switch-online/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": ["libs/nintendo-switch-online/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/nintendo-switch-online"],
       "options": {
-        "jestConfig": "libs/nintendo-switch-online/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/nintendo-switch-online/jest.config.js"
       }
     }
-  },
-  "tags": []
+  }
 }

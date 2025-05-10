@@ -3,21 +3,17 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/ouistiti/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": ["libs/ouistiti/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/ouistiti"],
       "options": {
-        "jestConfig": "libs/ouistiti/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/ouistiti/jest.config.js"
       }
     }
-  },
-  "tags": []
+  }
 }

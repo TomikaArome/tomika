@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/frontend/src",
   "prefix": "tmk",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -69,41 +70,33 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "frontend:build",
-        "proxyConfig": "apps/frontend/proxy.conf.json"
+        "proxyConfig": "apps/frontend/proxy.conf.json",
+        "buildTarget": "frontend:build"
       },
       "configurations": {
         "production": {
-          "browserTarget": "frontend:build:production"
+          "buildTarget": "frontend:build:production"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "frontend:build"
+        "buildTarget": "frontend:build"
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": [
-          "apps/frontend/src/**/*.ts",
-          "apps/frontend/src/**/*.html"
-        ]
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/frontend"],
       "options": {
-        "jestConfig": "apps/frontend/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "apps/frontend/jest.config.js"
       }
     },
     "deploy": {
       "executor": "angular-cli-ghpages:deploy"
     }
-  },
-  "tags": []
+  }
 }

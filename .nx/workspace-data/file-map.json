@@ -47,7 +47,7 @@
     "@angular-eslint/eslint-plugin": "18.4.3",
     "@angular-eslint/eslint-plugin-template": "18.4.3",
     "@angular-eslint/template-parser": "18.4.3",
-    "@angular/cli": "~17.3.0",
+    "@angular/cli": "~18.1.0",
     "@angular/compiler-cli": "18.2.9",
     "@angular/language-service": "18.2.9",
     "@nestjs/schematics": "10.0.2",
@@ -68,6 +68,7 @@
     "@types/set-cookie-parser": "^2.4.2",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
+    "@typescript-eslint/utils": "^7.16.0",
     "cypress": "13.17.0",
     "eslint": "8.57.1",
     "eslint-config-prettier": "9.0.0",
@@ -108,115 +109,6 @@
   "nxJsonPlugins": [],
   "fileMap": {
     "projectFileMap": {
-      "backend": [
-        {
-          "file": "apps/backend/.eslintrc.json",
-          "hash": "3595092817234927786"
-        },
-        {
-          "file": "apps/backend/jest.config.js",
-          "hash": "14764775137118483703"
-        },
-        {
-          "file": "apps/backend/project.json",
-          "hash": "15221804645048294287"
-        },
-        {
-          "file": "apps/backend/src/app/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/backend/src/app/app.controller.spec.ts",
-          "hash": "15859953346642325947",
-          "deps": [
-            "npm:@nestjs/testing"
-          ]
-        },
-        {
-          "file": "apps/backend/src/app/app.controller.ts",
-          "hash": "14826100206856882122",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/backend/src/app/app.module.ts",
-          "hash": "17216028606856043288",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:mongoose",
-            "npm:@nestjs/mongoose",
-            "ouistiti",
-            "common-backend"
-          ]
-        },
-        {
-          "file": "apps/backend/src/app/app.service.spec.ts",
-          "hash": "6332748756781370420",
-          "deps": [
-            "npm:@nestjs/testing"
-          ]
-        },
-        {
-          "file": "apps/backend/src/app/app.service.ts",
-          "hash": "8118291797590482303",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/backend/src/assets/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/backend/src/exception-filters/mongo-error.filter.ts",
-          "hash": "3800035830584098277",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:mongodb",
-            "npm:express",
-            "common"
-          ]
-        },
-        {
-          "file": "apps/backend/src/exception-filters/tmk-err.filter.ts",
-          "hash": "9017349135365497739",
-          "deps": [
-            "npm:@nestjs/common",
-            "common",
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/backend/src/exception-filters/validation-error.filter.ts",
-          "hash": "17746435385480309414",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:mongoose",
-            "npm:express",
-            "common"
-          ]
-        },
-        {
-          "file": "apps/backend/src/main.ts",
-          "hash": "9733319491141615790",
-          "deps": [
-            "npm:@nestjs/core"
-          ]
-        },
-        {
-          "file": "apps/backend/tsconfig.app.json",
-          "hash": "6873790451466084242"
-        },
-        {
-          "file": "apps/backend/tsconfig.json",
-          "hash": "9214820933160915425"
-        },
-        {
-          "file": "apps/backend/tsconfig.spec.json",
-          "hash": "14923180086576996015"
-        }
-      ],
       "playground-e2e": [
         {
           "file": "apps/playground-e2e/.eslintrc.json",
@@ -262,334 +154,320 @@
           "hash": "17327834683392158647"
         }
       ],
-      "frontend-e2e": [
+      "common-backend": [
         {
-          "file": "apps/frontend-e2e/.eslintrc.json",
-          "hash": "7570708808841137117"
+          "file": "libs/common-backend/.eslintrc.json",
+          "hash": "13800677001662881425"
         },
         {
-          "file": "apps/frontend-e2e/cypress.json",
-          "hash": "7929329345170060984"
+          "file": "libs/common-backend/README.md",
+          "hash": "6790164484026818890"
         },
         {
-          "file": "apps/frontend-e2e/project.json",
-          "hash": "3962366637573927333"
+          "file": "libs/common-backend/jest.config.ts",
+          "hash": "7830341389908868031"
         },
         {
-          "file": "apps/frontend-e2e/src/fixtures/example.json",
-          "hash": "11614668686582597233"
+          "file": "libs/common-backend/project.json",
+          "hash": "3927688561417195456"
         },
         {
-          "file": "apps/frontend-e2e/src/integration/app.spec.ts",
-          "hash": "5870103527414819913"
+          "file": "libs/common-backend/src/index.ts",
+          "hash": "1968798416459225306"
         },
         {
-          "file": "apps/frontend-e2e/src/plugins/index.js",
-          "hash": "1870053236038166983",
+          "file": "libs/common-backend/src/lib/posts/index.ts",
+          "hash": "12988106854182250745"
+        },
+        {
+          "file": "libs/common-backend/src/lib/posts/post.schema.ts",
+          "hash": "9386185975300617714",
           "deps": [
-            "npm:@nx/cypress"
+            "npm:mongoose",
+            "npm:@nestjs/mongoose",
+            "common"
           ]
         },
         {
-          "file": "apps/frontend-e2e/src/support/app.po.ts",
-          "hash": "11157016311132186162"
+          "file": "libs/common-backend/src/lib/posts/posts.controller.ts",
+          "hash": "8956753732941599848",
+          "deps": [
+            "npm:@nestjs/common",
+            "common"
+          ]
         },
         {
-          "file": "apps/frontend-e2e/src/support/commands.ts",
-          "hash": "7314691991044890572"
+          "file": "libs/common-backend/src/lib/posts/posts.module.ts",
+          "hash": "4084612168499942400",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose"
+          ]
         },
         {
-          "file": "apps/frontend-e2e/src/support/index.ts",
-          "hash": "3666078656922506009"
+          "file": "libs/common-backend/src/lib/posts/posts.service.ts",
+          "hash": "5100631533459360572",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose",
+            "common"
+          ]
         },
         {
-          "file": "apps/frontend-e2e/tsconfig.e2e.json",
-          "hash": "3552469080385459243"
+          "file": "libs/common-backend/src/lib/tags/index.ts",
+          "hash": "3567899641295097498"
         },
         {
-          "file": "apps/frontend-e2e/tsconfig.json",
-          "hash": "4500232260948002331"
+          "file": "libs/common-backend/src/lib/tags/tag.schema.ts",
+          "hash": "8346121006565525896",
+          "deps": [
+            "npm:@nestjs/mongoose",
+            "npm:mongoose",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/tags/tags.controller.ts",
+          "hash": "15350423192305174379",
+          "deps": [
+            "npm:@nestjs/common",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/tags/tags.module.ts",
+          "hash": "12350622976959419199",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose"
+          ]
+        },
+        {
+          "file": "libs/common-backend/src/lib/tags/tags.service.ts",
+          "hash": "11974190104278429842",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose",
+            "common"
+          ]
+        },
+        {
+          "file": "libs/common-backend/tsconfig.json",
+          "hash": "2840670722752396445"
+        },
+        {
+          "file": "libs/common-backend/tsconfig.lib.json",
+          "hash": "8188472110264778699"
+        },
+        {
+          "file": "libs/common-backend/tsconfig.spec.json",
+          "hash": "11550347367511341917"
         }
       ],
-      "common": [
+      "frontend": [
         {
-          "file": "libs/common/.babelrc",
-          "hash": "12678781556853150254"
+          "file": "apps/frontend/.eslintrc.json",
+          "hash": "447771065579201379"
         },
         {
-          "file": "libs/common/.eslintrc.json",
-          "hash": "2735913900879119837"
+          "file": "apps/frontend/jest.config.js",
+          "hash": "18353546863181136259"
         },
         {
-          "file": "libs/common/README.md",
-          "hash": "17127957463758053849"
+          "file": "apps/frontend/project.json",
+          "hash": "18268682475078116287"
         },
         {
-          "file": "libs/common/docs/user/Users.md",
-          "hash": "10236328999341731018"
+          "file": "apps/frontend/proxy.conf.json",
+          "hash": "7740023976500524898"
         },
         {
-          "file": "libs/common/jest.config.js",
-          "hash": "12955024269809785240"
-        },
-        {
-          "file": "libs/common/project.json",
-          "hash": "444138714147347221"
-        },
-        {
-          "file": "libs/common/src/index.ts",
-          "hash": "14803989726245966590"
-        },
-        {
-          "file": "libs/common/src/lib/error/module.ts",
-          "hash": "9801741534704110576"
-        },
-        {
-          "file": "libs/common/src/lib/error/tmk-err-conflict.ts",
-          "hash": "7622991339300160926"
-        },
-        {
-          "file": "libs/common/src/lib/error/tmk-err-not-found.ts",
-          "hash": "1178786774567662007"
-        },
-        {
-          "file": "libs/common/src/lib/error/tmk-err.ts",
-          "hash": "9762496873861107199"
-        },
-        {
-          "file": "libs/common/src/lib/module.ts",
-          "hash": "8329010450301054925"
-        },
-        {
-          "file": "libs/common/src/lib/posts/post.interface.ts",
-          "hash": "673021400845008984"
-        },
-        {
-          "file": "libs/common/src/lib/tags/tag.interface.ts",
-          "hash": "1819090311573477795"
-        },
-        {
-          "file": "libs/common/src/lib/user/connected-account/connected-account.model.ts",
-          "hash": "5282520426691794434"
-        },
-        {
-          "file": "libs/common/src/lib/user/connected-account/discord-account.model.spec.ts",
-          "hash": "2167588996804534281"
-        },
-        {
-          "file": "libs/common/src/lib/user/connected-account/discord-account.model.ts",
-          "hash": "6520912164039004382"
-        },
-        {
-          "file": "libs/common/src/lib/user/connected-account/module.ts",
-          "hash": "6444142431722784567"
-        },
-        {
-          "file": "libs/common/src/lib/user/group.model.spec.ts",
-          "hash": "17659864196006960354"
-        },
-        {
-          "file": "libs/common/src/lib/user/group.model.ts",
-          "hash": "1826732423030102536"
-        },
-        {
-          "file": "libs/common/src/lib/user/module.ts",
-          "hash": "6386330365751706987"
-        },
-        {
-          "file": "libs/common/src/lib/user/permission.model.spec.ts",
-          "hash": "8244799814891430612"
-        },
-        {
-          "file": "libs/common/src/lib/user/permission.model.ts",
-          "hash": "13624126159884904181"
-        },
-        {
-          "file": "libs/common/src/lib/user/permissions.json",
-          "hash": "10657442335406065627"
-        },
-        {
-          "file": "libs/common/src/lib/user/user.model.ts",
-          "hash": "3157449694492955185"
-        },
-        {
-          "file": "libs/common/src/mock/module.ts",
-          "hash": "3006571435048459332"
-        },
-        {
-          "file": "libs/common/src/mock/user/group.mock.ts",
-          "hash": "7923189888126293192"
-        },
-        {
-          "file": "libs/common/src/mock/user/module.ts",
-          "hash": "11074725764556396081"
-        },
-        {
-          "file": "libs/common/src/mock/user/permission.mock.ts",
-          "hash": "9724393355644376969"
-        },
-        {
-          "file": "libs/common/src/mock/user/user.mock.ts",
-          "hash": "1262358550666708656"
-        },
-        {
-          "file": "libs/common/tsconfig.json",
-          "hash": "12834038490315927699"
-        },
-        {
-          "file": "libs/common/tsconfig.lib.json",
-          "hash": "15448591875537424246"
-        },
-        {
-          "file": "libs/common/tsconfig.spec.json",
-          "hash": "13015927483173923663"
-        }
-      ],
-      "nintendo-switch-online": [
-        {
-          "file": "libs/nintendo-switch-online/.babelrc",
-          "hash": "12678781556853150254"
-        },
-        {
-          "file": "libs/nintendo-switch-online/.eslintrc.json",
-          "hash": "12983935809692621782"
-        },
-        {
-          "file": "libs/nintendo-switch-online/README.md",
-          "hash": "5790414047638894165"
-        },
-        {
-          "file": "libs/nintendo-switch-online/jest.config.js",
-          "hash": "12218049966735586309"
-        },
-        {
-          "file": "libs/nintendo-switch-online/project.json",
-          "hash": "8667148658568920854"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/index.ts",
-          "hash": "1139100853822116954"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connect-response.model.ts",
-          "hash": "15874664875505200364"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connect.model.ts",
-          "hash": "2317967203778673738"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connector-args.model.ts",
-          "hash": "12294189220408846431"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-game-connector-args.model.ts",
-          "hash": "8475270052309595986"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/connect/nso-connector.class.ts",
-          "hash": "10224376113655578315",
+          "file": "apps/frontend/src/admin/admin-panel-routing.module.ts",
+          "hash": "17048901625964952426",
           "deps": [
-            "npm:node-fetch"
+            "npm:@angular/core",
+            "npm:@angular/router"
           ]
         },
         {
-          "file": "libs/nintendo-switch-online/src/lib/connect/nso-game-connector.class.ts",
-          "hash": "14073258013758404828",
+          "file": "apps/frontend/src/admin/admin-panel.module.ts",
+          "hash": "15192780074196591009",
           "deps": [
-            "npm:node-fetch",
-            "npm:set-cookie-parser"
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "npm:@angular/common"
           ]
         },
         {
-          "file": "libs/nintendo-switch-online/src/lib/model/language-code.model.ts",
-          "hash": "4120006401972498905"
+          "file": "apps/frontend/src/admin/panel/admin-panel.component.html",
+          "hash": "8202273554962421498"
         },
         {
-          "file": "libs/nintendo-switch-online/src/lib/model/nso-app-args.model.ts",
-          "hash": "3462045788633223712"
+          "file": "apps/frontend/src/admin/panel/admin-panel.component.scss",
+          "hash": "10425030425912961067"
         },
         {
-          "file": "libs/nintendo-switch-online/src/lib/nso-app.class.ts",
-          "hash": "17361755573588727757",
+          "file": "apps/frontend/src/admin/panel/admin-panel.component.ts",
+          "hash": "14377739769071806185",
           "deps": [
-            "npm:node-fetch",
-            "npm:rxjs"
+            "npm:@angular/core"
           ]
         },
         {
-          "file": "libs/nintendo-switch-online/src/lib/nso-constants.ts",
-          "hash": "9451473584298862658"
+          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.html",
+          "hash": "4493432999524057857"
         },
         {
-          "file": "libs/nintendo-switch-online/src/lib/nso-error.class.ts",
-          "hash": "7208439460766619375"
+          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.scss",
+          "hash": "6924415856513855772"
         },
         {
-          "file": "libs/nintendo-switch-online/src/lib/nso-operation.class.ts",
-          "hash": "8449967941217033089"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-2/model/battle.model.ts",
-          "hash": "11202861228130013341"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-2/splatoon-2-controller.class.ts",
-          "hash": "948509988985588917"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/battle-histories.model.ts",
-          "hash": "2962982857869173244"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/battle.model.ts",
-          "hash": "4285673114804781807"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/bullet-token.model.ts",
-          "hash": "16127587238662058334"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/index.ts",
-          "hash": "8192505406427481611"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/salmon-run-shift.model.ts",
-          "hash": "13326384404108511629"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/url-object.model.ts",
-          "hash": "7299449254909432574"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/weapons.model.ts",
-          "hash": "12449745699346319885"
-        },
-        {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/splatoon-3-controller.class.ts",
-          "hash": "13124454140390373112",
+          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.ts",
+          "hash": "7614089120985358547",
           "deps": [
-            "npm:node-fetch"
+            "npm:@angular/core",
+            "npm:@angular/cdk",
+            "common",
+            "npm:@angular/material"
           ]
         },
         {
-          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/splatoon-3-version-manager.class.ts",
-          "hash": "14819647726416595692",
+          "file": "apps/frontend/src/app/app-routing.module.ts",
+          "hash": "4147903852107805792",
           "deps": [
-            "npm:node-fetch"
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "ouistiti-ui"
           ]
         },
         {
-          "file": "libs/nintendo-switch-online/tsconfig.json",
-          "hash": "12834038490315927699"
+          "file": "apps/frontend/src/app/app.component.html",
+          "hash": "17816966185630879015"
         },
         {
-          "file": "libs/nintendo-switch-online/tsconfig.lib.json",
-          "hash": "15448591875537424246"
+          "file": "apps/frontend/src/app/app.component.scss",
+          "hash": "3244421341483603138"
         },
         {
-          "file": "libs/nintendo-switch-online/tsconfig.spec.json",
-          "hash": "13015927483173923663"
+          "file": "apps/frontend/src/app/app.component.spec.ts",
+          "hash": "14919087980981185590",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/app/app.component.ts",
+          "hash": "17166900340145608026",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/app/app.module.ts",
+          "hash": "14183334050680529070",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser",
+            "npm:@fortawesome/angular-fontawesome"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/assets/tomika.svg",
+          "hash": "3078790963171877968"
+        },
+        {
+          "file": "apps/frontend/src/cards-test/cards-test.component.html",
+          "hash": "2649416847022377322"
+        },
+        {
+          "file": "apps/frontend/src/cards-test/cards-test.component.scss",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/cards-test/cards-test.component.ts",
+          "hash": "13851159992608026714",
+          "deps": [
+            "npm:@angular/core",
+            "npm:socket.io-client"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/favicon.ico",
+          "hash": "9303420814833116677"
+        },
+        {
+          "file": "apps/frontend/src/index.html",
+          "hash": "12376973084632260505"
+        },
+        {
+          "file": "apps/frontend/src/index/index.component.html",
+          "hash": "4725246019342439418"
+        },
+        {
+          "file": "apps/frontend/src/index/index.component.scss",
+          "hash": "801240964504112946"
+        },
+        {
+          "file": "apps/frontend/src/index/index.component.ts",
+          "hash": "15862093764844608625",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/main.ts",
+          "hash": "14896519517424602606",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/platform-browser-dynamic"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/polyfills.ts",
+          "hash": "2908177964561583612",
+          "deps": [
+            "npm:zone.js"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/services/permission.service.ts",
+          "hash": "26222103427352125",
+          "deps": [
+            "npm:@angular/core",
+            "common"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/styles.scss",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/frontend/src/test-setup.ts",
+          "hash": "16110123792168980195",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "apps/frontend/tsconfig.app.json",
+          "hash": "18340481176415527529"
+        },
+        {
+          "file": "apps/frontend/tsconfig.editor.json",
+          "hash": "6367495026318685054"
+        },
+        {
+          "file": "apps/frontend/tsconfig.json",
+          "hash": "9191379799926122967"
+        },
+        {
+          "file": "apps/frontend/tsconfig.spec.json",
+          "hash": "2368708604775059221"
         }
       ],
       "ouistiti-ui": [
@@ -1392,311 +1270,200 @@
           "hash": "10595040461224341030"
         }
       ],
-      "frontend": [
+      "nintendo-switch-online": [
         {
-          "file": "apps/frontend/.eslintrc.json",
-          "hash": "447771065579201379"
+          "file": "libs/nintendo-switch-online/.babelrc",
+          "hash": "12678781556853150254"
         },
         {
-          "file": "apps/frontend/jest.config.js",
-          "hash": "18353546863181136259"
+          "file": "libs/nintendo-switch-online/.eslintrc.json",
+          "hash": "12983935809692621782"
         },
         {
-          "file": "apps/frontend/project.json",
-          "hash": "18268682475078116287"
+          "file": "libs/nintendo-switch-online/README.md",
+          "hash": "5790414047638894165"
         },
         {
-          "file": "apps/frontend/proxy.conf.json",
-          "hash": "7740023976500524898"
+          "file": "libs/nintendo-switch-online/jest.config.js",
+          "hash": "12218049966735586309"
         },
         {
-          "file": "apps/frontend/src/admin/admin-panel-routing.module.ts",
-          "hash": "17048901625964952426",
+          "file": "libs/nintendo-switch-online/project.json",
+          "hash": "8667148658568920854"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/index.ts",
+          "hash": "1139100853822116954"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connect-response.model.ts",
+          "hash": "15874664875505200364"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connect.model.ts",
+          "hash": "2317967203778673738"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-connector-args.model.ts",
+          "hash": "12294189220408846431"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/model/nso-game-connector-args.model.ts",
+          "hash": "8475270052309595986"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/connect/nso-connector.class.ts",
+          "hash": "10224376113655578315",
           "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router"
+            "npm:node-fetch"
           ]
         },
         {
-          "file": "apps/frontend/src/admin/admin-panel.module.ts",
-          "hash": "15192780074196591009",
+          "file": "libs/nintendo-switch-online/src/lib/connect/nso-game-connector.class.ts",
+          "hash": "14073258013758404828",
           "deps": [
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "npm:@angular/common"
+            "npm:node-fetch",
+            "npm:set-cookie-parser"
           ]
         },
         {
-          "file": "apps/frontend/src/admin/panel/admin-panel.component.html",
-          "hash": "8202273554962421498"
+          "file": "libs/nintendo-switch-online/src/lib/model/language-code.model.ts",
+          "hash": "4120006401972498905"
         },
         {
-          "file": "apps/frontend/src/admin/panel/admin-panel.component.scss",
-          "hash": "10425030425912961067"
+          "file": "libs/nintendo-switch-online/src/lib/model/nso-app-args.model.ts",
+          "hash": "3462045788633223712"
         },
         {
-          "file": "apps/frontend/src/admin/panel/admin-panel.component.ts",
-          "hash": "14377739769071806185",
+          "file": "libs/nintendo-switch-online/src/lib/nso-app.class.ts",
+          "hash": "17361755573588727757",
           "deps": [
-            "npm:@angular/core"
+            "npm:node-fetch",
+            "npm:rxjs"
           ]
         },
         {
-          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.html",
-          "hash": "4493432999524057857"
+          "file": "libs/nintendo-switch-online/src/lib/nso-constants.ts",
+          "hash": "9451473584298862658"
         },
         {
-          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.scss",
-          "hash": "6924415856513855772"
+          "file": "libs/nintendo-switch-online/src/lib/nso-error.class.ts",
+          "hash": "7208439460766619375"
         },
         {
-          "file": "apps/frontend/src/admin/permission-tree/permission-tree.component.ts",
-          "hash": "7614089120985358547",
+          "file": "libs/nintendo-switch-online/src/lib/nso-operation.class.ts",
+          "hash": "8449967941217033089"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-2/model/battle.model.ts",
+          "hash": "11202861228130013341"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-2/splatoon-2-controller.class.ts",
+          "hash": "948509988985588917"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/battle-histories.model.ts",
+          "hash": "2962982857869173244"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/battle.model.ts",
+          "hash": "4285673114804781807"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/bullet-token.model.ts",
+          "hash": "16127587238662058334"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/index.ts",
+          "hash": "8192505406427481611"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/salmon-run-shift.model.ts",
+          "hash": "13326384404108511629"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/url-object.model.ts",
+          "hash": "7299449254909432574"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/model/weapons.model.ts",
+          "hash": "12449745699346319885"
+        },
+        {
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/splatoon-3-controller.class.ts",
+          "hash": "13124454140390373112",
           "deps": [
-            "npm:@angular/core",
-            "npm:@angular/cdk",
-            "common",
-            "npm:@angular/material"
+            "npm:node-fetch"
           ]
         },
         {
-          "file": "apps/frontend/src/app/app-routing.module.ts",
-          "hash": "4147903852107805792",
+          "file": "libs/nintendo-switch-online/src/lib/splatoon-3/splatoon-3-version-manager.class.ts",
+          "hash": "14819647726416595692",
           "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router",
-            "ouistiti-ui"
+            "npm:node-fetch"
           ]
         },
         {
-          "file": "apps/frontend/src/app/app.component.html",
-          "hash": "17816966185630879015"
+          "file": "libs/nintendo-switch-online/tsconfig.json",
+          "hash": "12834038490315927699"
         },
         {
-          "file": "apps/frontend/src/app/app.component.scss",
-          "hash": "3244421341483603138"
+          "file": "libs/nintendo-switch-online/tsconfig.lib.json",
+          "hash": "15448591875537424246"
         },
         {
-          "file": "apps/frontend/src/app/app.component.spec.ts",
-          "hash": "14919087980981185590",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common"
-          ]
-        },
-        {
-          "file": "apps/frontend/src/app/app.component.ts",
-          "hash": "17166900340145608026",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/frontend/src/app/app.module.ts",
-          "hash": "14183334050680529070",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/platform-browser",
-            "npm:@fortawesome/angular-fontawesome"
-          ]
-        },
-        {
-          "file": "apps/frontend/src/assets/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/frontend/src/assets/tomika.svg",
-          "hash": "3078790963171877968"
-        },
-        {
-          "file": "apps/frontend/src/cards-test/cards-test.component.html",
-          "hash": "2649416847022377322"
-        },
-        {
-          "file": "apps/frontend/src/cards-test/cards-test.component.scss",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/frontend/src/cards-test/cards-test.component.ts",
-          "hash": "13851159992608026714",
-          "deps": [
-            "npm:@angular/core",
-            "npm:socket.io-client"
-          ]
-        },
-        {
-          "file": "apps/frontend/src/favicon.ico",
-          "hash": "9303420814833116677"
-        },
-        {
-          "file": "apps/frontend/src/index.html",
-          "hash": "12376973084632260505"
-        },
-        {
-          "file": "apps/frontend/src/index/index.component.html",
-          "hash": "4725246019342439418"
-        },
-        {
-          "file": "apps/frontend/src/index/index.component.scss",
-          "hash": "801240964504112946"
-        },
-        {
-          "file": "apps/frontend/src/index/index.component.ts",
-          "hash": "15862093764844608625",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/frontend/src/main.ts",
-          "hash": "14896519517424602606",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/platform-browser-dynamic"
-          ]
-        },
-        {
-          "file": "apps/frontend/src/polyfills.ts",
-          "hash": "2908177964561583612",
-          "deps": [
-            "npm:zone.js"
-          ]
-        },
-        {
-          "file": "apps/frontend/src/services/permission.service.ts",
-          "hash": "26222103427352125",
-          "deps": [
-            "npm:@angular/core",
-            "common"
-          ]
-        },
-        {
-          "file": "apps/frontend/src/styles.scss",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/frontend/src/test-setup.ts",
-          "hash": "16110123792168980195",
-          "deps": [
-            "npm:jest-preset-angular"
-          ]
-        },
-        {
-          "file": "apps/frontend/tsconfig.app.json",
-          "hash": "18340481176415527529"
-        },
-        {
-          "file": "apps/frontend/tsconfig.editor.json",
-          "hash": "6367495026318685054"
-        },
-        {
-          "file": "apps/frontend/tsconfig.json",
-          "hash": "9191379799926122967"
-        },
-        {
-          "file": "apps/frontend/tsconfig.spec.json",
-          "hash": "2368708604775059221"
+          "file": "libs/nintendo-switch-online/tsconfig.spec.json",
+          "hash": "13015927483173923663"
         }
       ],
-      "playground": [
+      "frontend-e2e": [
         {
-          "file": "apps/playground/.eslintrc.json",
-          "hash": "7333243731265388849"
+          "file": "apps/frontend-e2e/.eslintrc.json",
+          "hash": "7570708808841137117"
         },
         {
-          "file": "apps/playground/jest.config.ts",
-          "hash": "2746038918526022381"
+          "file": "apps/frontend-e2e/cypress.json",
+          "hash": "7929329345170060984"
         },
         {
-          "file": "apps/playground/project.json",
-          "hash": "3207048986729773512"
+          "file": "apps/frontend-e2e/project.json",
+          "hash": "3962366637573927333"
         },
         {
-          "file": "apps/playground/src/app/app.module.ts",
-          "hash": "757111143787273149",
+          "file": "apps/frontend-e2e/src/fixtures/example.json",
+          "hash": "11614668686582597233"
+        },
+        {
+          "file": "apps/frontend-e2e/src/integration/app.spec.ts",
+          "hash": "5870103527414819913"
+        },
+        {
+          "file": "apps/frontend-e2e/src/plugins/index.js",
+          "hash": "1870053236038166983",
           "deps": [
-            "npm:@angular/core",
-            "npm:@angular/platform-browser",
-            "npm:@angular/router",
-            "common-ui"
+            "npm:@nx/cypress"
           ]
         },
         {
-          "file": "apps/playground/src/app/app.routes.ts",
-          "hash": "6185150965714414910",
-          "deps": [
-            "npm:@angular/router"
-          ]
+          "file": "apps/frontend-e2e/src/support/app.po.ts",
+          "hash": "11157016311132186162"
         },
         {
-          "file": "apps/playground/src/app/playground-root.component.html",
-          "hash": "13817158308925849674"
+          "file": "apps/frontend-e2e/src/support/commands.ts",
+          "hash": "7314691991044890572"
         },
         {
-          "file": "apps/playground/src/app/playground-root.component.scss",
-          "hash": "15611290374171968164"
+          "file": "apps/frontend-e2e/src/support/index.ts",
+          "hash": "3666078656922506009"
         },
         {
-          "file": "apps/playground/src/app/playground-root.component.spec.ts",
-          "hash": "9295037438251165994",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router"
-          ]
+          "file": "apps/frontend-e2e/tsconfig.e2e.json",
+          "hash": "3552469080385459243"
         },
         {
-          "file": "apps/playground/src/app/playground-root.component.ts",
-          "hash": "9626529091176690689",
-          "deps": [
-            "npm:@angular/core",
-            "common-ui"
-          ]
-        },
-        {
-          "file": "apps/playground/src/assets/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/playground/src/favicon.ico",
-          "hash": "9303420814833116677"
-        },
-        {
-          "file": "apps/playground/src/index.html",
-          "hash": "10986334777727853597"
-        },
-        {
-          "file": "apps/playground/src/main.ts",
-          "hash": "3259059517603285449",
-          "deps": [
-            "npm:@angular/platform-browser-dynamic"
-          ]
-        },
-        {
-          "file": "apps/playground/src/styles.scss",
-          "hash": "5195668842064076916"
-        },
-        {
-          "file": "apps/playground/src/test-setup.ts",
-          "hash": "17711435995618823417",
-          "deps": [
-            "npm:jest-preset-angular"
-          ]
-        },
-        {
-          "file": "apps/playground/tsconfig.app.json",
-          "hash": "8365644956319658761"
-        },
-        {
-          "file": "apps/playground/tsconfig.editor.json",
-          "hash": "17511610827034788226"
-        },
-        {
-          "file": "apps/playground/tsconfig.json",
-          "hash": "9884653866960566465"
-        },
-        {
-          "file": "apps/playground/tsconfig.spec.json",
-          "hash": "7670846817526018622"
+          "file": "apps/frontend-e2e/tsconfig.json",
+          "hash": "4500232260948002331"
         }
       ],
       "ouistiti-shared": [
@@ -1797,280 +1564,104 @@
           "hash": "629660272914713126"
         }
       ],
-      "common-backend": [
+      "playground": [
         {
-          "file": "libs/common-backend/.eslintrc.json",
-          "hash": "13800677001662881425"
+          "file": "apps/playground/.eslintrc.json",
+          "hash": "7333243731265388849"
         },
         {
-          "file": "libs/common-backend/README.md",
-          "hash": "6790164484026818890"
+          "file": "apps/playground/jest.config.ts",
+          "hash": "2746038918526022381"
         },
         {
-          "file": "libs/common-backend/jest.config.ts",
-          "hash": "7830341389908868031"
+          "file": "apps/playground/project.json",
+          "hash": "3207048986729773512"
         },
         {
-          "file": "libs/common-backend/project.json",
-          "hash": "3927688561417195456"
-        },
-        {
-          "file": "libs/common-backend/src/index.ts",
-          "hash": "1968798416459225306"
-        },
-        {
-          "file": "libs/common-backend/src/lib/posts/index.ts",
-          "hash": "12988106854182250745"
-        },
-        {
-          "file": "libs/common-backend/src/lib/posts/post.schema.ts",
-          "hash": "9386185975300617714",
-          "deps": [
-            "npm:mongoose",
-            "npm:@nestjs/mongoose",
-            "common"
-          ]
-        },
-        {
-          "file": "libs/common-backend/src/lib/posts/posts.controller.ts",
-          "hash": "8956753732941599848",
-          "deps": [
-            "npm:@nestjs/common",
-            "common"
-          ]
-        },
-        {
-          "file": "libs/common-backend/src/lib/posts/posts.module.ts",
-          "hash": "4084612168499942400",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/mongoose"
-          ]
-        },
-        {
-          "file": "libs/common-backend/src/lib/posts/posts.service.ts",
-          "hash": "5100631533459360572",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/mongoose",
-            "common"
-          ]
-        },
-        {
-          "file": "libs/common-backend/src/lib/tags/index.ts",
-          "hash": "3567899641295097498"
-        },
-        {
-          "file": "libs/common-backend/src/lib/tags/tag.schema.ts",
-          "hash": "8346121006565525896",
-          "deps": [
-            "npm:@nestjs/mongoose",
-            "npm:mongoose",
-            "common"
-          ]
-        },
-        {
-          "file": "libs/common-backend/src/lib/tags/tags.controller.ts",
-          "hash": "15350423192305174379",
-          "deps": [
-            "npm:@nestjs/common",
-            "common"
-          ]
-        },
-        {
-          "file": "libs/common-backend/src/lib/tags/tags.module.ts",
-          "hash": "12350622976959419199",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/mongoose"
-          ]
-        },
-        {
-          "file": "libs/common-backend/src/lib/tags/tags.service.ts",
-          "hash": "11974190104278429842",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/mongoose",
-            "common"
-          ]
-        },
-        {
-          "file": "libs/common-backend/tsconfig.json",
-          "hash": "2840670722752396445"
-        },
-        {
-          "file": "libs/common-backend/tsconfig.lib.json",
-          "hash": "8188472110264778699"
-        },
-        {
-          "file": "libs/common-backend/tsconfig.spec.json",
-          "hash": "11550347367511341917"
-        }
-      ],
-      "common-ui": [
-        {
-          "file": "libs/common-ui/.eslintrc.json",
-          "hash": "12943342344525390221"
-        },
-        {
-          "file": "libs/common-ui/README.md",
-          "hash": "7754615602505382514"
-        },
-        {
-          "file": "libs/common-ui/jest.config.ts",
-          "hash": "12282006040124213536"
-        },
-        {
-          "file": "libs/common-ui/project.json",
-          "hash": "12652055196760146690"
-        },
-        {
-          "file": "libs/common-ui/src/global.scss",
-          "hash": "16230018524133975904"
-        },
-        {
-          "file": "libs/common-ui/src/index.ts",
-          "hash": "15497835509783042733"
-        },
-        {
-          "file": "libs/common-ui/src/lib/common-ui.module.ts",
-          "hash": "16261162741514646702",
+          "file": "apps/playground/src/app/app.module.ts",
+          "hash": "757111143787273149",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:@fortawesome/angular-fontawesome"
+            "npm:@angular/platform-browser",
+            "npm:@angular/router",
+            "common-ui"
           ]
         },
         {
-          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.html",
-          "hash": "9064666852551740009"
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.scss",
-          "hash": "16175095069937206823"
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.ts",
-          "hash": "11152316565891321716",
+          "file": "apps/playground/src/app/app.routes.ts",
+          "hash": "6185150965714414910",
           "deps": [
-            "npm:@angular/core"
+            "npm:@angular/router"
           ]
         },
         {
-          "file": "libs/common-ui/src/lib/datatable/datatable.component.html",
-          "hash": "1420378754005450742"
+          "file": "apps/playground/src/app/playground-root.component.html",
+          "hash": "13817158308925849674"
         },
         {
-          "file": "libs/common-ui/src/lib/datatable/datatable.component.scss",
-          "hash": "4574583685776649337"
+          "file": "apps/playground/src/app/playground-root.component.scss",
+          "hash": "15611290374171968164"
         },
         {
-          "file": "libs/common-ui/src/lib/datatable/datatable.component.ts",
-          "hash": "429056610005564345",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/datatable.service.ts",
-          "hash": "2305983377521000350",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.html",
-          "hash": "548160717751285164"
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.scss",
-          "hash": "12397116742648609691"
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.ts",
-          "hash": "8326138746975588162",
+          "file": "apps/playground/src/app/playground-root.component.spec.ts",
+          "hash": "9295037438251165994",
           "deps": [
             "npm:@angular/core",
-            "npm:@fortawesome/free-solid-svg-icons"
+            "npm:@angular/router"
           ]
         },
         {
-          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.html",
-          "hash": "17283722117942303962"
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.scss",
-          "hash": "6321894613771396004"
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.ts",
-          "hash": "12396313833539050114",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/index.ts",
-          "hash": "16708893460843398016"
-        },
-        {
-          "file": "libs/common-ui/src/lib/datatable/model/datatable.model.ts",
-          "hash": "9235191029175083469"
-        },
-        {
-          "file": "libs/common-ui/src/lib/directives/grip.directive.ts",
-          "hash": "15200508899814997915",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.html",
-          "hash": "6668113240443625230"
-        },
-        {
-          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.scss",
-          "hash": "11100909136803685746"
-        },
-        {
-          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.ts",
-          "hash": "5423267179424440460",
+          "file": "apps/playground/src/app/playground-root.component.ts",
+          "hash": "9626529091176690689",
           "deps": [
             "npm:@angular/core",
-            "npm:rxjs"
+            "common-ui"
           ]
         },
         {
-          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.service.ts",
-          "hash": "6576208105437164291",
+          "file": "apps/playground/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/playground/src/favicon.ico",
+          "hash": "9303420814833116677"
+        },
+        {
+          "file": "apps/playground/src/index.html",
+          "hash": "10986334777727853597"
+        },
+        {
+          "file": "apps/playground/src/main.ts",
+          "hash": "3259059517603285449",
           "deps": [
-            "npm:@angular/core"
+            "npm:@angular/platform-browser-dynamic"
           ]
         },
         {
-          "file": "libs/common-ui/src/lib/focus-outline/focusable.directive.ts",
-          "hash": "11632273276299908093",
-          "deps": [
-            "npm:@angular/core"
-          ]
+          "file": "apps/playground/src/styles.scss",
+          "hash": "5195668842064076916"
         },
         {
-          "file": "libs/common-ui/src/test-setup.ts",
+          "file": "apps/playground/src/test-setup.ts",
           "hash": "17711435995618823417",
           "deps": [
             "npm:jest-preset-angular"
           ]
         },
         {
-          "file": "libs/common-ui/tsconfig.json",
-          "hash": "15487755565970508470"
+          "file": "apps/playground/tsconfig.app.json",
+          "hash": "8365644956319658761"
         },
         {
-          "file": "libs/common-ui/tsconfig.lib.json",
-          "hash": "16980941095143460879"
+          "file": "apps/playground/tsconfig.editor.json",
+          "hash": "17511610827034788226"
         },
         {
-          "file": "libs/common-ui/tsconfig.spec.json",
+          "file": "apps/playground/tsconfig.json",
+          "hash": "9884653866960566465"
+        },
+        {
+          "file": "apps/playground/tsconfig.spec.json",
           "hash": "7670846817526018622"
         }
       ],
@@ -2259,6 +1850,416 @@
           "file": "libs/ouistiti/tsconfig.spec.json",
           "hash": "13015927483173923663"
         }
+      ],
+      "backend": [
+        {
+          "file": "apps/backend/.eslintrc.json",
+          "hash": "3595092817234927786"
+        },
+        {
+          "file": "apps/backend/jest.config.js",
+          "hash": "14764775137118483703"
+        },
+        {
+          "file": "apps/backend/project.json",
+          "hash": "15221804645048294287"
+        },
+        {
+          "file": "apps/backend/src/app/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/backend/src/app/app.controller.spec.ts",
+          "hash": "15859953346642325947",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.controller.ts",
+          "hash": "14826100206856882122",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.module.ts",
+          "hash": "17216028606856043288",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongoose",
+            "npm:@nestjs/mongoose",
+            "ouistiti",
+            "common-backend"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.service.spec.ts",
+          "hash": "6332748756781370420",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/backend/src/app/app.service.ts",
+          "hash": "8118291797590482303",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/backend/src/exception-filters/mongo-error.filter.ts",
+          "hash": "3800035830584098277",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongodb",
+            "npm:express",
+            "common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/exception-filters/tmk-err.filter.ts",
+          "hash": "9017349135365497739",
+          "deps": [
+            "npm:@nestjs/common",
+            "common",
+            "npm:express"
+          ]
+        },
+        {
+          "file": "apps/backend/src/exception-filters/validation-error.filter.ts",
+          "hash": "17746435385480309414",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongoose",
+            "npm:express",
+            "common"
+          ]
+        },
+        {
+          "file": "apps/backend/src/main.ts",
+          "hash": "9733319491141615790",
+          "deps": [
+            "npm:@nestjs/core"
+          ]
+        },
+        {
+          "file": "apps/backend/tsconfig.app.json",
+          "hash": "6873790451466084242"
+        },
+        {
+          "file": "apps/backend/tsconfig.json",
+          "hash": "9214820933160915425"
+        },
+        {
+          "file": "apps/backend/tsconfig.spec.json",
+          "hash": "14923180086576996015"
+        }
+      ],
+      "common-ui": [
+        {
+          "file": "libs/common-ui/.eslintrc.json",
+          "hash": "12943342344525390221"
+        },
+        {
+          "file": "libs/common-ui/README.md",
+          "hash": "7754615602505382514"
+        },
+        {
+          "file": "libs/common-ui/jest.config.ts",
+          "hash": "12282006040124213536"
+        },
+        {
+          "file": "libs/common-ui/project.json",
+          "hash": "12652055196760146690"
+        },
+        {
+          "file": "libs/common-ui/src/global.scss",
+          "hash": "16230018524133975904"
+        },
+        {
+          "file": "libs/common-ui/src/index.ts",
+          "hash": "15497835509783042733"
+        },
+        {
+          "file": "libs/common-ui/src/lib/common-ui.module.ts",
+          "hash": "16261162741514646702",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@fortawesome/angular-fontawesome"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.html",
+          "hash": "9064666852551740009"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.scss",
+          "hash": "16175095069937206823"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/cell-container/datatable-cell-container.component.ts",
+          "hash": "11152316565891321716",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/datatable.component.html",
+          "hash": "1420378754005450742"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/datatable.component.scss",
+          "hash": "4574583685776649337"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/datatable.component.ts",
+          "hash": "429056610005564345",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/datatable.service.ts",
+          "hash": "2305983377521000350",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.html",
+          "hash": "548160717751285164"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.scss",
+          "hash": "12397116742648609691"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/divider/datatable-divider.component.ts",
+          "hash": "8326138746975588162",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.html",
+          "hash": "17283722117942303962"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.scss",
+          "hash": "6321894613771396004"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/header-container/datatable-header-container.component.ts",
+          "hash": "12396313833539050114",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/index.ts",
+          "hash": "16708893460843398016"
+        },
+        {
+          "file": "libs/common-ui/src/lib/datatable/model/datatable.model.ts",
+          "hash": "9235191029175083469"
+        },
+        {
+          "file": "libs/common-ui/src/lib/directives/grip.directive.ts",
+          "hash": "15200508899814997915",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.html",
+          "hash": "6668113240443625230"
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.scss",
+          "hash": "11100909136803685746"
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.component.ts",
+          "hash": "5423267179424440460",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focus-outline.service.ts",
+          "hash": "6576208105437164291",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/lib/focus-outline/focusable.directive.ts",
+          "hash": "11632273276299908093",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/common-ui/src/test-setup.ts",
+          "hash": "17711435995618823417",
+          "deps": [
+            "npm:jest-preset-angular"
+          ]
+        },
+        {
+          "file": "libs/common-ui/tsconfig.json",
+          "hash": "15487755565970508470"
+        },
+        {
+          "file": "libs/common-ui/tsconfig.lib.json",
+          "hash": "16980941095143460879"
+        },
+        {
+          "file": "libs/common-ui/tsconfig.spec.json",
+          "hash": "7670846817526018622"
+        }
+      ],
+      "common": [
+        {
+          "file": "libs/common/.babelrc",
+          "hash": "12678781556853150254"
+        },
+        {
+          "file": "libs/common/.eslintrc.json",
+          "hash": "2735913900879119837"
+        },
+        {
+          "file": "libs/common/README.md",
+          "hash": "17127957463758053849"
+        },
+        {
+          "file": "libs/common/docs/user/Users.md",
+          "hash": "10236328999341731018"
+        },
+        {
+          "file": "libs/common/jest.config.js",
+          "hash": "12955024269809785240"
+        },
+        {
+          "file": "libs/common/project.json",
+          "hash": "444138714147347221"
+        },
+        {
+          "file": "libs/common/src/index.ts",
+          "hash": "14803989726245966590"
+        },
+        {
+          "file": "libs/common/src/lib/error/module.ts",
+          "hash": "9801741534704110576"
+        },
+        {
+          "file": "libs/common/src/lib/error/tmk-err-conflict.ts",
+          "hash": "7622991339300160926"
+        },
+        {
+          "file": "libs/common/src/lib/error/tmk-err-not-found.ts",
+          "hash": "1178786774567662007"
+        },
+        {
+          "file": "libs/common/src/lib/error/tmk-err.ts",
+          "hash": "9762496873861107199"
+        },
+        {
+          "file": "libs/common/src/lib/module.ts",
+          "hash": "8329010450301054925"
+        },
+        {
+          "file": "libs/common/src/lib/posts/post.interface.ts",
+          "hash": "673021400845008984"
+        },
+        {
+          "file": "libs/common/src/lib/tags/tag.interface.ts",
+          "hash": "1819090311573477795"
+        },
+        {
+          "file": "libs/common/src/lib/user/connected-account/connected-account.model.ts",
+          "hash": "5282520426691794434"
+        },
+        {
+          "file": "libs/common/src/lib/user/connected-account/discord-account.model.spec.ts",
+          "hash": "2167588996804534281"
+        },
+        {
+          "file": "libs/common/src/lib/user/connected-account/discord-account.model.ts",
+          "hash": "6520912164039004382"
+        },
+        {
+          "file": "libs/common/src/lib/user/connected-account/module.ts",
+          "hash": "6444142431722784567"
+        },
+        {
+          "file": "libs/common/src/lib/user/group.model.spec.ts",
+          "hash": "17659864196006960354"
+        },
+        {
+          "file": "libs/common/src/lib/user/group.model.ts",
+          "hash": "1826732423030102536"
+        },
+        {
+          "file": "libs/common/src/lib/user/module.ts",
+          "hash": "6386330365751706987"
+        },
+        {
+          "file": "libs/common/src/lib/user/permission.model.spec.ts",
+          "hash": "8244799814891430612"
+        },
+        {
+          "file": "libs/common/src/lib/user/permission.model.ts",
+          "hash": "13624126159884904181"
+        },
+        {
+          "file": "libs/common/src/lib/user/permissions.json",
+          "hash": "10657442335406065627"
+        },
+        {
+          "file": "libs/common/src/lib/user/user.model.ts",
+          "hash": "3157449694492955185"
+        },
+        {
+          "file": "libs/common/src/mock/module.ts",
+          "hash": "3006571435048459332"
+        },
+        {
+          "file": "libs/common/src/mock/user/group.mock.ts",
+          "hash": "7923189888126293192"
+        },
+        {
+          "file": "libs/common/src/mock/user/module.ts",
+          "hash": "11074725764556396081"
+        },
+        {
+          "file": "libs/common/src/mock/user/permission.mock.ts",
+          "hash": "9724393355644376969"
+        },
+        {
+          "file": "libs/common/src/mock/user/user.mock.ts",
+          "hash": "1262358550666708656"
+        },
+        {
+          "file": "libs/common/tsconfig.json",
+          "hash": "12834038490315927699"
+        },
+        {
+          "file": "libs/common/tsconfig.lib.json",
+          "hash": "15448591875537424246"
+        },
+        {
+          "file": "libs/common/tsconfig.spec.json",
+          "hash": "13015927483173923663"
+        }
       ]
     },
     "nonProjectFiles": [
@@ -2340,7 +2341,7 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "16116188280409288162"
+        "hash": "16839613545720735307"
       },
       {
         "file": "package.json",

@@ -16,9 +16,10 @@ import { combineLatest, Observable } from 'rxjs';
 import { faPause } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'tmk-ouistiti-game-container',
-  templateUrl: './ouistiti-game-container.component.html',
-  styleUrls: ['./ouistiti-game-container.component.scss'],
+    selector: 'tmk-ouistiti-game-container',
+    templateUrl: './ouistiti-game-container.component.html',
+    styleUrls: ['./ouistiti-game-container.component.scss'],
+    standalone: false
 })
 export class OuistitiGameContainerComponent {
   roundInfo$: Observable<RoundInfo> = this.roundService.currentRoundInfo$;

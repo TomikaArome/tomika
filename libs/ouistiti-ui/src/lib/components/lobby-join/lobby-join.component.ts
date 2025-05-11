@@ -15,9 +15,10 @@ import {
 import { LobbyService } from '../../services/lobby.service';
 
 @Component({
-  selector: 'tmk-ouistiti-lobby-join',
-  templateUrl: './lobby-join.component.html',
-  styleUrls: ['./lobby-join.component.scss'],
+    selector: 'tmk-ouistiti-lobby-join',
+    templateUrl: './lobby-join.component.html',
+    styleUrls: ['./lobby-join.component.scss'],
+    standalone: false
 })
 export class LobbyJoinComponent {
   private _lobby: LobbyInfo = null;

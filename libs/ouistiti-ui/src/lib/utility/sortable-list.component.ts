@@ -25,16 +25,17 @@ interface SortableListTemplateContext<T> {
 }
 
 @Component({
-  selector: 'tmk-sortable-list',
-  templateUrl: './sortable-list.component.html',
-  styleUrls: ['./sortable-list.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: forwardRef(() => SortableListComponent),
-    },
-  ],
+    selector: 'tmk-sortable-list',
+    templateUrl: './sortable-list.component.html',
+    styleUrls: ['./sortable-list.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            multi: true,
+            useExisting: forwardRef(() => SortableListComponent),
+        },
+    ],
+    standalone: false
 })
 export class SortableListComponent<T> implements ControlValueAccessor {
   // Items as set by the input

@@ -10,9 +10,10 @@ import {
 import { PlayerService } from '../../../services/player.service';
 
 @Component({
-  selector: 'tmk-ouistiti-bidding-popup',
-  templateUrl: './bidding-popup.component.html',
-  styleUrls: ['./bidding-popup.component.scss'],
+    selector: 'tmk-ouistiti-bidding-popup',
+    templateUrl: './bidding-popup.component.html',
+    styleUrls: ['./bidding-popup.component.scss'],
+    standalone: false
 })
 export class BiddingPopupComponent {
   @Input()

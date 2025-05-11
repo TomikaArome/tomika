@@ -8,9 +8,10 @@ import { PlayerService } from '../../services/player.service';
 import { LobbyService } from '../../services/lobby.service';
 
 @Component({
-  selector: 'tmk-ouistiti-lobby-list-item',
-  templateUrl: './lobby-list-item.component.html',
-  styleUrls: ['./lobby-list-item.component.scss'],
+    selector: 'tmk-ouistiti-lobby-list-item',
+    templateUrl: './lobby-list-item.component.html',
+    styleUrls: ['./lobby-list-item.component.scss'],
+    standalone: false
 })
 export class LobbyListItemComponent {
   @Input()

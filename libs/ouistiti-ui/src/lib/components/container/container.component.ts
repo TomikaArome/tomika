@@ -7,9 +7,10 @@ import { GameStatus, LobbyInfo } from '@TomikaArome/ouistiti-shared';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'tmk-ouistiti-container',
-  templateUrl: './container.component.html',
-  styleUrls: ['./container.component.scss'],
+    selector: 'tmk-ouistiti-container',
+    templateUrl: './container.component.html',
+    styleUrls: ['./container.component.scss'],
+    standalone: false
 })
 export class ContainerComponent {
   showLobbySelector$ = this.playerService.selfInLobby$.pipe(

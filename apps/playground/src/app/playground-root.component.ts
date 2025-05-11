@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { DatatableHeader, DatatableService, GripDraggedEvent } from '@TomikaArome/common-ui';
 
 @Component({
-  selector: 'tmk-playground-root',
-  templateUrl: './playground-root.component.html',
-  styleUrls: ['./playground-root.component.scss'],
+    selector: 'tmk-playground-root',
+    templateUrl: './playground-root.component.html',
+    styleUrls: ['./playground-root.component.scss'],
+    standalone: false
 })
 export class PlaygroundRootComponent {
   headers: DatatableHeader[] = [

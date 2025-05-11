@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 
 @Component({
-  selector: 'tmk-cards-test',
-  templateUrl: './cards-test.component.html',
-  styleUrls: ['./cards-test.component.scss'],
+    selector: 'tmk-cards-test',
+    templateUrl: './cards-test.component.html',
+    styleUrls: ['./cards-test.component.scss'],
+    standalone: false
 })
 export class CardsTestComponent {
   socket: Socket;

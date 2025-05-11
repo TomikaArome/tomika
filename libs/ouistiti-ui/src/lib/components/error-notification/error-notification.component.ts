@@ -12,10 +12,10 @@ import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'tmk-ouistiti-error-notification',
-  template:
-    '<div>Error: <b>{{ error.type }}</b></div><i>See DevTools for more information</i>',
-  styleUrls: ['./error-notification.component.scss'],
+    selector: 'tmk-ouistiti-error-notification',
+    template: '<div>Error: <b>{{ error.type }}</b></div><i>See DevTools for more information</i>',
+    styleUrls: ['./error-notification.component.scss'],
+    standalone: false
 })
 export class ErrorNotificationComponent implements OnInit, OnDestroy {
   @Input()

@@ -16,9 +16,10 @@ import { faBan, faCrown, faDoorOpen, faPlay, faRandom } from '@fortawesome/free-
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'tmk-ouistiti-lobby-screen',
-  templateUrl: './lobby-screen.component.html',
-  styleUrls: ['./lobby-screen.component.scss'],
+    selector: 'tmk-ouistiti-lobby-screen',
+    templateUrl: './lobby-screen.component.html',
+    styleUrls: ['./lobby-screen.component.scss'],
+    standalone: false
 })
 export class LobbyScreenComponent implements OnDestroy {
   private onDestroy$ = new Subject<void>();

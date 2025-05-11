@@ -8,9 +8,10 @@ import { LobbyService } from '../../services/lobby.service';
 import { LobbyCreateParams } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-lobby-create',
-  templateUrl: './lobby-create.component.html',
-  styleUrls: ['./lobby-create.component.scss'],
+    selector: 'tmk-ouistiti-lobby-create',
+    templateUrl: './lobby-create.component.html',
+    styleUrls: ['./lobby-create.component.scss'],
+    standalone: false
 })
 export class LobbyCreateComponent {
   form = new UntypedFormGroup({

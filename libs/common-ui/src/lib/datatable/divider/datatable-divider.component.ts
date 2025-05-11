@@ -2,10 +2,11 @@ import { Component, EventEmitter, HostBinding, Input, Output, ViewEncapsulation 
 import { faCaretDown, faCaretLeft, faCaretRight, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'tmk-datatable-divider',
-  templateUrl: './datatable-divider.component.html',
-  styleUrls: ['./datatable-divider.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'tmk-datatable-divider',
+    templateUrl: './datatable-divider.component.html',
+    styleUrls: ['./datatable-divider.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DatatableDividerComponent {
   faCaretDown = faCaretDown;

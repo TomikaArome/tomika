@@ -4,16 +4,17 @@ import { PlayerService } from '../../../services/player.service';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'tmk-ouistiti-colour-selector',
-  templateUrl: './colour-selector.component.html',
-  styleUrls: ['./colour-selector.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: forwardRef(() => ColourSelectorComponent),
-    },
-  ],
+    selector: 'tmk-ouistiti-colour-selector',
+    templateUrl: './colour-selector.component.html',
+    styleUrls: ['./colour-selector.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            multi: true,
+            useExisting: forwardRef(() => ColourSelectorComponent),
+        },
+    ],
+    standalone: false
 })
 export class ColourSelectorComponent implements ControlValueAccessor {
   @Input()

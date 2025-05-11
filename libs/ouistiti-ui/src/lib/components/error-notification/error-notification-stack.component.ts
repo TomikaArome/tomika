@@ -3,15 +3,16 @@ import { SocketService } from '../../services/socket.service';
 import { OuistitiError } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-error-notification-stack',
-  template: ` <tmk-ouistiti-error-notification
+    selector: 'tmk-ouistiti-error-notification-stack',
+    template: ` <tmk-ouistiti-error-notification
     *ngFor="let error of errorStack"
     [error]="error"
     [duration]="5000"
     (dismiss)="removeFromStack(error)"
   >
   </tmk-ouistiti-error-notification>`,
-  styleUrls: ['./error-notification-stack.component.scss'],
+    styleUrls: ['./error-notification-stack.component.scss'],
+    standalone: false
 })
 export class ErrorNotificationStackComponent {
   errorStack: OuistitiError[] = [];

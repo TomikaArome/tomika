@@ -18,10 +18,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'tmk-ouistiti-player-list-item',
-  templateUrl: './player-list-item.component.html',
-  styleUrls: ['./player-list-item.component.scss'],
-  providers: [SortableListComponent],
+    selector: 'tmk-ouistiti-player-list-item',
+    templateUrl: './player-list-item.component.html',
+    styleUrls: ['./player-list-item.component.scss'],
+    providers: [SortableListComponent],
+    standalone: false
 })
 export class PlayerListItemComponent implements OnDestroy {
   @Input()

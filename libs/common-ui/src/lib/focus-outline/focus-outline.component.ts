@@ -11,10 +11,11 @@ interface FocusOutlineComponentOptions {
 }
 
 @Component({
-  selector: 'tmk-focus-outline',
-  templateUrl: './focus-outline.component.html',
-  styleUrls: ['./focus-outline.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'tmk-focus-outline',
+    templateUrl: './focus-outline.component.html',
+    styleUrls: ['./focus-outline.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class FocusOutlineComponent implements AfterViewInit, OnDestroy {
   @HostBinding('class.tmk-focus-outline') private className = true;

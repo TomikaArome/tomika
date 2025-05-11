@@ -14,9 +14,10 @@ interface FlatPermissionNode {
 }
 
 @Component({
-  selector: 'tmk-permission-tree',
-  templateUrl: './permission-tree.component.html',
-  styleUrls: ['./permission-tree.component.scss'],
+    selector: 'tmk-permission-tree',
+    templateUrl: './permission-tree.component.html',
+    styleUrls: ['./permission-tree.component.scss'],
+    standalone: false
 })
 export class PermissionTreeComponent {
   treeControl: FlatTreeControl<FlatPermissionNode>;

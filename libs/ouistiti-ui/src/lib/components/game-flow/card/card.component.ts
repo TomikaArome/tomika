@@ -9,9 +9,10 @@ interface SymbolPosition {
 }
 
 @Component({
-  selector: 'tmk-ouistiti-card',
-  templateUrl: './card.component.html',
-  styleUrls: ['./card.component.scss'],
+    selector: 'tmk-ouistiti-card',
+    templateUrl: './card.component.html',
+    styleUrls: ['./card.component.scss'],
+    standalone: false
 })
 export class CardComponent {
   readonly cardBackPath = `/assets/ouistiti/images/CARD_BACK.svg`;

@@ -1,10 +1,11 @@
 import { Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
-  selector: 'tmk-datatable-cell-container',
-  templateUrl: './datatable-cell-container.component.html',
-  styleUrls: ['./datatable-cell-container.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'tmk-datatable-cell-container',
+    templateUrl: './datatable-cell-container.component.html',
+    styleUrls: ['./datatable-cell-container.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DatatableCellContainerComponent {
   @HostBinding('class.tmk-datatable-cell-container') private className = true;

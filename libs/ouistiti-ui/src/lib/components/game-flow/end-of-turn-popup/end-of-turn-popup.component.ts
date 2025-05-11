@@ -6,9 +6,10 @@ import {
 } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-end-of-turn-popup',
-  templateUrl: './end-of-turn-popup.component.html',
-  styleUrls: ['end-of-turn-popup.component.scss'],
+    selector: 'tmk-ouistiti-end-of-turn-popup',
+    templateUrl: './end-of-turn-popup.component.html',
+    styleUrls: ['end-of-turn-popup.component.scss'],
+    standalone: false
 })
 export class EndOfTurnPopupComponent {
   @Input()

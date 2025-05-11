@@ -4,7 +4,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Directive({
-  selector: '[tmkSortableListGrip]',
+    selector: '[tmkSortableListGrip]',
+    standalone: false
 })
 export class SortableListGripDirective implements OnDestroy {
   element: HTMLElement = this.elementRef.nativeElement;

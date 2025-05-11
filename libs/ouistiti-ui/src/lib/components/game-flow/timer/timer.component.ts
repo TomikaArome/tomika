@@ -4,9 +4,10 @@ import { takeUntil } from 'rxjs/operators';
 import { BreakPointInfo } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-timer',
-  templateUrl: './timer.component.html',
-  styleUrls: ['./timer.component.scss'],
+    selector: 'tmk-ouistiti-timer',
+    templateUrl: './timer.component.html',
+    styleUrls: ['./timer.component.scss'],
+    standalone: false
 })
 export class TimerComponent implements OnDestroy {
   @Input()

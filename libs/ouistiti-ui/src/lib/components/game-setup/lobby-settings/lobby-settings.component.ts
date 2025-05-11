@@ -12,16 +12,17 @@ import {
 } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-lobby-settings',
-  templateUrl: './lobby-settings.component.html',
-  styleUrls: ['../../../ouistiti-theme.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: forwardRef(() => LobbySettingsComponent),
-    },
-  ],
+    selector: 'tmk-ouistiti-lobby-settings',
+    templateUrl: './lobby-settings.component.html',
+    styleUrls: ['../../../ouistiti-theme.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            multi: true,
+            useExisting: forwardRef(() => LobbySettingsComponent),
+        },
+    ],
+    standalone: false
 })
 export class LobbySettingsComponent implements ControlValueAccessor, OnDestroy {
   @Input()

@@ -2,9 +2,10 @@ import { Component, ElementRef, Input } from '@angular/core';
 import { PlayerInfo, WonCardInfo } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-player-round-details',
-  templateUrl: './player-round-details.component.html',
-  styleUrls: ['./player-round-details.component.scss'],
+    selector: 'tmk-ouistiti-player-round-details',
+    templateUrl: './player-round-details.component.html',
+    styleUrls: ['./player-round-details.component.scss'],
+    standalone: false
 })
 export class PlayerRoundDetailsComponent {
   @Input()

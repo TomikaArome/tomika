@@ -8,9 +8,10 @@ import { GameService } from '../../../services/game.service';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'tmk-ouistiti-end-of-game-container',
-  templateUrl: './end-of-game-container.component.html',
-  styleUrls: ['./end-of-game-container.component.scss'],
+    selector: 'tmk-ouistiti-end-of-game-container',
+    templateUrl: './end-of-game-container.component.html',
+    styleUrls: ['./end-of-game-container.component.scss'],
+    standalone: false
 })
 export class EndOfGameContainerComponent {
   @Input()

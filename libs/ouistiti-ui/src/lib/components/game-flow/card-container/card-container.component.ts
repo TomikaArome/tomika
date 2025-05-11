@@ -42,9 +42,10 @@ interface CardPosition {
 }
 
 @Component({
-  selector: 'tmk-ouistiti-card-container',
-  templateUrl: './card-container.component.html',
-  styleUrls: ['./card-container.component.scss'],
+    selector: 'tmk-ouistiti-card-container',
+    templateUrl: './card-container.component.html',
+    styleUrls: ['./card-container.component.scss'],
+    standalone: false
 })
 export class CardContainerComponent implements OnInit {
   @Input()

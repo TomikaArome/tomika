@@ -24,9 +24,10 @@ import { PlayerService } from '../../services/player.service';
 import { GameService } from '../../services/game.service';
 
 @Component({
-  selector: 'tmk-ouistiti-scoreboard',
-  templateUrl: 'scoreboard.component.html',
-  styleUrls: ['scoreboard.component.scss'],
+    selector: 'tmk-ouistiti-scoreboard',
+    templateUrl: 'scoreboard.component.html',
+    styleUrls: ['scoreboard.component.scss'],
+    standalone: false
 })
 export class ScoreboardComponent implements AfterViewInit {
   @Input()

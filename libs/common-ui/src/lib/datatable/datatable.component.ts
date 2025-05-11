@@ -10,11 +10,12 @@ interface DatatableHeaderSize {
 }
 
 @Component({
-  selector: 'tmk-datatable',
-  templateUrl: './datatable.component.html',
-  styleUrls: ['./datatable.component.scss'],
-  providers: [DatatableService],
-  encapsulation: ViewEncapsulation.None
+    selector: 'tmk-datatable',
+    templateUrl: './datatable.component.html',
+    styleUrls: ['./datatable.component.scss'],
+    providers: [DatatableService],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DatatableComponent implements AfterViewInit {
   private static minimumCellSize = 50;

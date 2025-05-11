@@ -13,9 +13,10 @@ import {
 } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-lobby-vacancy-selector',
-  templateUrl: './lobby-vacancy-selector.component.html',
-  styleUrls: ['lobby-vacancy-selector.component.scss'],
+    selector: 'tmk-ouistiti-lobby-vacancy-selector',
+    templateUrl: './lobby-vacancy-selector.component.html',
+    styleUrls: ['lobby-vacancy-selector.component.scss'],
+    standalone: false
 })
 export class LobbyVacancySelectorComponent {
   @Input()

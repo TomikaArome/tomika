@@ -1,7 +1,8 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[tmkFocusable]'
+    selector: '[tmkFocusable]',
+    standalone: false
 })
 export class FocusableDirective {
 

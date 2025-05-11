@@ -3,9 +3,10 @@ import { faBan } from '@fortawesome/free-solid-svg-icons';
 import { KnownCardInfo } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-trump-card-wrapper',
-  templateUrl: './trump-card-wrapper.component.html',
-  styleUrls: ['./trump-card-wrapper.component.scss'],
+    selector: 'tmk-ouistiti-trump-card-wrapper',
+    templateUrl: './trump-card-wrapper.component.html',
+    styleUrls: ['./trump-card-wrapper.component.scss'],
+    standalone: false
 })
 export class TrumpCardWrapperComponent {
   @Input()

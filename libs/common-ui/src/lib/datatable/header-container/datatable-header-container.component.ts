@@ -2,10 +2,11 @@ import { Component, ElementRef, HostBinding, Input, ViewEncapsulation } from '@a
 import { DatatableHeader } from '../model/datatable.model';
 
 @Component({
-  selector: 'tmk-datatable-header-container',
-  templateUrl: './datatable-header-container.component.html',
-  styleUrls: ['./datatable-header-container.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'tmk-datatable-header-container',
+    templateUrl: './datatable-header-container.component.html',
+    styleUrls: ['./datatable-header-container.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DatatableHeaderContainerComponent {
   constructor(public elementRef: ElementRef<HTMLElement>) {}

@@ -12,9 +12,10 @@ import {
 import { PlayerListItemContentDirective } from '../../directives/player-list-item-content.directive';
 
 @Component({
-  selector: 'tmk-ouistiti-player-list',
-  templateUrl: './player-list.component.html',
-  styleUrls: ['./player-list.component.scss'],
+    selector: 'tmk-ouistiti-player-list',
+    templateUrl: './player-list.component.html',
+    styleUrls: ['./player-list.component.scss'],
+    standalone: false
 })
 export class PlayerListComponent {
   @Input()

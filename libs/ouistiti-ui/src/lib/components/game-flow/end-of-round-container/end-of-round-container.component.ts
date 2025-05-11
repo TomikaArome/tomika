@@ -6,9 +6,10 @@ import {
 } from '@TomikaArome/ouistiti-shared';
 
 @Component({
-  selector: 'tmk-ouistiti-end-of-round-container',
-  templateUrl: './end-of-round-container.component.html',
-  styleUrls: ['end-of-round-container.component.scss'],
+    selector: 'tmk-ouistiti-end-of-round-container',
+    templateUrl: './end-of-round-container.component.html',
+    styleUrls: ['end-of-round-container.component.scss'],
+    standalone: false
 })
 export class EndOfRoundContainerComponent {
   @Input()

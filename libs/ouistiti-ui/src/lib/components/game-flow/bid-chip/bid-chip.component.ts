@@ -3,9 +3,10 @@ import { PlayerColour, PlayerSymbol } from '@TomikaArome/ouistiti-shared';
 import { PlayerService } from '../../../services/player.service';
 
 @Component({
-  selector: 'tmk-ouistiti-bid-chip',
-  templateUrl: './bid-chip.component.html',
-  styleUrls: ['./bid-chip.component.scss'],
+    selector: 'tmk-ouistiti-bid-chip',
+    templateUrl: './bid-chip.component.html',
+    styleUrls: ['./bid-chip.component.scss'],
+    standalone: false
 })
 export class BidChipComponent {
   @Input()

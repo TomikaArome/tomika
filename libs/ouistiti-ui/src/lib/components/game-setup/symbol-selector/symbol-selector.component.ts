@@ -4,16 +4,17 @@ import { PlayerService } from '../../../services/player.service';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'tmk-ouistiti-symbol-selector',
-  templateUrl: './symbol-selector.component.html',
-  styleUrls: ['./symbol-selector.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: forwardRef(() => SymbolSelectorComponent),
-    },
-  ],
+    selector: 'tmk-ouistiti-symbol-selector',
+    templateUrl: './symbol-selector.component.html',
+    styleUrls: ['./symbol-selector.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            multi: true,
+            useExisting: forwardRef(() => SymbolSelectorComponent),
+        },
+    ],
+    standalone: false
 })
 export class SymbolSelectorComponent implements ControlValueAccessor {
   @Input()

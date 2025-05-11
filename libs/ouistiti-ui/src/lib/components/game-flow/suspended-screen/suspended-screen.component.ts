@@ -3,9 +3,10 @@ import { PlayerInfo } from '@TomikaArome/ouistiti-shared';
 import { faForward, faPlay, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'tmk-ouistiti-suspended-screen',
-  templateUrl: './suspended-screen.component.html',
-  styleUrls: ['./suspended-screen.component.scss'],
+    selector: 'tmk-ouistiti-suspended-screen',
+    templateUrl: './suspended-screen.component.html',
+    styleUrls: ['./suspended-screen.component.scss'],
+    standalone: false
 })
 export class SuspendedScreenComponent {
   @Input()

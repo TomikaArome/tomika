@@ -23,21 +23,22 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'tmk-ouistiti-player-settings',
-  templateUrl: './player-settings.component.html',
-  styleUrls: ['../../../ouistiti-theme.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi: true,
-      useExisting: forwardRef(() => PlayerSettingsComponent),
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => PlayerSettingsComponent),
-      multi: true,
-    },
-  ],
+    selector: 'tmk-ouistiti-player-settings',
+    templateUrl: './player-settings.component.html',
+    styleUrls: ['../../../ouistiti-theme.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            multi: true,
+            useExisting: forwardRef(() => PlayerSettingsComponent),
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => PlayerSettingsComponent),
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 export class PlayerSettingsComponent
   implements ControlValueAccessor, OnDestroy

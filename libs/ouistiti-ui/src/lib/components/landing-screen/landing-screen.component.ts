@@ -9,9 +9,10 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'tmk-ouistiti-landing-screen',
-  templateUrl: './landing-screen.component.html',
-  styleUrls: ['./landing-screen.component.scss'],
+    selector: 'tmk-ouistiti-landing-screen',
+    templateUrl: './landing-screen.component.html',
+    styleUrls: ['./landing-screen.component.scss'],
+    standalone: false
 })
 export class LandingScreenComponent {
   lobbyList$: Observable<LobbyInfo[]> = this.lobbyService.lobbyList$;

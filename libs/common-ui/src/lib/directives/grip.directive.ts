@@ -22,7 +22,8 @@ const isHTMLElement = (obj: any): obj is HTMLElement =>
   obj && typeof obj === 'object' && obj.innerText;
 
 @Directive({
-  selector: '([tmkGrip])'
+    selector: '([tmkGrip])',
+    standalone: false
 })
 export class GripDirective {
   private isGripped = false;

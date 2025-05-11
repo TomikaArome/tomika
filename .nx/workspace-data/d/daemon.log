@@ -92,3 +92,27 @@
 [NX Daemon Server] - 2025-05-10T23:52:19.908Z - Closed a connection. Number of open connections: 0
 [NX Daemon Server] - 2025-05-10T23:52:19.908Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (sources)
 [NX Daemon Server] - 2025-05-10T23:52:19.909Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (outputs)
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.129Z - Started listening on: /tmp/ff689cc768d76c982620/d.sock
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.135Z - [WATCHER]: Subscribed to changes within: /home/celia/repos/tomika (native)
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.138Z - Established a connection. Number of open connections: 1
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.138Z - Established a connection. Number of open connections: 2
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.140Z - Closed a connection. Number of open connections: 1
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.142Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.143Z - Done responding to the client Shutdown initiated
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.143Z - Handled FORCE_SHUTDOWN. Handling time: 0. Response time: 1.
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.145Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (sources)
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.145Z - Closed a connection. Number of open connections: 0
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.145Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (outputs)
+[NX v21.0.3 Daemon Server] - 2025-05-11T00:24:38.146Z - Server stopped because: "Request to shutdown"
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.392Z - Started listening on: /tmp/ff689cc768d76c982620/d.sock
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.397Z - [WATCHER]: Subscribed to changes within: /home/celia/repos/tomika (native)
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.399Z - Established a connection. Number of open connections: 1
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.399Z - Established a connection. Number of open connections: 2
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.401Z - Closed a connection. Number of open connections: 1
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.403Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.403Z - Done responding to the client Shutdown initiated
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.403Z - Handled FORCE_SHUTDOWN. Handling time: 0. Response time: 0.
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.404Z - Closed a connection. Number of open connections: 0
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.404Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (sources)
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.404Z - [WATCHER]: Stopping the watcher for /home/celia/repos/tomika (outputs)
+[NX v20.8.1 Daemon Server] - 2025-05-11T00:29:42.405Z - Server stopped because: "Request to shutdown"
